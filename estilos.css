@@ -184,3 +184,11 @@ table.usuarios th { font-family: var(--mono); font-size: 0.75rem; text-transform
 table.usuarios select { min-width: 110px; }
 #admin-bar { display: flex; flex-wrap: wrap; gap: 8px; }
 .panel .editor { grid-column: 1 / -1; padding: 24px; max-width: none; }
+
+/* ---------- Paginador ---------- */
+.pager { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; padding-top: 28px; }
+.pager .btn { min-width: 42px; padding-inline: 12px; justify-self: auto; }
+.pager .btn[disabled] { opacity: .45; cursor: default; }
+.pager .btn[disabled]:hover { border-color: var(--line); }
+.pager .gap { color: var(--muted); padding-inline: 4px; }
+@media (max-width: 480px) { .pager .txt { display: none; } }

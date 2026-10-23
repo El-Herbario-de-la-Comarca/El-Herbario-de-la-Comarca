@@ -146,7 +146,8 @@ function art(d) {
 function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i = 1; i <= 5; i++) h += `<i class="${i <= n ? "on" : ""}"></i>`; return h + "</span>"; }
 
 /* ---------- Catálogo ---------- */
-const state = { q: "", marca: "", tipo: "", corte: "", fuerza: "", pais: "", sort: "nombre" };
+const POR_PAGINA = 20;
+const state = { q: "", marca: "", tipo: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 };
 const FILTERS = [["f-marca", "marca", "Todas"], ["f-tipo", "tipo", "Todos"], ["f-corte", "corte", "Todos"], ["f-pais", "pais", "Todos"]];
 function fillSelect(id, label, values) {
   $(id).innerHTML = `<option value="">${label}</option>` + values.map((v) => `<option value="${esc(v.value)}">${esc(v.text)}</option>`).join("");
@@ -162,12 +163,12 @@ function fillFilters() {
   $("f-fuerza").value = state.fuerza;
 }
 function setupFilters() {
-  $("q").addEventListener("input", (e) => { state.q = e.target.value; render(); });
+  $("q").addEventListener("input", (e) => { state.q = e.target.value; state.page = 1; render(); });
   [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-corte", "corte"], ["f-fuerza", "fuerza"], ["f-pais", "pais"], ["sort", "sort"]].forEach(([id, k]) => {
-    $(id).addEventListener("change", (e) => { state[k] = e.target.value; render(); });
+    $(id).addEventListener("change", (e) => { state[k] = e.target.value; state.page = 1; render(); });
   });
   $("reset").addEventListener("click", () => {
-    Object.assign(state, { q: "", marca: "", tipo: "", corte: "", fuerza: "", pais: "", sort: "nombre" });
+    Object.assign(state, { q: "", marca: "", tipo: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 });
     $("q").value = ""; ["f-marca", "f-tipo", "f-corte", "f-fuerza", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
     render();
   });
@@ -193,8 +194,14 @@ function render() {
     : state.sort === "fuerza-desc" ? b.fuerza - a.fuerza || byName(a, b)
     : state.sort === "puntuacion" ? score(b) - score(a) || byName(a, b)
     : byName(a, b));
-  $("count").textContent = list.length === 1 ? "1 tabaco" : `${list.length} tabacos`;
-  $("grid").innerHTML = list.length ? list.map((d) => {
+  const paginas = Math.max(1, Math.ceil(list.length / POR_PAGINA));
+  state.page = Math.min(Math.max(1, state.page), paginas);
+  const desde = (state.page - 1) * POR_PAGINA;
+  const visibles = list.slice(desde, desde + POR_PAGINA);
+  $("count").textContent = (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
+    (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "");
+  pintarPaginador(paginas);
+  $("grid").innerHTML = list.length ? visibles.map((d) => {
     const o = officialFor(d.id);
     const rate = o ? (o.score ? `Puntuación del herbario: ${o.score} de 5` : "") : "Sin reseña todavía";
     return `
@@ -210,6 +217,32 @@ function render() {
       </div>
     </button>`;
   }).join("") : `<p class="empty">Ningún tabaco coincide con la búsqueda. Prueba con menos filtros.</p>`;
+}
+
+/* Paginador: 20 tabacos por página */
+function numerosPagina(actual, total) {
+  const set = new Set([1, total, actual - 1, actual, actual + 1]);
+  const nums = [...set].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b);
+  const out = [];
+  nums.forEach((n, i) => { if (i && n - nums[i - 1] > 1) out.push("…"); out.push(n); });
+  return out;
+}
+function pintarPaginador(paginas) {
+  const nav = $("pager");
+  if (paginas <= 1) { nav.hidden = true; nav.innerHTML = ""; return; }
+  nav.hidden = false;
+  const p = state.page;
+  nav.innerHTML =
+    `<button class="btn" type="button" data-page="${p - 1}"${p === 1 ? " disabled" : ""}>‹<span class="txt"> Anterior</span></button>` +
+    numerosPagina(p, paginas).map((n) => n === "…"
+      ? '<span class="gap" aria-hidden="true">…</span>'
+      : `<button class="btn${n === p ? " primary" : ""}" type="button" data-page="${n}"${n === p ? ' aria-current="page"' : ""} aria-label="Página ${n}">${n}</button>`).join("") +
+    `<button class="btn" type="button" data-page="${p + 1}"${p === paginas ? " disabled" : ""}><span class="txt">Siguiente </span>›</button>`;
+}
+function irAPagina(n) {
+  state.page = n; render();
+  const top = $("grid").getBoundingClientRect().top + window.scrollY - document.querySelector(".bar").offsetHeight - 8;
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
 }
 
 /* ---------- Ficha de detalle ---------- */
@@ -759,6 +792,7 @@ function paintTop() {
 
 /* ---------- Eventos globales ---------- */
 $("grid").addEventListener("click", (e) => { const b = e.target.closest(".card"); if (b) openDetail(b.dataset.id); });
+$("pager").addEventListener("click", (e) => { const b = e.target.closest("button[data-page]"); if (b && !b.disabled) irAPagina(Number(b.dataset.page)); });
 $("overlay").addEventListener("click", (e) => { if (e.target === $("overlay")) closeDetail(); });
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
