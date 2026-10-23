@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El herbario de la Comarca</title>
+<meta name="description" content="Catálogo en español de tabaco de pipa: mezclas, marcas, cortes y reseñas del herbario.">
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="box">
+    <h2 id="gate-title">Solo para mayores de 18</h2>
+    <p id="gate-text">El herbario de la Comarca es un catálogo informativo sobre tabaco de pipa. Confirma que eres mayor de edad para entrar.</p>
+    <div class="acts" id="gate-acts">
+      <button class="yes" id="gate-yes" type="button">Tengo 18 años o más</button>
+      <button id="gate-no" type="button">Salir</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm" id="confirm" role="alertdialog" aria-modal="true" aria-labelledby="cf-title" aria-describedby="cf-text" hidden>
+  <div class="box">
+    <h2 id="cf-title">Eliminar ficha</h2>
+    <p id="cf-text"></p>
+    <p class="msg" id="cf-msg" role="alert"></p>
+    <div class="acts"><button class="btn danger" id="cf-yes" type="button">Sí, eliminar</button><button class="btn" id="cf-no" type="button">Cancelar</button></div>
+  </div>
+</div>
+
+
+<div class="confirm" id="login" role="dialog" aria-modal="true" aria-labelledby="lg-title" hidden>
+  <div class="box">
+    <h2 id="lg-title">Acceso de colaboradores</h2>
+    <p id="lg-text">Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta y pide al administrador que te dé permiso de edición.</p>
+    <form id="lg-form" class="f" novalidate>
+      <div class="field"><label for="lg-email">Correo electrónico</label><input id="lg-email" type="email" autocomplete="email" required></div>
+      <div class="field" id="lg-pass-f"><label for="lg-pass">Contraseña</label><input id="lg-pass" type="password" autocomplete="current-password" minlength="8"></div>
+      <p class="msg" id="lg-msg" role="alert"></p>
+      <div class="acts">
+        <button class="btn primary" id="lg-send" type="submit">Entrar</button>
+        <button class="btn" id="lg-new" type="button">Crear cuenta</button>
+        <button class="btn" id="lg-cancel" type="button">Cerrar</button>
+      </div>
+      <button class="link" id="lg-forgot" type="button">He olvidado mi contraseña</button>
+    </form>
+    <form id="np-form" class="f" novalidate hidden>
+      <div class="field"><label for="np-pass">Nueva contraseña (mínimo 8 caracteres)</label><input id="np-pass" type="password" autocomplete="new-password" minlength="8"></div>
+      <p class="msg" id="np-msg" role="alert"></p>
+      <div class="acts"><button class="btn primary" id="np-save" type="submit">Guardar contraseña</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <img class="logo" src="img/logo.png" alt="Logo del Pipa Club Fumadas Hobbit: un hobbit fumando en pipa a la puerta de su casa" width="132" height="132">
+      <div class="hero-text">
+        <span class="eyebrow">Pipa Club Fumadas Hobbit</span>
+        <div class="brand"><h1>El herbario de la Comarca</h1></div>
+        <span class="tag">Catálogo de hierba de pipa</span>
+      </div>
+    </div>
+    <svg class="hills" viewBox="0 0 1200 120" preserveAspectRatio="xMinYMax slice" aria-hidden="true">
+      <path class="h-back" d="M0 70 C120 20 240 20 360 62 C480 100 560 40 700 36 C840 32 960 90 1080 58 C1140 44 1170 46 1200 52 V120 H0Z"/>
+      <path class="h-front" d="M0 96 C140 56 260 60 380 88 C520 118 620 70 760 72 C900 74 1000 112 1120 90 C1160 82 1180 80 1200 82 V120 H0Z"/>
+      <g class="door" transform="translate(150 62)">
+        <ellipse cx="0" cy="26" rx="23" ry="24" class="d-frame"/>
+        <ellipse cx="0" cy="26" rx="18" ry="19" class="d-door"/>
+        <circle cx="0" cy="28" r="2.6" class="d-knob"/>
+      </g>
+      <g class="flowers">
+        <circle cx="96" cy="104" r="3.2"/><circle cx="108" cy="108" r="2.6"/><circle cx="204" cy="106" r="3"/><circle cx="216" cy="102" r="2.4"/>
+        <circle cx="880" cy="98" r="3"/><circle cx="894" cy="102" r="2.4"/><circle cx="1010" cy="104" r="3.2"/>
+      </g>
+    </svg>
+  </header>
+
+  <section class="bar" aria-label="Buscar y filtrar">
+    <div class="row">
+      <div class="field search"><label for="q">Buscar</label><input id="q" type="search" placeholder="Nombre, marca o nota de sabor" autocomplete="off"></div>
+      <div class="field"><label for="f-marca">Marca</label><select id="f-marca"></select></div>
+      <div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo"></select></div>
+      <div class="field"><label for="f-corte">Corte</label><select id="f-corte"></select></div>
+      <div class="field"><label for="f-fuerza">Fuerza</label><select id="f-fuerza"></select></div>
+      <div class="field"><label for="f-pais">País</label><select id="f-pais"></select></div>
+      <div class="field"><label for="sort">Ordenar por</label>
+        <select id="sort">
+          <option value="nombre">Nombre</option>
+          <option value="puntuacion">Mejor puntuados por el herbario</option>
+          <option value="fuerza-asc">Fuerza: de suave a fuerte</option>
+          <option value="fuerza-desc">Fuerza: de fuerte a suave</option>
+        </select>
+      </div>
+    </div>
+    <div class="count"><span id="count" aria-live="polite"></span><span class="count-acts"><button class="link" id="reset" type="button">Quitar filtros</button><span id="admin-bar"></span></span></div>
+  </section>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    <span><strong>El herbario de la Comarca no vende tabaco</strong> ni incluye enlaces a tiendas. Es un sitio informativo.</span>
+    <span class="acceso"><span id="status" class="status"></span> <span id="auth-box"></span></span>
+    <span>Fumar perjudica gravemente la salud. Prohibida la venta a menores de 18 años.</span>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="d-name"></div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.97.0"></script>
+<script src="config.js"></script>
+<script src="datos-iniciales.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
