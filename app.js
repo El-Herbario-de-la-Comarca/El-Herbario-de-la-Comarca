@@ -666,9 +666,14 @@ async function entrar(ev) {
   ev.preventDefault();
   const d = datosLogin(true); if (!d) return;
   $("lg-send").disabled = true;
-  const { error } = await sb.auth.signInWithPassword(d);
+  $("lg-msg").style.color = "var(--muted)"; $("lg-msg").textContent = "Entrando…";
+  let res;
+  try { res = await sb.auth.signInWithPassword(d); }
+  catch (e) { res = { error: e }; }
   $("lg-send").disabled = false;
-  if (error) $("lg-msg").textContent = errorLogin(error);
+  $("lg-msg").style.color = "";
+  if (res.error) { console.error(res.error); $("lg-msg").textContent = errorLogin(res.error); }
+  else { $("lg-msg").textContent = ""; cerrarLogin(); }
 }
 async function crearCuenta() {
   const d = datosLogin(true); if (!d) return;
@@ -777,12 +782,16 @@ $("login").addEventListener("click", (e) => { if (e.target === $("login")) cerra
   const { data } = await sb.auth.getSession();
   await leerSesion(data && data.session);
   await refrescar();
-  sb.auth.onAuthStateChange(async (ev, session) => {
+  // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
+  // (fallo conocido de supabase-js). Por eso el trabajo se aplaza con setTimeout.
+  sb.auth.onAuthStateChange((ev, session) => {
     if (ev === "INITIAL_SESSION" || ev === "TOKEN_REFRESHED") return;
-    await leerSesion(session);
-    if (ev === "PASSWORD_RECOVERY") { paintTop(); pedirNuevaPass(); return; }
-    if (ev === "SIGNED_IN") cerrarLogin();
-    if (!$("overlay").hidden) closeDetail();
-    paintTop();
+    setTimeout(async () => {
+      await leerSesion(session);
+      if (ev === "PASSWORD_RECOVERY") { paintTop(); pedirNuevaPass(); return; }
+      if (ev === "SIGNED_IN") cerrarLogin();
+      if (!$("overlay").hidden) closeDetail();
+      await refrescar();
+    }, 0);
   });
 })();
