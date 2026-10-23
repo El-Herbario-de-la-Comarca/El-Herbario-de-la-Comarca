@@ -6,6 +6,6 @@
 // Mientras estén vacíos, la web funciona en modo solo lectura con el catálogo de respaldo.
 // =====================================================================
 window.HERBARIO_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: ""
+  supabaseUrl: "https://yqargaygohhktbhmpcqk.supabase.co",
+  supabaseAnonKey: "sb_publishable_labR2MVyewHbOyvubMcW4A_sGrzbAUA"
 };
