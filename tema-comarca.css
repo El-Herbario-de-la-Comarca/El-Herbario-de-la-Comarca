@@ -72,3 +72,31 @@
 .comarca .gate { background: color-mix(in srgb, var(--bg) 88%, #2E2418); }
 .comarca footer { border-top-style: dashed; }
 @media (max-width: 600px) { .comarca .panel .art { border-radius: 14px 14px 0 0; } }
+
+/* Madriguera en la colina (sustituye a las colinas simples). */
+.hills.hole { display: none; }
+.comarca .hills:not(.hole) { display: none; }
+.comarca .hills.hole { display: block; height: clamp(120px, 17vw, 200px); margin-top: 6px; }
+:root.comarca { --mound: #A9BC7A; --stone: #BCAE92; --glass: #F3C866; --pathc: #DCC79C; --wood: #8A6747; --smoke: rgb(255 255 255 / .7); }
+:root.comarca[data-theme="dark"] { --mound: #2E3B27; --stone: #5B5444; --glass: #E9B44C; --pathc: #4A4030; --wood: #6B4F37; --smoke: rgb(220 205 175 / .28); }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --mound: #2E3B27; --stone: #5B5444; --glass: #E9B44C; --pathc: #4A4030; --wood: #6B4F37; --smoke: rgb(220 205 175 / .28); } }
+.hole .h-mound { fill: var(--mound); }
+.hole .h-grass { fill: none; stroke: var(--hill-b); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hole .h-path { fill: var(--pathc); }
+.hole .chimney rect { fill: var(--wood); }
+.hole .smoke circle { fill: var(--smoke); }
+.hole .w-frame { fill: var(--wood); }
+.hole .w-glass { fill: var(--glass); }
+.hole .w-bars { fill: none; stroke: var(--wood); stroke-width: 2.4; }
+.hole .d-stone { fill: none; stroke: var(--stone); stroke-width: 8; stroke-dasharray: 11 3; }
+.hole .d-frame { fill: var(--door-ring); }
+.hole .d-door { fill: var(--door); }
+.hole .d-planks { fill: none; stroke: rgb(0 0 0 / .2); stroke-width: 1.6; }
+.hole .d-knob { fill: var(--knob); }
+.hole .fence path { fill: none; stroke: var(--wood); stroke-width: 3; stroke-linecap: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .hole .smoke circle { animation: humo 6s ease-in infinite; transform-box: fill-box; transform-origin: center; }
+  .hole .smoke circle:nth-child(2) { animation-delay: -2s; }
+  .hole .smoke circle:nth-child(3) { animation-delay: -4s; }
+}
+@keyframes humo { 0% { transform: translate(-6px, 34px) scale(.5); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(8px, -16px) scale(1.3); opacity: 0; } }

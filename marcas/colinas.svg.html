@@ -1,0 +1,46 @@
+    <svg class="hills hole" viewBox="0 0 1200 210" preserveAspectRatio="xMinYMax slice" aria-hidden="true">
+      <defs>
+        <clipPath id="hh-door"><circle cx="222" cy="158" r="31"/></clipPath>
+        <clipPath id="hh-win"><circle cx="300" cy="146" r="12"/></clipPath>
+      </defs>
+      <!-- colinas del fondo -->
+      <path class="h-back" d="M0 128 C150 70 300 78 430 118 C560 156 650 92 800 86 C960 80 1060 136 1200 104 V210 H0Z"/>
+      <!-- colina de la madriguera -->
+      <path class="h-mound" d="M48 210 C62 128 128 66 236 62 C340 58 404 112 438 210Z"/>
+      <path class="h-grass" d="M110 98 l6 -10 l3 10 M170 74 l5 -9 l4 9 M318 78 l4 -9 l5 9 M372 112 l5 -9 l3 9"/>
+      <!-- chimenea y humo -->
+      <g class="chimney">
+        <rect x="276" y="44" width="16" height="24" rx="2"/>
+        <rect x="273" y="40" width="22" height="6" rx="2"/>
+      </g>
+      <g class="smoke">
+        <circle cx="284" cy="30" r="5"/><circle cx="292" cy="18" r="6.5"/><circle cx="286" cy="4" r="8"/>
+      </g>
+      <!-- ventanas -->
+      <g class="win">
+        <circle cx="300" cy="146" r="16" class="w-frame"/>
+        <circle cx="300" cy="146" r="12" class="w-glass"/>
+        <g clip-path="url(#hh-win)"><path class="w-bars" d="M300 132 V160 M286 146 H314"/></g>
+      </g>
+      <g class="win">
+        <circle cx="150" cy="152" r="12" class="w-frame"/>
+        <circle cx="150" cy="152" r="8.5" class="w-glass"/>
+        <path class="w-bars" d="M150 143.5 V160.5 M141.5 152 H158.5"/>
+      </g>
+      <!-- puerta redonda -->
+      <circle cx="222" cy="158" r="40" class="d-stone"/>
+      <circle cx="222" cy="158" r="34" class="d-frame"/>
+      <circle cx="222" cy="158" r="31" class="d-door"/>
+      <g clip-path="url(#hh-door)"><path class="d-planks" d="M206 120 V200 M222 120 V200 M238 120 V200"/></g>
+      <circle cx="241" cy="160" r="3.4" class="d-knob"/>
+      <!-- valla -->
+      <g class="fence"><path d="M340 196 V176 M360 197 V177 M380 198 V178 M400 199 V180 M336 184 H404 M336 192 H404"/></g>
+      <!-- colina delantera y camino -->
+      <path class="h-front" d="M0 200 C90 194 160 192 260 194 C380 196 470 168 620 164 C780 160 900 196 1040 186 C1120 180 1170 176 1200 178 V210 H0Z"/>
+      <path class="h-path" d="M206 192 C200 197 186 204 166 210 H282 C262 204 246 197 238 192Z"/>
+      <g class="flowers">
+        <circle cx="104" cy="198" r="3.4"/><circle cx="116" cy="202" r="2.8"/><circle cx="128" cy="197" r="3"/>
+        <circle cx="296" cy="200" r="3.2"/><circle cx="310" cy="204" r="2.6"/><circle cx="322" cy="199" r="3"/>
+        <circle cx="880" cy="190" r="3"/><circle cx="894" cy="194" r="2.4"/><circle cx="1010" cy="190" r="3.2"/>
+      </g>
+    </svg>
