@@ -58,6 +58,7 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
 /* ---------- Estado ---------- */
 let current = [];   // fichas
 let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado }]
+let bodega = {};      // tabaco_id -> { tengo, probado, quiero } (solo la del usuario que ha entrado)
 let openId = null, lastFocus = null;
 
 function mapItem(r) {
@@ -125,6 +126,7 @@ async function cargarTodo() {
       }
       ctx.opiniones = true;
     } catch (e) { console.warn("Reseñas no disponibles", e); ctx.opiniones = false; }
+    await cargarBodega();
   } catch (e) {
     console.error(e);
     usarRespaldo("No se ha podido conectar con la base de datos. Mostrando la copia de respaldo.");
@@ -133,14 +135,14 @@ async function cargarTodo() {
 function usarRespaldo(aviso) {
   ctx.online = false;
   current = (window.DATOS_INICIALES || []).map(mapItem).filter((d) => d.nombre);
-  opiniones = {};
+  opiniones = {}; bodega = {}; ctx.bodega = false;
   ctx.aviso = aviso || "";
 }
 async function refrescar() {
   await cargarTodo();
   fillFilters(); render(); paintTop();
   if (!$("overlay").hidden && openId != null) {
-    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintTools(); paintVideo(); paintResenas(); }
+    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas(); }
   }
 }
 
@@ -364,6 +366,7 @@ function openDetail(id, desdeUrl) {
     <div class="art" id="d-art">${art(d)}</div>
     <div class="info">
       <div id="d-meta"></div>
+      <div id="d-bodega"></div>
       <div id="d-tools"></div>
     </div>
     <div class="sections">
@@ -376,7 +379,7 @@ function openDetail(id, desdeUrl) {
     </div>`);
   $("d-close").addEventListener("click", () => closeDetail());
   $("d-close").focus();
-  paintMeta(); paintTools(); paintVideo(); paintResenas();
+  paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas();
 }
 function closeDetail(desdeUrl) {
   $("overlay").hidden = true; openId = null;
@@ -814,6 +817,61 @@ async function abrirMisPropuestas() {
   box.innerHTML = data.map((p) => { const { titulo } = describirPropuesta(p); return `<p><strong>${ESTADO[p.estado]}</strong> · ${titulo} <span class="muted">· ${fecha(p.creado)}</span></p>`; }).join("");
 }
 
+/* ---------- Mi bodega ----------
+   Cada persona registrada marca sus tabacos: los tiene, los ha probado o quiere probarlos.
+   Es privada (reglas de 10_mi_bodega.sql). Si ese SQL aún no se ha ejecutado, la web sigue sin ella. */
+const BODEGA = [["tengo", "Lo tengo"], ["probado", "Lo he probado"], ["quiero", "Quiero probarlo"]];
+async function cargarBodega() {
+  bodega = {}; ctx.bodega = false;
+  if (!sb || !ctx.session) return;
+  try {
+    for (let desde = 0; ; desde += 1000) {
+      const { data, error } = await sb.from("bodega").select("tabaco_id,tengo,probado,quiero").range(desde, desde + 999);
+      if (error) throw error;
+      data.forEach((x) => { bodega[String(x.tabaco_id)] = { tengo: x.tengo, probado: x.probado, quiero: x.quiero }; });
+      if (data.length < 1000) break;
+    }
+    ctx.bodega = true;
+  } catch (e) { console.warn("Mi bodega no disponible", e); }
+}
+function paintBodega() {
+  const box = $("d-bodega"); if (!box || openId == null) return;
+  if (!ctx.online || !ctx.session || !ctx.bodega) { box.innerHTML = ""; return; }
+  const m = bodega[String(openId)] || {};
+  box.innerHTML = `<div class="btns bodega" role="group" aria-label="Mi bodega">
+      ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${m[k] ? "✓ " : ""}${t}</button>`).join("")}
+    </div><p class="msg" id="bd-msg" role="alert"></p>`;
+  box.querySelectorAll("[data-bod]").forEach((b) => b.addEventListener("click", () => marcarBodega(openId, b.dataset.bod)));
+}
+async function marcarBodega(id, campo) {
+  const k = String(id), antes = bodega[k] || { tengo: false, probado: false, quiero: false };
+  const nuevo = { ...antes, [campo]: !antes[campo] };
+  // Al probarlo, deja de estar en «quiero probarlo».
+  if (campo === "probado" && nuevo.probado) nuevo.quiero = false;
+  const vacio = !nuevo.tengo && !nuevo.probado && !nuevo.quiero;
+  const { error } = vacio
+    ? await sb.from("bodega").delete().eq("tabaco_id", k).eq("usuario", ctx.uid)
+    : await sb.from("bodega").upsert({ tabaco_id: k, usuario: ctx.uid, ...nuevo }, { onConflict: "usuario,tabaco_id" });
+  if (error) { const m = $("bd-msg"); if (m) m.textContent = "No se ha podido guardar en tu bodega."; return; }
+  if (vacio) delete bodega[k]; else bodega[k] = nuevo;
+  if (String(openId) === k) paintBodega();
+}
+function abrirBodega() {
+  const fila = (d) => `<li><button class="link" type="button" data-open="${esc(d.id)}">${esc(d.nombre)}</button> <span class="muted">· ${esc(d.marca)}${d.tipo ? " · " + esc(d.tipo) : ""}</span></li>`;
+  const grupos = BODEGA.map(([k, t]) => {
+    const items = current.filter((d) => (bodega[String(d.id)] || {})[k])
+      .sort((a, b) => a.marca.localeCompare(b.marca, "es") || a.nombre.localeCompare(b.nombre, "es"));
+    return `<section class="sec"><h3>${t} <span class="muted">(${items.length})</span></h3>
+      ${items.length ? `<ul class="bodega-lista">${items.map(fila).join("")}</ul>` : '<p class="muted">Nada todavía.</p>'}</section>`;
+  }).join("");
+  abrirPanel(`<div class="info adm"><h2 id="d-name">Mi bodega</h2>
+    <p class="muted">Marca tus tabacos desde su ficha. Solo tú ves esta lista.</p>
+    ${grupos}
+    <button class="close" id="d-close" type="button">Cerrar</button></div>`);
+  $("d-close").addEventListener("click", () => closeDetail());
+  $("panel").querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.open)));
+}
+
 /* ---------- Acceso (correo y contraseña) ---------- */
 function abrirLogin() {
   $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
@@ -920,6 +978,10 @@ function paintTop() {
     $("mp-open").addEventListener("click", abrirMisPropuestas);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else bar.innerHTML = "";
+  if (ctx.online && ctx.session && ctx.bodega) {
+    bar.insertAdjacentHTML("afterbegin", '<button class="btn" id="bd-open" type="button">Mi bodega</button>');
+    $("bd-open").addEventListener("click", abrirBodega);
+  }
 
   const st = $("status"), box = $("auth-box");
   if (!CONFIGURADO) { st.textContent = "Base de datos sin configurar: catálogo de solo lectura."; box.innerHTML = ""; return; }
