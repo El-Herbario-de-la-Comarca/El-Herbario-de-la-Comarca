@@ -50,7 +50,7 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
 
 /* ---------- Estado ---------- */
 let current = [];   // fichas
-let resenas = {};   // tabaco_id -> { headline, body, score }
+let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado }]
 let openId = null, lastFocus = null;
 
 function mapItem(r) {
@@ -64,15 +64,20 @@ function mapItem(r) {
     video: typeof r.video_id === "string" && /^[A-Za-z0-9_-]{11}$/.test(r.video_id) ? r.video_id : ""
   };
 }
-function mapResena(r) {
+function mapOpinion(r) {
   const score = Number.isInteger(r.puntuacion) && r.puntuacion >= 1 && r.puntuacion <= 5 ? r.puntuacion : 0;
-  return { headline: str(r.titular, 200), body: str(r.texto, 20000), score };
+  return { id: r.id, autor: String(r.autor || ""), firma: str(r.firma, 40), score, texto: str(r.texto, 5000),
+    creado: r.creado, actualizado: r.actualizado };
 }
 const findItem = (id) => current.find((d) => d.id === String(id));
-function officialFor(id) {
-  const o = resenas[String(id)];
-  return o && (o.headline || o.body) ? o : null;
+const opinionesDe = (id) => opiniones[String(id)] || [];
+/* Media y número de reseñas de un tabaco */
+function statsDe(id) {
+  const l = opinionesDe(id).filter((o) => o.score);
+  const n = l.length;
+  return { n, media: n ? l.reduce((a, o) => a + o.score, 0) / n : 0 };
 }
+const fmtMedia = (m) => m.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 function ytId(raw) {
   let url;
   try { url = new URL(/^https?:\/\//i.test(raw) ? raw : "https://" + raw); } catch (e) { return ""; }
@@ -98,12 +103,19 @@ async function cargarTodo() {
       filas.push(...data);
       if (data.length < 1000) break;
     }
-    const r = await sb.from("resenas").select("*");
-    if (r.error) throw r.error;
     current = filas.map(mapItem).filter((d) => d.nombre);
-    resenas = {};
-    r.data.forEach((x) => { resenas[String(x.tabaco_id)] = mapResena(x); });
     ctx.online = true;
+    // Reseñas de usuarios. Si aún no se ha ejecutado 07_resenas_usuarios.sql, la web sigue sin ellas.
+    opiniones = {};
+    try {
+      for (let desde = 0; ; desde += 1000) {
+        const { data, error } = await sb.from("opiniones").select("*").order("creado", { ascending: false }).range(desde, desde + 999);
+        if (error) throw error;
+        data.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).push(mapOpinion(x)); });
+        if (data.length < 1000) break;
+      }
+      ctx.opiniones = true;
+    } catch (e) { console.warn("Reseñas no disponibles", e); ctx.opiniones = false; }
   } catch (e) {
     console.error(e);
     usarRespaldo("No se ha podido conectar con la base de datos. Mostrando la copia de respaldo.");
@@ -112,14 +124,14 @@ async function cargarTodo() {
 function usarRespaldo(aviso) {
   ctx.online = false;
   current = (window.DATOS_INICIALES || []).map(mapItem).filter((d) => d.nombre);
-  resenas = {};
+  opiniones = {};
   ctx.aviso = aviso || "";
 }
 async function refrescar() {
   await cargarTodo();
   fillFilters(); render(); paintTop();
   if (!$("overlay").hidden && openId != null) {
-    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintTools(); paintVideo(); paintOfficial(); }
+    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintTools(); paintVideo(); paintResenas(); }
   }
 }
 
@@ -182,7 +194,7 @@ function setupFilters() {
 function render() {
   const q = norm(state.q.trim());
   const byName = (a, b) => a.nombre.localeCompare(b.nombre, "es");
-  const score = (d) => { const o = officialFor(d.id); return o ? o.score : 0; };
+  const score = (d) => statsDe(d.id).media;
   const list = current.filter((d) => {
     if (state.marca && d.marca !== state.marca) return false;
     if (state.tipo && d.tipo !== state.tipo) return false;
@@ -207,17 +219,17 @@ function render() {
     (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "");
   pintarPaginador(paginas);
   $("grid").innerHTML = list.length ? visibles.map((d) => {
-    const o = officialFor(d.id);
-    const rate = o ? (o.score ? `Puntuación del herbario: ${o.score} de 5` : "") : "Sin reseña todavía";
+    const st = statsDe(d.id);
+    const rate = st.n ? `${fmtMedia(st.media)} de 5 · ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}` : "Sin reseñas todavía";
     return `
     <button class="card" type="button" data-id="${esc(d.id)}" aria-label="Ver ficha de ${esc(d.nombre)}">
       <div class="art">${art(d)}</div>
       <div class="body">
         <span class="brandname">${esc(d.marca)}</span>
         <h2>${esc(d.nombre)}</h2>
-        <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${o ? '<span class="chip official">Reseña</span>' : ""}${d.video ? '<span class="chip">Vídeo</span>' : ""}</div>
+        <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${d.video ? '<span class="chip">Vídeo</span>' : ""}</div>
         ${d.fuerza ? `<div class="str">${pips(d.fuerza)}<span>${FUERZA[d.fuerza]}</span></div>` : ""}
-        ${rate ? `<span class="rate${o ? "" : " none"}">${rate}</span>` : ""}
+        ${st.n ? `<div class="str">${pips(Math.round(st.media))}<span>${rate}</span></div>` : `<span class="rate none">${rate}</span>`}
         <p>${esc(d.desc)}</p>
       </div>
     </button>`;
@@ -251,14 +263,14 @@ function irAPagina(n) {
 }
 
 /* ---------- Ficha de detalle ---------- */
-/* Puntuación del herbario en grande, junto al nombre de la ficha */
+/* Media de las reseñas en grande, junto al nombre de la ficha */
 function notaGrande(d) {
-  const o = officialFor(d.id);
-  if (!o || !o.score) return "";
-  return `<div class="nota" aria-label="Puntuación del herbario: ${o.score} de 5">
-      <span class="nota-n" aria-hidden="true">${o.score}<small>/5</small></span>
-      ${pips(o.score)}
-      <span class="nota-l" aria-hidden="true">${esc(VALORACION[o.score].replace(/^\d · /, ""))}</span>
+  const st = statsDe(d.id);
+  if (!st.n) return "";
+  return `<div class="nota" aria-label="Media de las reseñas: ${fmtMedia(st.media)} de 5, ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}">
+      <span class="nota-n" aria-hidden="true">${fmtMedia(st.media)}<small>/5</small></span>
+      ${pips(Math.round(st.media))}
+      <span class="nota-l" aria-hidden="true">${st.n} ${st.n === 1 ? "reseña" : "reseñas"}</span>
     </div>`;
 }
 function metaHTML(d) {
@@ -334,15 +346,15 @@ function openDetail(id, desdeUrl) {
     </div>
     <div class="sections">
       <section class="sec" id="d-video" aria-labelledby="vd-h" hidden></section>
-      <section class="sec" aria-labelledby="of-h">
-        <h3 id="of-h">Reseña del herbario</h3>
-        <div id="of-view"></div>
-        <div id="of-edit"></div>
+      <section class="sec" aria-labelledby="rv-h">
+        <h3 id="rv-h">Reseñas</h3>
+        <div id="rv-mine"></div>
+        <div class="reviews" id="rv-list"></div>
       </section>
     </div>`);
   $("d-close").addEventListener("click", () => closeDetail());
   $("d-close").focus();
-  paintMeta(); paintTools(); paintVideo(); paintOfficial();
+  paintMeta(); paintTools(); paintVideo(); paintResenas();
 }
 function closeDetail(desdeUrl) {
   $("overlay").hidden = true; openId = null;
@@ -577,25 +589,6 @@ async function saveEditor(ev, d) {
   }
 }
 
-/* ---------- Reseña del herbario (solo admin) ---------- */
-function paintOfficial() {
-  if (openId == null || !$("of-view")) return;
-  const o = officialFor(openId);
-  let h = "";
-  if (o) {
-    h += `<article class="ofc">`;
-    if (o.headline) h += `<h4>${esc(o.headline)}</h4>`;
-    if (o.score) h += `<div class="str">${pips(o.score)}<span>Puntuación: ${o.score} de 5</span></div>`;
-    if (o.body) h += `<div class="text">${paras(o.body)}</div>`;
-    h += `</article>`;
-  } else {
-    h += `<p class="muted">Todavía no hay reseña de este tabaco.</p>`;
-  }
-  if (esAdmin()) h += `<button class="btn" id="of-toggle" type="button">${o ? "Editar reseña" : "Escribir reseña"}</button>`;
-  $("of-view").innerHTML = h;
-  const t = $("of-toggle"); if (t) t.addEventListener("click", showOfficialForm);
-}
-
 /* ---------- Vídeo de la ficha (lo pone solo el administrador, desde «Editar ficha») ----------
    El reproductor de YouTube se carga embebido al abrir la ficha, sin reproducir solo.
    Se usa youtube-nocookie.com para que YouTube no guarde cookies hasta que se reproduce. */
@@ -611,42 +604,96 @@ function paintVideo() {
       referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
     <a class="yt-link" href="https://www.youtube.com/watch?v=${d.video}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a>`;
 }
-function showOfficialForm() {
-  const o = officialFor(openId) || { headline: "", body: "", score: 0 };
-  $("of-edit").innerHTML = `
-    <form class="f" id="of-form" novalidate>
-      <div class="field"><label for="of-headline">Titular</label><input id="of-headline" type="text" maxlength="200" value="${esc(o.headline)}" placeholder="Una frase que resuma la reseña"></div>
-      <div class="field"><label for="of-score">Puntuación</label>
-        <select id="of-score"><option value="0">Sin puntuación</option>${[1, 2, 3, 4, 5].map((n) => `<option value="${n}"${o.score === n ? " selected" : ""}>${VALORACION[n]}</option>`).join("")}</select></div>
-      <div class="field"><label for="of-body">Texto de la reseña</label><textarea id="of-body" style="min-height:200px" maxlength="20000" placeholder="Escribe la reseña. Una línea en blanco separa los párrafos.">${esc(o.body)}</textarea></div>
-      <p class="msg" id="of-msg" role="alert"></p>
+/* ---------- Reseñas de los usuarios ----------
+   Cualquier persona registrada deja una reseña por tabaco (puntuación y texto). Se publica al momento;
+   cada cual edita o borra la suya y el administrador puede borrar cualquiera. */
+function firmaGuardada() {
+  try { return localStorage.getItem("herbario-firma") || ""; } catch (e) { return ""; }
+}
+function paintResenas() {
+  const list = $("rv-list"), mine = $("rv-mine");
+  if (!list || !mine || openId == null) return;
+  const todas = opinionesDe(openId);
+  const mia = ctx.uid ? todas.find((o) => o.autor === ctx.uid) : null;
+  const resto = todas.filter((o) => o !== mia);
+
+  // Zona propia: escribir, o ver/editar la propia
+  if (!ctx.online || !ctx.opiniones) {
+    mine.innerHTML = ctx.online ? '<p class="muted">Las reseñas todavía no están disponibles.</p>' : "";
+  } else if (!ctx.session) {
+    mine.innerHTML = '<p class="muted"><button class="link" type="button" id="rv-login">Entra con tu cuenta</button> para escribir una reseña.</p>';
+    $("rv-login").addEventListener("click", abrirLogin);
+  } else if (mia) {
+    mine.innerHTML = `<div class="rev mine">${revHTML(mia, true)}</div>`;
+  } else {
+    mine.innerHTML = '<button class="btn primary" type="button" id="rv-new">Escribir una reseña</button>';
+    $("rv-new").addEventListener("click", () => formResena(null));
+  }
+  list.innerHTML = resto.length ? resto.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("")
+    : (mia ? "" : '<p class="muted">Todavía no hay reseñas de este tabaco.</p>');
+  [mine, list].forEach((box) => box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena)));
+}
+function revHTML(o, propia) {
+  const editado = o.actualizado && o.creado && new Date(o.actualizado) - new Date(o.creado) > 60000;
+  const acts = propia
+    ? `<div class="acts"><button class="link" type="button" data-rv="edit" data-id="${o.id}">Editar</button><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar</button></div>`
+    : (esAdmin() ? `<div class="acts"><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar (admin)</button></div>` : "");
+  return `<div class="head"><span class="who">${esc(o.firma)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
+      <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
+      <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
+    ${o.texto ? `<p>${esc(o.texto)}</p>` : ""}${acts}`;
+}
+async function accionResena(e) {
+  const b = e.currentTarget, id = Number(b.dataset.id);
+  const o = opinionesDe(openId).find((x) => x.id === id); if (!o) return;
+  if (b.dataset.rv === "edit") { formResena(o); return; }
+  if (!b.dataset.sure) { b.dataset.sure = "1"; b.textContent = "Pulsa otra vez para borrarla"; return; }
+  b.disabled = true;
+  const { error } = await sb.from("opiniones").delete().eq("id", id);
+  if (error) { b.disabled = false; b.textContent = "No se ha podido borrar"; return; }
+  refrescar();
+}
+function formResena(o) {
+  const v = o || { firma: firmaGuardada(), score: 0, texto: "" };
+  $("rv-mine").innerHTML = `
+    <form class="f" id="rv-form" novalidate>
+      <div class="two">
+        <div class="field"><label for="rv-score">Puntuación</label>
+          <select id="rv-score"><option value="0">Elige…</option>${[1, 2, 3, 4, 5].map((n) => `<option value="${n}"${v.score === n ? " selected" : ""}>${VALORACION[n]}</option>`).join("")}</select></div>
+        <div class="field"><label for="rv-firma">Firma (nombre que se muestra)</label><input id="rv-firma" type="text" maxlength="40" value="${esc(v.firma)}" autocomplete="nickname" placeholder="Por ejemplo, Bilbo de Bolsón"></div>
+      </div>
+      <div class="field"><label for="rv-texto">Tu reseña (opcional)</label><textarea id="rv-texto" maxlength="5000" placeholder="Aroma, sabor, cómo se fuma, con qué pipa…">${esc(v.texto)}</textarea></div>
+      <p class="muted">Se publica al momento con tu firma. Tu correo no se muestra.</p>
+      <p class="msg" id="rv-msg" role="alert"></p>
       <div class="btns">
-        <button class="btn primary" type="submit" id="of-save">Guardar reseña</button>
-        <button class="btn" type="button" id="of-cancel">Cancelar</button>
-        ${officialFor(openId) ? '<button class="btn danger" type="button" id="of-del">Quitar reseña</button>' : ""}
+        <button class="btn primary" type="submit" id="rv-save">${o ? "Guardar cambios" : "Publicar reseña"}</button>
+        <button class="btn" type="button" id="rv-cancel">Cancelar</button>
       </div>
     </form>`;
-  $("of-headline").focus();
-  $("of-cancel").addEventListener("click", () => { $("of-edit").innerHTML = ""; });
-  $("of-form").addEventListener("submit", saveOfficial);
-  const del = $("of-del");
-  if (del) del.addEventListener("click", async () => {
-    if (!del.dataset.sure) { del.dataset.sure = "1"; del.textContent = "Pulsa otra vez para quitarla"; return; }
-    const { error } = await sb.from("resenas").delete().eq("tabaco_id", openId);
-    if (error) { $("of-msg").textContent = "No se ha podido quitar la reseña. Inténtalo de nuevo."; return; }
-    $("of-edit").innerHTML = ""; refrescar();
-  });
+  $("rv-score").focus();
+  $("rv-cancel").addEventListener("click", paintResenas);
+  $("rv-form").addEventListener("submit", (ev) => guardarResena(ev, o));
 }
-async function saveOfficial(ev) {
+async function guardarResena(ev, o) {
   ev.preventDefault();
-  const msg = $("of-msg");
-  const titular = $("of-headline").value.trim(), texto = $("of-body").value.trim();
-  if (!texto) { msg.textContent = "Escribe el texto de la reseña."; return; }
-  const btn = $("of-save"); btn.disabled = true; msg.textContent = "";
-  const fila = { tabaco_id: openId, titular, texto, puntuacion: Number($("of-score").value) || 0, actualizado: new Date().toISOString() };
-  const { error } = await sb.from("resenas").upsert(fila);
-  if (error) { btn.disabled = false; msg.textContent = "No se ha podido guardar la reseña. Inténtalo de nuevo."; return; }
-  $("of-edit").innerHTML = ""; refrescar();
+  const msg = $("rv-msg"), btn = $("rv-save");
+  const puntuacion = Number($("rv-score").value) || 0;
+  const firma = $("rv-firma").value.trim().slice(0, 40);
+  const texto = $("rv-texto").value.trim().slice(0, 5000);
+  if (!puntuacion) { msg.textContent = "Elige una puntuación de 1 a 5."; return; }
+  if (firma.length < 2) { msg.textContent = "Escribe el nombre con el que quieres firmar (al menos 2 letras)."; return; }
+  btn.disabled = true; msg.textContent = "";
+  const r = o
+    ? await sb.from("opiniones").update({ firma, puntuacion, texto }).eq("id", o.id)
+    : await sb.from("opiniones").insert({ tabaco_id: openId, firma, puntuacion, texto });
+  if (r.error) {
+    btn.disabled = false;
+    msg.textContent = /duplicate|unique/i.test(r.error.message || "") ? "Ya tienes una reseña de este tabaco; edítala en lugar de crear otra."
+      : "No se ha podido guardar la reseña. Comprueba la conexión e inténtalo de nuevo.";
+    return;
+  }
+  try { localStorage.setItem("herbario-firma", firma); } catch (e) {}
+  await refrescar();
 }
 
 /* ---------- Panel de revisión y usuarios (solo admin) ---------- */
