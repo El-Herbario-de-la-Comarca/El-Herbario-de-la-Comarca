@@ -1,13 +1,8 @@
 Mac Baren | 420 Supreme Choice ; 424 Classic Flake
 Amphora | 405 Mellow Blend
 Robert McConnell | 1028 Fancy Selection No. 1 ; 1033 Old London Pebble Cut
-Davidoff | 1086 Red Mixture ; 1089 Discovery Brazil Virginia ; 1090 Discovery Malawi Dark Cavendish
-Kopp | 1091 Caribbean Blue Bellamy ; 1092 Caribbean Blue Drake ; 1093 Caribbean Blue Graham ; 1094 Caribbean Blue Rackham ; 1095 Caribbean Blue Seegar ; 1096 Caribbean Blue Wynne
-Captain Black | 1097 Cherry ; 1098 Dark ; 1099 Gold ; 1100 Original ; 1101 Platinum ; 1102 Royal
-Clan | 1103 Original
-Erik Stokkebye | 1104 4th Generation 1855 ; 1105 4th Generation 1882 Founder's Blend ; 1106 4th Generation 1897 ; 1107 4th Generation 1931 Flake ; 1108 4th Generation 1957 ; 1109 4th Generation 1982 ; 1110 4th Generation 2012 Anniversary Blend ; 1111 4th Generation Max Erik 1989 ; 1112 4 Seasons Spring Mixture ; 1113 4 Seasons Summer Mixture ; 1114 4 Seasons Autumn Mixture ; 1115 4 Seasons Winter Mixture
-Orlik | 1116 Golden Sliced ; 1117 Club Mixture
-Stanwell | 1118 Classic ; 1119 Green & Indigo ; 1120 Jubilee ; 1121 Melange ; 1122 Sungold
+Davidoff | 1086 Red Mixture
+Stanwell | 1118 Classic ; 1119 Green & Indigo ; 1120 Jubilee ; 1122 Sungold
 Escudo | 1123 Navy Deluxe
 Lane Limited | 1124 1-Q ; 1125 BCA ; 1126 Black Raspberry ; 1127 BL/WB ; 1128 Buttered Rum ; 1129 Hazelnut ; 1130 HG-2000 ; 1131 HGL ; 1132 HS-3 ; 1133 LL-7 ; 1134 MV-1000 ; 1135 RLP-6 ; 1136 TK-6 ; 1137 Very Cherry
 Planta | 1138 Original Danish Black V Mixture ; 1139 Presbyterian Mixture
@@ -24,4 +19,4 @@ Sir Walter Raleigh | 1223 Aromatic ; 1224 Regular
 Prince Albert | 1225 Prince Albert
 Half and Half | 1226 Half and Half
 Carter Hall | 1227 Carter Hall
-FALTAN 118
+FALTAN 88
