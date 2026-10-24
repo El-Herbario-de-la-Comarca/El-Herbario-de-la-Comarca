@@ -2138,5 +2138,290 @@
 "Family": "English",
 "Components": "Black Cavendish, Latakia, Orientals, Virginia",
 "src": "tobaccoreviews (Scottish)"
+},
+"1045": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Virginia",
+"src": "tobaccoreviews (Aromatic; esencias florales)"
+},
+"1051": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Straight Virginia)"
+},
+"1025": {
+"Family": "Virginia",
+"Components": "Perique, Virginia",
+"src": "tobaccoreviews (Virginia/Perique)"
+},
+"1026": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Virginia",
+"src": "tobaccoreviews (Aromatic; tonka, ron, vainilla)"
+},
+"1029": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Dark Fired Kentucky, Perique, Virginia",
+"src": "tobaccoreviews (Aromatic)"
+},
+"1050": {
+"Family": "English",
+"Components": "Black Cavendish, Latakia, Orientals, Virginia",
+"src": "tobaccoreviews (Scottish; Celebrated Sovereign)"
+},
+"1052": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Cigar, Virginia",
+"src": "tobaccoreviews (Cigar Leaf Based; afrutado)"
+},
+"1027": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Virginia",
+"src": "tobaccoreviews (Aromatic; Cruise Line Original)"
+},
+"1058": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Straight Virginia)"
+},
+"1070": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"271": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley",
+"src": "smokingpipes-webfetch"
+},
+"276": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"277": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"278": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews (Aromatic)"
+},
+"281": {
+"Family": "Burley",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"282": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"347": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Orientals, Black Cavendish",
+"src": "smokingpipes (Cherry Ambrosia = Red Ambrosia)"
+},
+"348": {
+"Family": "Aromatic",
+"Components": "Burley, Cavendish",
+"src": "tobaccoreviews (Aromatic)"
+},
+"416": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"417": {
+"Family": "English Aromatic",
+"Components": "Virginia, Latakia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"418": {
+"Family": "Burley",
+"Components": "Burley, Virginia",
+"src": "tobaccoreviews (Burley Based)"
+},
+"419": {
+"Family": "Virginia/Burley",
+"Components": "Burley, Cavendish, Virginia",
+"src": "tobaccoreviews"
+},
+"421": {
+"Family": "Aromatic",
+"Components": "",
+"src": "cgarsltd (Aromatic Choice)"
+},
+"422": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews"
+},
+"423": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "tobaccoreviews (Classic Amber)"
+},
+"425": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews (Vanilla Roll Cake)"
+},
+"426": {
+"Family": "Virginia",
+"Components": "Virginia, Dark Fired Kentucky, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"427": {
+"Family": "English Aromatic",
+"Components": "Virginia, Latakia, Burley",
+"src": "smokingpipes-webfetch"
+},
+"428": {
+"Family": "Virginia",
+"Components": "Virginia, Latakia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"429": {
+"Family": "English",
+"Components": "Virginia, Latakia, Burley, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1148": {
+"Family": "English",
+"Components": "Virginia, Latakia, Perique, Dark Fired Kentucky, Orientals",
+"src": "smokingpipes (Balkan en el nombre)"
+},
+"1149": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes (Buddies = Bi-Bo)"
+},
+"1151": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1152": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1153": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1154": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1155": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1156": {
+"Family": "English Aromatic",
+"Components": "Virginia, Latakia, Dark Fired Kentucky",
+"src": "smokingpipes-webfetch"
+},
+"1157": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1158": {
+"Family": "English",
+"Components": "Virginia, Latakia, Perique, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1159": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1160": {
+"Family": "English",
+"Components": "Virginia, Latakia, Burley, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1161": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1162": {
+"Family": "Virginia",
+"Components": "Virginia, Perique",
+"src": "smokingpipes-webfetch"
+},
+"1163": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Straight Virginia)"
+},
+"1164": {
+"Family": "Aromatic",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1165": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1167": {
+"Family": "Virginia",
+"Components": "Virginia, Perique",
+"src": "smokingpipes-webfetch"
+},
+"1168": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1169": {
+"Family": "Virginia",
+"Components": "Virginia, Perique",
+"src": "smokingpipes-webfetch"
+},
+"1186": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes (TR añade Burley)"
+},
+"1187": {
+"Family": "Aromatic",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1191": {
+"Family": "Virginia",
+"Components": "Virginia, Perique",
+"src": "smokingpipes-webfetch"
+},
+"1194": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1195": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1196": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1201": {
+"Family": "Burley",
+"Components": "Virginia, Burley",
+"src": "smokingpipes-webfetch"
 }
 }
