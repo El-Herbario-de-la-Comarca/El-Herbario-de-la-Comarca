@@ -21,16 +21,16 @@
   });
 })();
 
-// Estilo de la mezcla (se guarda en la columna "tipo") y hojas que lleva.
+// Mezcla (se guarda en la columna "tipo") y hojas que lleva.
 const TIPOS = {
-  "Inglés": "#2F3E4E", "Oriental": "#8C3B2A", "Virginia": "#B8862B", "Virginia-Perique": "#7A5A1E",
-  "Burley": "#6B4A2F", "Americano": "#4F5E3A", "Aromático": "#7B2D4B", "Componente": "#5B6B73"
+  "Inglesa": "#2F3E4E", "Virginia": "#B8862B", "Virginia-Perique": "#7A5A1E", "Burley": "#6B4A2F",
+  "Lakeland": "#3F6E5A", "Aromática": "#7B2D4B", "Sin mezclar": "#5B6B73"
 };
 const ESTILOS = Object.keys(TIPOS);
 const HOJAS = ["Virginia", "Burley", "Oriental", "Latakia", "Perique", "Kentucky", "Cavendish", "Cigarro"];
 const FUERZA = ["Sin datos", "Muy suave", "Suave", "Media", "Fuerte", "Muy fuerte"];
 const VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"];
-const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Estilo"], ["hojas", "Hojas"], ["corte", "Corte"], ["fuerza", "Fuerza"],
+const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Mezcla"], ["hojas", "Hojas"], ["corte", "Corte"], ["fuerza", "Fuerza"],
   ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"]];
 
 const $ = (id) => document.getElementById(id);
@@ -257,7 +257,7 @@ function metaHTML(d) {
       <h2 id="d-name">${esc(d.nombre)}</h2>
       ${d.desc ? `<p>${esc(d.desc)}</p>` : ""}
       <dl>
-        ${d.tipo ? `<dt>Estilo</dt><dd>${esc(d.tipo)}</dd>` : ""}
+        ${d.tipo ? `<dt>Mezcla</dt><dd>${esc(d.tipo)}</dd>` : ""}
         ${d.hojas.length ? `<dt>Hojas</dt><dd><span class="meta">${d.hojas.map((h) => `<span class="chip">${esc(h)}</span>`).join("")}</span></dd>` : ""}
         ${d.corte ? `<dt>Corte</dt><dd>${esc(d.corte)}</dd>` : ""}
         <dt>Fuerza</dt><dd><span class="str">${d.fuerza ? pips(d.fuerza) : ""}<span>${FUERZA[d.fuerza]}</span></span></dd>
@@ -430,7 +430,7 @@ function openEditor(id) {
         <div class="field"><label for="ed-marca">Marca</label><input id="ed-marca" type="text" maxlength="80" list="dl-marca" value="${esc(v.marca)}" autocomplete="off"></div>
       </div>
       <div class="two">
-        <div class="field"><label for="ed-tipo">Estilo</label><select id="ed-tipo"><option value="">Sin datos</option>${estilos.map((e) => `<option value="${esc(e)}"${v.tipo === e ? " selected" : ""}>${esc(e)}</option>`).join("")}</select></div>
+        <div class="field"><label for="ed-tipo">Mezcla</label><select id="ed-tipo"><option value="">Sin datos</option>${estilos.map((e) => `<option value="${esc(e)}"${v.tipo === e ? " selected" : ""}>${esc(e)}</option>`).join("")}</select></div>
         <div class="field"><label for="ed-corte">Corte</label><input id="ed-corte" type="text" maxlength="40" list="dl-corte" value="${esc(v.corte)}" autocomplete="off"></div>
       </div>
       <div class="two">

@@ -1,8 +1,8 @@
 -- =====================================================================
--- 04 · Estilo y hojas
+-- 04 · Mezcla y hojas
 -- Separa el antiguo "tipo" en dos datos:
---   · Estilo (se sigue guardando en la columna "tipo"): Inglés, Oriental, Virginia,
---     Virginia-Perique, Burley, Americano, Aromático o Componente.
+--   · Mezcla (se sigue guardando en la columna "tipo"): Inglesa, Virginia, Virginia-Perique,
+--     Burley, Lakeland, Aromática o Sin mezclar.
 --   · Hojas (columna nueva "hojas"): Virginia, Burley, Oriental, Latakia, Perique,
 --     Kentucky, Cavendish, Cigarro.
 -- Ejecútalo una sola vez en Supabase → SQL Editor. Se puede repetir sin romper nada.

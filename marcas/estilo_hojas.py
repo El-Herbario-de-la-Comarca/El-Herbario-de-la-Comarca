@@ -9,17 +9,17 @@
 import json, re, sys, pathlib
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
-ESTILOS = ["Inglés", "Oriental", "Virginia", "Virginia-Perique", "Burley", "Americano", "Aromático", "Componente"]
+ESTILOS = ["Inglesa", "Virginia", "Virginia-Perique", "Burley", "Lakeland", "Aromática", "Sin mezclar"]
 HOJAS = ["Virginia", "Burley", "Oriental", "Latakia", "Perique", "Kentucky", "Cavendish", "Cigarro"]
 
 FAMILIA = {
-    "english": "Inglés", "balkan": "Inglés", "scottish": "Inglés",
-    "oriental": "Oriental", "turkish": "Oriental", "oriental/turkish": "Oriental",
+    "english": "Inglesa", "balkan": "Inglesa", "scottish": "Inglesa",
+    "oriental": "Virginia", "turkish": "Virginia", "oriental/turkish": "Virginia",
     "virginia": "Virginia", "virginia/perique": "Virginia-Perique", "virginia perique": "Virginia-Perique", "vaper": "Virginia-Perique",
     "burley": "Burley", "kentucky": "Burley", "virginia/burley": "Burley", "virginia burley": "Burley",
-    "american": "Americano",
-    "aromatic": "Aromático", "english aromatic": "Aromático", "aromatic english": "Aromático",
-    "blending": "Componente", "blending tobacco": "Componente", "component": "Componente",
+    "american": "Burley",
+    "aromatic": "Aromática", "english aromatic": "Aromática", "aromatic english": "Aromática",
+    "blending": "Sin mezclar", "blending tobacco": "Sin mezclar", "component": "Sin mezclar",
 }
 REGLAS_HOJAS = [
     ("Virginia", r"virginia"),
@@ -42,11 +42,11 @@ def estilo_de(familia, hojas):
     f = re.sub(r"\s+", " ", (familia or "").lower()).strip()
     e = FAMILIA.get(f)
     if e is None and f:
-        if "aromatic" in f: e = "Aromático"
-        elif "english" in f or "balkan" in f: e = "Inglés"
+        if "aromatic" in f: e = "Aromática"
+        elif "english" in f or "balkan" in f: e = "Inglesa"
         elif "perique" in f: e = "Virginia-Perique"
-        elif "oriental" in f or "turkish" in f: e = "Oriental"
-        elif "blend" in f: e = "Componente"
+        elif "oriental" in f or "turkish" in f: e = "Virginia"
+        elif "blend" in f: e = "Sin mezclar"
     if e == "Virginia" and "Perique" in hojas:
         e = "Virginia-Perique"
     return e
