@@ -187,3 +187,15 @@
 @keyframes parpadeo { from { opacity: 1; } to { opacity: .35; } }
 @keyframes vela { from { opacity: 1; } to { opacity: .7; } }
 @keyframes nieve { from { transform: translate(0, 0); } to { transform: translate(12px, 230px); } }
+
+/* Cabecera un 20 % más baja en móviles. */
+@media (max-width: 600px) {
+  .comarca .hero { padding-top: 22px; }
+  .comarca .hero-top { gap: 12px; }
+  .comarca .logo { width: 68px; }
+  .comarca .hero-text { gap: 4px; }
+  .comarca .eyebrow { font-size: 0.82rem; }
+  .comarca .hero h1 { font-size: 1.55rem; }
+  .comarca .hero .tag { font-size: 0.85rem; }
+  .comarca .hills.hole { height: 96px; margin-top: 4px; }
+}
