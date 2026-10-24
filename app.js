@@ -582,30 +582,19 @@ function paintOfficial() {
 }
 
 /* ---------- Vídeo de la ficha (lo pone solo el administrador, desde «Editar ficha») ----------
-   YouTube no se carga hasta que se pulsa (sin conexiones a Google ni cookies al abrir la ficha),
-   y luego se usa youtube-nocookie.com. */
+   El reproductor de YouTube se carga embebido al abrir la ficha, sin reproducir solo.
+   Se usa youtube-nocookie.com para que YouTube no guarde cookies hasta que se reproduce. */
 function paintVideo() {
   const box = $("d-video"); if (!box) return;
   const d = findItem(openId);
-  if (!d || !d.video) { box.hidden = true; box.innerHTML = ""; return; }
-  box.hidden = false;
+  if (!d || !/^[A-Za-z0-9_-]{11}$/.test(d.video || "")) { box.hidden = true; box.innerHTML = ""; return; }
+  if (box.dataset.video === d.video && !box.hidden) return;   // no recargar el vídeo si ya está puesto
+  box.hidden = false; box.dataset.video = d.video;
   box.innerHTML = `<h3 id="vd-h">Vídeo</h3>
-    <div class="yt" id="yt-box">
-      <button class="yt-cover" id="yt-play" type="button" data-id="${d.video}">
-        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 1.5v17l15-8.5z"/></svg></span>
-        <strong>Ver el vídeo</strong>
-        <small>Al pulsar se carga el reproductor de YouTube</small>
-      </button>
-    </div>
+    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/${d.video}?rel=0"
+      title="Vídeo de ${esc(d.nombre)}" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
     <a class="yt-link" href="https://www.youtube.com/watch?v=${d.video}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a>`;
-  const yp = $("yt-play");
-  yp.addEventListener("click", () => {
-    const id = yp.dataset.id;
-    if (!/^[A-Za-z0-9_-]{11}$/.test(id)) return;
-    $("yt-box").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0"
-      title="Vídeo de ${esc(d.nombre)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-  });
 }
 function showOfficialForm() {
   const o = officialFor(openId) || { headline: "", body: "", score: 0 };
