@@ -46,7 +46,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .field { display: grid; gap: 4px; min-width: 0; flex: 1 1 150px; }
 .field.search { flex: 2 1 260px; }
 @media (min-width: 1100px) {
-  .bar .row { display: grid; grid-template-columns: minmax(0, 2.2fr) repeat(7, minmax(0, 1fr)); }
+  .bar .row { display: grid; grid-template-columns: minmax(0, 2.2fr) repeat(6, minmax(0, 1fr)); }
 }
 label { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 input[type="search"], input[type="text"], input[type="url"], input[type="email"], input[type="password"], select, textarea {

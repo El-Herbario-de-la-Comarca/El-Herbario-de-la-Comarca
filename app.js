@@ -150,7 +150,7 @@ function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i 
 
 /* ---------- Catálogo ---------- */
 const POR_PAGINA = 20;
-const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 };
+const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1 };
 const FILTERS = [["f-marca", "marca", "Todas"], ["f-corte", "corte", "Todos"], ["f-pais", "pais", "Todos"]];
 function fillSelect(id, label, values) {
   $(id).innerHTML = `<option value="">${label}</option>` + values.map((v) => `<option value="${esc(v.value)}">${esc(v.text)}</option>`).join("");
@@ -167,17 +167,15 @@ function fillFilters() {
   $("f-tipo").value = state.tipo; if ($("f-tipo").value !== state.tipo) state.tipo = $("f-tipo").value;
   fillSelect("f-hoja", "Cualquiera", orden(HOJAS, "hojas").map((v) => ({ value: v, text: v })));
   $("f-hoja").value = state.hoja; if ($("f-hoja").value !== state.hoja) state.hoja = $("f-hoja").value;
-  fillSelect("f-fuerza", "Cualquiera", [1, 2, 3, 4, 5].map((n) => ({ value: String(n), text: FUERZA[n] })));
-  $("f-fuerza").value = state.fuerza;
 }
 function setupFilters() {
   $("q").addEventListener("input", (e) => { state.q = e.target.value; state.page = 1; render(); });
-  [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-fuerza", "fuerza"], ["f-pais", "pais"], ["sort", "sort"]].forEach(([id, k]) => {
+  [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-pais", "pais"], ["sort", "sort"]].forEach(([id, k]) => {
     $(id).addEventListener("change", (e) => { state[k] = e.target.value; state.page = 1; render(); });
   });
   $("reset").addEventListener("click", () => {
-    Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 });
-    $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-fuerza", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
+    Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1 });
+    $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
     render();
   });
 }
@@ -191,7 +189,6 @@ function render() {
     if (state.hoja && !d.hojas.includes(state.hoja)) return false;
     if (state.corte && d.corte !== state.corte) return false;
     if (state.pais && d.pais !== state.pais) return false;
-    if (state.fuerza && String(d.fuerza) !== state.fuerza) return false;
     if (q) {
       const hay = norm([d.nombre, d.marca, d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc].join(" "));
       return q.split(/\s+/).every((w) => hay.includes(w));
