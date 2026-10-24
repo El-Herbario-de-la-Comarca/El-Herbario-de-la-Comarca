@@ -119,16 +119,28 @@
 :root.comarca { --smoke: rgb(120 104 82 / .32); --ring: rgb(110 95 72 / .55); }
 :root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); }
 @media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); } }
-.hole .ring ellipse { fill: none; stroke: var(--ring); stroke-width: 3.2; opacity: 0; }
+.hole .ring path, .hole .ship path { fill: none; stroke: var(--ring); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.hole .ring path { stroke-linecap: butt; }
+.hole .ship path { stroke-width: 1.8; fill: color-mix(in srgb, var(--ring) 25%, transparent); }
+.hole .ring, .hole .ship { opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .hole .ring ellipse { animation: anillo 10s ease-out 4s infinite; transform-box: fill-box; transform-origin: center; }
-  .hole .ring ellipse:nth-child(2) { animation-delay: 5.1s; }
-  .hole .ring ellipse:nth-child(3) { animation-delay: 6.2s; }
+  .hole .ring, .hole .ship { transform-box: fill-box; transform-origin: center; animation: 10s 4s infinite; }
+  .hole .ring { animation-name: anillo; animation-timing-function: ease-out; }
+  .hole .ship { animation-name: barco; animation-timing-function: linear; }
 }
 @keyframes anillo {
-  0%   { opacity: 0;   transform: translate(0, 6px) scale(.35, .3); }
-  4%   { opacity: .95; transform: translate(4px, -4px) scale(.6, .55); }
-  35%  { opacity: .8;  transform: translate(110px, -24px) scale(1.15, 1.05); }
-  85%  { opacity: 0;   transform: translate(300px, -40px) scale(1.9, 1.6); stroke-width: 1.4; }
-  100% { opacity: 0;   transform: translate(300px, -40px) scale(1.9, 1.6); }
+  0%   { opacity: 0;   transform: translate(0, 6px) scale(.3); }
+  5%   { opacity: .95; transform: translate(6px, -6px) scale(.6); }
+  30%  { opacity: .85; transform: translate(150px, -30px) scale(1.5); }
+  58%  { opacity: .85; transform: translate(156px, -31px) scale(1.55); }
+  72%  { opacity: 0;   transform: translate(166px, -34px) scale(2); }
+  100% { opacity: 0;   transform: translate(166px, -34px) scale(2); }
+}
+@keyframes barco {
+  0%, 33% { opacity: 0;  transform: translate(0, 4px) scale(.4); }
+  37%  { opacity: .9; transform: translate(14px, -8px) scale(.6); }
+  54%  { opacity: .9; transform: translate(152px, -29px) scale(1); }
+  66%  { opacity: .75; transform: translate(250px, -36px) scale(1.05); }
+  78%  { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
+  100% { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
 }
