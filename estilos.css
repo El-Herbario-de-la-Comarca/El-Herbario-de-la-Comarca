@@ -45,8 +45,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
 .field { display: grid; gap: 4px; min-width: 0; flex: 1 1 150px; }
 .field.search { flex: 2 1 260px; }
-@media (min-width: 1024px) {
-  .bar .row { display: grid; grid-template-columns: minmax(0, 2.5fr) repeat(6, minmax(0, 1fr)); }
+@media (min-width: 1100px) {
+  .bar .row { display: grid; grid-template-columns: minmax(0, 2.2fr) repeat(7, minmax(0, 1fr)); }
 }
 label { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 input[type="search"], input[type="text"], input[type="url"], input[type="email"], input[type="password"], select, textarea {
@@ -195,3 +195,9 @@ table.usuarios select { min-width: 110px; }
 .pager .btn[disabled]:hover { border-color: var(--line); }
 .pager .gap { color: var(--muted); padding-inline: 4px; }
 @media (max-width: 480px) { .pager .txt { display: none; } }
+
+/* ---------- Hojas en el editor ---------- */
+fieldset.hojas-ed { border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px 12px; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; min-width: 0; }
+fieldset.hojas-ed legend { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 4px; }
+label.check { font-family: var(--body); font-size: 0.95rem; letter-spacing: 0; text-transform: none; color: var(--fg); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; min-height: 32px; }
+label.check input { width: 18px; height: 18px; accent-color: var(--accent); }

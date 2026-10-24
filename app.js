@@ -21,14 +21,16 @@
   });
 })();
 
+// Estilo de la mezcla (se guarda en la columna "tipo") y hojas que lleva.
 const TIPOS = {
-  "Virginia": "#B8862B", "Burley": "#6B4A2F", "Aromático": "#7B2D4B",
-  "Inglés": "#2F3E4E", "Oriental": "#8C3B2A", "Cavendish": "#4A3A6B", "Para mezclas": "#5B6B73"
+  "Inglés": "#2F3E4E", "Oriental": "#8C3B2A", "Virginia": "#B8862B", "Virginia-Perique": "#7A5A1E",
+  "Burley": "#6B4A2F", "Americano": "#4F5E3A", "Aromático": "#7B2D4B", "Componente": "#5B6B73"
 };
-const TIPOS_SUGERIDOS = ["Virginia", "Burley", "Aromático", "Inglés", "Oriental", "Cavendish", "Para mezclas"];
+const ESTILOS = Object.keys(TIPOS);
+const HOJAS = ["Virginia", "Burley", "Oriental", "Latakia", "Perique", "Kentucky", "Cavendish", "Cigarro"];
 const FUERZA = ["Sin datos", "Muy suave", "Suave", "Media", "Fuerte", "Muy fuerte"];
 const VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"];
-const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Tipo"], ["corte", "Corte"], ["fuerza", "Fuerza"],
+const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Estilo"], ["hojas", "Hojas"], ["corte", "Corte"], ["fuerza", "Fuerza"],
   ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"]];
 
 const $ = (id) => document.getElementById(id);
@@ -54,10 +56,11 @@ let openId = null, lastFocus = null;
 function mapItem(r) {
   const notas = Array.isArray(r.notas) ? r.notas.filter((n) => typeof n === "string" && n.trim()).map((n) => n.trim().slice(0, 40)).slice(0, 12) : [];
   const f = Number(r.fuerza);
+  const hojas = Array.isArray(r.hojas) ? HOJAS.filter((h) => r.hojas.includes(h)) : [];
   return {
     id: String(r.id), nombre: str(r.nombre, 120), marca: str(r.marca, 80), tipo: str(r.tipo, 40), corte: str(r.corte, 40),
     pais: str(r.pais, 60), formato: str(r.formato, 80), desc: str(r.descripcion, 2000),
-    fuerza: Number.isInteger(f) && f >= 1 && f <= 5 ? f : 0, notas, foto: str(r.foto, 500)
+    fuerza: Number.isInteger(f) && f >= 1 && f <= 5 ? f : 0, notas, hojas, foto: str(r.foto, 500)
   };
 }
 function mapResena(r) {
@@ -147,8 +150,8 @@ function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i 
 
 /* ---------- Catálogo ---------- */
 const POR_PAGINA = 20;
-const state = { q: "", marca: "", tipo: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 };
-const FILTERS = [["f-marca", "marca", "Todas"], ["f-tipo", "tipo", "Todos"], ["f-corte", "corte", "Todos"], ["f-pais", "pais", "Todos"]];
+const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 };
+const FILTERS = [["f-marca", "marca", "Todas"], ["f-corte", "corte", "Todos"], ["f-pais", "pais", "Todos"]];
 function fillSelect(id, label, values) {
   $(id).innerHTML = `<option value="">${label}</option>` + values.map((v) => `<option value="${esc(v.value)}">${esc(v.text)}</option>`).join("");
 }
@@ -159,17 +162,22 @@ function fillFilters() {
     $(id).value = state[key];
     if ($(id).value !== state[key]) state[key] = $(id).value;
   });
+  const orden = (lista, k) => lista.filter((v) => current.some((d) => (k === "hojas" ? d.hojas.includes(v) : d[k] === v)));
+  fillSelect("f-tipo", "Todos", orden(ESTILOS, "tipo").map((v) => ({ value: v, text: v })));
+  $("f-tipo").value = state.tipo; if ($("f-tipo").value !== state.tipo) state.tipo = $("f-tipo").value;
+  fillSelect("f-hoja", "Cualquiera", orden(HOJAS, "hojas").map((v) => ({ value: v, text: v })));
+  $("f-hoja").value = state.hoja; if ($("f-hoja").value !== state.hoja) state.hoja = $("f-hoja").value;
   fillSelect("f-fuerza", "Cualquiera", [1, 2, 3, 4, 5].map((n) => ({ value: String(n), text: FUERZA[n] })));
   $("f-fuerza").value = state.fuerza;
 }
 function setupFilters() {
   $("q").addEventListener("input", (e) => { state.q = e.target.value; state.page = 1; render(); });
-  [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-corte", "corte"], ["f-fuerza", "fuerza"], ["f-pais", "pais"], ["sort", "sort"]].forEach(([id, k]) => {
+  [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-fuerza", "fuerza"], ["f-pais", "pais"], ["sort", "sort"]].forEach(([id, k]) => {
     $(id).addEventListener("change", (e) => { state[k] = e.target.value; state.page = 1; render(); });
   });
   $("reset").addEventListener("click", () => {
-    Object.assign(state, { q: "", marca: "", tipo: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 });
-    $("q").value = ""; ["f-marca", "f-tipo", "f-corte", "f-fuerza", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
+    Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", fuerza: "", pais: "", sort: "nombre", page: 1 });
+    $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-fuerza", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
     render();
   });
 }
@@ -180,11 +188,12 @@ function render() {
   const list = current.filter((d) => {
     if (state.marca && d.marca !== state.marca) return false;
     if (state.tipo && d.tipo !== state.tipo) return false;
+    if (state.hoja && !d.hojas.includes(state.hoja)) return false;
     if (state.corte && d.corte !== state.corte) return false;
     if (state.pais && d.pais !== state.pais) return false;
     if (state.fuerza && String(d.fuerza) !== state.fuerza) return false;
     if (q) {
-      const hay = norm([d.nombre, d.marca, d.tipo, d.corte, d.pais, d.notas.join(" "), d.desc].join(" "));
+      const hay = norm([d.nombre, d.marca, d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc].join(" "));
       return q.split(/\s+/).every((w) => hay.includes(w));
     }
     return true;
@@ -252,7 +261,8 @@ function metaHTML(d) {
       <h2 id="d-name">${esc(d.nombre)}</h2>
       ${d.desc ? `<p>${esc(d.desc)}</p>` : ""}
       <dl>
-        ${d.tipo ? `<dt>Tipo</dt><dd>${esc(d.tipo)}</dd>` : ""}
+        ${d.tipo ? `<dt>Estilo</dt><dd>${esc(d.tipo)}</dd>` : ""}
+        ${d.hojas.length ? `<dt>Hojas</dt><dd><span class="meta">${d.hojas.map((h) => `<span class="chip">${esc(h)}</span>`).join("")}</span></dd>` : ""}
         ${d.corte ? `<dt>Corte</dt><dd>${esc(d.corte)}</dd>` : ""}
         <dt>Fuerza</dt><dd><span class="str">${d.fuerza ? pips(d.fuerza) : ""}<span>${FUERZA[d.fuerza]}</span></span></dd>
         ${d.pais ? `<dt>Origen</dt><dd>${esc(d.pais)}</dd>` : ""}
@@ -410,10 +420,10 @@ function openEditor(id) {
   if (id && !d) return;
   const admin = esAdmin();
   openId = id || null;
-  const v = d || { nombre: "", marca: "", tipo: "", corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "" };
+  const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "" };
   const uniq = (k) => [...new Set(current.map((x) => x[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   const dl = (name, vals) => `<datalist id="${name}">${vals.map((x) => `<option value="${esc(x)}">`).join("")}</datalist>`;
-  const tipos = [...new Set([...TIPOS_SUGERIDOS, ...uniq("tipo")])];
+  const estilos = v.tipo && !ESTILOS.includes(v.tipo) ? [...ESTILOS, v.tipo] : ESTILOS;
   const titulo = admin ? (d ? "Editar ficha" : "Añadir tabaco") : (d ? "Proponer cambios" : "Proponer tabaco nuevo");
   abrirPanel(`
     <form class="f editor" id="ed-form" novalidate>
@@ -424,7 +434,7 @@ function openEditor(id) {
         <div class="field"><label for="ed-marca">Marca</label><input id="ed-marca" type="text" maxlength="80" list="dl-marca" value="${esc(v.marca)}" autocomplete="off"></div>
       </div>
       <div class="two">
-        <div class="field"><label for="ed-tipo">Tipo</label><input id="ed-tipo" type="text" maxlength="40" list="dl-tipo" value="${esc(v.tipo)}" autocomplete="off"></div>
+        <div class="field"><label for="ed-tipo">Estilo</label><select id="ed-tipo"><option value="">Sin datos</option>${estilos.map((e) => `<option value="${esc(e)}"${v.tipo === e ? " selected" : ""}>${esc(e)}</option>`).join("")}</select></div>
         <div class="field"><label for="ed-corte">Corte</label><input id="ed-corte" type="text" maxlength="40" list="dl-corte" value="${esc(v.corte)}" autocomplete="off"></div>
       </div>
       <div class="two">
@@ -436,9 +446,12 @@ function openEditor(id) {
         <div class="field"><label for="ed-formato">Formato</label><input id="ed-formato" type="text" maxlength="80" value="${esc(v.formato)}" placeholder="Lata de 50 g"></div>
         <div class="field"><label for="ed-notas">Notas de sabor</label><input id="ed-notas" type="text" value="${esc(v.notas.join(", "))}" placeholder="Separadas por comas: heno, miel, cítrico"></div>
       </div>
+      <fieldset class="hojas-ed"><legend>Hojas que lleva</legend>
+        ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
+      </fieldset>
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
       ${!admin ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
-      ${dl("dl-marca", uniq("marca"))}${dl("dl-tipo", tipos)}${dl("dl-corte", uniq("corte"))}${dl("dl-pais", uniq("pais"))}
+      ${dl("dl-marca", uniq("marca"))}${dl("dl-corte", uniq("corte"))}${dl("dl-pais", uniq("pais"))}
       <p class="msg" id="ed-msg" role="alert"></p>
       <div class="btns">
         <button class="btn primary" type="submit" id="ed-save">${admin ? (d ? "Guardar cambios" : "Crear ficha") : "Enviar propuesta"}</button>
@@ -452,7 +465,9 @@ function openEditor(id) {
 function leerFormulario() {
   return {
     nombre: $("ed-nombre").value.trim().slice(0, 120), marca: $("ed-marca").value.trim().slice(0, 80),
-    tipo: $("ed-tipo").value.trim().slice(0, 40), corte: $("ed-corte").value.trim().slice(0, 40),
+    tipo: $("ed-tipo").value.trim().slice(0, 40),
+    hojas: [...document.querySelectorAll('input[name="ed-hoja"]:checked')].map((c) => c.value),
+    corte: $("ed-corte").value.trim().slice(0, 40),
     fuerza: Number($("ed-fuerza").value) || 0, pais: $("ed-pais").value.trim().slice(0, 60),
     formato: $("ed-formato").value.trim().slice(0, 80),
     notas: $("ed-notas").value.split(",").map((n) => n.trim().slice(0, 40)).filter(Boolean).slice(0, 12),
