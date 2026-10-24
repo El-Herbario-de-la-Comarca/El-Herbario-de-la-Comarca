@@ -115,7 +115,7 @@
 .hole .h-path ellipse { fill: var(--pathc); stroke: var(--stone-edge); stroke-width: .8; }
 
 /* Anillo de humo: sale de la chimenea cada 30 s y cruza el cielo. */
-.comarca .hills.hole { overflow: visible; }
+.comarca .hills.hole { overflow: visible; clip-path: inset(-400px 0 0 0); }
 :root.comarca { --smoke: rgb(120 104 82 / .32); --ring: rgb(110 95 72 / .55); }
 :root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); }
 @media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); } }
