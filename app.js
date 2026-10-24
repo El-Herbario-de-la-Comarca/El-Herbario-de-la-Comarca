@@ -50,7 +50,7 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
 
 /* ---------- Estado ---------- */
 let current = [];   // fichas
-let resenas = {};   // tabaco_id -> { headline, body, score, videoId }
+let resenas = {};   // tabaco_id -> { headline, body, score }
 let openId = null, lastFocus = null;
 
 function mapItem(r) {
@@ -60,18 +60,18 @@ function mapItem(r) {
   return {
     id: String(r.id), nombre: str(r.nombre, 120), marca: str(r.marca, 80), tipo: str(r.tipo, 40), corte: str(r.corte, 40),
     pais: str(r.pais, 60), formato: str(r.formato, 80), desc: str(r.descripcion, 2000),
-    fuerza: Number.isInteger(f) && f >= 1 && f <= 5 ? f : 0, notas, hojas, foto: str(r.foto, 500)
+    fuerza: Number.isInteger(f) && f >= 1 && f <= 5 ? f : 0, notas, hojas, foto: str(r.foto, 500),
+    video: typeof r.video_id === "string" && /^[A-Za-z0-9_-]{11}$/.test(r.video_id) ? r.video_id : ""
   };
 }
 function mapResena(r) {
-  const videoId = typeof r.video_id === "string" && /^[A-Za-z0-9_-]{11}$/.test(r.video_id) ? r.video_id : "";
   const score = Number.isInteger(r.puntuacion) && r.puntuacion >= 1 && r.puntuacion <= 5 ? r.puntuacion : 0;
-  return { headline: str(r.titular, 200), body: str(r.texto, 20000), score, videoId };
+  return { headline: str(r.titular, 200), body: str(r.texto, 20000), score };
 }
 const findItem = (id) => current.find((d) => d.id === String(id));
 function officialFor(id) {
   const o = resenas[String(id)];
-  return o && (o.headline || o.body || o.videoId) ? o : null;
+  return o && (o.headline || o.body) ? o : null;
 }
 function ytId(raw) {
   let url;
@@ -119,7 +119,7 @@ async function refrescar() {
   await cargarTodo();
   fillFilters(); render(); paintTop();
   if (!$("overlay").hidden && openId != null) {
-    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintTools(); paintOfficial(); }
+    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintTools(); paintVideo(); paintOfficial(); }
   }
 }
 
@@ -215,7 +215,7 @@ function render() {
       <div class="body">
         <span class="brandname">${esc(d.marca)}</span>
         <h2>${esc(d.nombre)}</h2>
-        <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${o ? '<span class="chip official">Reseña</span>' : ""}${o && o.videoId ? '<span class="chip">Vídeo</span>' : ""}</div>
+        <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${o ? '<span class="chip official">Reseña</span>' : ""}${d.video ? '<span class="chip">Vídeo</span>' : ""}</div>
         ${d.fuerza ? `<div class="str">${pips(d.fuerza)}<span>${FUERZA[d.fuerza]}</span></div>` : ""}
         ${rate ? `<span class="rate${o ? "" : " none"}">${rate}</span>` : ""}
         <p>${esc(d.desc)}</p>
@@ -318,6 +318,7 @@ function openDetail(id, desdeUrl) {
       <div id="d-tools"></div>
     </div>
     <div class="sections">
+      <section class="sec" id="d-video" aria-labelledby="vd-h" hidden></section>
       <section class="sec" aria-labelledby="of-h">
         <h3 id="of-h">Reseña del herbario</h3>
         <div id="of-view"></div>
@@ -326,7 +327,7 @@ function openDetail(id, desdeUrl) {
     </div>`);
   $("d-close").addEventListener("click", () => closeDetail());
   $("d-close").focus();
-  paintMeta(); paintTools(); paintOfficial();
+  paintMeta(); paintTools(); paintVideo(); paintOfficial();
 }
 function closeDetail(desdeUrl) {
   $("overlay").hidden = true; openId = null;
@@ -453,7 +454,7 @@ function openEditor(id) {
   if (id && !d) return;
   const admin = esAdmin();
   openId = id || null;
-  const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "" };
+  const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "", video: "" };
   const uniq = (k) => [...new Set(current.map((x) => x[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   const dl = (name, vals) => `<datalist id="${name}">${vals.map((x) => `<option value="${esc(x)}">`).join("")}</datalist>`;
   const estilos = v.tipo && !ESTILOS.includes(v.tipo) ? [...ESTILOS, v.tipo] : ESTILOS;
@@ -482,6 +483,7 @@ function openEditor(id) {
       <fieldset class="hojas-ed"><legend>Hojas que lleva</legend>
         ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
       </fieldset>
+      ${admin ? `<div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>` : ""}
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
       ${!admin ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
       ${dl("dl-marca", uniq("marca"))}${dl("dl-corte", uniq("corte"))}${dl("dl-pais", uniq("pais"))}
@@ -514,6 +516,12 @@ async function saveEditor(ev, d) {
   const msg = $("ed-msg"), btn = $("ed-save");
   const data = leerFormulario();
   if (!data.nombre || !data.marca) { msg.textContent = "El nombre y la marca son obligatorios."; return; }
+  if (esAdmin() && $("ed-video")) {
+    const raw = $("ed-video").value.trim();
+    const vid = raw ? ytId(raw) : "";
+    if (raw && !vid) { msg.textContent = "No reconozco ese enlace. Pega la dirección del vídeo de YouTube, por ejemplo https://www.youtube.com/watch?v=abcdefghijk"; return; }
+    if (vid !== ((d && d.video) || "")) data.video_id = vid;   // solo se envía si cambia
+  }
   btn.disabled = true; msg.textContent = "";
   try {
     if (esAdmin()) {
@@ -563,18 +571,6 @@ function paintOfficial() {
     h += `<article class="ofc">`;
     if (o.headline) h += `<h4>${esc(o.headline)}</h4>`;
     if (o.score) h += `<div class="str">${pips(o.score)}<span>Puntuación: ${o.score} de 5</span></div>`;
-    // Vídeo embebido. YouTube no se carga hasta que se pulsa (privacidad: sin conexiones a Google
-    // ni cookies al abrir la ficha), y luego se usa youtube-nocookie.com.
-    if (o.videoId) {
-      h += `<div class="yt" id="yt-box">
-        <button class="yt-cover" id="yt-play" type="button" data-id="${o.videoId}">
-          <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 1.5v17l15-8.5z"/></svg></span>
-          <strong>Ver la reseña en vídeo</strong>
-          <small>Al pulsar se carga el reproductor de YouTube</small>
-        </button>
-      </div>
-      <a class="yt-link" href="https://www.youtube.com/watch?v=${o.videoId}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a>`;
-    }
     if (o.body) h += `<div class="text">${paras(o.body)}</div>`;
     h += `</article>`;
   } else {
@@ -583,26 +579,41 @@ function paintOfficial() {
   if (esAdmin()) h += `<button class="btn" id="of-toggle" type="button">${o ? "Editar reseña" : "Escribir reseña"}</button>`;
   $("of-view").innerHTML = h;
   const t = $("of-toggle"); if (t) t.addEventListener("click", showOfficialForm);
+}
+
+/* ---------- Vídeo de la ficha (lo pone solo el administrador, desde «Editar ficha») ----------
+   YouTube no se carga hasta que se pulsa (sin conexiones a Google ni cookies al abrir la ficha),
+   y luego se usa youtube-nocookie.com. */
+function paintVideo() {
+  const box = $("d-video"); if (!box) return;
+  const d = findItem(openId);
+  if (!d || !d.video) { box.hidden = true; box.innerHTML = ""; return; }
+  box.hidden = false;
+  box.innerHTML = `<h3 id="vd-h">Vídeo</h3>
+    <div class="yt" id="yt-box">
+      <button class="yt-cover" id="yt-play" type="button" data-id="${d.video}">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 1.5v17l15-8.5z"/></svg></span>
+        <strong>Ver el vídeo</strong>
+        <small>Al pulsar se carga el reproductor de YouTube</small>
+      </button>
+    </div>
+    <a class="yt-link" href="https://www.youtube.com/watch?v=${d.video}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a>`;
   const yp = $("yt-play");
-  if (yp) yp.addEventListener("click", () => {
+  yp.addEventListener("click", () => {
     const id = yp.dataset.id;
     if (!/^[A-Za-z0-9_-]{11}$/.test(id)) return;
     $("yt-box").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0"
-      title="Reseña en vídeo" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+      title="Vídeo de ${esc(d.nombre)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
       referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   });
 }
 function showOfficialForm() {
-  const o = officialFor(openId) || { headline: "", body: "", score: 0, videoId: "" };
-  const url = o.videoId ? "https://www.youtube.com/watch?v=" + o.videoId : "";
+  const o = officialFor(openId) || { headline: "", body: "", score: 0 };
   $("of-edit").innerHTML = `
     <form class="f" id="of-form" novalidate>
       <div class="field"><label for="of-headline">Titular</label><input id="of-headline" type="text" maxlength="200" value="${esc(o.headline)}" placeholder="Una frase que resuma la reseña"></div>
-      <div class="two">
-        <div class="field"><label for="of-score">Puntuación</label>
-          <select id="of-score"><option value="0">Sin puntuación</option>${[1, 2, 3, 4, 5].map((n) => `<option value="${n}"${o.score === n ? " selected" : ""}>${VALORACION[n]}</option>`).join("")}</select></div>
-        <div class="field"><label for="of-video">Vídeo de YouTube (opcional)</label><input id="of-video" type="url" value="${esc(url)}" placeholder="https://www.youtube.com/watch?v=..."></div>
-      </div>
+      <div class="field"><label for="of-score">Puntuación</label>
+        <select id="of-score"><option value="0">Sin puntuación</option>${[1, 2, 3, 4, 5].map((n) => `<option value="${n}"${o.score === n ? " selected" : ""}>${VALORACION[n]}</option>`).join("")}</select></div>
       <div class="field"><label for="of-body">Texto de la reseña</label><textarea id="of-body" style="min-height:200px" maxlength="20000" placeholder="Escribe la reseña. Una línea en blanco separa los párrafos.">${esc(o.body)}</textarea></div>
       <p class="msg" id="of-msg" role="alert"></p>
       <div class="btns">
@@ -625,16 +636,10 @@ function showOfficialForm() {
 async function saveOfficial(ev) {
   ev.preventDefault();
   const msg = $("of-msg");
-  const raw = $("of-video").value.trim();
-  let videoId = "";
-  if (raw) {
-    videoId = ytId(raw);
-    if (!videoId) { msg.textContent = "No reconozco ese enlace. Pega la dirección del vídeo de YouTube, por ejemplo https://www.youtube.com/watch?v=abcdefghijk"; return; }
-  }
   const titular = $("of-headline").value.trim(), texto = $("of-body").value.trim();
-  if (!texto && !videoId) { msg.textContent = "Escribe el texto de la reseña o añade un vídeo."; return; }
+  if (!texto) { msg.textContent = "Escribe el texto de la reseña."; return; }
   const btn = $("of-save"); btn.disabled = true; msg.textContent = "";
-  const fila = { tabaco_id: openId, titular, texto, puntuacion: Number($("of-score").value) || 0, video_id: videoId, actualizado: new Date().toISOString() };
+  const fila = { tabaco_id: openId, titular, texto, puntuacion: Number($("of-score").value) || 0, actualizado: new Date().toISOString() };
   const { error } = await sb.from("resenas").upsert(fila);
   if (error) { btn.disabled = false; msg.textContent = "No se ha podido guardar la reseña. Inténtalo de nuevo."; return; }
   $("of-edit").innerHTML = ""; refrescar();

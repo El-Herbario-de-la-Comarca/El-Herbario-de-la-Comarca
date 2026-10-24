@@ -54,6 +54,7 @@ create table if not exists public.tabacos (
   fuerza          int  not null default 0 check (fuerza between 0 and 5),
   notas           text[] not null default '{}' check (cardinality(notas) <= 12),
   foto            text not null default '' check (char_length(foto) <= 500),
+  video_id        text not null default '' check (video_id = '' or video_id ~ '^[A-Za-z0-9_-]{11}$'),
   creado          timestamptz not null default now(),
   actualizado     timestamptz not null default now(),
   actualizado_por uuid
