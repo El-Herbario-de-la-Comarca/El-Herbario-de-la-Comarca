@@ -272,9 +272,44 @@ function abrirPanel(html) {
   $("overlay").hidden = false;
   $("panel").innerHTML = html;
 }
-function openDetail(id) {
+/* ---------- Enlace propio de cada ficha: #/ficha/<id>/<nombre> ----------
+   Va tras la almohadilla para que GitHub Pages sirva siempre index.html. El id es lo que cuenta;
+   el nombre solo hace el enlace legible. */
+const TITULO = document.title;
+const slug = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const hashFicha = (d) => `#/ficha/${encodeURIComponent(d.id)}/${slug(d.nombre)}`;
+function idDeHash() {
+  const m = location.hash.match(/^#\/ficha\/([^/?#]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+function ponerUrlFicha(d) {
+  const h = hashFicha(d);
+  if (location.hash === h) return;
+  // Si ya había una ficha en la URL se sustituye, para que Atrás siempre vuelva al listado.
+  if (idDeHash()) history.replaceState(history.state, "", h);
+  else history.pushState({ ficha: true }, "", h);
+}
+function quitarUrlFicha() {
+  if (!idDeHash()) return;
+  // Si la ficha se abrió desde el listado, se vuelve atrás; si se entró por un enlace, se limpia la URL.
+  if (history.state && history.state.ficha) history.back();
+  else history.replaceState(null, "", location.pathname + location.search);
+}
+function abrirFichaDeUrl() {
+  const id = idDeHash();
+  if (id && String(openId) !== id && findItem(id)) openDetail(id, true);
+}
+window.addEventListener("popstate", () => {
+  if (idDeHash()) abrirFichaDeUrl();
+  else if (!$("overlay").hidden) closeDetail(true);
+});
+
+function openDetail(id, desdeUrl) {
   const d = findItem(id); if (!d) return;
   openId = d.id;
+  if (!desdeUrl) ponerUrlFicha(d);
+  document.title = `${d.nombre} · ${TITULO}`;
   abrirPanel(`
     <button class="x-close" id="d-close" type="button" aria-label="Cerrar ficha" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
     <div class="art" id="d-art">${art(d)}</div>
@@ -289,12 +324,14 @@ function openDetail(id) {
         <div id="of-edit"></div>
       </section>
     </div>`);
-  $("d-close").addEventListener("click", closeDetail);
+  $("d-close").addEventListener("click", () => closeDetail());
   $("d-close").focus();
   paintMeta(); paintTools(); paintOfficial();
 }
-function closeDetail() {
+function closeDetail(desdeUrl) {
   $("overlay").hidden = true; openId = null;
+  document.title = TITULO;
+  if (!desdeUrl) quitarUrlFicha();
   if (lastFocus && lastFocus.focus) lastFocus.focus();
 }
 function paintArt() { const d = findItem(openId), el = $("d-art"); if (d && el) el.innerHTML = art(d); }
@@ -507,7 +544,7 @@ async function saveEditor(ev, d) {
         <p>Tu propuesta se ha enviado. El administrador la revisará y, si la aprueba, aparecerá en el catálogo.</p>
         <div class="btns"><button class="btn primary" id="ok-close" type="button">Volver al catálogo</button>
         ${d ? '<button class="btn" id="ok-ficha" type="button">Volver a la ficha</button>' : ""}</div></div>`);
-      $("ok-close").addEventListener("click", closeDetail);
+      $("ok-close").addEventListener("click", () => closeDetail());
       if (d) $("ok-ficha").addEventListener("click", () => openDetail(d.id));
     }
   } catch (e) {
@@ -617,7 +654,7 @@ async function abrirRevision() {
   if (!esAdmin()) return;
   abrirPanel(`<div class="info adm"><h2 id="d-name">Propuestas pendientes</h2><div id="rv-list"><p class="muted">Cargando…</p></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
-  $("d-close").addEventListener("click", closeDetail);
+  $("d-close").addEventListener("click", () => closeDetail());
   const { data, error } = await sb.from("propuestas").select("*").eq("estado", "pendiente").order("creado");
   const box = $("rv-list"); if (!box) return;
   if (error) { box.innerHTML = '<p class="msg">No se han podido cargar las propuestas.</p>'; return; }
@@ -651,7 +688,7 @@ async function abrirUsuarios() {
     <p class="muted">Quien entra por primera vez queda como lector. Cambia aquí su rol para que pueda proponer cambios (editor) o administrar (admin).</p>
     <div id="us-list"><p class="muted">Cargando…</p></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
-  $("d-close").addEventListener("click", closeDetail);
+  $("d-close").addEventListener("click", () => closeDetail());
   const { data, error } = await sb.from("perfiles").select("id,email,rol,creado").order("creado");
   const box = $("us-list"); if (!box) return;
   if (error) { box.innerHTML = '<p class="msg">No se han podido cargar los usuarios.</p>'; return; }
@@ -672,7 +709,7 @@ async function abrirUsuarios() {
 async function abrirMisPropuestas() {
   abrirPanel(`<div class="info adm"><h2 id="d-name">Mis propuestas</h2><div id="mp-list"><p class="muted">Cargando…</p></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
-  $("d-close").addEventListener("click", closeDetail);
+  $("d-close").addEventListener("click", () => closeDetail());
   const { data, error } = await sb.from("propuestas").select("*").eq("autor", ctx.uid).order("creado", { ascending: false }).limit(100);
   const box = $("mp-list"); if (!box) return;
   if (error) { box.innerHTML = '<p class="msg">No se han podido cargar.</p>'; return; }
@@ -823,10 +860,12 @@ $("login").addEventListener("click", (e) => { if (e.target === $("login")) cerra
 (async function iniciar() {
   setupFilters();
   usarRespaldo(); fillFilters(); render(); paintTop();   // se ve algo al instante
+  abrirFichaDeUrl();                                      // quien entra por el enlace de una ficha
   if (!sb) return;
   const { data } = await sb.auth.getSession();
   await leerSesion(data && data.session);
   await refrescar();
+  abrirFichaDeUrl();   // por si la ficha solo está en Supabase (no en la copia de respaldo)
   // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
   // (fallo conocido de supabase-js). Por eso el trabajo se aplaza con setTimeout.
   sb.auth.onAuthStateChange((ev, session) => {
