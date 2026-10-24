@@ -1,15 +1,7 @@
-Borkum Riff | 51 Original ; 52 Bourbon Whiskey ; 53 Black Cavendish ; 54 Cherry Cavendish ; 55 Cherry Liquor
 Mac Baren | 420 Supreme Choice ; 424 Classic Flake
-Erinmore | 349 Erinmore Flake ; 350 Erinmore Mixture
-Capstan | 391 Original Flake ; 392 Original Ready Rubbed ; 393 Gold Flake ; 394 Gold Ready Rubbed
-Three Nuns | 395 Three Nuns
-St. Bruno | 396 St. Bruno Flake ; 397 St. Bruno Ready Rubbed ; 398 Gold Block
-Amphora | 399 Original Blend ; 400 Full Aroma ; 401 Burley Blend ; 402 English Blend ; 403 Virginia Blend ; 404 Kentucky Blend ; 405 Mellow Blend ; 406 Rich Aroma ; 407 Special Reserve Black Cavendish ; 408 Special Reserve No. 2 ; 409 Special Reserve No. 8
-Holger Danske | 410 Amber Magic ; 411 Black and B. ; 412 Golden Harmony ; 413 Ruby Melange ; 414 Sunny Delight
-Amsterdamer | 415 Amsterdamer
+Amphora | 405 Mellow Blend
 Robert McConnell | 1028 Fancy Selection No. 1 ; 1033 Old London Pebble Cut
-Ashton | 1075 Artisan's Blend ; 1076 Consummate Gentleman ; 1077 Gold Rush ; 1078 Guilty Pleasure ; 1079 Rainy Day ; 1080 Smooth Sailing ; 1081 Winding Road
-Davidoff | 1082 Danish Mixture ; 1083 English Mixture ; 1084 Royalty Mixture ; 1085 Scottish Mixture ; 1086 Red Mixture ; 1087 Flake Medallions ; 1088 Discovery Argentina Cavendish ; 1089 Discovery Brazil Virginia ; 1090 Discovery Malawi Dark Cavendish
+Davidoff | 1086 Red Mixture ; 1089 Discovery Brazil Virginia ; 1090 Discovery Malawi Dark Cavendish
 Kopp | 1091 Caribbean Blue Bellamy ; 1092 Caribbean Blue Drake ; 1093 Caribbean Blue Graham ; 1094 Caribbean Blue Rackham ; 1095 Caribbean Blue Seegar ; 1096 Caribbean Blue Wynne
 Captain Black | 1097 Cherry ; 1098 Dark ; 1099 Gold ; 1100 Original ; 1101 Platinum ; 1102 Royal
 Clan | 1103 Original
@@ -32,4 +24,4 @@ Sir Walter Raleigh | 1223 Aromatic ; 1224 Regular
 Prince Albert | 1225 Prince Albert
 Half and Half | 1226 Half and Half
 Carter Hall | 1227 Carter Hall
-FALTAN 162
+FALTAN 118

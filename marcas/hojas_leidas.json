@@ -2423,5 +2423,225 @@
 "Family": "Burley",
 "Components": "Virginia, Burley",
 "src": "smokingpipes-webfetch"
+},
+"51": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"52": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"53": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"54": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"55": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"349": {
+"Family": "Virginia",
+"Components": "Virginia, Burley",
+"src": "smokingpipes-webfetch"
+},
+"350": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"396": {
+"Family": "Virginia",
+"Components": "Virginia, Dark Fired Kentucky",
+"src": "smokingpipes-webfetch"
+},
+"395": {
+"Family": "Virginia",
+"Components": "Virginia, Dark Fired Kentucky, Burley",
+"src": "smokingpipes-webfetch"
+},
+"397": {
+"Family": "Virginia",
+"Components": "Virginia, Dark Fired Kentucky",
+"src": "smokingpipes-webfetch"
+},
+"392": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Straight Virginia)"
+},
+"393": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Capstan Gold Navy Cut; Straight Virginia)"
+},
+"391": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "mac-baren.com (fabricante; la lista en Blends ingleses, solo Virginia)"
+},
+"399": {
+"Family": "Burley",
+"Components": "Virginia, Dark Fired Kentucky, Burley, Orientals, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"400": {
+"Family": "Aromatic",
+"Components": "Virginia, Dark Fired Kentucky, Orientals, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"401": {
+"Family": "Burley",
+"Components": "Virginia, Dark Fired Kentucky, Burley",
+"src": "smokingpipes-webfetch (Amphora Burley)"
+},
+"407": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"408": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews"
+},
+"409": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews"
+},
+"402": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch (Amphora English)"
+},
+"403": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch (Amphora Virginia)"
+},
+"404": {
+"Family": "Burley",
+"Components": "Virginia, Dark Fired Kentucky",
+"src": "smokingpipes-webfetch"
+},
+"406": {
+"Family": "Aromatic",
+"Components": "Burley, Oriental/Turkish, Virginia",
+"src": "tobaccoreviews"
+},
+"394": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Capstan Gold Navy Cut Ready Rubbed; Straight Virginia)"
+},
+"398": {
+"Family": "Aromatic",
+"Components": "Burley, Virginia",
+"src": "tobaccoreviews (Mac Baren Gold Block)"
+},
+"410": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews"
+},
+"411": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews (Black & Bourbon)"
+},
+"412": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Oriental/Turkish, Virginia",
+"src": "tobaccoreviews"
+},
+"413": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews"
+},
+"414": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews"
+},
+"415": {
+"Family": "Other",
+"Components": "Burley, Kentucky, Virginia",
+"src": "tobaccoreviews (Mac Baren Amsterdamer; Other)"
+},
+"1075": {
+"Family": "English",
+"Components": "Virginia, Latakia, Perique, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1076": {
+"Family": "English",
+"Components": "Virginia, Latakia, Burley",
+"src": "smokingpipes-webfetch"
+},
+"1077": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "smokingpipes-webfetch"
+},
+"1078": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1079": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1080": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley",
+"src": "smokingpipes-webfetch"
+},
+"1081": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1082": {
+"Family": "Aromatic",
+"Components": "Virginia, Burley, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1083": {
+"Family": "English",
+"Components": "Burley, Virginia, Latakia, Perique",
+"src": "smokingpipes-webfetch"
+},
+"1084": {
+"Family": "English",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch (Davidoff Royalty)"
+},
+"1085": {
+"Family": "Aromatic",
+"Components": "Virginia, Dark Fired Kentucky, Burley, Orientals",
+"src": "smokingpipes-webfetch"
+},
+"1087": {
+"Family": "Virginia",
+"Components": "Virginia, Perique, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1088": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Virginia",
+"src": "tobaccoreviews (Davidoff Argentina Cavendish)"
 }
 }
