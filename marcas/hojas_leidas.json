@@ -3123,5 +3123,40 @@
 "Family": "Aromatic",
 "Components": "Black Cavendish, Oriental/Turkish, Virginia",
 "src": "tobaccoreviews (McLintock Wild Cherry; el catálogo dice \"Wild C\", nombre asumido)"
+},
+"1086": {
+"Family": "Aromatic",
+"Components": "Virginia, Black Cavendish",
+"src": "smokingpipes-webfetch"
+},
+"1138": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews (Planta Original Danish Black Vanilla Mixture)"
+},
+"1139": {
+"Family": "English",
+"Components": "Latakia, Oriental/Turkish, Virginia",
+"src": "tobaccoreviews (aparece como Mac Baren Presbyterian Mixture)"
+},
+"1140": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Virginia",
+"src": "tobaccoreviews (Planta Cellini Classico)"
+},
+"1188": {
+"Family": "Virginia",
+"Components": "Virginia",
+"src": "tobaccoreviews (Straight Virginia)"
+},
+"1211": {
+"Family": "Aromatic",
+"Components": "Black Cavendish, Burley, Cavendish, Virginia",
+"src": "tobaccoreviews (Aromatic #7)"
+},
+"1173": {
+"Family": "Aromatic",
+"Components": "Virginia, Latakia, Orientals",
+"src": "smokingpipes-webfetch"
 }
 }
