@@ -1,0 +1,74 @@
+/* Identidad «despensa de agujero hobbit»: pergamino, tinta marrón, verde de la puerta y dorado del logo.
+   Prueba: se activa con la clase .comarca en <html>. */
+:root.comarca {
+  --bg: #F3EBDA; --surface: #FBF6EA; --fg: #2E2418; --muted: #6E5E48; --line: #DDCEB1;
+  --accent: #2F5D34; --accent-fg: #FBF6EA; --gold: #A8761E; --gold-soft: #F1E2BC; --danger: #9A3324;
+  --hill-a: #CBD3A4; --hill-b: #97AB6C; --door: #2F5D34; --door-ring: #7A4F2A; --knob: #D9A93A;
+  --display: "Young Serif", Georgia, serif;
+  --body: "Alegreya", Georgia, "Times New Roman", serif;
+  --mono: "Alegreya SC", "Alegreya", Georgia, serif;
+  --shadow: 0 1px 0 rgb(80 60 30 / .06), 0 6px 18px -10px rgb(80 60 30 / .35);
+}
+@media (prefers-color-scheme: dark) {
+  :root.comarca:not([data-theme="light"]) {
+    --bg: #1C1A13; --surface: #25221A; --fg: #EEE4CD; --muted: #AC9E83; --line: #3B3628;
+    --accent: #9CC07A; --accent-fg: #1C1A13; --gold: #E2B551; --gold-soft: #3A3120; --danger: #E8978C;
+    --hill-a: #2A3324; --hill-b: #34422B; --door: #3F7A40; --door-ring: #8A6034; --knob: #E2B551;
+    --shadow: 0 1px 0 rgb(0 0 0 / .3), 0 8px 20px -12px rgb(0 0 0 / .7);
+  }
+}
+:root.comarca[data-theme="dark"] {
+  --bg: #1C1A13; --surface: #25221A; --fg: #EEE4CD; --muted: #AC9E83; --line: #3B3628;
+  --accent: #9CC07A; --accent-fg: #1C1A13; --gold: #E2B551; --gold-soft: #3A3120; --danger: #E8978C;
+  --hill-a: #2A3324; --hill-b: #34422B; --door: #3F7A40; --door-ring: #8A6034; --knob: #E2B551;
+  --shadow: 0 1px 0 rgb(0 0 0 / .3), 0 8px 20px -12px rgb(0 0 0 / .7);
+}
+
+/* Tipografía: uncial solo en el título; versalitas en lugar de letra de máquina. */
+.comarca body { font-size: 17px; line-height: 1.5; }
+.comarca label, .comarca .brandname, .comarca .chip, .comarca .count, .comarca .eyebrow, .comarca .hero .tag,
+.comarca dt, .comarca .sec h3, .comarca .str, .comarca .rate, .comarca .rev .when, .comarca .video small,
+.comarca .status, .comarca table.usuarios th, .comarca dl.diff dt, .comarca fieldset.hojas-ed legend {
+  text-transform: none; letter-spacing: 0.03em;
+}
+.comarca label { font-size: 0.92rem; color: var(--muted); }
+.comarca .eyebrow { font-size: 1rem; color: var(--accent); letter-spacing: 0.08em; }
+.comarca .hero .tag { font-size: 1rem; }
+.comarca .brandname { font-size: 0.92rem; }
+.comarca .count { font-size: 0.95rem; }
+.comarca .chip { font-size: 0.85rem; padding: 1px 10px; background: color-mix(in srgb, var(--line) 30%, transparent); border-color: transparent; }
+.comarca .chip.official { background: var(--gold-soft); color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
+.comarca dt { font-size: 0.92rem; padding-top: 1px; }
+.comarca .sec h3 { font-size: 1.05rem; color: var(--accent); }
+.comarca .str, .comarca .rate { font-size: 0.88rem; }
+.comarca .hero h1 { color: var(--fg); }
+.comarca .card h2, .comarca .panel h2 { color: var(--fg); }
+
+/* Cabecera: una línea ornamental fina bajo las colinas. */
+.comarca .hills { margin-top: 10px; }
+.comarca .bar { border-top: 0; border-bottom: 1px solid var(--line); box-shadow: 0 -1px 0 var(--hill-b), 0 -4px 0 var(--bg), 0 -5px 0 var(--line); }
+.comarca .hills .flowers circle:nth-child(odd) { fill: #C8553D; } .comarca .hills .flowers circle:nth-child(even) { fill: #E2B551; }
+
+/* Campos y botones más suaves. */
+.comarca input[type="search"], .comarca input[type="text"], .comarca input[type="url"], .comarca input[type="email"],
+.comarca input[type="password"], .comarca select, .comarca textarea { border-radius: 8px; background: var(--surface); border-color: var(--line); }
+.comarca .btn, .comarca .close, .comarca .gate button { border-radius: 8px; }
+
+/* Tarjetas: papel sobre pergamino. */
+.comarca .card { border-radius: 12px; border-color: var(--line); box-shadow: var(--shadow); }
+.comarca .card .art { background: radial-gradient(ellipse at 50% 85%, color-mix(in srgb, var(--hill-a) 45%, transparent), transparent 70%); }
+.comarca .card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+@media (prefers-reduced-motion: no-preference) {
+  .comarca .card { transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .comarca .card:hover { transform: translateY(-2px); }
+}
+.comarca .pips i { background: color-mix(in srgb, var(--line) 80%, transparent); }
+.comarca .pips i.on { background: var(--gold); }
+
+/* Ficha y ventanas. */
+.comarca .panel, .comarca .gate .box, .comarca .confirm .box { border-radius: 14px; box-shadow: 0 20px 50px -20px rgb(40 30 15 / .5); }
+.comarca .panel .art { border-radius: 14px 0 0 0; background: color-mix(in srgb, var(--hill-a) 22%, var(--surface)); }
+.comarca .overlay { background: color-mix(in srgb, var(--bg) 70%, #2E2418); }
+.comarca .gate { background: color-mix(in srgb, var(--bg) 88%, #2E2418); }
+.comarca footer { border-top-style: dashed; }
+@media (max-width: 600px) { .comarca .panel .art { border-radius: 14px 14px 0 0; } }
