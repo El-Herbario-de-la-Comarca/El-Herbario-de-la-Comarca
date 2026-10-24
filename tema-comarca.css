@@ -144,3 +144,46 @@
   78%  { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
   100% { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
 }
+
+/* ---------- Temporadas: Halloween y Navidad (data-temporada en <html>) ---------- */
+.hole .t-halloween, .hole .t-navidad { display: none; }
+[data-temporada="halloween"] .hole .t-halloween, [data-temporada="navidad"] .hole .t-navidad { display: inline; }
+:root.comarca { --moon: #F1E3B5; --bat: #3A3328; --pumpkin: #E07B24; --pumpkin-d: #B95A14; --stem: #5D6B2E; --lantern: #FFD36B;
+  --snow: #FFFFFF; --wreath: #3E6B35; --berry: #C0392B; --l0: #E2463A; --l1: #F2C14E; --l2: #4FA3D9; --l3: #6BBF59; --webc: rgb(80 70 55 / .45); }
+:root.comarca[data-theme="dark"] { --moon: #F4E6B8; --bat: #0E0D09; --snow: #DCE2E6; --webc: rgb(230 220 200 / .35); }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --moon: #F4E6B8; --bat: #0E0D09; --snow: #DCE2E6; --webc: rgb(230 220 200 / .35); } }
+[data-temporada="halloween"].comarca { --glass: #F39A3B; }
+.hole .moon { fill: var(--moon); }
+.hole .bat path, .hole .bat circle { fill: var(--bat); }
+.hole .pk { fill: var(--pumpkin); stroke: var(--pumpkin-d); stroke-width: 1; }
+.hole .pk-c { fill: color-mix(in srgb, var(--pumpkin) 85%, #fff); }
+.hole .stem { fill: var(--stem); }
+.hole .face { fill: var(--lantern); }
+.hole .web { fill: none; stroke: var(--webc); stroke-width: .8; }
+.hole .spider { stroke: var(--webc); stroke-width: .7; }
+.hole .spider-b { fill: var(--bat); }
+.hole .snow-line { fill: none; stroke: var(--snow); stroke-width: 5; stroke-linecap: butt; stroke-linejoin: round; opacity: .95; }
+.hole .snow-line.far { stroke-width: 3.5; opacity: .75; }
+.hole .snow-patches ellipse { fill: var(--snow); opacity: .9; }
+.hole .snow-fill, .hole .snowfall circle { fill: var(--snow); }
+.hole .snowfall circle { opacity: .9; }
+.hole .wreath { fill: none; stroke: var(--wreath); stroke-width: 4.5; }
+.hole .berries circle, .hole .bow { fill: var(--berry); }
+.hole .bow { stroke: var(--berry); stroke-width: 1.4; stroke-linecap: round; }
+.hole .cable { fill: none; stroke: rgb(40 50 30 / .5); stroke-width: .8; }
+.hole .l0 { fill: var(--l0); } .hole .l1 { fill: var(--l1); } .hole .l2 { fill: var(--l2); } .hole .l3 { fill: var(--l3); }
+.hole .fir { fill: #3E6B35; } .hole .trunk { fill: var(--wood); } .hole .star { fill: #F2C14E; }
+@media (prefers-reduced-motion: no-preference) {
+  .hole .bat { animation: aleteo .5s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+  .hole .bat.b2 { animation-duration: .42s; } .hole .bat.b3 { animation-duration: .58s; }
+  .hole .bat path { animation: vuelo 6s ease-in-out infinite alternate; }
+  .hole .lights circle, .hole .tree circle { animation: parpadeo 1.6s ease-in-out infinite alternate; }
+  .hole .lights .l1, .hole .tree .l1 { animation-delay: -.4s; } .hole .lights .l2, .hole .tree .l2 { animation-delay: -.8s; } .hole .lights .l3, .hole .tree .l3 { animation-delay: -1.2s; }
+  .hole .face { animation: vela 2.4s ease-in-out infinite alternate; }
+  .hole .snowfall circle { animation-name: nieve; animation-timing-function: linear; animation-iteration-count: infinite; }
+}
+@keyframes aleteo { from { transform: scaleY(1); } to { transform: scaleY(.55); } }
+@keyframes vuelo { from { transform: translate(0, 0); } to { transform: translate(14px, -6px); } }
+@keyframes parpadeo { from { opacity: 1; } to { opacity: .35; } }
+@keyframes vela { from { opacity: 1; } to { opacity: .7; } }
+@keyframes nieve { from { transform: translate(0, 0); } to { transform: translate(12px, 230px); } }
