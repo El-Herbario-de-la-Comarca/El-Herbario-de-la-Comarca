@@ -1,46 +1,29 @@
     <svg class="hills hole" viewBox="0 0 1200 210" preserveAspectRatio="xMinYMax slice" aria-hidden="true">
       <defs>
-        <clipPath id="hh-door"><circle cx="222" cy="158" r="31"/></clipPath>
-        <clipPath id="hh-win"><circle cx="300" cy="146" r="12"/></clipPath>
+        <clipPath id="hh-door"><circle cx="222" cy="160" r="31"/></clipPath>
       </defs>
-      <!-- colinas del fondo -->
-      <path class="h-back" d="M0 128 C150 70 300 78 430 118 C560 156 650 92 800 86 C960 80 1060 136 1200 104 V210 H0Z"/>
-      <!-- colina de la madriguera -->
-      <path class="h-mound" d="M48 210 C62 128 128 66 236 62 C340 58 404 112 438 210Z"/>
-      <path class="h-grass" d="M110 98 l6 -10 l3 10 M170 74 l5 -9 l4 9 M318 78 l4 -9 l5 9 M372 112 l5 -9 l3 9"/>
-      <!-- chimenea y humo -->
-      <g class="chimney">
-        <rect x="276" y="44" width="16" height="24" rx="2"/>
-        <rect x="273" y="40" width="22" height="6" rx="2"/>
-      </g>
-      <g class="smoke">
-        <circle cx="284" cy="30" r="5"/><circle cx="292" cy="18" r="6.5"/><circle cx="286" cy="4" r="8"/>
-      </g>
-      <!-- ventanas -->
-      <g class="win">
-        <circle cx="300" cy="146" r="16" class="w-frame"/>
-        <circle cx="300" cy="146" r="12" class="w-glass"/>
-        <g clip-path="url(#hh-win)"><path class="w-bars" d="M300 132 V160 M286 146 H314"/></g>
-      </g>
-      <g class="win">
-        <circle cx="150" cy="152" r="12" class="w-frame"/>
-        <circle cx="150" cy="152" r="8.5" class="w-glass"/>
-        <path class="w-bars" d="M150 143.5 V160.5 M141.5 152 H158.5"/>
-      </g>
-      <!-- puerta redonda -->
-      <circle cx="222" cy="158" r="40" class="d-stone"/>
-      <circle cx="222" cy="158" r="34" class="d-frame"/>
-      <circle cx="222" cy="158" r="31" class="d-door"/>
-      <g clip-path="url(#hh-door)"><path class="d-planks" d="M206 120 V200 M222 120 V200 M238 120 V200"/></g>
-      <circle cx="241" cy="160" r="3.4" class="d-knob"/>
-      <!-- valla -->
-      <g class="fence"><path d="M340 196 V176 M360 197 V177 M380 198 V178 M400 199 V180 M336 184 H404 M336 192 H404"/></g>
-      <!-- colina delantera y camino -->
-      <path class="h-front" d="M0 200 C90 194 160 192 260 194 C380 196 470 168 620 164 C780 160 900 196 1040 186 C1120 180 1170 176 1200 178 V210 H0Z"/>
-      <path class="h-path" d="M206 192 C200 197 186 204 166 210 H282 C262 204 246 197 238 192Z"/>
-      <g class="flowers">
-        <circle cx="104" cy="198" r="3.4"/><circle cx="116" cy="202" r="2.8"/><circle cx="128" cy="197" r="3"/>
-        <circle cx="296" cy="200" r="3.2"/><circle cx="310" cy="204" r="2.6"/><circle cx="322" cy="199" r="3"/>
-        <circle cx="880" cy="190" r="3"/><circle cx="894" cy="194" r="2.4"/><circle cx="1010" cy="190" r="3.2"/>
-      </g>
+      <path class="h-far" d="M0 120 C70 104 120 92 190 96 C260 100 300 84 380 88 C470 92 520 116 600 110 C700 102 760 78 860 82 C960 86 1040 112 1200 100 V210 H0Z"/>
+      <path class="h-back" d="M0 140 C110 112 190 118 280 128 C380 140 450 130 560 118 C660 108 720 120 810 126 C920 134 1040 118 1200 124 V210 H0Z"/>
+      <path class="h-mound" d="M40 210 C46 182 58 156 74 132 C88 112 104 100 122 90 C134 82 146 80 158 74 C176 64 196 62 214 63 C232 60 250 58 268 62 C292 66 308 70 324 80 C342 90 352 96 366 110 C382 126 394 140 404 160 C414 178 422 194 430 210Z"/>
+      <path class="h-shade" d="M330 84 C352 98 372 118 388 140 C402 162 416 186 430 210 L404 210 C398 186 386 160 370 138 C356 118 344 100 330 84Z"/>
+      <path class="h-grass" d="M96 108 l3 -9 l2 8 l4 -11 l1 11 M150 78 l4 -8 l2 7 M184 66 l3 -10 l3 9 l3 -7 M336 86 l3 -8 l3 8 M360 104 l4 -10 l1 9 l4 -6 M392 148 l3 -9 l2 8 M62 160 l3 -8 l3 7"/>
+      <g class="chimney"><path d="M277 68 L275.5 52 L274 51 L274.5 46 L294 45.5 L295 50.5 L292.5 51.5 L291.5 68Z"/><path class="ch-lines" d="M275.8 57 H292.6 M276.4 63 H292 M283 51.5 V57 M287 57 V63 M281 63 V68"/></g>
+      <g class="smoke"><circle cx="285" cy="30" r="5"/><circle cx="292" cy="18" r="6.5"/><circle cx="286" cy="4" r="8"/></g>
+      <path class="ivy" d="M330 96 C320 104 324 116 314 124 C306 130 310 140 302 142 M330 96 C338 108 334 118 342 128"/>
+      <g class="leaves"><circle cx="324" cy="104" r="3.2"/><circle cx="318" cy="118" r="3"/><circle cx="310" cy="128" r="2.8"/><circle cx="336" cy="112" r="3"/><circle cx="341" cy="124" r="2.6"/><circle cx="328" cy="98" r="2.6"/></g>
+      <g class="stones"><path d="M286.2 145.8 L280.1 145.7 L281.6 138.2 L287.3 140.3Z"/><path d="M287.9 140.1 L283.8 138.4 L288.9 131.6 L291.8 134.6Z"/><path d="M292.7 135.0 L289.4 130.9 L297.4 126.9 L298.6 132.0Z"/><path d="M299.0 131.7 L298.0 125.8 L305.1 125.5 L304.2 131.6Z"/><path d="M304.6 131.3 L306.0 125.2 L313.6 128.5 L310.2 133.5Z"/><path d="M310.9 133.2 L313.6 129.3 L317.5 132.7 L313.9 135.9Z"/><path d="M314.2 136.2 L319.2 132.1 L323.5 139.9 L317.1 141.9Z"/><path d="M316.2 142.6 L321.7 141.2 L322.0 149.3 L316.4 148.3Z"/><path d="M137.1 155.8 L131.9 156.6 L132.2 150.3 L137.3 151.3Z"/><path d="M136.8 150.8 L132.0 149.5 L134.3 144.3 L138.4 147.4Z"/><path d="M139.3 147.6 L135.2 144.7 L140.7 140.0 L143.0 144.4Z"/><path d="M143.5 144.7 L141.3 140.5 L147.8 139.0 L147.9 143.7Z"/><path d="M148.2 143.3 L147.9 139.1 L155.4 140.9 L153.3 144.7Z"/><path d="M153.4 145.1 L155.9 140.6 L162.4 148.0 L157.5 149.9Z"/><path d="M158.4 149.9 L162.0 148.4 L163.0 156.3 L159.0 155.8Z"/></g>
+      <g class="win"><circle cx="302" cy="146" r="14.5" class="w-frame"/><circle cx="302" cy="146" r="11" class="w-glass"/><path class="w-bars" d="M302 135 V157 M291 146 H313"/></g>
+      <g class="win"><circle cx="148" cy="154" r="10.5" class="w-frame"/><circle cx="148" cy="154" r="7.6" class="w-glass"/><path class="w-bars" d="M148 146.4 V161.6 M140.4 154 H155.6"/></g>
+      <path class="sill" d="M286 162 C294 160 310 160 318 162 L317 165 C308 163.5 296 163.5 287 165Z"/>
+            <g class="flowers fl-pot"><circle cx="291" cy="160.5" r="2.4"/><circle cx="297" cy="159.6" r="2"/><circle cx="307" cy="159.6" r="2.2"/><circle cx="313" cy="160.5" r="2.4"/></g>
+      <g class="stones door-stones"><path d="M187.5 159.5 L179.0 159.4 L180.1 149.8 L188.4 152.0Z"/><path d="M188.5 151.0 L178.1 148.2 L181.2 139.4 L190.8 144.8Z"/><path d="M192.5 144.6 L180.3 138.3 L187.9 128.4 L197.8 137.2Z"/><path d="M198.3 136.4 L191.2 128.9 L196.8 124.2 L202.9 132.6Z"/><path d="M203.3 131.5 L196.7 121.8 L207.4 116.7 L211.1 127.7Z"/><path d="M212.2 128.2 L209.0 119.2 L219.0 117.4 L219.6 126.8Z"/><path d="M220.5 126.1 L220.2 116.0 L227.8 116.3 L226.5 126.4Z"/><path d="M227.4 126.8 L229.8 114.1 L240.6 117.2 L235.5 129.1Z"/><path d="M236.5 129.1 L241.8 119.1 L247.9 123.3 L241.6 132.1Z"/><path d="M242.1 133.0 L249.7 121.9 L258.5 129.5 L247.9 138.5Z"/><path d="M249.1 138.8 L256.0 133.3 L260.2 139.1 L252.4 143.9Z"/><path d="M252.7 144.8 L263.6 139.4 L266.6 147.9 L254.9 150.6Z"/><path d="M254.6 151.6 L266.6 148.6 L268.0 159.5 L255.7 159.5Z"/></g>
+      <circle cx="222" cy="160" r="34" class="d-frame"/>
+      <circle cx="222" cy="160" r="31" class="d-door"/>
+      <g clip-path="url(#hh-door)"><path class="d-planks" d="M203 120 V200 M214.5 120 V200 M229 120 V200 M241 120 V200"/></g>
+      <circle cx="241" cy="162" r="3.4" class="d-knob"/>
+      <g class="fence"><path d="M342.0 197.0 L340.8 180.4 M361.0 197.5 L360.5 179.9 M381.0 198.5 L382.0 181.5 M400.0 199.5 L398.6 177.8 M338 184 C356 182 380 186 404 184 M338 192 C360 191 384 193 404 192"/></g>
+      <path class="h-front" d="M0 202 C40 198 80 196 120 197 C160 198 190 194 230 195 C280 196 320 197 370 194 C430 190 470 172 540 168 C620 164 680 170 760 166 C840 162 900 188 980 186 C1060 184 1120 176 1200 180 V210 H0Z"/>
+      <g class="h-path"><ellipse cx="221.5" cy="197" rx="8.0" ry="2.5" transform="rotate(-6.0 222 197)"/><ellipse cx="215.4" cy="203" rx="10.0" ry="3.0" transform="rotate(7.9 214 203)"/><ellipse cx="227.9" cy="208" rx="11.0" ry="3.0" transform="rotate(-0.3 228 208)"/></g>
+      <g class="bush"><path d="M66 200 C60 190 70 182 78 186 C82 178 94 178 96 188 C104 186 108 196 102 202Z"/><path d="M402 200 C398 192 406 186 412 189 C416 182 426 184 426 192 C432 192 434 200 430 203Z"/></g>
+      <g class="flowers"><circle cx="112" cy="199" r="3.2"/><circle cx="124" cy="203" r="2.6"/><circle cx="134" cy="198" r="3"/><circle cx="292" cy="201" r="3"/><circle cx="305" cy="205" r="2.6"/><circle cx="318" cy="200" r="3"/><circle cx="880" cy="190" r="3"/><circle cx="894" cy="194" r="2.4"/><circle cx="1010" cy="190" r="3.2"/></g>
     </svg>

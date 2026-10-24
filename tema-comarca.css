@@ -100,3 +100,16 @@
   .hole .smoke circle:nth-child(3) { animation-delay: -4s; }
 }
 @keyframes humo { 0% { transform: translate(-6px, 34px) scale(.5); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(8px, -16px) scale(1.3); opacity: 0; } }
+/* Versión orgánica de la madriguera. */
+:root.comarca { --far: #DCDDB5; --shade: rgb(60 70 30 / .12); --stonec: #C3B597; --stone-edge: #9C8C6C; --leaf: #6E8B45; }
+:root.comarca[data-theme="dark"] { --far: #242A1E; --shade: rgb(0 0 0 / .22); --stonec: #5E5747; --stone-edge: #403B30; --leaf: #4E6A35; }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --far: #242A1E; --shade: rgb(0 0 0 / .22); --stonec: #5E5747; --stone-edge: #403B30; --leaf: #4E6A35; } }
+.hole .h-far { fill: var(--far); }
+.hole .h-shade { fill: var(--shade); }
+.hole .stones path { fill: var(--stonec); stroke: var(--stone-edge); stroke-width: 1; stroke-linejoin: round; }
+.hole .ch-lines { fill: none; stroke: rgb(0 0 0 / .18); stroke-width: 1.2; }
+.hole .chimney path:first-child { fill: var(--stonec); stroke: var(--stone-edge); stroke-width: 1; }
+.hole .ivy { fill: none; stroke: var(--leaf); stroke-width: 1.6; stroke-linecap: round; }
+.hole .leaves circle, .hole .bush path { fill: var(--leaf); }
+.hole .sill, .hole .pots path { fill: var(--wood); }
+.hole .h-path ellipse { fill: var(--pathc); stroke: var(--stone-edge); stroke-width: .8; }
