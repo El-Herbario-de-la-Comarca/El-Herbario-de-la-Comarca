@@ -96,10 +96,10 @@ def estilo_de(familia, hojas, nombre="", src="", i=""):
         return "Balcánica", "Balkan en el nombre"
     if e == "Inglesa" and lat and ori and not va:
         return "Balcánica", "latakia y orientales sin virginia"
-    # Familia Virginia: se queda en Virginia, o Virginia-Perique si lleva perique,
-    # aunque lleve orientales. Excepción: con latakia es Inglesa (p. ej. Mac Baren 428).
-    if e in ("Virginia", "Virginia-Perique") and va and lat:
-        return "Inglesa", "virginia con latakia"
+    # Familia Virginia con orientales o latakia: ya no es Virginia ni Virginia-Perique,
+    # es Inglesa (p. ej. Mac Baren 428 Latakia Blend). Virginia-Perique es solo virginia con perique.
+    if e in ("Virginia", "Virginia-Perique") and va and (ori or lat):
+        return "Inglesa", "virginia con orientales o latakia"
     if e == "Virginia" and "Perique" in hojas:
         return "Virginia-Perique", "virginia con perique"
     return e, "familia"
