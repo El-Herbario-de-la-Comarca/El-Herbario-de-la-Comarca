@@ -113,3 +113,20 @@
 .hole .leaves circle, .hole .bush path { fill: var(--leaf); }
 .hole .sill, .hole .pots path { fill: var(--wood); }
 .hole .h-path ellipse { fill: var(--pathc); stroke: var(--stone-edge); stroke-width: .8; }
+
+/* Anillo de humo: sale de la chimenea cada 30 s y cruza el cielo. */
+.comarca .hills.hole { overflow: visible; }
+:root.comarca { --smoke: rgb(120 104 82 / .32); --ring: rgb(110 95 72 / .55); }
+:root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); } }
+.hole .ring ellipse { fill: none; stroke: var(--ring); stroke-width: 3.2; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .hole .ring ellipse { animation: anillo 30s ease-out 4s infinite; transform-box: fill-box; transform-origin: center; }
+}
+@keyframes anillo {
+  0%   { opacity: 0;   transform: translate(0, 6px) scale(.35, .3); }
+  2%   { opacity: .95; transform: translate(4px, -4px) scale(.6, .55); }
+  10%  { opacity: .8;  transform: translate(110px, -24px) scale(1.15, 1.05); }
+  22%  { opacity: 0;   transform: translate(300px, -40px) scale(1.9, 1.6); stroke-width: 1.4; }
+  100% { opacity: 0;   transform: translate(300px, -40px) scale(1.9, 1.6); }
+}
