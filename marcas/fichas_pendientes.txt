@@ -4,16 +4,10 @@ Robert McConnell | 1028 Fancy Selection No. 1 ; 1033 Old London Pebble Cut
 Davidoff | 1086 Red Mixture
 Planta | 1138 Original Danish Black V Mixture ; 1139 Presbyterian Mixture
 Cellini | 1140 Classico
-Mc Lintock | 1141 Shamrock Isle ; 1142 Wild C
+Mc Lintock | 1141 Shamrock Isle
 R and M | 1143 R and M
-Sutliff | 1144 Creme Brulee ; 1145 Rum & Maple ; 1146 Z50 Black Cordial ; 1147 Z92 Vanilla Custard
 Dan Tobacco | 1150 Bizzy Lizzy ; 1166 The Manager
 Germain's | 1170 B.K. Flake ; 1173 Century ; 1178 Mixture No. 7 ; 1181 Royal Jersey: Dark Cavendish
-Esoterica | 1188 Brighton ; 1189 Cardiff ; 1190 Dorchester ; 1192 Hastings ; 1193 Kingsbridge ; 1197 Penzance ; 1198 Ramsgate ; 1199 Scarborough ; 1200 St. Ives ; 1202 Tilbury ; 1203 Woodbridge
-Seattle Pipe Club | 1204 Hogshead ; 1205 Mississippi River ; 1206 Mississippi River Rum Barrel Aged ; 1207 Mississippi River Special Reserve ; 1208 Plum Pudding ; 1209 Plum Pudding Bourbon Barrel Aged ; 1210 Plum Pudding Special Reserve
-Watch City | 1211 #7 ; 1212 4-Q ; 1213 Bada-Bing! ; 1214 Beacon Blend ; 1215 Blue Ridge Special ; 1216 Bostonian Rhapsody ; 1217 Deluxe Crumb Cut ; 1218 English Ernie-ental ; 1219 Eureka ; 1220 F.U.S.T.G! (Fired Up & Set To Go!) ; 1221 None of Your Business ; 1222 Spiked Spumoni
-Sir Walter Raleigh | 1223 Aromatic ; 1224 Regular
-Prince Albert | 1225 Prince Albert
-Half and Half | 1226 Half and Half
-Carter Hall | 1227 Carter Hall
-FALTAN 57
+Esoterica | 1188 Brighton
+Watch City | 1211 #7 ; 1216 Bostonian Rhapsody ; 1220 F.U.S.T.G! (Fired Up & Set To Go!) ; 1222 Spiked Spumoni
+FALTAN 22
