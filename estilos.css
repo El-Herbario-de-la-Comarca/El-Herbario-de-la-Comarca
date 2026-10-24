@@ -105,6 +105,16 @@ dd { margin: 0; min-width: 0; }
 .ofc h4 { font-family: var(--display); font-weight: 400; font-size: 1.45rem; line-height: 1.2; margin: 0; text-wrap: balance; overflow-wrap: anywhere; }
 .ofc .text { display: grid; gap: 10px; max-width: 68ch; overflow-wrap: anywhere; }
 .ofc .text p { margin: 0; }
+.yt { position: relative; width: 100%; max-width: 640px; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: #111; }
+.yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.yt-cover { position: absolute; inset: 0; width: 100%; height: 100%; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 16px; border: 0; cursor: pointer; font: inherit; text-align: center; color: #F2F4EF;
+  background: radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--accent) 45%, #111) 0%, #111 75%); }
+.yt-cover .play { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; }
+.yt-cover .play svg { width: 24px; height: 24px; margin-left: 4px; fill: var(--accent-fg, #fff); }
+.yt-cover:hover .play, .yt-cover:focus-visible .play { transform: scale(1.06); }
+.yt-cover strong { font-weight: 600; font-size: 1.05rem; }
+.yt-cover small { font-size: 0.8rem; opacity: 0.75; }
+.yt-link { font-size: 0.85rem; color: var(--muted); justify-self: start; }
 .video { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; color: inherit; text-decoration: none; background: color-mix(in srgb, var(--line) 25%, transparent); max-width: 460px; }
 .video:hover { border-color: var(--accent); }
 .video .play { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; }

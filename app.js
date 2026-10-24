@@ -563,12 +563,19 @@ function paintOfficial() {
     h += `<article class="ofc">`;
     if (o.headline) h += `<h4>${esc(o.headline)}</h4>`;
     if (o.score) h += `<div class="str">${pips(o.score)}<span>Puntuación: ${o.score} de 5</span></div>`;
-    if (o.body) h += `<div class="text">${paras(o.body)}</div>`;
+    // Vídeo embebido. YouTube no se carga hasta que se pulsa (privacidad: sin conexiones a Google
+    // ni cookies al abrir la ficha), y luego se usa youtube-nocookie.com.
     if (o.videoId) {
-      h += `<a class="video" href="https://www.youtube.com/watch?v=${o.videoId}" target="_blank" rel="noopener noreferrer">
-        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 1.5v17l15-8.5z"/></svg></span>
-        <span class="t"><strong>Ver la reseña en vídeo</strong><small>youtube.com/watch?v=${o.videoId}</small></span></a>`;
+      h += `<div class="yt" id="yt-box">
+        <button class="yt-cover" id="yt-play" type="button" data-id="${o.videoId}">
+          <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 1.5v17l15-8.5z"/></svg></span>
+          <strong>Ver la reseña en vídeo</strong>
+          <small>Al pulsar se carga el reproductor de YouTube</small>
+        </button>
+      </div>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=${o.videoId}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a>`;
     }
+    if (o.body) h += `<div class="text">${paras(o.body)}</div>`;
     h += `</article>`;
   } else {
     h += `<p class="muted">Todavía no hay reseña de este tabaco.</p>`;
@@ -576,6 +583,14 @@ function paintOfficial() {
   if (esAdmin()) h += `<button class="btn" id="of-toggle" type="button">${o ? "Editar reseña" : "Escribir reseña"}</button>`;
   $("of-view").innerHTML = h;
   const t = $("of-toggle"); if (t) t.addEventListener("click", showOfficialForm);
+  const yp = $("yt-play");
+  if (yp) yp.addEventListener("click", () => {
+    const id = yp.dataset.id;
+    if (!/^[A-Za-z0-9_-]{11}$/.test(id)) return;
+    $("yt-box").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0"
+      title="Reseña en vídeo" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  });
 }
 function showOfficialForm() {
   const o = officialFor(openId) || { headline: "", body: "", score: 0, videoId: "" };
