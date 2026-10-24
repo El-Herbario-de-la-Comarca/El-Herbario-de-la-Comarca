@@ -259,7 +259,7 @@ function metaHTML(d) {
         ${d.formato ? `<dt>Formato</dt><dd>${esc(d.formato)}</dd>` : ""}
         ${d.notas.length ? `<dt>Notas</dt><dd><span class="meta">${d.notas.map((n) => `<span class="chip">${esc(n)}</span>`).join("")}</span></dd>` : ""}
       </dl>
-      ${!d.notas.length ? '<p class="muted">Ficha básica: faltan las notas de sabor.</p>' : ""}`;
+      ${!d.notas.length && esEditor() ? '<p class="muted">Ficha básica: faltan las notas de sabor.</p>' : ""}`;
 }
 function abrirPanel(html) {
   if ($("overlay").hidden) lastFocus = document.activeElement;
