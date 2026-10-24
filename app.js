@@ -28,9 +28,16 @@ const TIPOS = {
 };
 const ESTILOS = Object.keys(TIPOS);
 const HOJAS = ["Virginia", "Burley", "Oriental", "Latakia", "Perique", "Kentucky", "Cavendish", "Cigarro"];
-const FUERZA = ["Sin datos", "Muy suave", "Suave", "Media", "Fuerte", "Muy fuerte"];
+const FUERZA = ["Sin datos", "Muy suave", "Suave", "Media", "Fuerte", "Muy fuerte"];   // antigua fuerza de la ficha (propuestas viejas)
+/* Características que se valoran en cada reseña (0 = sin indicar) */
+const CARACT = [
+  { k: "fuerza", col: "fuerza", label: "Fuerza", ops: ["", "Muy suave", "Suave", "Suave a media", "Media", "Media a fuerte", "Fuerte", "Muy fuerte"] },
+  { k: "sabor", col: "sabor", label: "Intensidad de sabor", ops: ["", "Muy suave", "Suave", "Suave a media", "Media", "Media a intensa", "Intensa", "Muy intensa"] },
+  { k: "aroma", col: "aromatizante", label: "Aromatizante", ops: ["", "Ninguno", "Muy ligero", "Ligero", "Medio", "Fuerte", "Muy fuerte"] },
+  { k: "hab", col: "nota_hab", label: "Nota de habitación", ops: ["", "Imperceptible", "Desagradable", "Tolerable", "Agradable", "Muy agradable"] }
+];
 const VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"];
-const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Mezcla"], ["hojas", "Hojas"], ["corte", "Corte"], ["fuerza", "Fuerza"],
+const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Mezcla"], ["hojas", "Hojas"], ["corte", "Corte"],
   ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"]];
 
 const $ = (id) => document.getElementById(id);
@@ -66,8 +73,10 @@ function mapItem(r) {
 }
 function mapOpinion(r) {
   const score = Number.isInteger(r.puntuacion) && r.puntuacion >= 1 && r.puntuacion <= 5 ? r.puntuacion : 0;
-  return { id: r.id, autor: String(r.autor || ""), firma: str(r.firma, 40), score, texto: str(r.texto, 5000),
+  const o = { id: r.id, autor: String(r.autor || ""), firma: str(r.firma, 40), score, texto: str(r.texto, 5000),
     creado: r.creado, actualizado: r.actualizado };
+  CARACT.forEach((c) => { const v = Number(r[c.col]); o[c.k] = Number.isInteger(v) && v > 0 && v < c.ops.length ? v : 0; });
+  return o;
 }
 const findItem = (id) => current.find((d) => d.id === String(id));
 const opinionesDe = (id) => opiniones[String(id)] || [];
@@ -228,7 +237,6 @@ function render() {
         <span class="brandname">${esc(d.marca)}</span>
         <h2>${esc(d.nombre)}</h2>
         <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${d.video ? '<span class="chip">Vídeo</span>' : ""}</div>
-        ${d.fuerza ? `<div class="str">${pips(d.fuerza)}<span>${FUERZA[d.fuerza]}</span></div>` : ""}
         ${st.n ? `<div class="str">${pips(Math.round(st.media))}<span>${rate}</span></div>` : `<span class="rate none">${rate}</span>`}
         <p>${esc(d.desc)}</p>
       </div>
@@ -273,6 +281,20 @@ function notaGrande(d) {
       <span class="nota-l" aria-hidden="true">${st.n} ${st.n === 1 ? "reseña" : "reseñas"}</span>
     </div>`;
 }
+/* Lo que dicen las reseñas de fuerza, sabor, aromatizante y nota de habitación (como Tobacco Reviews) */
+function resumenCaract(d) {
+  const l = opinionesDe(d.id);
+  const filas = CARACT.map((c) => {
+    const votos = l.map((o) => o[c.k]).filter(Boolean);
+    if (!votos.length) return "";
+    const cuenta = c.ops.map((_, i) => votos.filter((v) => v === i).length);
+    const max = Math.max(...cuenta);
+    const top = cuenta.indexOf(max);
+    const barras = c.ops.map((op, i) => i && cuenta[i] ? `<li><span class="op">${esc(op)}</span><span class="barra"><i style="width:${Math.round(cuenta[i] / votos.length * 100)}%"></i></span><span class="n">${cuenta[i]}</span></li>` : "").join("");
+    return `<div class="car"><div class="car-h"><span class="car-l">${esc(c.label)}</span><strong>${esc(c.ops[top])}</strong></div><ul>${barras}</ul></div>`;
+  }).join("");
+  return filas ? `<div class="caract"><h3>Según las reseñas</h3>${filas}</div>` : "";
+}
 function metaHTML(d) {
   return `
       <div class="d-head">
@@ -287,11 +309,11 @@ function metaHTML(d) {
         ${d.tipo ? `<dt>Mezcla</dt><dd>${esc(d.tipo)}</dd>` : ""}
         ${d.hojas.length ? `<dt>Hojas</dt><dd><span class="meta">${d.hojas.map((h) => `<span class="chip">${esc(h)}</span>`).join("")}</span></dd>` : ""}
         ${d.corte ? `<dt>Corte</dt><dd>${esc(d.corte)}</dd>` : ""}
-        <dt>Fuerza</dt><dd><span class="str">${d.fuerza ? pips(d.fuerza) : ""}<span>${FUERZA[d.fuerza]}</span></span></dd>
         ${d.pais ? `<dt>Origen</dt><dd>${esc(d.pais)}</dd>` : ""}
         ${d.formato ? `<dt>Formato</dt><dd>${esc(d.formato)}</dd>` : ""}
         ${d.notas.length ? `<dt>Notas</dt><dd><span class="meta">${d.notas.map((n) => `<span class="chip">${esc(n)}</span>`).join("")}</span></dd>` : ""}
       </dl>
+      ${resumenCaract(d)}
       ${!d.notas.length && esEditor() ? '<p class="muted">Ficha básica: faltan las notas de sabor.</p>' : ""}`;
 }
 function abrirPanel(html) {
@@ -499,8 +521,6 @@ function openEditor(id) {
         <div class="field"><label for="ed-corte">Corte</label><input id="ed-corte" type="text" maxlength="40" list="dl-corte" value="${esc(v.corte)}" autocomplete="off"></div>
       </div>
       <div class="two">
-        <div class="field"><label for="ed-fuerza">Fuerza</label>
-          <select id="ed-fuerza">${[0, 1, 2, 3, 4, 5].map((n) => `<option value="${n}"${v.fuerza === n ? " selected" : ""}>${FUERZA[n]}</option>`).join("")}</select></div>
         <div class="field"><label for="ed-pais">País de origen</label><input id="ed-pais" type="text" maxlength="60" list="dl-pais" value="${esc(v.pais)}" autocomplete="off"></div>
       </div>
       <div class="two">
@@ -530,7 +550,7 @@ function leerFormulario() {
     tipo: $("ed-tipo").value.trim().slice(0, 40),
     hojas: [...document.querySelectorAll('input[name="ed-hoja"]:checked')].map((c) => c.value),
     corte: $("ed-corte").value.trim().slice(0, 40),
-    fuerza: Number($("ed-fuerza").value) || 0, pais: $("ed-pais").value.trim().slice(0, 60),
+    pais: $("ed-pais").value.trim().slice(0, 60),
     formato: $("ed-formato").value.trim().slice(0, 80),
     notas: $("ed-notas").value.split(",").map((n) => n.trim().slice(0, 40)).filter(Boolean).slice(0, 12),
     descripcion: $("ed-desc").value.trim().slice(0, 2000)
@@ -641,6 +661,7 @@ function revHTML(o, propia) {
   return `<div class="head"><span class="who">${esc(o.firma)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
       <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
       <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
+    ${CARACT.some((c) => o[c.k]) ? `<dl class="rev-car">${CARACT.map((c) => o[c.k] ? `<dt>${esc(c.label)}</dt><dd>${esc(c.ops[o[c.k]])}</dd>` : "").join("")}</dl>` : ""}
     ${o.texto ? `<p>${esc(o.texto)}</p>` : ""}${acts}`;
 }
 async function accionResena(e) {
@@ -654,7 +675,7 @@ async function accionResena(e) {
   refrescar();
 }
 function formResena(o) {
-  const v = o || { firma: firmaGuardada(), score: 0, texto: "" };
+  const v = o || { firma: firmaGuardada(), score: 0, texto: "", fuerza: 0, sabor: 0, aroma: 0, hab: 0 };
   $("rv-mine").innerHTML = `
     <form class="f" id="rv-form" novalidate>
       <div class="two">
@@ -662,6 +683,8 @@ function formResena(o) {
           <select id="rv-score"><option value="0">Elige…</option>${[1, 2, 3, 4, 5].map((n) => `<option value="${n}"${v.score === n ? " selected" : ""}>${VALORACION[n]}</option>`).join("")}</select></div>
         <div class="field"><label for="rv-firma">Firma (nombre que se muestra)</label><input id="rv-firma" type="text" maxlength="40" value="${esc(v.firma)}" autocomplete="nickname" placeholder="Por ejemplo, Bilbo de Bolsón"></div>
       </div>
+      <div class="two">${CARACT.map((c) => `<div class="field"><label for="rv-${c.k}">${esc(c.label)}</label>
+          <select id="rv-${c.k}">${c.ops.map((op, i) => `<option value="${i}"${(v[c.k] || 0) === i ? " selected" : ""}>${i ? esc(op) : "Sin indicar"}</option>`).join("")}</select></div>`).join("")}</div>
       <div class="field"><label for="rv-texto">Tu reseña (opcional)</label><textarea id="rv-texto" maxlength="5000" placeholder="Aroma, sabor, cómo se fuma, con qué pipa…">${esc(v.texto)}</textarea></div>
       <p class="muted">Se publica al momento con tu firma. Tu correo no se muestra.</p>
       <p class="msg" id="rv-msg" role="alert"></p>
@@ -683,9 +706,11 @@ async function guardarResena(ev, o) {
   if (!puntuacion) { msg.textContent = "Elige una puntuación de 1 a 5."; return; }
   if (firma.length < 2) { msg.textContent = "Escribe el nombre con el que quieres firmar (al menos 2 letras)."; return; }
   btn.disabled = true; msg.textContent = "";
+  const fila = { firma, puntuacion, texto };
+  CARACT.forEach((c) => { fila[c.col] = Number($("rv-" + c.k).value) || 0; });
   const r = o
-    ? await sb.from("opiniones").update({ firma, puntuacion, texto }).eq("id", o.id)
-    : await sb.from("opiniones").insert({ tabaco_id: openId, firma, puntuacion, texto });
+    ? await sb.from("opiniones").update(fila).eq("id", o.id)
+    : await sb.from("opiniones").insert(Object.assign({ tabaco_id: openId }, fila));
   if (r.error) {
     btn.disabled = false;
     msg.textContent = /duplicate|unique/i.test(r.error.message || "") ? "Ya tienes una reseña de este tabaco; edítala en lugar de crear otra."
