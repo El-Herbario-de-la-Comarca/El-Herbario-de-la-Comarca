@@ -1,0 +1,189 @@
+/* Identidad «despensa de agujero hobbit»: pergamino, tinta marrón, verde de la puerta y dorado del logo.
+   Prueba: se activa con la clase .comarca en <html>. */
+:root.comarca {
+  --bg: #F3EBDA; --surface: #FBF6EA; --fg: #2E2418; --muted: #6E5E48; --line: #DDCEB1;
+  --accent: #2F5D34; --accent-fg: #FBF6EA; --gold: #A8761E; --gold-soft: #F1E2BC; --danger: #9A3324;
+  --hill-a: #CBD3A4; --hill-b: #97AB6C; --door: #2F5D34; --door-ring: #7A4F2A; --knob: #D9A93A;
+  --display: "Young Serif", Georgia, serif;
+  --body: "Alegreya", Georgia, "Times New Roman", serif;
+  --mono: "Alegreya SC", "Alegreya", Georgia, serif;
+  --shadow: 0 1px 0 rgb(80 60 30 / .06), 0 6px 18px -10px rgb(80 60 30 / .35);
+}
+@media (prefers-color-scheme: dark) {
+  :root.comarca:not([data-theme="light"]) {
+    --bg: #1C1A13; --surface: #25221A; --fg: #EEE4CD; --muted: #AC9E83; --line: #3B3628;
+    --accent: #9CC07A; --accent-fg: #1C1A13; --gold: #E2B551; --gold-soft: #3A3120; --danger: #E8978C;
+    --hill-a: #2A3324; --hill-b: #34422B; --door: #3F7A40; --door-ring: #8A6034; --knob: #E2B551;
+    --shadow: 0 1px 0 rgb(0 0 0 / .3), 0 8px 20px -12px rgb(0 0 0 / .7);
+  }
+}
+:root.comarca[data-theme="dark"] {
+  --bg: #1C1A13; --surface: #25221A; --fg: #EEE4CD; --muted: #AC9E83; --line: #3B3628;
+  --accent: #9CC07A; --accent-fg: #1C1A13; --gold: #E2B551; --gold-soft: #3A3120; --danger: #E8978C;
+  --hill-a: #2A3324; --hill-b: #34422B; --door: #3F7A40; --door-ring: #8A6034; --knob: #E2B551;
+  --shadow: 0 1px 0 rgb(0 0 0 / .3), 0 8px 20px -12px rgb(0 0 0 / .7);
+}
+
+/* Tipografía: uncial solo en el título; versalitas en lugar de letra de máquina. */
+.comarca body { font-size: 17px; line-height: 1.5; }
+.comarca label, .comarca .brandname, .comarca .chip, .comarca .count, .comarca .eyebrow, .comarca .hero .tag,
+.comarca dt, .comarca .sec h3, .comarca .str, .comarca .rate, .comarca .rev .when, .comarca .video small,
+.comarca .status, .comarca table.usuarios th, .comarca dl.diff dt, .comarca fieldset.hojas-ed legend {
+  text-transform: none; letter-spacing: 0.03em;
+}
+.comarca label { font-size: 0.92rem; color: var(--muted); }
+.comarca .eyebrow { font-size: 1rem; color: var(--accent); letter-spacing: 0.08em; }
+.comarca .hero .tag { font-size: 1rem; }
+.comarca .brandname { font-size: 0.92rem; }
+.comarca .count { font-size: 0.95rem; }
+.comarca .chip { font-size: 0.85rem; padding: 1px 10px; background: color-mix(in srgb, var(--line) 30%, transparent); border-color: transparent; }
+.comarca .chip.official { background: var(--gold-soft); color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
+.comarca dt { font-size: 0.92rem; padding-top: 1px; }
+.comarca .sec h3 { font-size: 1.05rem; color: var(--accent); }
+.comarca .str, .comarca .rate { font-size: 0.88rem; }
+.comarca .hero h1 { color: var(--fg); }
+.comarca .card h2, .comarca .panel h2 { color: var(--fg); }
+
+/* Cabecera: una línea ornamental fina bajo las colinas. */
+.comarca .hills { margin-top: 10px; }
+.comarca .bar { border-top: 0; border-bottom: 1px solid var(--line); box-shadow: 0 -1px 0 var(--hill-b), 0 -4px 0 var(--bg), 0 -5px 0 var(--line); }
+.comarca .hills .flowers circle:nth-child(odd) { fill: #C8553D; } .comarca .hills .flowers circle:nth-child(even) { fill: #E2B551; }
+
+/* Campos y botones más suaves. */
+.comarca input[type="search"], .comarca input[type="text"], .comarca input[type="url"], .comarca input[type="email"],
+.comarca input[type="password"], .comarca select, .comarca textarea { border-radius: 8px; background: var(--surface); border-color: var(--line); }
+.comarca .btn, .comarca .close, .comarca .gate button { border-radius: 8px; }
+
+/* Tarjetas: papel sobre pergamino. */
+.comarca .card { border-radius: 12px; border-color: var(--line); box-shadow: var(--shadow); }
+.comarca .card .art { background: radial-gradient(ellipse at 50% 85%, color-mix(in srgb, var(--hill-a) 45%, transparent), transparent 70%); }
+.comarca .card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+@media (prefers-reduced-motion: no-preference) {
+  .comarca .card { transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .comarca .card:hover { transform: translateY(-2px); }
+}
+.comarca .pips i { background: color-mix(in srgb, var(--line) 80%, transparent); }
+.comarca .pips i.on { background: var(--gold); }
+
+/* Ficha y ventanas. */
+.comarca .panel, .comarca .gate .box, .comarca .confirm .box { border-radius: 14px; box-shadow: 0 20px 50px -20px rgb(40 30 15 / .5); }
+.comarca .panel .art { border-radius: 14px 0 0 0; background: color-mix(in srgb, var(--hill-a) 22%, var(--surface)); }
+.comarca .overlay { background: color-mix(in srgb, var(--bg) 70%, #2E2418); }
+.comarca .gate { background: color-mix(in srgb, var(--bg) 88%, #2E2418); }
+.comarca footer { border-top-style: dashed; }
+@media (max-width: 600px) { .comarca .panel .art { border-radius: 14px 14px 0 0; } }
+
+/* Madriguera en la colina (sustituye a las colinas simples). */
+.hills.hole { display: none; }
+.comarca .hills:not(.hole) { display: none; }
+.comarca .hills.hole { display: block; height: clamp(120px, 17vw, 200px); margin-top: 6px; }
+:root.comarca { --mound: #A9BC7A; --stone: #BCAE92; --glass: #F3C866; --pathc: #DCC79C; --wood: #8A6747; --smoke: rgb(255 255 255 / .7); }
+:root.comarca[data-theme="dark"] { --mound: #2E3B27; --stone: #5B5444; --glass: #E9B44C; --pathc: #4A4030; --wood: #6B4F37; --smoke: rgb(220 205 175 / .28); }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --mound: #2E3B27; --stone: #5B5444; --glass: #E9B44C; --pathc: #4A4030; --wood: #6B4F37; --smoke: rgb(220 205 175 / .28); } }
+.hole .h-mound { fill: var(--mound); }
+.hole .h-grass { fill: none; stroke: var(--hill-b); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hole .h-path { fill: var(--pathc); }
+.hole .chimney rect { fill: var(--wood); }
+.hole .smoke circle { fill: var(--smoke); }
+.hole .w-frame { fill: var(--wood); }
+.hole .w-glass { fill: var(--glass); }
+.hole .w-bars { fill: none; stroke: var(--wood); stroke-width: 2.4; }
+.hole .d-stone { fill: none; stroke: var(--stone); stroke-width: 8; stroke-dasharray: 11 3; }
+.hole .d-frame { fill: var(--door-ring); }
+.hole .d-door { fill: var(--door); }
+.hole .d-planks { fill: none; stroke: rgb(0 0 0 / .2); stroke-width: 1.6; }
+.hole .d-knob { fill: var(--knob); }
+.hole .fence path { fill: none; stroke: var(--wood); stroke-width: 3; stroke-linecap: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .hole .smoke circle { animation: humo 6s ease-in infinite; transform-box: fill-box; transform-origin: center; }
+  .hole .smoke circle:nth-child(2) { animation-delay: -2s; }
+  .hole .smoke circle:nth-child(3) { animation-delay: -4s; }
+}
+@keyframes humo { 0% { transform: translate(-6px, 34px) scale(.5); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(8px, -16px) scale(1.3); opacity: 0; } }
+/* Versión orgánica de la madriguera. */
+:root.comarca { --far: #DCDDB5; --shade: rgb(60 70 30 / .12); --stonec: #C3B597; --stone-edge: #9C8C6C; --leaf: #6E8B45; }
+:root.comarca[data-theme="dark"] { --far: #242A1E; --shade: rgb(0 0 0 / .22); --stonec: #5E5747; --stone-edge: #403B30; --leaf: #4E6A35; }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --far: #242A1E; --shade: rgb(0 0 0 / .22); --stonec: #5E5747; --stone-edge: #403B30; --leaf: #4E6A35; } }
+.hole .h-far { fill: var(--far); }
+.hole .h-shade { fill: var(--shade); }
+.hole .stones path { fill: var(--stonec); stroke: var(--stone-edge); stroke-width: 1; stroke-linejoin: round; }
+.hole .ch-lines { fill: none; stroke: rgb(0 0 0 / .18); stroke-width: 1.2; }
+.hole .chimney path:first-child { fill: var(--stonec); stroke: var(--stone-edge); stroke-width: 1; }
+.hole .ivy { fill: none; stroke: var(--leaf); stroke-width: 1.6; stroke-linecap: round; }
+.hole .leaves circle, .hole .bush path { fill: var(--leaf); }
+.hole .sill, .hole .pots path { fill: var(--wood); }
+.hole .h-path ellipse { fill: var(--pathc); stroke: var(--stone-edge); stroke-width: .8; }
+
+/* Anillo de humo: sale de la chimenea cada 30 s y cruza el cielo. */
+.comarca .hills.hole { overflow: visible; clip-path: inset(-400px 0 0 0); }
+:root.comarca { --smoke: rgb(120 104 82 / .32); --ring: rgb(110 95 72 / .55); }
+:root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); } }
+.hole .ring path, .hole .ship path { fill: none; stroke: var(--ring); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.hole .ring path { stroke-linecap: butt; }
+.hole .ship path { stroke-width: 1.8; fill: color-mix(in srgb, var(--ring) 25%, transparent); }
+.hole .ring, .hole .ship { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .hole .ring, .hole .ship { transform-box: fill-box; transform-origin: center; animation: 10s 4s infinite; }
+  .hole .ring { animation-name: anillo; animation-timing-function: ease-out; }
+  .hole .ship { animation-name: barco; animation-timing-function: linear; }
+}
+@keyframes anillo {
+  0%   { opacity: 0;   transform: translate(0, 6px) scale(.3); }
+  5%   { opacity: .95; transform: translate(6px, -6px) scale(.6); }
+  30%  { opacity: .85; transform: translate(150px, -30px) scale(1.5); }
+  58%  { opacity: .85; transform: translate(156px, -31px) scale(1.55); }
+  72%  { opacity: 0;   transform: translate(166px, -34px) scale(2); }
+  100% { opacity: 0;   transform: translate(166px, -34px) scale(2); }
+}
+@keyframes barco {
+  0%, 33% { opacity: 0;  transform: translate(0, 4px) scale(.4); }
+  37%  { opacity: .9; transform: translate(14px, -8px) scale(.6); }
+  54%  { opacity: .9; transform: translate(152px, -29px) scale(1); }
+  66%  { opacity: .75; transform: translate(250px, -36px) scale(1.05); }
+  78%  { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
+  100% { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
+}
+
+/* ---------- Temporadas: Halloween y Navidad (data-temporada en <html>) ---------- */
+.hole .t-halloween, .hole .t-navidad { display: none; }
+[data-temporada="halloween"] .hole .t-halloween, [data-temporada="navidad"] .hole .t-navidad { display: inline; }
+:root.comarca { --moon: #F1E3B5; --bat: #3A3328; --pumpkin: #E07B24; --pumpkin-d: #B95A14; --stem: #5D6B2E; --lantern: #FFD36B;
+  --snow: #FFFFFF; --wreath: #3E6B35; --berry: #C0392B; --l0: #E2463A; --l1: #F2C14E; --l2: #4FA3D9; --l3: #6BBF59; --webc: rgb(80 70 55 / .45); }
+:root.comarca[data-theme="dark"] { --moon: #F4E6B8; --bat: #0E0D09; --snow: #DCE2E6; --webc: rgb(230 220 200 / .35); }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --moon: #F4E6B8; --bat: #0E0D09; --snow: #DCE2E6; --webc: rgb(230 220 200 / .35); } }
+[data-temporada="halloween"].comarca { --glass: #F39A3B; }
+.hole .moon { fill: var(--moon); }
+.hole .bat path, .hole .bat circle { fill: var(--bat); }
+.hole .pk { fill: var(--pumpkin); stroke: var(--pumpkin-d); stroke-width: 1; }
+.hole .pk-c { fill: color-mix(in srgb, var(--pumpkin) 85%, #fff); }
+.hole .stem { fill: var(--stem); }
+.hole .face { fill: var(--lantern); }
+.hole .web { fill: none; stroke: var(--webc); stroke-width: .8; }
+.hole .spider { stroke: var(--webc); stroke-width: .7; }
+.hole .spider-b { fill: var(--bat); }
+.hole .snow-line { fill: none; stroke: var(--snow); stroke-width: 5; stroke-linecap: butt; stroke-linejoin: round; opacity: .95; }
+.hole .snow-line.far { stroke-width: 3.5; opacity: .75; }
+.hole .snow-patches ellipse { fill: var(--snow); opacity: .9; }
+.hole .snow-fill, .hole .snowfall circle { fill: var(--snow); }
+.hole .snowfall circle { opacity: .9; }
+.hole .wreath { fill: none; stroke: var(--wreath); stroke-width: 4.5; }
+.hole .berries circle, .hole .bow { fill: var(--berry); }
+.hole .bow { stroke: var(--berry); stroke-width: 1.4; stroke-linecap: round; }
+.hole .cable { fill: none; stroke: rgb(40 50 30 / .5); stroke-width: .8; }
+.hole .l0 { fill: var(--l0); } .hole .l1 { fill: var(--l1); } .hole .l2 { fill: var(--l2); } .hole .l3 { fill: var(--l3); }
+.hole .fir { fill: #3E6B35; } .hole .trunk { fill: var(--wood); } .hole .star { fill: #F2C14E; }
+@media (prefers-reduced-motion: no-preference) {
+  .hole .bat { animation: aleteo .5s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+  .hole .bat.b2 { animation-duration: .42s; } .hole .bat.b3 { animation-duration: .58s; }
+  .hole .bat path { animation: vuelo 6s ease-in-out infinite alternate; }
+  .hole .lights circle, .hole .tree circle { animation: parpadeo 1.6s ease-in-out infinite alternate; }
+  .hole .lights .l1, .hole .tree .l1 { animation-delay: -.4s; } .hole .lights .l2, .hole .tree .l2 { animation-delay: -.8s; } .hole .lights .l3, .hole .tree .l3 { animation-delay: -1.2s; }
+  .hole .face { animation: vela 2.4s ease-in-out infinite alternate; }
+  .hole .snowfall circle { animation-name: nieve; animation-timing-function: linear; animation-iteration-count: infinite; }
+}
+@keyframes aleteo { from { transform: scaleY(1); } to { transform: scaleY(.55); } }
+@keyframes vuelo { from { transform: translate(0, 0); } to { transform: translate(14px, -6px); } }
+@keyframes parpadeo { from { opacity: 1; } to { opacity: .35; } }
+@keyframes vela { from { opacity: 1; } to { opacity: .7; } }
+@keyframes nieve { from { transform: translate(0, 0); } to { transform: translate(12px, 230px); } }
