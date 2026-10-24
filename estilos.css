@@ -79,6 +79,8 @@ button.link { font: inherit; background: none; border: 0; color: var(--accent); 
 footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; gap: 6px; font-size: 0.85rem; color: var(--muted); }
 footer strong { color: var(--fg); font-weight: 600; }
 footer .legal-links a { color: var(--muted); }
+.lg-priv { font-size: 0.8rem; }
+.lg-priv a { color: inherit; }
 footer .visitas { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.02em; }
 
 /* Detalle */

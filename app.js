@@ -819,8 +819,8 @@ function abrirLogin() {
   $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
   ["lg-send", "lg-new", "lg-forgot"].forEach((id) => ($(id).disabled = false));
   $("lg-form").hidden = false; $("np-form").hidden = true;
-  $("lg-title").textContent = "Acceso de colaboradores";
-  $("lg-text").textContent = "Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta y pide al administrador que te dé permiso de edición.";
+  $("lg-title").textContent = "Entrar en el herbario";
+  $("lg-text").textContent = "Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta: con ella puedes escribir reseñas.";
   $("login").hidden = false; $("lg-email").focus();
 }
 function cerrarLogin() { $("login").hidden = true; }

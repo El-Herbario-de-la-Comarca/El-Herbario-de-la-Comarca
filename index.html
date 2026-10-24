@@ -37,8 +37,8 @@
 
 <div class="confirm" id="login" role="dialog" aria-modal="true" aria-labelledby="lg-title" hidden>
   <div class="box">
-    <h2 id="lg-title">Acceso de colaboradores</h2>
-    <p id="lg-text">Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta y pide al administrador que te dé permiso de edición.</p>
+    <h2 id="lg-title">Entrar en el herbario</h2>
+    <p id="lg-text">Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta: con ella puedes escribir reseñas.</p>
     <form id="lg-form" class="f" novalidate>
       <div class="field"><label for="lg-email">Correo electrónico</label><input id="lg-email" type="email" autocomplete="email" required></div>
       <div class="field" id="lg-pass-f"><label for="lg-pass">Contraseña</label><input id="lg-pass" type="password" autocomplete="current-password" minlength="8"></div>
@@ -49,6 +49,7 @@
         <button class="btn" id="lg-cancel" type="button">Cerrar</button>
       </div>
       <button class="link" id="lg-forgot" type="button">He olvidado mi contraseña</button>
+      <p class="muted lg-priv">Al crear una cuenta guardamos tu correo para gestionarla; nunca se publica. Más información en la <a href="privacidad.html" target="_blank" rel="noopener">política de privacidad</a>.</p>
     </form>
     <form id="np-form" class="f" novalidate hidden>
       <div class="field"><label for="np-pass">Nueva contraseña (mínimo 8 caracteres)</label><input id="np-pass" type="password" autocomplete="new-password" minlength="8"></div>
@@ -134,7 +135,7 @@
     <span class="acceso"><span id="status" class="status"></span> <span id="auth-box"></span></span>
     <span>Fumar perjudica gravemente la salud. Prohibida la venta a menores de 18 años.</span>
     <span id="visitas" class="visitas" hidden></span>
-    <span class="legal-links"><a href="aviso-legal.html">Aviso legal</a></span>
+    <span class="legal-links"><a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Política de privacidad</a></span>
   </footer>
 </div>
 
