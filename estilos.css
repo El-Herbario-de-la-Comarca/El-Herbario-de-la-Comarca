@@ -89,6 +89,12 @@ footer .visitas { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 
 .card .photo { max-width: 170px; }
 .panel .photo { max-width: 220px; }
 .panel .info { padding: 24px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.d-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.d-title { display: grid; gap: 4px; min-width: 0; }
+.nota { flex: none; display: grid; justify-items: center; gap: 6px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--line) 22%, transparent); }
+.nota-n { font-family: var(--display); font-size: 3rem; line-height: .9; color: var(--fg); }
+.nota-n small { font-size: 1.1rem; color: var(--muted); margin-left: 2px; }
+.nota-l { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .panel h2 { font-family: var(--display); font-weight: 400; font-size: 1.9rem; line-height: 1.1; margin: 0; overflow-wrap: anywhere; }
 .panel p { margin: 0; text-wrap: pretty; }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 0.92rem; }

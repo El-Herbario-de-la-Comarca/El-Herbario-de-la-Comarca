@@ -251,10 +251,25 @@ function irAPagina(n) {
 }
 
 /* ---------- Ficha de detalle ---------- */
+/* Puntuación del herbario en grande, junto al nombre de la ficha */
+function notaGrande(d) {
+  const o = officialFor(d.id);
+  if (!o || !o.score) return "";
+  return `<div class="nota" aria-label="Puntuación del herbario: ${o.score} de 5">
+      <span class="nota-n" aria-hidden="true">${o.score}<small>/5</small></span>
+      ${pips(o.score)}
+      <span class="nota-l" aria-hidden="true">${esc(VALORACION[o.score].replace(/^\d · /, ""))}</span>
+    </div>`;
+}
 function metaHTML(d) {
   return `
-      <span class="brandname">${esc(d.marca)}</span>
-      <h2 id="d-name">${esc(d.nombre)}</h2>
+      <div class="d-head">
+        <div class="d-title">
+          <span class="brandname">${esc(d.marca)}</span>
+          <h2 id="d-name">${esc(d.nombre)}</h2>
+        </div>
+        ${notaGrande(d)}
+      </div>
       ${d.desc ? `<p>${esc(d.desc)}</p>` : ""}
       <dl>
         ${d.tipo ? `<dt>Mezcla</dt><dd>${esc(d.tipo)}</dd>` : ""}
