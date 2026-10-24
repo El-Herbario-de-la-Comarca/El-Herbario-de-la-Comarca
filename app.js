@@ -23,7 +23,7 @@
 
 // Mezcla (se guarda en la columna "tipo") y hojas que lleva.
 const TIPOS = {
-  "Inglesa": "#2F3E4E", "Virginia": "#B8862B", "Virginia-Perique": "#7A5A1E", "Burley": "#6B4A2F",
+  "Inglesa": "#2F3E4E", "Balcánica": "#4A3B5C", "Oriental": "#8C5A3C", "Virginia": "#B8862B", "Virginia-Perique": "#7A5A1E", "Burley": "#6B4A2F",
   "Lakeland": "#3F6E5A", "Aromática": "#7B2D4B", "Sin mezclar": "#5B6B73"
 };
 const ESTILOS = Object.keys(TIPOS);
