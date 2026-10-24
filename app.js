@@ -280,11 +280,11 @@ function openDetail(id) {
   const d = findItem(id); if (!d) return;
   openId = d.id;
   abrirPanel(`
+    <button class="x-close" id="d-close" type="button" aria-label="Cerrar ficha" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
     <div class="art" id="d-art">${art(d)}</div>
     <div class="info">
       <div id="d-meta"></div>
       <div id="d-tools"></div>
-      <button class="close" id="d-close" type="button">Cerrar</button>
     </div>
     <div class="sections">
       <section class="sec" aria-labelledby="of-h">
