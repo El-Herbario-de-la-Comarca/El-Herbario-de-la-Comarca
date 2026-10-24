@@ -199,8 +199,7 @@ function render() {
     return true;
   });
   list.sort((a, b) =>
-    state.sort === "fuerza-asc" ? (a.fuerza || 99) - (b.fuerza || 99) || byName(a, b)
-    : state.sort === "fuerza-desc" ? b.fuerza - a.fuerza || byName(a, b)
+    state.sort === "marca" ? a.marca.localeCompare(b.marca, "es") || byName(a, b)
     : state.sort === "puntuacion" ? score(b) - score(a) || byName(a, b)
     : byName(a, b));
   const paginas = Math.max(1, Math.ceil(list.length / POR_PAGINA));
