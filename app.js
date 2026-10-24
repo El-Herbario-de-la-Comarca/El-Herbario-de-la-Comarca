@@ -865,12 +865,33 @@ $("np-form").addEventListener("submit", guardarNuevaPass);
 $("lg-cancel").addEventListener("click", cerrarLogin);
 $("login").addEventListener("click", (e) => { if (e.target === $("login")) cerrarLogin(); });
 
+/* ---------- Contador de visitas (pie de página) ----------
+   Cuenta una visita por sesión del navegador. El país sale de la zona horaria (zonas.js):
+   no se usa la IP ni servicios externos, y solo se guarda el total por país. */
+async function contarVisita() {
+  if (!sb) return;
+  let ya = false;
+  try { ya = sessionStorage.getItem("herbario-visita") === "1"; } catch (e) {}
+  let pais = "";
+  try { pais = (window.ZONA_PAIS || {})[Intl.DateTimeFormat().resolvedOptions().timeZone] || ""; } catch (e) {}
+  const { data, error } = await sb.rpc("registrar_visita", { p_pais: pais, p_contar: !ya });
+  if (error || !data) return;   // si aún no se ha ejecutado 06_visitas.sql, no se muestra nada
+  if (!ya) { try { sessionStorage.setItem("herbario-visita", "1"); } catch (e) {} }
+  const n = (x) => Number(x || 0).toLocaleString("es-ES");
+  const total = Number(data.total || 0), paises = Number(data.paises || 0);
+  if (!total) return;
+  $("visitas").textContent = `${n(total)} ${total === 1 ? "visita" : "visitas"}` +
+    (paises ? ` desde ${n(paises)} ${paises === 1 ? "país" : "países"}` : "");
+  $("visitas").hidden = false;
+}
+
 /* ---------- Arranque ---------- */
 (async function iniciar() {
   setupFilters();
   usarRespaldo(); fillFilters(); render(); paintTop();   // se ve algo al instante
   abrirFichaDeUrl();                                      // quien entra por el enlace de una ficha
   if (!sb) return;
+  contarVisita();
   const { data } = await sb.auth.getSession();
   await leerSesion(data && data.session);
   await refrescar();
