@@ -1,6 +1,13 @@
 # Traspaso: lectura de mezcla y hojas de las fichas
 
-Estado a 24/10/2026: hay **485 de 647** fichas leídas. Faltan **162**; la lista está en `marcas/fichas_pendientes.txt`.
+Estado a 24/10/2026 (noche): **fase de lectura terminada**. Hay **632 de 647** fichas leídas. Faltan **15** sin dato fiable (lista en `marcas/fichas_pendientes.txt`): Mac Baren 420 y 424, Amphora 405 Mellow Blend, McConnell 1028 y 1033, Mc Lintock 1141, R and M 1143, Dan Tobacco 1150 y 1166, Germain's 1170, 1178 y 1181, Watch City 1216, 1220 y 1222. Germain's 1170 y 1181 existen en Smokingpipes (familia Virginia) pero no se pudieron abrir. Siguiente paso: la fase final (más abajo).
+
+### Notas de la última tanda
+- Familias nuevas que `estilo_hojas.py` debe contemplar tal cual vienen de la fuente: «Virginia Based», «Cavendish Based», «Virginia/Perique», «Virginia/Burley», «Scottish», «Dutch-style» (Clan), «Other» (Amsterdamer) y «English Aromatic» (Lane HGL). «Burley Based» se guardó ya como Burley.
+- Nombres asumidos o distintos (revisar): 1142 Mc Lintock «Wild C» guardada como McLintock Wild Cherry; 1139 Presbyterian Mixture (TR la lista bajo Mac Baren); 1211 Watch City #7 guardada como «Aromatic #7»; 1122 Stanwell Sungold (TR: «Vanilla (Sungold)»); 398 St. Bruno Gold Block (TR: «Mac Baren Gold Block»); 393 Capstan Gold Flake (TR: «Gold Navy Cut»); 394 Capstan Gold Ready Rubbed (TR: «Gold Navy Cut Ready Rubbed»).
+- 391 Capstan Original Flake viene de mac-baren.com (solo Virginia, sin campo de familia).
+- Erik Stokkebye 4 Seasons (1112-1115): comprobadas con la descripción de Smokingpipes; salen Aromática, Inglesa, Virginia y Virginia.
+- Smokingpipes mostró una sala de espera con anti-robot en una página de listado (Seattle Pipe Club). No se insistió; las fichas individuales sí abrían.
 Rama de trabajo: `estilo-y-hojas`. No toques `main` hasta la fase final.
 
 ## Archivos
