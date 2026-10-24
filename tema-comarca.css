@@ -114,36 +114,35 @@
 .hole .sill, .hole .pots path { fill: var(--wood); }
 .hole .h-path ellipse { fill: var(--pathc); stroke: var(--stone-edge); stroke-width: .8; }
 
-/* Anillo de humo: sale de la chimenea cada 30 s y cruza el cielo. */
+/* Anillo de humo: sale de la chimenea cada 10 s, se aleja flotando y el barco lo atraviesa.
+   Las dos mitades del anillo (detrás y delante del barco) se pintan con un color opaco
+   mezclado con el fondo, así se solapan sin que se note la unión. La transparencia se anima
+   con --ra (0–1) en vez de con opacity, por el mismo motivo. */
+@property --ra { syntax: "<number>"; inherits: true; initial-value: 0; }
 .comarca .hills.hole { overflow: visible; clip-path: inset(-400px 0 0 0); }
-:root.comarca { --smoke: rgb(120 104 82 / .32); --ring: rgb(110 95 72 / .55); }
-:root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); }
-@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); } }
-.hole .ring path, .hole .ship path { fill: none; stroke: var(--ring); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-.hole .ring path { stroke-linecap: butt; }
-.hole .ship path { stroke-width: 1.8; fill: color-mix(in srgb, var(--ring) 25%, transparent); }
-.hole .ring, .hole .ship { opacity: 0; }
+:root.comarca { --smoke: rgb(120 104 82 / .32); --ring: rgb(110 95 72 / .55); --ring-c: rgb(110 95 72); --ring-max: 55%; }
+:root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); --ring-c: rgb(225 210 180); --ring-max: 50%; }
+@media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); --ring-c: rgb(225 210 180); --ring-max: 50%; } }
+.hole .ring path { fill: color-mix(in srgb, var(--ring-c) calc(var(--ra) * var(--ring-max)), var(--bg)); stroke: none; }
+.hole .ship path { fill: color-mix(in srgb, var(--ring) 25%, transparent); stroke: var(--ring); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hole .ring { --ra: 0; visibility: hidden; }
+.hole .ship { opacity: 0; }
+.hole .ring, .hole .ship, .hole .ring-w, .hole .ship-w { transform-box: view-box; transform-origin: 284px 36px; }
 @media (prefers-reduced-motion: no-preference) {
-  .hole .ring, .hole .ship { transform-box: fill-box; transform-origin: center; animation: 10s 4s infinite; }
-  .hole .ring { animation-name: anillo; animation-timing-function: ease-out; }
-  .hole .ship { animation-name: barco; animation-timing-function: linear; }
+  .hole .ring { visibility: visible;
+    animation: anillo-mov 10s 4s infinite cubic-bezier(.22, .55, .32, 1), anillo-tam 10s 4s infinite cubic-bezier(.3, .6, .4, 1), anillo-ver 10s 4s infinite ease-in-out; }
+  .hole .ring-w { animation: anillo-vaiven 3.4s ease-in-out infinite alternate; }
+  .hole .ship { animation: barco-mov 10s 4s infinite cubic-bezier(.45, .05, .55, .95), barco-ver 10s 4s infinite ease-in-out; }
+  .hole .ship-w { animation: barco-vaiven 1.8s ease-in-out infinite alternate; }
 }
-@keyframes anillo {
-  0%   { opacity: 0;   transform: translate(0, 6px) scale(.3); }
-  5%   { opacity: .95; transform: translate(6px, -6px) scale(.6); }
-  30%  { opacity: .85; transform: translate(150px, -30px) scale(1.5); }
-  58%  { opacity: .85; transform: translate(156px, -31px) scale(1.55); }
-  72%  { opacity: 0;   transform: translate(166px, -34px) scale(2); }
-  100% { opacity: 0;   transform: translate(166px, -34px) scale(2); }
-}
-@keyframes barco {
-  0%, 33% { opacity: 0;  transform: translate(0, 4px) scale(.4); }
-  37%  { opacity: .9; transform: translate(14px, -8px) scale(.6); }
-  54%  { opacity: .9; transform: translate(152px, -29px) scale(1); }
-  66%  { opacity: .75; transform: translate(250px, -36px) scale(1.05); }
-  78%  { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
-  100% { opacity: 0;  transform: translate(330px, -44px) scale(1.15); }
-}
+/* Cada propiedad tiene un solo tramo con su curva: sin paradas ni cambios bruscos de velocidad. */
+@keyframes anillo-mov { 0% { translate: 0 2px; } 72%, 100% { translate: 178px -36px; } }
+@keyframes anillo-tam { 0% { scale: .3; } 72%, 100% { scale: 1.75; } }
+@keyframes anillo-ver { 0% { --ra: 0; } 7% { --ra: 1; } 56% { --ra: .95; } 74%, 100% { --ra: 0; } }
+@keyframes anillo-vaiven { from { rotate: -4deg; scale: 1.03 .97; } to { rotate: 4deg; scale: .97 1.03; } }
+@keyframes barco-mov { 0%, 30% { translate: 0 4px; scale: .45; } 84%, 100% { translate: 340px -62px; scale: 1.15; } }
+@keyframes barco-ver { 0%, 30% { opacity: 0; } 37% { opacity: .9; } 70% { opacity: .85; } 84%, 100% { opacity: 0; } }
+@keyframes barco-vaiven { from { rotate: -3deg; translate: 0 -.6px; } to { rotate: 3deg; translate: 0 .6px; } }
 
 /* ---------- Temporadas: Halloween y Navidad (data-temporada en <html>) ---------- */
 .hole .t-halloween, .hole .t-navidad { display: none; }
