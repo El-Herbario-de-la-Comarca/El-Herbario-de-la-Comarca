@@ -221,7 +221,7 @@ function render() {
         <h2>${esc(d.nombre)}</h2>
         <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${o ? '<span class="chip official">Reseña</span>' : ""}${o && o.videoId ? '<span class="chip">Vídeo</span>' : ""}</div>
         ${d.fuerza ? `<div class="str">${pips(d.fuerza)}<span>${FUERZA[d.fuerza]}</span></div>` : ""}
-        ${rate ? `<span class="rate">${rate}</span>` : ""}
+        ${rate ? `<span class="rate${o ? "" : " none"}">${rate}</span>` : ""}
         <p>${esc(d.desc)}</p>
       </div>
     </button>`;

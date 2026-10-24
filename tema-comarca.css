@@ -199,3 +199,16 @@
   .comarca .hero .tag { font-size: 0.85rem; }
   .comarca .hills.hole { height: 96px; margin-top: 4px; }
 }
+
+/* Tarjetas compactas en móviles: lata pequeña a la izquierda y datos a la derecha. */
+@media (max-width: 600px) {
+  .comarca .grid { gap: 10px; padding-top: 16px; }
+  .comarca .card { grid-template-rows: none; grid-template-columns: 88px minmax(0, 1fr); align-items: center; border-radius: 10px; }
+  .comarca .card .art { padding: 10px 0 10px 10px; background: none; }
+  .comarca .card .art svg, .comarca .card .photo { max-width: 78px; }
+  .comarca .card .body { padding: 11px 14px 11px 12px; gap: 5px; }
+  .comarca .card h2 { font-size: 1.12rem; }
+  .comarca .card .brandname { font-size: 0.85rem; }
+  .comarca .card p, .comarca .card .rate.none { display: none; }
+  .comarca .card:hover { transform: none; }
+}
