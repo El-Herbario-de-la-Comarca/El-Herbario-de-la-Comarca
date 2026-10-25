@@ -1078,6 +1078,7 @@ function abrirLogin() {
   $("lg-form").hidden = false; $("np-form").hidden = true;
   $("lg-title").textContent = "Entrar en el herbario";
   $("lg-text").textContent = "Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta: con ella puedes escribir reseñas.";
+  $("lg-nombre-f").hidden = true; $("lg-send").hidden = false; $("lg-forgot").hidden = false;
   $("login").hidden = false; $("lg-email").focus();
 }
 function cerrarLogin() { $("login").hidden = true; }
@@ -1110,11 +1111,23 @@ async function entrar(ev) {
   else { $("lg-msg").textContent = ""; cerrarLogin(); }
 }
 async function crearCuenta() {
+  // Primera pulsación: se pide también el nombre público.
+  if ($("lg-nombre-f").hidden) {
+    $("lg-nombre-f").hidden = false; $("lg-send").hidden = true; $("lg-forgot").hidden = true;
+    $("lg-title").textContent = "Crear cuenta";
+    $("lg-text").textContent = "Escribe tu correo, una contraseña y el nombre público que verán los demás en tus reseñas.";
+    $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
+    $("lg-nombre").focus(); return;
+  }
+  const nombre = $("lg-nombre").value.trim();
+  if (nombre.length < 2 || nombre.length > 40) { $("lg-msg").textContent = "Escribe un nombre público de 2 a 40 caracteres."; $("lg-nombre").focus(); return; }
   const d = datosLogin(true); if (!d) return;
   $("lg-new").disabled = true;
-  const { data, error } = await sb.auth.signUp(Object.assign(d, { options: { emailRedirectTo: location.origin + location.pathname } }));
+  const { data, error } = await sb.auth.signUp(Object.assign(d, { options: { emailRedirectTo: location.origin + location.pathname, data: { nombre } } }));
   $("lg-new").disabled = false;
   if (error) { $("lg-msg").textContent = errorLogin(error); return; }
+  // Si la cuenta queda abierta al momento, se guarda también el nombre en el perfil (por si falta el SQL 21).
+  if (data.session) { try { await sb.rpc("actualizar_mi_perfil", { p_nombre: nombre, p_avatar: "" }); } catch (e) {} }
   if (!data.session) { $("lg-msg").style.color = "var(--accent)"; $("lg-msg").textContent = "Cuenta creada. Revisa tu correo y pulsa el enlace de confirmación para poder entrar."; }
 }
 async function olvido() {
