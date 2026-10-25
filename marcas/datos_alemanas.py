@@ -73,3 +73,84 @@ MARCAS["HU Tobacco"] = [
     ("Nebari", "", "Virginia, Burley, Perique", "Ribbon", "Lata de 50 g · lata de 100 g", _PE, "catálogo HU"),
     ("Night Owl", "Burley", "Virginia, Perique, Burley", "Broken Flake", "Lata de 50 g · lata de 100 g", _PE, "sp"),
 ]
+
+# ---------------------------------------------------------------- Solani
+PAIS["Solani"] = "Alemania"
+FUENTES["Solani"] = "cigarworld.de (Solani Collection), Smokingpipes y la ficha del importador Monjure International (oct. 2026)"
+_SO = "Mezcla de Rüdiger Will."
+MARCAS["Solani"] = [
+    ("Aged Burley Flake 656", "Burley", "Burley, Cigar, Kentucky", "Flake", "Lata de 50 g", _SO, "cw"),
+    ("Blue Label 369", "Aromatic", "Virginia, Burley, Black Cavendish, Perique", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Aroma afrutado y de miel.", "cw y Monjure"),
+    ("Festival 333", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Aroma afrutado.", "cw"),
+    ("Gold Label 779", "English", "Virginia, Latakia, Orientals", "Ribbon", "Lata de 50 g", _SO + " También se vende como English Luxury.", "cw"),
+    ("Green Label 127", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Un toque de manzana.", "cw y Monjure"),
+    ("Red Label 131", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Esencias tropicales y un toque de whisky de malta.", "cw y Monjure"),
+    ("Silver Flake 660", "Virginia", "Kentucky, Virginia", "Flake", "Lata de 100 g", _SO, "tr"),
+    ("Virginia Flake 633", "Virginia", "Virginia, Perique", "Flake", "Lata de 50 g · lata de 100 g", _SO, "Monjure"),
+    ("White and Black 763", "English", "Virginia, Latakia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO, "sp"),
+    ("X - Sweet Mystery 113", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO, "sp"),
+]
+
+# ---------------------------------------------------------------- Reiner
+PAIS["Reiner"] = "Alemania"
+FUENTES["Reiner"] = "cigarworld.de (Reiner Pfeifentabak) y Tobacco Reviews (oct. 2026)"
+_RE = "La elabora Kohlhase & Kopp."
+MARCAS["Reiner"] = [
+    ("Blend 12 (Gelb)", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g", _RE + " Aroma de vainilla.", "cw"),
+    ("Blend 25 (Grün)", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _RE + " Aroma de frutos secos.", "cw"),
+    ("Blend 36 (Blau)", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _RE + " Aroma de miel.", "cw"),
+    ("Blend 51 (Rot)", "English", "Virginia, Black Cavendish, Latakia, Kentucky", "Ribbon", "Lata de 50 g · lata de 100 g", _RE, "cw"),
+    ("Long Golden Flake (Blend 71)", "Virginia/Perique", "Burley, Perique, Virginia", "Flake", "", _RE + " Aroma de miel y naranja.", "tr"),
+    ("Professional", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 100 g", _RE + " Aroma afrutado.", "cw"),
+]
+
+# ---------------------------------------------------------------- Bentley
+PAIS["Bentley"] = ""
+FUENTES["Bentley"] = "cigarworld.de (Bentley Pfeifentabak, oct. 2026)"
+_BE = "Bolsa de 50 g · lata de 100 g"
+MARCAS["Bentley"] = [
+    ("B13 Pipe Tobacco", "Aromatic", "Virginia, Burley, Orientals", "Ribbon", "Lata de 100 g", "Aroma afrutado.", "cw"),
+    ("The Classic One", "Virginia", "Virginia", "Ready Rubbed", _BE, "", "cw"),
+    ("The London Carmine", "English", "Virginia, Latakia, Orientals, Kentucky", "Ribbon", _BE, "Antes se llamaba The London Pine.", "cw"),
+    ("The Oriental Amber", "English", "Virginia, Orientals, Perique", "Ribbon", _BE, "", "cw"),
+    ("The Planters Purpure", "Aromatic", "Virginia, Black Cavendish", "Ribbon", _BE, "Aroma afrutado.", "cw"),
+    ("The Royal Gold", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", _BE, "Aroma de vainilla. Antes se llamaba Royal Vanilla.", "cw"),
+    ("The Virginia Ruby", "Aromatic", "Virginia, Black Cavendish", "Ribbon", _BE, "Aroma de vainilla. Antes se llamaba Virginia Honey.", "cw"),
+]
+
+# ---------------------------------------------------------------- Ilsted
+PAIS["Ilsted"] = ""
+FUENTES["Ilsted"] = "cigarworld.de (Ilsted's Own, oct. 2026) y Tobacco Reviews"
+_IL = "Marca del pipero danés Poul Ilsted."
+MARCAS["Ilsted"] = [
+    ("Cedros", "Aromatic", "Black Cavendish, Burley, Kentucky, Virginia", "Ribbon", "Lata de 50 g", _IL + " Aroma de frutos secos; se vende en caja de cedro.", "cw"),
+    ("Golden Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", _IL, "cw"),
+    ("Own Mixture No. 55", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 100 g", _IL + " Aroma afrutado.", "cw"),
+    ("Own Mixture No. 66", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 100 g", _IL + " Aroma de vainilla.", "cw"),
+    ("Own Mixture No. 77", "Aromatic", "Burley, Cavendish, Virginia", "Ribbon", "Lata de 100 g", _IL, "tr"),
+    ("Own Mixture No. 88", "English", "Virginia, Latakia, Kentucky", "Ribbon", "Lata de 100 g", _IL, "cw"),
+    ("Own Mixture No. 99", "Aromatic", "Black Cavendish, Burley, Orientals, Virginia", "Ribbon", "Lata de 100 g", _IL + " Aroma de caramelo.", "cw"),
+    ("Own Mixture No. 100", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 100 g", _IL + " Aroma afrutado.", "cw"),
+]
+
+# ---------------------------------------------------------------- Winsløw
+PAIS["Winsløw"] = ""
+FUENTES["Winsløw"] = "cigarworld.de (Poul Winslow Pfeifentabak, oct. 2026)"
+_WI = "Marca del pipero danés Poul Winsløw."
+MARCAS["Winsløw"] = [
+    ("Harlekin", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 100 g", _WI + " Aroma afrutado.", "cw"),
+    ("No. 1", "Aromatic", "Black Cavendish", "Ribbon", "Lata de 100 g", _WI + " Aroma de vainilla.", "cw"),
+    ("No. 2", "Aromatic", "Virginia, Black Cavendish, Burley", "Ribbon", "Lata de 100 g", _WI + " Notas de licor de nuez y piña caramelizada.", "cw"),
+    ("No. 3", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 100 g", _WI + " Notas de vainilla, almendra y champán.", "cw"),
+]
+
+# ---------------------------------------------------------------- Robert Lewis
+PAIS["Robert Lewis"] = ""
+FUENTES["Robert Lewis"] = "cigarworld.de (Robert Lewis Pfeifentabak) y Smokingpipes (oct. 2026)"
+_RL = "Mezcla de la tienda londinense Robert Lewis."
+MARCAS["Robert Lewis"] = [
+    ("123 Mixture", "English", "Virginia, Black Cavendish, Latakia, Orientals", "Ribbon", "Lata de 50 g", _RL, "cw"),
+    ("Orcilla Mixture", "Virginia", "Virginia, Latakia, Perique, Orientals", "Ribbon", "Lata de 50 g", _RL, "sp"),
+    ("Tree Mixture", "English", "Virginia, Black Cavendish, Latakia, Orientals", "Ribbon", "Lata de 50 g", _RL, "cw"),
+    ("Wingfield Mixture", "English", "Virginia, Black Cavendish, Latakia", "Ribbon", "Lata de 50 g", _RL, "cw"),
+]
