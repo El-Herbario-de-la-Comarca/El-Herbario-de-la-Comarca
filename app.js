@@ -108,8 +108,10 @@ function ytId(raw) {
 function fotoSegura(u) { return /^(https:\/\/|img\/)/.test(u || "") ? u : ""; }
 
 /* ---------- Carga de datos ---------- */
-async function cargarTodo() {
-  if (!sb) { usarRespaldo(); return; }
+async function cargarTodo() { if (await cargarTabacos()) await cargarExtras(); }
+// Primero las fichas (con sus fotos), para pintar el catálogo cuanto antes. Devuelve false si falla.
+async function cargarTabacos() {
+  if (!sb) { usarRespaldo(); return false; }
   try {
     const filas = [];
     for (let desde = 0; ; desde += 1000) {
@@ -121,6 +123,19 @@ async function cargarTodo() {
     current = filas.map(mapItem).filter((d) => d.nombre);
     ctx.espanaOk = filas.length > 0 && "en_espana" in filas[0];   // 16_se_vende_en_espana.sql
     ctx.online = true;
+    return true;
+  } catch (e) {
+    console.error(e);
+    usarRespaldo("No se ha podido conectar con la base de datos. Mostrando la copia de respaldo.");
+    return false;
+  }
+}
+// Después, todo lo demás a la vez: reseñas, fotos y socios de las reseñas, y Mi bodega.
+async function cargarExtras() {
+  await Promise.all([cargarOpiniones(), cargarFotosAutores(), cargarSocios(), cargarBodega()]);
+}
+async function cargarOpiniones() {
+  {
     // Reseñas de usuarios. Si aún no se ha ejecutado 07_resenas_usuarios.sql, la web sigue sin ellas.
     opiniones = {};
     try {
@@ -132,23 +147,23 @@ async function cargarTodo() {
       }
       ctx.opiniones = true;
     } catch (e) { console.warn("Reseñas no disponibles", e); ctx.opiniones = false; }
+  }
+}
+async function cargarFotosAutores() {
     fotosAutores = {};
     try {
       const { data, error } = await sb.rpc("fotos_resenas");
       if (error) throw error;
       (data || []).forEach((x) => { const u = fotoSegura(x.avatar); if (u) fotosAutores[String(x.autor)] = u; });
     } catch (e) { console.warn("Fotos de las reseñas no disponibles", e); }
+}
+async function cargarSocios() {
     sociosAutores = new Set();
     try {
       const { data, error } = await sb.rpc("socios_resenas");
       if (error) throw error;
       (data || []).forEach((x) => sociosAutores.add(String(x.autor)));
     } catch (e) { console.warn("Socios no disponibles (falta 23_socios_del_club.sql)", e); }
-    await cargarBodega();
-  } catch (e) {
-    console.error(e);
-    usarRespaldo("No se ha podido conectar con la base de datos. Mostrando la copia de respaldo.");
-  }
 }
 function usarRespaldo(aviso) {
   ctx.online = false;
@@ -157,11 +172,15 @@ function usarRespaldo(aviso) {
   ctx.aviso = aviso || "";
 }
 async function refrescar() {
-  await cargarTodo();
-  fillFilters(); render(); paintTop();
-  if (!$("overlay").hidden && openId != null) {
-    if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas(); }
-  }
+  const pintar = () => {
+    fillFilters(); render(); paintTop();
+    if (!$("overlay").hidden && openId != null) {
+      if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas(); }
+    }
+  };
+  const ok = await cargarTabacos();
+  pintar();                       // el catálogo y sus fotos ya se ven
+  if (ok) { await cargarExtras(); pintar(); }   // reseñas, medias, socios y Mi bodega
 }
 
 /* ---------- Ilustración y piezas ---------- */
@@ -997,6 +1016,7 @@ async function cargarTarros() {
     ctx.tarrosOk = true;
   } catch (e) { console.warn("Tarros no disponibles (falta 24_tarros.sql)", e); }
   ctx.unidadesOk = false;
+  if (ctx.tarrosOk && Object.keys(tarros).some((k) => tarros[k].some((t) => "unidades" in t))) { ctx.unidadesOk = true; return; }
   if (ctx.tarrosOk) try {
     const { error } = await sb.from("tarros").select("unidades").limit(1);
     if (error) throw error; ctx.unidadesOk = true;
@@ -1312,16 +1332,21 @@ const ICONO_BAUL = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" 
 const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector" };
 async function cargarPerfil() {
   ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false;
+  ctx.socioOk = false;
   if (!sb || !ctx.session) return;
+  // Las dos consultas van a la vez (la segunda falla si aún no se ha ejecutado el 23).
+  const [perfil, socio] = await Promise.all([
+    sb.from("perfiles").select("nombre,avatar").eq("id", ctx.uid).maybeSingle(),
+    sb.from("perfiles").select("socio,socio_desde").eq("id", ctx.uid).maybeSingle(),
+  ]);
   try {
-    const { data, error } = await sb.from("perfiles").select("nombre,avatar").eq("id", ctx.uid).maybeSingle();
+    const { data, error } = perfil;
     if (error) throw error;
     ctx.perfil = { nombre: (data && data.nombre) || "", avatar: fotoSegura((data && data.avatar) || "") };
     ctx.perfilOk = true;
   } catch (e) { console.warn("Perfil sin nombre ni foto (falta 13_mi_cuenta.sql)", e); }
-  ctx.socioOk = false;
   try {
-    const { data, error } = await sb.from("perfiles").select("socio,socio_desde").eq("id", ctx.uid).maybeSingle();
+    const { data, error } = socio;
     if (error) throw error;
     ctx.perfil.socio = !!(data && data.socio); ctx.perfil.socioDesde = (data && data.socio_desde) || null;
     ctx.socioOk = true;
@@ -1539,11 +1564,12 @@ async function leerSesion(session) {
   ctx.email = session ? session.user.email || "" : "";
   ctx.uid = session ? session.user.id : "";
   ctx.rol = "anonimo";
-  if (session && sb) {
+  const rol = async () => {
+    if (!session || !sb) return;
     const { data, error } = await sb.rpc("mi_rol");
     if (!error && typeof data === "string") ctx.rol = data;
-  }
-  await cargarPerfil();
+  };
+  await Promise.all([rol(), cargarPerfil()]);
   await contarPendientes();
 }
 async function contarPendientes() {
