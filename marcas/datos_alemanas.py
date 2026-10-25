@@ -347,7 +347,7 @@ MARCAS["Kontor-Tabak"] = [
     ("No. 6", "Oriental", "Orientals, Virginia, Burley", "", "Lata de 100 g", _KT + " Predomina el tabaco turco; sin aromatizar.", "tabak-kontor"),
     ("No. 20", "Aromatic", "Virginia, Black Cavendish, Burley", "", "Lata de 50 g · lata de 100 g", _KT + " Aroma de vainilla y miel, de estilo danés.", "tabak-kontor"),
     ("No. 27", "Aromatic", "Black Cavendish, Virginia", "", "Lata de 100 g", _KT + " Aroma de grosella negra.", "tabak-kontor"),
-    ("No. 28", "", "", "", "Lata de 100 g", _KT, ""),
+    ("No. 28", "Aromatic", "Black Cavendish, Burley, Virginia", "", "Lata de 100 g", _KT + " Aroma de frambuesa silvestre, vino blanco y un toque de vainilla.", "tabak-kontor"),
     ("No. 33", "Virginia", "Virginia", "", "Lata de 100 g", _KT + " La misma mezcla que la No. 3, madurada el triple de tiempo.", "tabak-kontor"),
 ]
 
@@ -389,4 +389,36 @@ MARCAS["Dan Tobacco"] = [
 ]
 MARCAS["Mac Baren"] = [
     ("Mixture Flake", "Aromatic", "Virginia, Burley, Black Cavendish, Kentucky", "Flake", "Lata de 100 g", "Aroma de miel.", "cw"),
+]
+
+# ---------------------------------------------------------------- TAK – Tabak aus Kiel (marca de la casa)
+# Fuente: fichas de dein-tabak.de (HAUSMARKE – TAK), oct. 2026. Solo las que se pudieron leer y tienen
+# precio. Familia según la categoría de la tienda («naturbelassen», «mit Latakia», «leicht aromatisiert»)
+# y los componentes que da la ficha; vacía si no está clara. Fuera: Sailing City 2.0 (sin precio),
+# Nice Plug y Micha's Cake (Restbestand 2025). Pendientes de leer: ver claude/traspaso-marcas-alemanas.md.
+PAIS["TAK"] = "Alemania"
+FUENTES["TAK"] = "dein-tabak.de (fichas de la marca de la casa TAK – Tabak aus Kiel, oct. 2026)"
+_TAK = "Mezcla de la casa de la tienda Dein-Tabak de Kiel."
+MARCAS["TAK"] = [
+    ("L48", "Aromatic", "Virginia, Black Cavendish", "", "Lata de 100 g", _TAK + " De estilo danés, ligeramente aromatizada, con virginia en curly hilado a mano.", "dein-tabak"),
+    ("M70", "Aromatic", "Virginia, Burley, Black Cavendish", "", "Lata de 100 g", _TAK + " De estilo danés, ligeramente aromatizada, con notas de fruta seca.", "dein-tabak"),
+    ("M74", "Virginia", "Virginia, Perique, Cavendish", "", "Lata de 100 g", _TAK + " Virginias con un toque de perique; sin aromatizar.", "dein-tabak"),
+    ("16/5 Der Neue", "Virginia", "Virginia, Burley, Perique", "Coins", "Lata de 100 g · 200 g", _TAK + " Virginias claras y dark fired en curly; sin aromatizar.", "dein-tabak"),
+    ("Typ 3/2 – Danish Blend 2.0", "Aromatic", "Virginia, Black Cavendish", "", "200 g", _TAK + " De estilo danés, suave y ligeramente aromatizada.", "dein-tabak"),
+    ("Virginia Crumble Cake", "Virginia", "Virginia", "Cake", "100 g", _TAK + " Sin aromatizar.", "dein-tabak"),
+    ("Salvo's 2.0", "Virginia", "Virginia", "Broken Flake", "Lata de 100 g", _TAK + " Varias virginias, entre ellas dark fired; sin aromatizar.", "dein-tabak"),
+    ("Old School", "", "Virginia, Black Cavendish, Burley", "", "Lata de 100 g", _TAK + " Sin aromatizar.", "dein-tabak"),
+    ("Orient Esprex", "Oriental", "Orientals, Virginia, Perique", "", "Lata de 100 g", _TAK + " Un 50 % de tabaco oriental; sin aromatizar.", "dein-tabak"),
+    ("Herbst 84", "English", "Virginia, Orientals, Latakia", "", "Lata de 100 g · lata de 200 g", _TAK + " Inglesa suave.", "dein-tabak"),
+    ("Evening Latakia", "English", "Orientals, Latakia", "", "Lata de 100 g", _TAK + " Tabaco macedonio con un 45 % de latakia.", "dein-tabak"),
+    ("Latakia Revival", "English", "Latakia, Orientals, Virginia, Perique", "", "Lata de 100 g", _TAK + " Latakia suave, con virginias dark fired y algo de perique.", "dein-tabak"),
+    ("Italy Style", "English", "Kentucky, Latakia, Orientals, Virginia", "", "Lata de 100 g", _TAK + " Latakia al estilo italiano.", "dein-tabak"),
+    ("Kieler Foerde 2.0", "English", "Latakia, Perique, Orientals", "Ribbon", "Lata de 100 g", _TAK + " Un 65 % de latakia, sin virginia.", "dein-tabak"),
+    ("Dark Matter", "English", "Latakia, Perique, Virginia", "", "Lata de 100 g", _TAK + " Un 50 % de latakia y un 25 % de perique.", "dein-tabak"),
+    ("Amorelli's best Selection", "English", "Latakia, Perique, Orientals, Virginia", "", "100 g", _TAK + " Un 60 % de latakia.", "dein-tabak"),
+    ("Teslar", "Aromatic", "Burley, Virginia, Cavendish", "", "Lata de 100 g", _TAK + " Ligeramente aromatizada con melocotón.", "dein-tabak"),
+    ("40+10", "Aromatic", "Virginia, Burley", "", "Lata de 100 g", _TAK + " Aroma suave de haba tonka y naranja.", "dein-tabak (tonka)"),
+    ("Happy Dad", "Aromatic", "Virginia, Black Cavendish, Burley", "", "Lata de 100 g", _TAK + " De estilo danés, ligeramente aromatizada.", "dein-tabak"),
+    ("P7 Cake (T&T 1)", "Aromatic", "Virginia, Burley", "Cake", "100 g", _TAK + " Madurada con ron añejo.", "dein-tabak"),
+    ("Ralf's Burley Cup", "Burley", "Burley, Virginia", "", "100 g", _TAK + " Un 65 % de burley.", "dein-tabak"),
 ]
