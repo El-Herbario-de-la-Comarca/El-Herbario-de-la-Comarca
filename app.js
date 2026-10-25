@@ -383,6 +383,7 @@ function openDetail(id, desdeUrl) {
       <section class="sec" id="d-video" aria-labelledby="vd-h" hidden></section>
       <section class="sec" aria-labelledby="rv-h">
         <h3 id="rv-h">Reseñas</h3>
+        <div id="rv-medias"></div>
         <div id="rv-mine"></div>
         <div class="reviews" id="rv-list"></div>
       </section>
@@ -651,6 +652,7 @@ function paintResenas() {
   const todas = opinionesDe(openId);
   const mia = ctx.uid ? todas.find((o) => o.autor === ctx.uid) : null;
   const resto = todas.filter((o) => o !== mia);
+  const md = $("rv-medias"); if (md) md.innerHTML = ctx.online && ctx.opiniones ? mediasHTML(todas) : "";
 
   // Zona propia: escribir, o ver/editar la propia
   if (!ctx.online || !ctx.opiniones) {
@@ -667,6 +669,39 @@ function paintResenas() {
   list.innerHTML = resto.length ? resto.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("")
     : (mia ? "" : '<p class="muted">Todavía no hay reseñas de este tabaco.</p>');
   [mine, list].forEach((box) => box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena)));
+}
+/* Medias de las reseñas: nota global, reparto de estrellas y una escala por característica.
+   Con menos de MIN_MEDIAS reseñas no se muestran, para que una sola opinión no fije la ficha. */
+const MIN_MEDIAS = 3;
+const ORDEN_MEDIAS = ["fuerza", "sabor", "hab", "aroma"];
+function mediasHTML(todas) {
+  const conNota = todas.filter((o) => o.score >= 1 && o.score <= 5);
+  if (!todas.length) return "";
+  if (conNota.length < MIN_MEDIAS) return `<p class="muted">Todavía hay pocas reseñas para sacar medias (hacen falta ${MIN_MEDIAS}).</p>`;
+  const n = conNota.length, media = conNota.reduce((a, o) => a + o.score, 0) / n;
+  const cuenta = [0, 0, 0, 0, 0, 0]; conNota.forEach((o) => cuenta[o.score]++);
+  const max = Math.max(...cuenta);
+  const estrellas = [1, 2, 3, 4, 5].map((i) => `<i class="${media >= i - 0.25 ? "on" : media >= i - 0.75 ? "half" : ""}"></i>`).join("");
+  const reparto = [5, 4, 3, 2, 1].map((i) => `<div class="md-br"><span>${i}</span><span class="md-bb"><span style="width:${max ? Math.round(cuenta[i] / max * 100) : 0}%"></span></span><span>${cuenta[i]}</span></div>`).join("");
+  const escalas = ORDEN_MEDIAS.map((k) => {
+    const c = CARACT.find((x) => x.k === k), tope = c.ops.length - 1;
+    const vals = todas.map((o) => o[k]).filter((v) => v >= 1 && v <= tope);
+    if (vals.length < MIN_MEDIAS) return "";
+    const m = vals.reduce((a, v) => a + v, 0) / vals.length;
+    const pos = Math.round((m - 1) / (tope - 1) * 100);
+    return `<div class="md-fila"><span class="md-lab">${esc(c.label)}</span>
+      <span class="md-esc" role="img" aria-label="${esc(c.label)}: ${esc(c.ops[Math.round(m)])}"><span style="left:${pos}%"></span></span>
+      <span class="md-val">${esc(c.ops[Math.round(m)])}</span>
+      <span class="md-ext"><span>${esc(c.ops[1])}</span><span>${esc(c.ops[tope])}</span></span></div>`;
+  }).join("");
+  return `<div class="medias">
+    <div class="md-top">
+      <div class="md-nota"><strong>${media.toFixed(1).replace(".", ",")}</strong><span class="md-est" aria-hidden="true">${estrellas}</span>
+        <span class="muted">${n} ${n === 1 ? "reseña" : "reseñas"}</span></div>
+      <div class="md-reparto" aria-label="Reparto de puntuaciones">${reparto}</div>
+    </div>
+    ${escalas ? `<div class="md-escalas"><h4>Según los fumadores</h4>${escalas}</div>` : ""}
+  </div>`;
 }
 function avatarResena(o) {
   const url = (ctx.uid && o.autor === ctx.uid && ctx.perfilOk) ? ctx.perfil.avatar : fotosAutores[o.autor];
