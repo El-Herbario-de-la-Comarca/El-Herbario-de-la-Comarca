@@ -38,7 +38,7 @@ const CARACT = [
 ];
 const VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"];
 const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Mezcla"], ["hojas", "Hojas"], ["corte", "Corte"],
-  ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"], ["en_espana", "Se vende en España"]];
+  ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"], ["en_espana", "Distintivo España (E)"]];
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -312,7 +312,7 @@ function metaHTML(d) {
       <div class="d-head">
         <div class="d-title">
           <span class="brandname">${esc(d.marca)}</span>
-          <h2 id="d-name">${esc(d.nombre)}${d.espana ? ' <span class="es-badge" role="img" aria-label="Se vende en estancos de España" title="Se vende en estancos de España">E</span>' : ""}</h2>
+          <h2 id="d-name">${esc(d.nombre)}${d.espana ? ' <span class="es-badge" role="img" aria-label="España">E</span>' : ""}</h2>
         </div>
         ${notaGrande(d)}
       </div>
@@ -543,7 +543,7 @@ function openEditor(id) {
       <fieldset class="hojas-ed"><legend>Hojas que lleva</legend>
         ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
       </fieldset>
-      ${ctx.espanaOk ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Se vende en estancos de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
+      ${ctx.espanaOk ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Mostrar el distintivo de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
       ${admin ? `<div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>` : ""}
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
       ${!admin ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
