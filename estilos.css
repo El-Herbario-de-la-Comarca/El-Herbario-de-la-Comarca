@@ -361,3 +361,9 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .mi-rango .muted { font-size: 0.85rem; }
 .mr-barra { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
 .mr-barra span { display: block; height: 100%; background: var(--accent); }
+
+/* Compartir e instalar */
+.compartir { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 4px 0 10px; }
+.compartir .muted { font-size: 0.85rem; overflow-wrap: anywhere; }
+.instalar { display: grid; gap: 6px; justify-items: start; max-width: 380px; margin: 0 0 16px; padding: 14px 16px; border: 1px dashed var(--line); border-radius: 10px; }
+.instalar .muted { font-size: 0.88rem; }

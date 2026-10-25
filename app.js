@@ -374,6 +374,29 @@ window.addEventListener("popstate", () => {
   else if (!$("overlay").hidden) closeDetail(true);
 });
 
+/* ---------- Compartir una ficha ----------
+   Cada ficha tiene una página pequeña en f/<id>.html (la genera herramientas/generar_tarjetas.py cada día)
+   con su nombre y su foto, para que WhatsApp y Telegram muestren una tarjeta. Si la ficha es de hoy
+   y aún no tiene la suya, se comparte el enlace normal. */
+let tarjetas = null;   // ids con página propia (f/lista.json)
+async function enlaceFicha(d) {
+  const base = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "");
+  if (tarjetas === null) {
+    try { const r = await fetch("f/lista.json", { cache: "no-cache" }); tarjetas = new Set(r.ok ? await r.json() : []); }
+    catch (e) { tarjetas = new Set(); }
+  }
+  return tarjetas.has(String(d.id)) ? `${base}f/${encodeURIComponent(d.id)}.html` : `${base}index.html#/ficha/${encodeURIComponent(d.id)}`;
+}
+async function compartirFicha(d) {
+  const url = await enlaceFicha(d), msg = $("d-share-msg");
+  const titulo = `${d.nombre} · ${d.marca}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: titulo, text: `${titulo} en El herbario de la Comarca`, url }); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  try { await navigator.clipboard.writeText(url); if (msg) msg.textContent = "Enlace copiado. Pégalo en WhatsApp o Telegram."; }
+  catch (e) { if (msg) msg.textContent = url; }
+}
 function openDetail(id, desdeUrl) {
   const d = findItem(id); if (!d) return;
   openId = d.id;
@@ -384,6 +407,7 @@ function openDetail(id, desdeUrl) {
     <div class="art" id="d-art">${art(d)}</div>
     <div class="info">
       <div id="d-meta"></div>
+      <div class="compartir"><button class="btn" id="d-share" type="button">Compartir</button><span class="muted" id="d-share-msg" role="status"></span></div>
       <div id="d-bodega"></div>
       <div id="d-tools"></div>
     </div>
@@ -397,6 +421,7 @@ function openDetail(id, desdeUrl) {
       </section>
     </div>`);
   $("d-close").addEventListener("click", () => closeDetail());
+  $("d-share").addEventListener("click", () => compartirFicha(d));
   $("d-close").focus();
   paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas();
 }
@@ -1308,6 +1333,21 @@ function avatarHTML(grande) {
   const letra = (ctx.perfil.nombre || ctx.email || "?").trim().charAt(0).toUpperCase();
   return `<span class="${cls}" aria-hidden="true">${esc(letra)}</span>`;
 }
+/* ---------- Instalar en el móvil ---------- */
+let avisoInstalar = null;   // Android/Chrome: el aviso de instalación se guarda para lanzarlo desde Mi cuenta
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); avisoInstalar = e; });
+const enApp = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+function instalacionHTML() {
+  if (enApp()) return "";
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (avisoInstalar) return `<div class="instalar"><strong>Llévate el herbario en el móvil</strong>
+      <span class="muted">Instálalo como una app, con el logo del club en tu pantalla de inicio.</span>
+      <button class="btn" id="cu-instalar" type="button">Instalar la app</button></div>`;
+  if (ios) return `<div class="instalar"><strong>Llévate el herbario en el móvil</strong>
+      <span class="muted">En Safari, pulsa Compartir y luego «Añadir a pantalla de inicio».</span></div>`;
+  return `<div class="instalar"><strong>Llévate el herbario en el móvil</strong>
+      <span class="muted">Ábrelo en el móvil y, en el menú del navegador, elige «Instalar app» o «Añadir a pantalla de inicio».</span></div>`;
+}
 function abrirCuenta() {
   const p = ctx.perfil;
   abrirPanel(`<div class="info adm cuenta"><h2 id="d-name">Mi cuenta</h2>
@@ -1341,6 +1381,7 @@ function abrirCuenta() {
       <div class="btns"><input id="nm-in" maxlength="40" value="${esc(p.nombre)}" placeholder="Cómo quieres que te vean">
       <button class="btn" type="submit">Guardar</button></div>
     </form>` : '<p class="muted">La foto de perfil y el nombre visible estarán disponibles pronto.</p>'}
+    ${instalacionHTML()}
     <p class="msg" id="cu-msg" role="alert"></p>
     <div class="btns">
       ${ctx.bodega ? '<button class="btn" id="cu-bodega" type="button">Mi bodega</button>' : ""}
@@ -1352,6 +1393,10 @@ function abrirCuenta() {
   $("cu-out").addEventListener("click", async () => { closeDetail(); await sb.auth.signOut(); });
   $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
   if ($("cu-bodega")) $("cu-bodega").addEventListener("click", abrirBodega);
+  if ($("cu-instalar")) $("cu-instalar").addEventListener("click", async () => {
+    if (!avisoInstalar) return;
+    avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; abrirCuenta();
+  });
   if (!ctx.perfilOk) return;
   $("av-pick").addEventListener("click", () => $("av-file").click());
   $("av-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirAvatar(f); });
@@ -1602,3 +1647,8 @@ async function contarVisita() {
     }, 0);
   });
 })();
+
+// Service worker: guarda la web para que abra rápido e instalable en el móvil.
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch((e) => console.warn("Sin service worker", e)));
+}
