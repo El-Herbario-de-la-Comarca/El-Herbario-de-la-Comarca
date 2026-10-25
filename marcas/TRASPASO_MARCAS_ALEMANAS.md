@@ -41,6 +41,17 @@ Thomas Radford (Pöschl) 3, Kentucky Bird, Prestige, Richmond y Käpt'n Barsdorf
 - Per Jensen Aftensmad (Smokingpipes, agotada con aviso) y Sir Henry's (marca de Ermuri en cigarworld): sin añadir, por revisar.
 - Meistermischungen de Kopp: sin componentes publicados; mezcla según el aroma o el nombre que da la tienda.
 
+## Marcas de casa (añadidas el 25/10 con permiso del usuario)
+- Pfeifendepot (Gerd Jansens Pfeifendepot): 39 mezclas, de las fichas de su web (el usuario pegó las URLs, porque
+  WebFetch solo abre URLs vistas en búsquedas o pegadas). Fuera: No. 083 Copenhagen Jubiläum (aniversario, agotada).
+  Dentro, aunque es de aniversario: No. 125 (está en la serie fija House Blends). Revisar.
+  Balcánicas: No. 081 Golden Balkan (sin orientales), No. 209 White Balkan, No. 202 Crown «A» (70 % latakia, 5 % virginia).
+  Lakeland: No. 064 Rosemoor (aceite de rosa).
+- Kontor-Tabak (TABAK-KONTOR Leipzig): 7 mezclas. No. 28 sin datos; No. 13 fuera (agotada y sin datos).
+- Pfeifen Huber: su web carga los productos con JavaScript; no se pudo leer. El texto que pasó el usuario parecía generado
+  por otra IA (no coincidía con la tienda) y no se usó.
+- TAK (Dein-Tabak): solo se leyó la página 1 de cada categoría y los listados no traen datos. Pendiente.
+
 ## Pendiente (preguntar al usuario)
 No están ni en Smokingpipes ni en cigarworld, así que no cumplen el criterio de octubre:
 - John Aylesbury (marca de una cooperativa de estancos; ~13 mezclas fijas en pipehouse.de y Tabak-Kontor).

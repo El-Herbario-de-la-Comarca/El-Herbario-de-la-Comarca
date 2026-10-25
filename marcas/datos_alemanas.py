@@ -310,3 +310,43 @@ MARCAS["Pfeifendepot"] = [
     ("No. 088 – DSK Flake", "Virginia", "Kentucky, Virginia", "Flake", "Lata de 50 g · 500 g a granel", _PDF + " Prensado en tortas claras y oscuras.", "pfeifendepot"),
     ("No. 209 – White Balkan", "English", "Virginia, Black Cavendish, Latakia, Orientals", "Ribbon", "Lata de 100 g", _PD + " La elabora Kopp Tobaccos.", "pfeifendepot"),
 ]
+_PDM = _PD + " Forma parte de la serie Masterblend."
+_PDG = _PD + " Forma parte de la miniserie The Good, The Bad & The Ugly."
+MARCAS["Pfeifendepot"] += [
+    ("No. 089 – DSK Ready Rubbed", "Virginia", "Kentucky, Virginia", "Ready Rubbed", "Lata de 50 g", _PDF + " Versión desmenuzada de la DSK Flake.", "pfeifendepot"),
+    ("No. 090 – Merlin Cut Plug", "Virginia/Perique", "Kentucky, Perique, Virginia", "Plug", "Lata de 50 g · 500 g a granel", _PDF + " Virginia oscuro con kentucky curado al fuego y perique.", "pfeifendepot"),
+    ("No. 091 – Camelot Broken", "Virginia/Perique", "Kentucky, Perique, Virginia", "Broken Flake", "Lata de 50 g", _PDF + " Versión desmenuzada de la Merlin Cut Plug.", "pfeifendepot"),
+    ("No. 098 – Copenhagen 1970", "Aromatic", "Cavendish, Perique, Virginia", "Ribbon", "Lata de 100 g", _PDC + " Lleva también hoja de Maryland; aroma afrutado y de chocolate, suave.", "pfeifendepot"),
+    ("No. 101 – Copenhagen Dannebrog", "Aromatic", "Cavendish, Orientals, Virginia", "Ready Rubbed", "Lata de 100 g", _PDC + " Aroma de ron.", "pfeifendepot"),
+    ("No. 125 – 125 Years Jubilee", "Virginia", "Virginia, Orientals, Cigar, Kentucky, Perique, Burley", "Ribbon", "Lata de 50 g", _PD + " Mezcla del 125 aniversario de la tienda, sin aromatizar.", "pfeifendepot"),
+    ("No. 200 – Bengals", "English", "Cavendish, Latakia, Perique, Virginia", "Ready Rubbed", "Lata de 50 g", _PDF + " Homenaje a las Bengal Slices.", "pfeifendepot"),
+    ("No. 202 – Crown „A“", "Balkan", "Latakia, Kentucky, Virginia, Orientals", "Ribbon", "Lata de 50 g", _PD + " Un 70 % de latakia, con kentucky de base y solo un 5 % de virginia.", "pfeifendepot (English)"),
+    ("No. 411 – Masterblend", "Aromatic", "Black Cavendish, Virginia", "Ribbon", "Lata de 100 g", _PDM + " Aroma de miel, ron y ciruela.", "pfeifendepot"),
+    ("No. 422 – Masterblend", "Aromatic", "Cavendish, Virginia", "Ribbon", "Lata de 100 g", _PDM + " Aroma de cereza.", "pfeifendepot"),
+    ("No. 433 – Masterblend", "Aromatic", "Black Cavendish, Virginia", "Ribbon", "Lata de 100 g", _PDM + " Aroma de vainilla y café.", "pfeifendepot"),
+    ("No. 444 – Masterblend", "Aromatic", "Black Cavendish, Virginia, Burley", "Ribbon", "Lata de 100 g", _PDM + " Aroma de frutos del bosque.", "pfeifendepot"),
+    ("No. 455 – Masterblend", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Lata de 100 g", _PDM + " Aroma de maracuyá y ciruela mirabel.", "pfeifendepot"),
+    ("No. 466 – Masterblend", "Aromatic", "Black Cavendish, Virginia, Burley", "Ribbon", "Lata de 100 g", _PDM + " Aroma de frutas tropicales.", "pfeifendepot"),
+    ("No. 477 – Masterblend", "English Aromatic", "Virginia, Black Cavendish, Latakia", "Ribbon", "Lata de 100 g", _PDM + " Aroma de miel con un fondo ahumado de latakia.", "pfeifendepot"),
+    ("No. 499 – Masterblend", "Aromatic", "Black Cavendish, Virginia", "Ribbon", "Lata de 100 g", _PDM + " Aroma de ciruela mirabel.", "pfeifendepot"),
+    ("No. 500 – Kori-Flake", "Virginia", "Virginia", "Flake", "Lata de 100 g", _PDF + " Prensado tres meses; con una nota de cilantro.", "pfeifendepot"),
+    ("No. 501 – The Good", "Oriental", "Orientals, Virginia, Burley, Black Cavendish", "Ready Rubbed", "Lata de 50 g", _PDG + " Virginia y oriental de Esmirna, ligera, sin aromatizar.", "pfeifendepot"),
+    ("No. 502 – The Bad", "Virginia/Perique", "Virginia, Perique, Kentucky", "Ready Rubbed", "Lata de 50 g", _PDG + " Sin aromatizar.", "pfeifendepot"),
+    ("No. 503 – The Ugly", "English Aromatic", "Burley, Latakia, Virginia", "Ribbon", "Lata de 50 g", _PDG + " Aroma de higo y anís.", "pfeifendepot"),
+    ("No. 999 – Curly Cut", "Virginia", "Cavendish, Kentucky, Virginia", "Coins", "Lata de 50 g · lata de 100 g", _PDF + " Un toque discreto de miel de bosque.", "pfeifendepot"),
+    ("VAPERizer (Plug)", "Virginia/Perique", "Virginia, Perique", "Plug", "Lata de 100 g", _PDF + " Sin aromatizar.", "pfeifendepot"),
+]
+
+# ---------------------------------------------------------------- Kontor-Tabak (marca de la casa)
+PAIS["Kontor-Tabak"] = "Alemania"
+FUENTES["Kontor-Tabak"] = "tabak-kontor.de (listado y fichas de KONTOR-TABAK, oct. 2026)"
+_KT = "Mezcla de la casa de la tienda TABAK-KONTOR de Leipzig."
+MARCAS["Kontor-Tabak"] = [
+    ("No. 3", "Virginia", "Virginia", "Ready Rubbed", "Lata de 100 g", _KT + " Cinco virginias rojas sin aromatizar; algún lote ha salido en flake.", "tabak-kontor"),
+    ("No. 5", "English", "Latakia, Perique, Black Cavendish, Virginia", "", "Lata de 100 g", _KT, "tabak-kontor"),
+    ("No. 6", "Oriental", "Orientals, Virginia, Burley", "", "Lata de 100 g", _KT + " Predomina el tabaco turco; sin aromatizar.", "tabak-kontor"),
+    ("No. 20", "Aromatic", "Virginia, Black Cavendish, Burley", "", "Lata de 50 g · lata de 100 g", _KT + " Aroma de vainilla y miel, de estilo danés.", "tabak-kontor"),
+    ("No. 27", "Aromatic", "Black Cavendish, Virginia", "", "Lata de 100 g", _KT + " Aroma de grosella negra.", "tabak-kontor"),
+    ("No. 28", "", "", "", "Lata de 100 g", _KT, ""),
+    ("No. 33", "Virginia", "Virginia", "", "Lata de 100 g", _KT + " La misma mezcla que la No. 3, madurada el triple de tiempo.", "tabak-kontor"),
+]
