@@ -38,7 +38,7 @@ const CARACT = [
 ];
 const VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"];
 const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Mezcla"], ["hojas", "Hojas"], ["corte", "Corte"],
-  ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"]];
+  ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"], ["en_espana", "Se vende en España"]];
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -117,6 +117,7 @@ async function cargarTodo() {
       if (data.length < 1000) break;
     }
     current = filas.map(mapItem).filter((d) => d.nombre);
+    ctx.espanaOk = filas.length > 0 && "en_espana" in filas[0];   // 16_se_vende_en_espana.sql
     ctx.online = true;
     // Reseñas de usuarios. Si aún no se ha ejecutado 07_resenas_usuarios.sql, la web sigue sin ellas.
     opiniones = {};
@@ -542,6 +543,7 @@ function openEditor(id) {
       <fieldset class="hojas-ed"><legend>Hojas que lleva</legend>
         ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
       </fieldset>
+      ${ctx.espanaOk ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Se vende en estancos de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
       ${admin ? `<div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>` : ""}
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
       ${!admin ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
@@ -565,10 +567,11 @@ function leerFormulario() {
     pais: $("ed-pais").value.trim().slice(0, 60),
     formato: $("ed-formato").value.trim().slice(0, 80),
     notas: $("ed-notas").value.split(",").map((n) => n.trim().slice(0, 40)).filter(Boolean).slice(0, 12),
-    descripcion: $("ed-desc").value.trim().slice(0, 2000)
+    descripcion: $("ed-desc").value.trim().slice(0, 2000),
+    ...($("ed-es") ? { en_espana: $("ed-es").checked } : {})
   };
 }
-function valorDe(d, k) { return k === "descripcion" ? d.desc : d[k]; }
+function valorDe(d, k) { return k === "descripcion" ? d.desc : k === "en_espana" ? !!d.espana : d[k]; }
 function igual(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
 async function saveEditor(ev, d) {
   ev.preventDefault();
@@ -598,7 +601,7 @@ async function saveEditor(ev, d) {
       let fila;
       if (d) {
         const cambios = {};
-        CAMPOS.forEach(([k]) => { if (!igual(data[k], valorDe(d, k))) cambios[k] = data[k]; });
+        CAMPOS.forEach(([k]) => { if (k in data && !igual(data[k], valorDe(d, k))) cambios[k] = data[k]; });
         if (!Object.keys(cambios).length) { msg.textContent = "No has cambiado nada."; btn.disabled = false; return; }
         fila = { tipo: "cambio", tabaco_id: d.id, datos: cambios, nota };
       } else {
@@ -746,13 +749,13 @@ function describirPropuesta(p) {
   if (p.tipo === "nueva") {
     titulo = `Ficha nueva: ${esc(p.datos.nombre || "")} · ${esc(p.datos.marca || "")}`;
     cuerpo = `<dl class="diff">${CAMPOS.map(([k, l]) => {
-      const v = Array.isArray(p.datos[k]) ? p.datos[k].join(", ") : (k === "fuerza" ? FUERZA[p.datos[k] || 0] : p.datos[k]);
+      const v = Array.isArray(p.datos[k]) ? p.datos[k].join(", ") : (k === "fuerza" ? FUERZA[p.datos[k] || 0] : k === "en_espana" ? (p.datos[k] ? "Sí" : "") : p.datos[k]);
       return v ? `<dt>${l}</dt><dd>${esc(v)}</dd>` : "";
     }).join("")}</dl>`;
   } else if (p.tipo === "cambio") {
     titulo = `Cambios en ${esc(nombre)}`;
     cuerpo = `<dl class="diff">${CAMPOS.filter(([k]) => k in p.datos).map(([k, l]) => {
-      const fmt = (v) => Array.isArray(v) ? v.join(", ") : (k === "fuerza" ? FUERZA[v || 0] : (v || "—"));
+      const fmt = (v) => Array.isArray(v) ? v.join(", ") : (k === "fuerza" ? FUERZA[v || 0] : k === "en_espana" ? (v ? "Sí" : "No") : (v || "—"));
       const antes = d ? fmt(valorDe(d, k)) : "—";
       return `<dt>${l}</dt><dd><span class="antes">${esc(antes)}</span> → <strong>${esc(fmt(p.datos[k]))}</strong></dd>`;
     }).join("")}</dl>`;
