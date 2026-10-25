@@ -94,6 +94,7 @@ def main():
     pre, cuerpo = js.split("window.DATOS_INICIALES = ", 1)
     datos = json.loads(cuerpo.strip().rstrip(";"))
     base = [d for d in datos if int(d["id"]) < PRIMER_ID]
+    espana = {str(d["id"]) for d in datos if d.get("en_espana")}   # se conserva la marca de España (SQL 16-17)
     claves = {(d["nombre"].lower(), d["marca"].lower()) for d in base}
     nombres_base = Counter(d["nombre"].lower() for d in base)
 
@@ -119,7 +120,7 @@ def main():
             nuevas.append({
                 "nombre": nombre, "marca": marca, "pais": D.PAIS.get(marca, ""), "tipo": mezcla, "corte": corte,
                 "formato": formato, "desc": desc, "fuerza": 0, "notas": [], "id": siguiente,
-                "descripcion": desc, "hojas": hojas,
+                "descripcion": desc, "hojas": hojas, "en_espana": str(siguiente) in espana,
             })
             siguiente += 1
 

@@ -80,15 +80,15 @@ FUENTES["Solani"] = "cigarworld.de (Solani Collection), Smokingpipes y la ficha 
 _SO = "Mezcla de Rüdiger Will."
 MARCAS["Solani"] = [
     ("Aged Burley Flake 656", "Burley", "Burley, Cigar, Kentucky", "Flake", "Lata de 50 g", _SO, "cw"),
-    ("Blue Label 369", "Aromatic", "Virginia, Burley, Black Cavendish, Perique", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Aroma afrutado y de miel.", "cw y Monjure"),
+    ("Blau 369", "Aromatic", "Virginia, Burley, Black Cavendish, Perique", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Aroma afrutado y de miel.", "cw y Monjure"),
     ("Festival 333", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Aroma afrutado.", "cw"),
-    ("Gold Label 779", "English", "Virginia, Latakia, Orientals", "Ribbon", "Lata de 50 g", _SO + " También se vende como English Luxury.", "cw"),
-    ("Green Label 127", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Un toque de manzana.", "cw y Monjure"),
-    ("Red Label 131", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Esencias tropicales y un toque de whisky de malta.", "cw y Monjure"),
+    ("Gold 779", "English", "Virginia, Latakia, Orientals", "Ribbon", "Lata de 50 g", _SO, "cw"),
+    ("Grün 127", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Un toque de manzana.", "cw y Monjure"),
+    ("Rot 131", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO + " Esencias tropicales y un toque de whisky de malta.", "cw y Monjure"),
     ("Silver Flake 660", "Virginia", "Kentucky, Virginia", "Flake", "Lata de 100 g", _SO, "tr"),
     ("Virginia Flake 633", "Virginia", "Virginia, Perique", "Flake", "Lata de 50 g · lata de 100 g", _SO, "Monjure"),
-    ("White and Black 763", "English", "Virginia, Latakia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO, "sp"),
-    ("X - Sweet Mystery 113", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO, "sp"),
+    ("White & Black 763", "English", "Virginia, Latakia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO, "sp"),
+    ("X-Mystery 113", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 50 g · lata de 100 g", _SO, "sp"),
 ]
 
 # ---------------------------------------------------------------- Reiner
@@ -123,7 +123,7 @@ PAIS["Ilsted"] = ""
 FUENTES["Ilsted"] = "cigarworld.de (Ilsted's Own, oct. 2026) y Tobacco Reviews"
 _IL = "Marca del pipero danés Poul Ilsted."
 MARCAS["Ilsted"] = [
-    ("Cedros", "Aromatic", "Black Cavendish, Burley, Kentucky, Virginia", "Ribbon", "Lata de 50 g", _IL + " Aroma de frutos secos; se vende en caja de cedro.", "cw"),
+    ("Cedros", "Aromatic", "Black Cavendish, Burley, Kentucky, Virginia", "Ribbon", "Lata de 50 g", _IL + " Aroma de frutos secos; viene en caja de cedro.", "cw"),
     ("Golden Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", _IL, "cw"),
     ("Own Mixture No. 55", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 100 g", _IL + " Aroma afrutado.", "cw"),
     ("Own Mixture No. 66", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 100 g", _IL + " Aroma de vainilla.", "cw"),
