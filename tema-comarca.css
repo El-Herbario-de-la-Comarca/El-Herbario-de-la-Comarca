@@ -114,7 +114,7 @@
 .hole .sill, .hole .pots path { fill: var(--wood); }
 .hole .h-path ellipse { fill: var(--pathc); stroke: var(--stone-edge); stroke-width: .8; }
 
-/* Anillo de humo: sale de la chimenea cada 10 s, se aleja flotando y el barco lo atraviesa.
+/* Anillo de humo: sale de la chimenea cada 10 s, se aleja flotando y el barco (un galeón) lo atraviesa.
    Las dos mitades del anillo (detrás y delante del barco) se pintan con un color opaco
    mezclado con el fondo, así se solapan sin que se note la unión. La transparencia se anima
    con --ra (0–1) en vez de con opacity, por el mismo motivo. */
@@ -124,7 +124,7 @@
 :root.comarca[data-theme="dark"] { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); --ring-c: rgb(225 210 180); --ring-max: 50%; }
 @media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --smoke: rgb(220 205 175 / .28); --ring: rgb(225 210 180 / .5); --ring-c: rgb(225 210 180); --ring-max: 50%; } }
 .hole .ring path { fill: color-mix(in srgb, var(--ring-c) calc(var(--ra) * var(--ring-max)), var(--bg)); stroke: none; }
-.hole .ship path { fill: color-mix(in srgb, var(--ring) 25%, transparent); stroke: var(--ring); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hole .ship path { fill: color-mix(in srgb, var(--ring) 25%, transparent); stroke: var(--ring); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 .hole .ring { --ra: 0; visibility: hidden; }
 .hole .ship { opacity: 0; }
 .hole .ring, .hole .ship, .hole .ring-w, .hole .ship-w { transform-box: view-box; transform-origin: 284px 36px; }
