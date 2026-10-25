@@ -67,7 +67,7 @@
 
 /* Ficha y ventanas. */
 .comarca .panel, .comarca .gate .box, .comarca .confirm .box { border-radius: 14px; box-shadow: 0 20px 50px -20px rgb(40 30 15 / .5); }
-.comarca .panel .art { border-radius: 14px 14px 0 0; background: color-mix(in srgb, var(--hill-a) 22%, var(--surface)); }
+.comarca .panel .art { border-radius: 14px 0 0 0; background: color-mix(in srgb, var(--hill-a) 22%, var(--surface)); }
 .comarca .overlay { background: color-mix(in srgb, var(--bg) 70%, #2E2418); }
 .comarca .gate { background: color-mix(in srgb, var(--bg) 88%, #2E2418); }
 .comarca footer { border-top-style: dashed; }
