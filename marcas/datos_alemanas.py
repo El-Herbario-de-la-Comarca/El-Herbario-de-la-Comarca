@@ -269,3 +269,16 @@ MARCAS["Exclusiv"] = [
     ("Mixture No. 6", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Bolsa de 50 g · lata de 100 g · lata de 200 g", _EX + " Aroma afrutado.", "cw"),
     ("Mixture No. 7", "Aromatic", "Black Cavendish", "Ribbon", "Lata de 200 g", _EX + " Aroma de ron de Jamaica y ciruela.", "cw"),
 ]
+_MM = "Forma parte de las Meistermischungen de Kopp Tobaccos (Kohlhase & Kopp, Rellingen)."
+MARCAS["Kopp"] += [
+    ("Meistermischung Nr. 11", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de miel, ron y ciruela.", "cw y rauch-lounge.com (aroma)"),
+    ("Meistermischung Nr. 22", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de cereza.", "cw y rauch-lounge.com (aroma)"),
+    ("Meistermischung Nr. 33", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de vainilla y café.", "cw y rauch-lounge.com (aroma)"),
+    ("Meistermischung Nr. 44", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de frutos del bosque.", "cw y rauch-lounge.com (aroma)"),
+    ("Meistermischung Nr. 55", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de maracuyá.", "cw y rauch-lounge.com (aroma)"),
+    ("Meistermischung Nr. 66", "", "", "", "Lata de 100 g", _MM, "cw"),
+    ("Meistermischung Nr. 77 Englisch sanft", "English", "", "", "Lata de 100 g", _MM + " Inglesa suave, según su nombre.", "cw (nombre)"),
+    ("Meistermischung Nr. 88 Virginia Flake", "Virginia", "Virginia", "Flake", "Lata de 100 g", _MM, "cw (nombre)"),
+    ("Meistermischung Nr. 99 Englisch", "English", "", "", "Lata de 100 g", _MM + " Inglesa, según su nombre.", "cw (nombre)"),
+    ("Meistermischung Nr. 110", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de naranja, vainilla y licor de almendra.", "cw y rauch-lounge.com (aroma)"),
+]
