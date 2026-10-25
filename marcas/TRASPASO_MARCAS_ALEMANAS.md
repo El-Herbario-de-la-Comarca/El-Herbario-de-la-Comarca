@@ -1,6 +1,25 @@
-# Traspaso: marcas nuevas de las tiendas alemanas
+# Traspaso: estado del catálogo y siguientes fichas
 
-Estado a 25/10/2026 (mañana): **134 fichas de 22 marcas** (ids 2000–2133). Rama `marcas-alemanas`, fusionada en `main`.
+**Estado a 25/10/2026 (10:40):** 825 fichas de 60 marcas en `datos-iniciales.js`; 163 con el distintivo de España (E).
+Todo está en `main` y publicado. SQL ejecutados por el usuario hasta el 21 (el 20 junta del 13 al 19).
+
+## Cómo seguir metiendo fichas
+- Añadir filas en `marcas/datos_alemanas.py` (formato y criterio al principio del archivo) y ejecutar
+  `python3 marcas/generar_alemanas.py`: regenera `datos-iniciales.js` y `supabase/09_marcas_alemanas.sql`
+  (ids desde 2000; conserva la marca de España). Para subirlas basta con volver a ejecutar el 09 en Supabase.
+- Si se añaden mezclas que están en la lista oficial española, marcarlas con un SQL `update ... set en_espana = true`.
+- Reglas fijadas por el usuario el 25/10:
+  - Solo información de España/Europa: si el nombre en EE. UU. es distinto, se usa el europeo y no se menciona el de EE. UU.
+  - Nada de textos sobre venta («se vende…»). El distintivo de España es solo el circulito con la E, sin texto.
+  - Formatos siempre en gramos (nada de onzas).
+- Truco para fuentes que WebFetch no abre: pedir al usuario que pegue las URLs (se le da el bloque ya preparado).
+
+## Siguiente tanda propuesta: mezclas de la lista oficial española que faltan
+Ver `marcas/en_espana.md` («En la lista oficial pero sin ficha»). El usuario iba a confirmarlas a mano.
+Lista oficial: PDF del CMT «Lista Precios Picadura de Pipa Península y Baleares 01_10_26» (el usuario lo adjuntó).
+
+
+Detalle de la tanda alemana (25/10 mañana): **134 fichas de 22 marcas** (ids 2000–2133). Rama `marcas-alemanas`, fusionada en `main`.
 
 Hechas: HU Tobacco 43, Kopp +18 (Wood, Cremon Mixture, Pipe 66, Meistermischungen), Solani 10, Ilsted 8, Bentley 7,
 Exclusiv (Pöschl) 7, Reiner 6, Gladora 6, Ermuri 5, Sillems 5, Winsløw 4, Robert Lewis 4, Per G. Jensen 4,
