@@ -59,7 +59,9 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
 /* ---------- Estado ---------- */
 let current = [];   // fichas
 let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado }]
-let fotosAutores = {}; // autor -> URL de su foto de perfil (14_fotos_en_resenas.sql)
+let fotosAutores = {};
+let sociosAutores = new Set(); // autores que son socios del club (23_socios_del_club.sql)
+const SELLO_SOCIO = '<img class="sello-socio" src="img/logo.png" alt="Socio del Pipa Club Fumadas Hobbit" title="Socio del Pipa Club Fumadas Hobbit" width="18" height="18">'; // autor -> URL de su foto de perfil (14_fotos_en_resenas.sql)
 let bodega = {};      // tabaco_id -> { tengo, probado, quiero } (solo la del usuario que ha entrado)
 let openId = null, lastFocus = null;
 
@@ -136,6 +138,12 @@ async function cargarTodo() {
       if (error) throw error;
       (data || []).forEach((x) => { const u = fotoSegura(x.avatar); if (u) fotosAutores[String(x.autor)] = u; });
     } catch (e) { console.warn("Fotos de las reseñas no disponibles", e); }
+    sociosAutores = new Set();
+    try {
+      const { data, error } = await sb.rpc("socios_resenas");
+      if (error) throw error;
+      (data || []).forEach((x) => sociosAutores.add(String(x.autor)));
+    } catch (e) { console.warn("Socios no disponibles (falta 23_socios_del_club.sql)", e); }
     await cargarBodega();
   } catch (e) {
     console.error(e);
@@ -703,6 +711,9 @@ function mediasHTML(todas) {
     ${escalas ? `<div class="md-escalas"><h4>Según los fumadores</h4>${escalas}</div>` : ""}
   </div>`;
 }
+function esSocio(autor) {
+  return (ctx.uid && autor === ctx.uid && ctx.socioOk) ? !!ctx.perfil.socio : sociosAutores.has(autor);
+}
 function avatarResena(o) {
   const url = (ctx.uid && o.autor === ctx.uid && ctx.perfilOk) ? ctx.perfil.avatar : fotosAutores[o.autor];
   if (url) return `<img class="avatar" src="${esc(url)}" alt="" loading="lazy">`;
@@ -713,7 +724,7 @@ function revHTML(o, propia) {
   const acts = propia
     ? `<div class="acts"><button class="link" type="button" data-rv="edit" data-id="${o.id}">Editar</button><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar</button></div>`
     : (esAdmin() ? `<div class="acts"><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar (admin)</button></div>` : "");
-  return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
+  return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${esSocio(o.autor) ? SELLO_SOCIO : ""}${propia ? " <small>(tu reseña)</small>" : ""}</span>
       <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
       <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
     ${CARACT.some((c) => o[c.k]) ? `<dl class="rev-car">${CARACT.map((c) => o[c.k] ? `<dt>${esc(c.label)}</dt><dd>${esc(c.ops[o[c.k]])}</dd>` : "").join("")}</dl>` : ""}
@@ -840,15 +851,38 @@ async function abrirUsuarios() {
     <div id="us-list"><p class="muted">Cargando…</p></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
   $("d-close").addEventListener("click", () => closeDetail());
-  const { data, error } = await sb.from("perfiles").select("id,email,rol,creado").order("creado");
+  let socios = true;
+  let { data, error } = await sb.from("perfiles").select("id,email,rol,creado,socio,socio_desde").order("creado");
+  if (error) { socios = false; ({ data, error } = await sb.from("perfiles").select("id,email,rol,creado").order("creado")); }
   const box = $("us-list"); if (!box) return;
   if (error) { box.innerHTML = '<p class="msg">No se han podido cargar los usuarios.</p>'; return; }
-  box.innerHTML = `<table class="usuarios"><thead><tr><th>Correo</th><th>Rol</th></tr></thead><tbody>${data.map((u) => `
+  box.innerHTML = `<table class="usuarios"><thead><tr><th>Correo</th><th>Rol</th>${socios ? "<th>Socio del club</th>" : ""}</tr></thead><tbody>${data.map((u) => `
     <tr><td>${esc(u.email || "—")}<br><small class="muted">desde ${fecha(u.creado)}</small></td>
     <td><select data-uid="${esc(u.id)}" aria-label="Rol de ${esc(u.email || "")}"${u.id === ctx.uid ? " disabled" : ""}>
       ${["lector", "editor", "admin"].map((r) => `<option value="${r}"${u.rol === r ? " selected" : ""}>${r}</option>`).join("")}
-    </select></td></tr>`).join("")}</tbody></table><p class="msg" id="us-msg" role="alert"></p>`;
+    </select></td>
+    ${socios ? `<td class="us-socio"><label><input type="checkbox" data-socio="${esc(u.id)}"${u.socio ? " checked" : ""}> Socio</label>
+      <input type="number" data-desde="${esc(u.id)}" min="1950" max="2100" step="1" placeholder="Año" value="${u.socio_desde || ""}" aria-label="Socio desde (año)"></td>` : ""}</tr>`).join("")}</tbody></table>
+    ${socios ? "" : '<p class="muted">Para marcar socios del club, ejecuta 23_socios_del_club.sql en Supabase.</p>'}
+    <p class="msg" id="us-msg" role="alert"></p>`;
   box.addEventListener("change", async (e) => {
+    const cs = e.target.closest("[data-socio],[data-desde]");
+    if (cs) {
+      const id = cs.dataset.socio || cs.dataset.desde;
+      const marca = box.querySelector(`[data-socio="${id}"]`), anio = box.querySelector(`[data-desde="${id}"]`);
+      const n = anio.value.trim() ? Number(anio.value) : null;
+      if (n !== null && !(Number.isInteger(n) && n >= 1950 && n <= 2100)) {
+        $("us-msg").style.color = ""; $("us-msg").textContent = "El año tiene que estar entre 1950 y 2100."; return;
+      }
+      marca.disabled = anio.disabled = true;
+      const { error } = await sb.from("perfiles").update({ socio: marca.checked, socio_desde: n }).eq("id", id);
+      $("us-msg").style.color = error ? "" : "var(--accent)";
+      $("us-msg").textContent = error ? "No se ha podido guardar el socio." : (marca.checked ? "Socio guardado." : "Ya no figura como socio.");
+      marca.disabled = anio.disabled = false;
+      if (!error && id === ctx.uid) { ctx.perfil.socio = marca.checked; ctx.perfil.socioDesde = n; }
+      if (!error) { if (marca.checked) sociosAutores.add(id); else sociosAutores.delete(id); }
+      return;
+    }
     const s = e.target.closest("select[data-uid]"); if (!s) return;
     s.disabled = true;
     const { error } = await sb.from("perfiles").update({ rol: s.value }).eq("id", s.dataset.uid);
@@ -1020,6 +1054,13 @@ async function cargarPerfil() {
     ctx.perfil = { nombre: (data && data.nombre) || "", avatar: fotoSegura((data && data.avatar) || "") };
     ctx.perfilOk = true;
   } catch (e) { console.warn("Perfil sin nombre ni foto (falta 13_mi_cuenta.sql)", e); }
+  ctx.socioOk = false;
+  try {
+    const { data, error } = await sb.from("perfiles").select("socio,socio_desde").eq("id", ctx.uid).maybeSingle();
+    if (error) throw error;
+    ctx.perfil.socio = !!(data && data.socio); ctx.perfil.socioDesde = (data && data.socio_desde) || null;
+    ctx.socioOk = true;
+  } catch (e) { console.warn("Sin datos de socio (falta 23_socios_del_club.sql)", e); }
 }
 function avatarHTML(grande) {
   const cls = grande ? "avatar big" : "avatar";
@@ -1033,6 +1074,12 @@ function abrirCuenta() {
     <div class="cuenta-cab">${avatarHTML(true)}
       <div><strong>${esc(p.nombre || ctx.email)}</strong><br><span class="muted">${esc(ctx.email)} · ${esc(ROL_TXT[ctx.rol] || ctx.rol)}</span></div>
     </div>
+    ${ctx.socioOk && p.socio ? `<div class="carne">
+      <img src="img/logo.png" alt="" width="64" height="64">
+      <div><span class="carne-club">Pipa Club Fumadas Hobbit</span>
+        <strong>${esc(p.nombre || ctx.email)}</strong>
+        <span>${p.socioDesde ? `Socio desde ${p.socioDesde}` : "Socio del club"}</span></div>
+    </div>` : ""}
     ${ctx.perfilOk ? `
     <div class="btns">
       <button class="btn" id="av-pick" type="button">${p.avatar ? "Cambiar foto" : "Subir foto de perfil"}</button>

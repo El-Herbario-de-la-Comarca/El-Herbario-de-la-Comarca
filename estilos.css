@@ -306,3 +306,16 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .md-lab { grid-column: 1; } .md-val { grid-column: 2; text-align: right; }
   .md-esc, .md-ext { grid-column: 1 / -1; }
 }
+
+/* Socios del Pipa Club */
+.sello-socio { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; flex: none; }
+.carne { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: center; max-width: 380px;
+  margin: 0 0 16px; padding: 14px 16px; border: 2px solid var(--door-ring); border-radius: 10px;
+  background: color-mix(in srgb, var(--hill-a) 45%, var(--surface)); }
+.carne img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+.carne div { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.carne-club { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.carne strong { font-family: var(--display); font-weight: 400; font-size: 1.25rem; }
+.us-socio { white-space: nowrap; }
+.us-socio label { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; font-family: var(--body); font-size: 0.9rem; color: var(--fg); }
+.us-socio input[type=number] { width: 84px; min-height: 34px; margin-left: 8px; }
