@@ -32,6 +32,24 @@ FAMILIA = {
 # Lakeland comprobadas en la descripción de Smokingpipes (esencias del Lake District,
 # floral, rosa, tonka/tonquin). Ver marcas/TRASPASO.md.
 LAKELAND = {
+    "296",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "307",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "325",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "319",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "309",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "317",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "318",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "338",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "387",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "291",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "310",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "320",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "333",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "327",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "334",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "386",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "326",   # GH: Lakeland según foros (25/10, decisión del usuario)
+    "336",   # GH: Lakeland según foros (25/10, decisión del usuario)
     "14",   # SG Cob Plug: tonka
     "20",   # SG Grousemoor: esencias Lake District
     "21",   # SG Grousemoor Plug

@@ -551,3 +551,9 @@ EXTRA += [("Condor", [
     ("Ready Rubbed", "Aromatic", "Virginia", "Ready Rubbed", "Bolsa de 50 g",
      "La de la bolsa verde. Virginia curado al aire con esencias florales y un toque de licor. Ya no se fabrica.", "tr / uktobacco (lakeland, según el usuario)"),
 ])]
+
+# Samuel Gawith Lakeland Dark (25/10, a petición del usuario). Smokingpipes la tiene agotada.
+EXTRA += [("Samuel Gawith", [
+    ("Lakeland Dark", "Burley", "Virginia, Dark Fired Kentucky", "Broken Flake", "Lata de 50 g",
+     "Cremosa, con notas dulces, especiadas y de cuero que aporta el kentucky.", "sp (lakeland)"),
+])]
