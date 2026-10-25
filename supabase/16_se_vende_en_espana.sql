@@ -1,5 +1,5 @@
 -- =====================================================================
--- 16 · Se vende en España
+-- 16 · Distintivo de España
 -- Nueva columna «en_espana»: en la ficha aparece un circulito con los colores de la bandera y
 -- una E. Se puede marcar o quitar desde «Editar ficha» (y los editores pueden proponerlo).
 -- Fuente: lista oficial de precios de picadura de pipa del Comisionado para el Mercado de Tabacos,

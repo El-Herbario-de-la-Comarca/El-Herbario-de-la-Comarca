@@ -185,10 +185,10 @@ PAIS["Per G. Jensen"] = "Estados Unidos"
 FUENTES["Per G. Jensen"] = "Smokingpipes y cigarworld.de (Legacy Collection, oct. 2026)"
 _PJ = "De la Legacy Collection, creada por el maestro mezclador danés Per Georg Jensen y elaborada por Cornell & Diehl."
 MARCAS["Per G. Jensen"] = [
-    ("Brothers in Arms", "Burley", "Virginia, Perique, Dark Fired Kentucky, Burley, Orientals", "Ribbon", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
-    ("Harbour Dreams", "Aromatic", "Virginia, Burley", "Broken Flake", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
-    ("King's Watch", "Virginia", "Virginia", "Flake", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
-    ("Port Guardian", "Virginia", "Virginia", "Flake", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
+    ("Brothers in Arms", "Burley", "Virginia, Perique, Dark Fired Kentucky, Burley, Orientals", "Ribbon", "Lata de 50 g", _PJ, "sp"),
+    ("Harbour Dreams", "Aromatic", "Virginia, Burley", "Broken Flake", "Lata de 50 g", _PJ, "sp"),
+    ("King's Watch", "Virginia", "Virginia", "Flake", "Lata de 50 g", _PJ, "sp"),
+    ("Port Guardian", "Virginia", "Virginia", "Flake", "Lata de 50 g", _PJ, "sp"),
 ]
 
 # ---------------------------------------------------------------- Thomas Radford
