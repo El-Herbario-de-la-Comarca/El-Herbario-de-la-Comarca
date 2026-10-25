@@ -369,3 +369,10 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .instalar { display: grid; gap: 6px; justify-items: start; max-width: 380px; margin: 0 0 16px; padding: 14px 16px; border: 1px dashed var(--line); border-radius: 10px; }
 .instalar .muted { font-size: 0.88rem; }
 .meta .es-badge.es-lista { font-size: 1.05rem; margin-left: 0; vertical-align: middle; align-self: center; }
+
+/* Ficha abierta en pantalla ancha: la foto arriba de su columna (no centrada en vertical)
+   y fija mientras se baja por la ficha. En el móvil ya va arriba. */
+@media (min-width: 601px) {
+  .panel .art { align-items: start; align-content: start; }
+  .panel .art > * { position: sticky; top: 28px; }
+}
