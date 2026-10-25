@@ -437,3 +437,109 @@ EXTRA = [("STG", [
     ("HH Pure Virginia Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", _HH + " Solo virginias.", "tr"),
     ("HH Rustica Flake", "Virginia", "Virginia, Burley", "Flake", "Lata de 100 g", _HH + " Lleva Nicotiana rustica, la planta de tabaco nativa de América.", "sp"),
 ])]
+
+# ---------------------------------------------------------------- Lista oficial española, 2.ª tanda (25/10 tarde)
+# Grupos 1 y 2 del cruce con la lista del CMT del 25/10/2026: mezclas que faltaban de marcas ya
+# presentes y marcas de pipa nuevas. Todas se venden en España (llevan la E). Fuentes: Tobacco
+# Reviews (tr), Smokingpipes (sp), cigarworld (cw), mac-baren.com, smoke-king, cgarsltd, thepipeshop.
+# Nombres: el europeo actual cuando el antiguo cambió por la normativa de la UE (Danske Club).
+for _m, _p in {"Cellini": "Dinamarca", "Holger Danske": "Dinamarca", "Stanwell": "Dinamarca",
+               "Brookfield": "Alemania", "Brigg": "Dinamarca"}.items():
+    PAIS.setdefault(_m, _p)
+_STGM = "Marca de Mac Baren, hoy de Scandinavian Tobacco Group (STG)."
+EXTRA += [
+    ("Cellini", [("Forte", "Aromatic", "Black Cavendish, Burley, Virginia", "", "Bolsa de 50 g", "Aromatizada con licor.", "tr")]),
+    ("Clan", [("Highland Gold", "Virginia", "Virginia", "Ribbon", "Bolsa de 50 g", "", "tr (Virginia Based)")]),
+    ("Borkum Riff", [("Sungold", "Aromatic", "Burley, Cavendish, Kentucky, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de vainilla y whisky.", "tr")]),
+    ("Dan Tobacco", [
+        ("Ascanian No. 1 Riverside Blend", "Virginia/Perique", "Virginia, Orientals, Perique", "Ready Rubbed", "Lata de 50 g · lata de 100 g", "", "tr"),
+        ("Holmer Knudsen's Pipe Tobacco", "Aromatic", "Virginia, Burley, Black Cavendish", "", "Lata de 50 g · lata de 100 g · bolsa de 250 g", "De estilo danés, con aroma de vainilla.", "cw"),
+        ("Roper's Roundels", "Virginia", "Virginia, Perique, Black Cavendish", "Coins", "Lata de 100 g", "De la serie Bulldog.", "sp"),
+        ("Torben Dansk Latakia (Cyprus)", "Blending", "Latakia", "", "50 g", "Latakia de Chipre para mezclar.", "cw"),
+        ("Torben Dansk Louisiana Perique", "Blending", "Perique", "", "Lata de 50 g", "Perique de Luisiana para mezclar.", "cw"),
+        ("Torben Dansk Virginia 1,6 Zaire", "Blending", "Virginia", "", "50 g", "Virginia de Zaire en corte de 1,6 mm, para mezclar.", "cw"),
+        ("Torben Dansk Burley", "Blending", "Burley", "", "50 g", "Burley para mezclar.", "cw"),
+    ]),
+    ("STG", [
+        ("7 Seas Regular Blend", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 40 g", "Marca Mac Baren. Aroma de chocolate y vainilla.", "tr"),
+        ("7 Seas Royal Blend", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 40 g", "Marca Mac Baren.", "tr"),
+        ("7 Seas Gold Blend", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 40 g", "Marca Mac Baren.", "tr"),
+        ("7 Seas Blue Blend", "Aromatic", "Virginia, Burley, Cavendish", "", "Bolsa de 40 g", "Marca Mac Baren.", "mac-baren.com"),
+        ("7 Seas Bright Blend", "Aromatic", "Virginia, Burley", "", "Bolsa de 40 g", "Marca Mac Baren.", "mac-baren.com"),
+        ("Cube Gold", "Aromatic", "Black Cavendish, Burley, Cavendish, Kentucky, Virginia", "Ribbon", "Bolsa de 40 g", "Marca Mac Baren. Aroma afrutado.", "tr"),
+        ("Cube Silver", "Aromatic", "Virginia, Burley, Orientals, Black Cavendish", "Ribbon", "Bolsa de 40 g", "Marca Mac Baren.", "sp"),
+    ]),
+    ("Peterson", [("Founder's Choice", "Aromatic", "Black Cavendish, Burley, Cavendish, Orientals", "", "Lata de 100 g", "Aroma de mango, ron y vainilla.", "tr")]),
+    ("W.Ø. Larsen", [("Fresh & Elegant", "Aromatic", "Burley, Cavendish, Virginia", "", "Bolsa de 50 g", "Aroma afrutado.", "tr")]),
+    ("Holger Danske", [("Original", "Virginia", "Black Cavendish, Burley, Perique, Virginia", "Ribbon", "Bolsa de 40 g", "", "tr (Virginia Based)")]),
+    ("Stanwell", [("Kir & Apple", "Aromatic", "Black Cavendish, Burley, Virginia", "Broken Flake", "Bolsa de 50 g", "Aroma de manzana y grosella negra.", "tr")]),
+    ("Käpt'n Barsdorfs Bester", [
+        ("Mixture", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 50 g · lata de 160 g", "", "tr"),
+        ("Red", "Aromatic", "Virginia, Burley", "", "Lata de 160 g", "Aroma de cereza.", "pfeifen-shop-online"),
+    ]),
+    ("Alsbo", [
+        ("Black", "Aromatic", "Cavendish, Black Cavendish", "Ready Rubbed", "Bolsa de 50 g", "Aroma de vainilla con un toque de avellana.", "smoke-king"),
+        ("Gold", "Aromatic", "Virginia", "Ribbon", "50 g", "Aroma de pistacho y vainilla.", "tr"),
+        ("Ruby", "Aromatic", "Black Cavendish, Burley, Virginia", "Ready Rubbed", "Bolsa de 50 g", "Aroma de cereza.", "cgarsltd"),
+        ("Whisky", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de whisky.", "tr"),
+    ]),
+    ("Skandinavik", [
+        ("Mixture", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 50 g", "", "tr"),
+        ("Navy", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aromatizada con licor.", "tr"),
+    ]),
+    ("Danske Club", [
+        ("Black", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de vainilla. Antes se llamaba Black Luxury.", "tr"),
+        ("White", "Aromatic", "Burley, Virginia", "Ribbon", "Lata de 50 g", "Aroma de vainilla. Antes se llamaba White Luxury.", "tr"),
+    ]),
+    ("Comoy's", [
+        ("Cornish Mixture", "Aromatic", "Burley, Cavendish, Virginia", "Ribbon", "Lata de 50 g", "Aroma de canela, chocolate y fruta.", "tr"),
+        ("English Mixture", "English", "Latakia, Orientals, Virginia", "Ribbon", "Lata de 50 g", "", "tr"),
+        ("Irish Mixture", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Lata de 50 g", "Aroma de whisky.", "tr"),
+        ("Scottish Mixture", "Scottish", "Orientals, Virginia", "Ribbon", "Lata de 50 g", "", "tr"),
+    ]),
+    ("Fribourg & Treyer", [
+        ("34th Mixture", "English", "Black Cavendish, Latakia, Virginia", "", "Lata de 50 g", "Inglesa fuerte, con mucha latakia.", "tr"),
+        ("Special Brown Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Navy flake con un ligero toque de ron.", "tr"),
+        ("Wingate Mixture", "English", "Latakia, Perique, Virginia", "Ribbon", "Lata de 50 g", "", "tr"),
+        ("Waterloo No. 2 Mixture", "Virginia/Latakia", "Latakia, Virginia", "Ribbon", "Lata de 50 g", "", "tr"),
+        ("Cut Virginia Plug", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Prensado en plug y cortado en láminas; sin aromatizar.", "smoke-king"),
+        ("Vintage Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Sin aromatizar.", "smoke-king"),
+    ]),
+    ("Wessex", [
+        ("Brown Virginia Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Sin aromatizar.", "tr"),
+        ("Gold Virginia Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", "", "tr"),
+        ("Red Virginia Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", "", "tr"),
+        ("Director's Choice", "Aromatic", "Cavendish, Virginia", "Ribbon", "Lata de 50 g", "Lleva también tabaco Maryland.", "tr"),
+        ("Tradition", "English", "Latakia, Orientals, Virginia", "Ribbon", "Lata de 50 g", "", "tr"),
+    ]),
+    ("Astley's", [
+        ("No. 2 Virginia Mixture", "Virginia/Perique", "Perique, Virginia", "Ribbon", "Lata de 50 g", "", "tr"),
+        ("No. 55 Elizabethan", "Virginia", "Virginia", "Ribbon", "Lata de 50 g", "Sin aromatizar.", "tr"),
+        ("No. 88 Matured Dark Virginia", "Virginia", "", "Ready Rubbed", "Lata de 50 g", "", "tr"),
+        ("No. 99 Royal Tudor", "English", "Latakia, Orientals, Virginia", "Ribbon", "Lata de 50 g", "Mezcla con mucha latakia.", "tr"),
+        ("No. 109 Medium Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Sin aromatizar.", "tr"),
+    ]),
+    ("Savinelli", [
+        ("The Balkans", "English", "Black Cavendish, Latakia, Orientals, Virginia", "", "Lata de 50 g", "", "tr"),
+        ("English Mixture", "English", "Burley, Latakia, Virginia", "", "Lata de 50 g", "", "tr"),
+        ("Armonia", "Aromatic", "Burley, Kentucky, Orientals, Virginia", "Ribbon", "Lata de 50 g", "Aroma de cacao, fruta, miel y ron.", "tr"),
+        ("Aroma", "Aromatic", "Virginia, Orientals, Black Cavendish", "Ribbon", "Lata de 50 g", "Aroma de amaretto y vainilla.", "sp"),
+        ("Black Cavendish", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g", "Notas suaves de vainilla y chocolate.", "sp"),
+        ("Cavendish", "Aromatic", "Black Cavendish, Burley, Orientals, Virginia", "Ribbon", "Lata de 50 g", "Aroma de caramelo, nata, miel y vainilla.", "tr"),
+        ("Leonardo", "Aromatic", "Black Cavendish, Burley, Cavendish, Virginia", "", "Lata de 100 g", "Aroma de caramelo, chocolate, café y vainilla.", "tr"),
+    ]),
+    ("Brookfield", [
+        ("No. 1", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Lleva también tabaco de Java. Aroma de vainilla.", "tr"),
+        ("No. 2", "Aromatic", "Black Cavendish, Burley, Virginia", "Broken Flake", "Bolsa de 50 g", "Aroma de vainilla.", "tr"),
+        ("No. 4 (Black Bourbon)", "American", "Burley, Virginia", "Broken Flake", "Bolsa de 50 g · lata de 200 g", "Aroma de bourbon.", "tr"),
+    ]),
+    ("Brigg", [("Regular", "Aromatic", "Burley, Cavendish, Virginia", "", "Bolsa de 40 g", _STGM + " Aroma de ron.", "tr")]),
+    ("Chacom", [
+        ("No. 1", "English", "Virginia, Latakia, Orientals, Black Cavendish", "Ribbon", "Lata de 50 g", "Inglesa suave, con poca latakia.", "sp"),
+        ("No. 2", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g", "Aroma de vainilla con un toque de ciruela.", "sp"),
+        ("No. 3", "Aromatic", "Virginia, Dark Fired Kentucky, Black Cavendish", "Ribbon", "Lata de 50 g", "Aroma de vainilla bourbon.", "sp"),
+        ("No. 4", "Virginia", "Virginia, Perique", "Flake", "Lata de 50 g", "", "sp"),
+        ("No. 5", "English", "Virginia, Latakia, Black Cavendish, Perique", "", "Lata de 50 g", "Inglesa intensa, sin aromatizar.", "thepipeshop"),
+        ("No. 6", "Aromatic", "Black Cavendish, Virginia, Burley", "", "Lata de 50 g", "Aroma de ron, café espresso y caramelo.", "thepipeshop"),
+    ]),
+]
