@@ -71,6 +71,7 @@ function mapItem(r) {
     id: String(r.id), nombre: str(r.nombre, 120), marca: str(r.marca, 80), tipo: str(r.tipo, 40), corte: str(r.corte, 40),
     pais: str(r.pais, 60), formato: str(r.formato, 80), desc: str(r.descripcion, 2000),
     fuerza: Number.isInteger(f) && f >= 1 && f <= 5 ? f : 0, notas, hojas, foto: str(r.foto, 500),
+    espana: r.en_espana === true,
     video: typeof r.video_id === "string" && /^[A-Za-z0-9_-]{11}$/.test(r.video_id) ? r.video_id : ""
   };
 }
@@ -310,7 +311,7 @@ function metaHTML(d) {
       <div class="d-head">
         <div class="d-title">
           <span class="brandname">${esc(d.marca)}</span>
-          <h2 id="d-name">${esc(d.nombre)}</h2>
+          <h2 id="d-name">${esc(d.nombre)}${d.espana ? ' <span class="es-badge" role="img" aria-label="Se vende en estancos de España" title="Se vende en estancos de España">E</span>' : ""}</h2>
         </div>
         ${notaGrande(d)}
       </div>
