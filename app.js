@@ -256,7 +256,7 @@ function render() {
       <div class="body">
         <span class="brandname">${esc(d.marca)}</span>
         <h2>${esc(d.nombre)}</h2>
-        <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${d.video ? '<span class="chip">Vídeo</span>' : ""}</div>
+        <div class="meta">${d.tipo ? `<span class="chip">${esc(d.tipo)}</span>` : ""}${d.corte ? `<span class="chip">${esc(d.corte)}</span>` : ""}${d.video ? '<span class="chip">Vídeo</span>' : ""}${d.espana ? '<span class="es-badge es-lista" role="img" aria-label="Se encuentra en España" title="España">E</span>' : ""}</div>
         ${st.n ? `<div class="str">${pips(Math.round(st.media))}<span>${rate}</span></div>` : `<span class="rate none">${rate}</span>`}
         <p>${esc(d.desc)}</p>
       </div>
