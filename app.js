@@ -1335,7 +1335,12 @@ function avatarHTML(grande) {
 }
 /* ---------- Instalar en el móvil ---------- */
 let avisoInstalar = null;   // Android/Chrome: el aviso de instalación se guarda para lanzarlo desde Mi cuenta
-window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); avisoInstalar = e; });
+// Chrome avisa unos segundos después de cargar; si Mi cuenta ya está abierta, se repinta para enseñar el botón.
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault(); avisoInstalar = e;
+  if (document.querySelector(".info.cuenta") && !document.getElementById("cu-instalar")) abrirCuenta();
+});
+window.addEventListener("appinstalled", () => { avisoInstalar = null; });
 const enApp = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
 function instalacionHTML() {
   if (enApp()) return "";
@@ -1650,5 +1655,5 @@ async function contarVisita() {
 
 // Service worker: guarda la web para que abra rápido e instalable en el móvil.
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch((e) => console.warn("Sin service worker", e)));
+  navigator.serviceWorker.register("sw.js").catch((e) => console.warn("Sin service worker", e));
 }
