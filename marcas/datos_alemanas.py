@@ -282,3 +282,31 @@ MARCAS["Kopp"] += [
     ("Meistermischung Nr. 99 Englisch", "English", "", "", "Lata de 100 g", _MM + " Inglesa, según su nombre.", "cw (nombre)"),
     ("Meistermischung Nr. 110", "Aromatic", "", "", "Lata de 100 g", _MM + " Aroma de naranja, vainilla y licor de almendra.", "cw y rauch-lounge.com (aroma)"),
 ]
+
+# ---------------------------------------------------------------- Pfeifendepot (marca de la casa)
+# Tienda Gerd Jansens Pfeifendepot. No está en Smokingpipes ni en cigarworld: se usa la ficha de su
+# propia web (Typ, Blätter, Schnitt, Aromatisierung), como con Watch City. El usuario pegó las URLs.
+PAIS["Pfeifendepot"] = "Alemania"
+FUENTES["Pfeifendepot"] = "pfeifendepot.de (fichas de cada mezcla de Pfeifendepot Tobaccos, oct. 2026)"
+_PD = "Mezcla de la casa de la tienda Gerd Jansens Pfeifendepot."
+_PDC = _PD + " Forma parte de la Copenhagen Line."
+_PDF = _PD + " Forma parte de la línea Flakes & Co."
+MARCAS["Pfeifendepot"] = [
+    ("No. 032 – Extra White", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Lata de 100 g", _PD + " Aroma afrutado y dulce.", "pfeifendepot"),
+    ("No. 034", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 100 g", _PD + " Aroma de caramelo y vainilla.", "pfeifendepot"),
+    ("No. 037 – Copenhagen Curlies", "Aromatic", "Virginia, Cavendish", "Coins", "Lata de 50 g · lata de 100 g · 500 g a granel", _PDC + " Aroma de coñac.", "pfeifendepot"),
+    ("No. 038 – Copenhagen B", "Virginia", "Virginia", "Ready Rubbed", "Lata de 100 g", _PDC + " Tres virginias suaves, prensadas durante semanas.", "pfeifendepot"),
+    ("No. 041 – Fiesta", "Aromatic", "Virginia, Black Cavendish, Burley", "Ribbon", "Lata de 100 g · lata de 200 g", _PD + " Aroma de ciruela mirabel y vainilla.", "pfeifendepot"),
+    ("No. 045 – Copenhagen Ø", "English", "Latakia, Black Cavendish, Kentucky, Perique", "", "Lata de 100 g", _PDC + " Mucha latakia y cavendish, con algo de hoja de Maryland.", "pfeifendepot"),
+    ("No. 047", "Aromatic", "Burley, Cavendish, Virginia", "Ribbon", "Lata de 100 g", _PD + " Aroma de arce, miel y vainilla.", "pfeifendepot"),
+    ("No. 056 – Cremon", "English", "Latakia, Orientals, Virginia", "Ribbon", "Lata de 50 g", _PD + " Una cuarta parte de tabacos especiados, sobre todo latakia.", "pfeifendepot"),
+    ("No. 057 – V-Cubes", "Aromatic", "Burley, Cavendish, Virginia", "Cube Cut", "Lata de 50 g · lata de 100 g · lata de 200 g", _PD + " Aroma de vainilla oscura.", "pfeifendepot"),
+    ("No. 064 – Rosemoor", "Aromatic", "Virginia, Burley", "Ribbon", "Lata de 100 g", _PD + " Aroma floral de aceite de rosa.", "pfeifendepot (Lakeland)"),
+    ("No. 066 – Fredensborg White", "Aromatic", "Burley, Cavendish, Orientals, Perique, Virginia", "Ribbon", "Lata de 100 g", _PD + " Aroma de vainilla, nuez y uva.", "pfeifendepot"),
+    ("No. 070 – Flake Cut", "Virginia", "Virginia", "Flake", "Lata de 50 g · lata de 100 g · lata de 200 g · 500 g a granel", _PDF + " Tres virginias madurados dos años en barriles de zinc.", "pfeifendepot"),
+    ("No. 079 – Gerd Jansens Scottish", "Scottish", "Virginia, Orientals", "Ribbon", "Lata de 50 g", _PD, "pfeifendepot"),
+    ("No. 080 – Gerd Jansens English", "English", "Orientals, Virginia, Latakia", "Ribbon", "Lata de 50 g", _PD, "pfeifendepot"),
+    ("No. 081 – Golden Balkan", "English", "Cavendish, Kentucky, Latakia, Perique, Virginia", "Ribbon", "Lata de 50 g · lata de 100 g", _PD + " Mucha latakia.", "pfeifendepot"),
+    ("No. 088 – DSK Flake", "Virginia", "Kentucky, Virginia", "Flake", "Lata de 50 g · 500 g a granel", _PDF + " Prensado en tortas claras y oscuras.", "pfeifendepot"),
+    ("No. 209 – White Balkan", "English", "Virginia, Black Cavendish, Latakia, Orientals", "Ribbon", "Lata de 100 g", _PD + " La elabora Kopp Tobaccos.", "pfeifendepot"),
+]
