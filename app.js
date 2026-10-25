@@ -971,6 +971,10 @@ function abrirBodega() {
 /* ---------- Mi cuenta ----------
    Nombre visible y foto de perfil (13_mi_cuenta.sql). Si ese SQL aún no se ha ejecutado,
    Mi cuenta sigue funcionando sin esas dos opciones. */
+// Baúl para el botón de Mi bodega (mismo círculo que la foto de Mi cuenta).
+const ICONO_BAUL = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 10.5V8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2.5"/><rect x="3" y="10.5" width="18" height="9.5" rx="1.6"/>
+  <path d="M3 13.5h18M8 4.4v6.1M16 4.4v6.1"/><rect x="10.3" y="12.2" width="3.4" height="3.6" rx=".6" fill="currentColor" stroke="none"/></svg>`;
 const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector" };
 async function cargarPerfil() {
   ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false;
@@ -1174,16 +1178,15 @@ function paintTop() {
     $("mp-open").addEventListener("click", abrirMisPropuestas);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else bar.innerHTML = "";
-  if (ctx.online && ctx.session && ctx.bodega) {
-    bar.insertAdjacentHTML("afterbegin", '<button class="btn" id="bd-open" type="button">Mi bodega</button>');
-    $("bd-open").addEventListener("click", abrirBodega);
-  }
 
   const st = $("status"), top = $("cuenta-top");
   if (!CONFIGURADO) { st.textContent = "Base de datos sin configurar: catálogo de solo lectura."; top.innerHTML = ""; return; }
   st.textContent = ctx.online ? "" : (ctx.aviso || "");
   if (ctx.session) {
-    top.innerHTML = `<button class="btn cuenta-btn" id="cu-open" type="button" aria-label="Mi cuenta">${avatarHTML()}<span>Mi cuenta</span></button>`;
+    top.innerHTML = (ctx.online && ctx.bodega
+        ? `<button class="btn cuenta-btn" id="bd-open" type="button"><span class="avatar" aria-hidden="true">${ICONO_BAUL}</span><span>Mi bodega</span></button>` : "")
+      + `<button class="btn cuenta-btn" id="cu-open" type="button" aria-label="Mi cuenta">${avatarHTML()}<span>Mi cuenta</span></button>`;
+    if ($("bd-open")) $("bd-open").addEventListener("click", abrirBodega);
     $("cu-open").addEventListener("click", abrirCuenta);
   } else {
     top.innerHTML = '<button class="btn primary" id="in" type="button">Entrar</button>';
