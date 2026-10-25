@@ -1,7 +1,7 @@
 # Traspaso: estado del catálogo y siguientes fichas
 
 **Estado a 25/10/2026 (10:40):** 825 fichas de 60 marcas en `datos-iniciales.js`; 163 con el distintivo de España (E).
-Todo está en `main` y publicado. SQL ejecutados por el usuario hasta el 21 (el 20 junta del 13 al 19).
+Todo está en `main` y publicado. El usuario ejecutó el 20 (junta del 13 al 19); el 21 (nombre al registrarse) estaba pendiente de ejecutar.
 
 ## Cómo seguir metiendo fichas
 - Añadir filas en `marcas/datos_alemanas.py` (formato y criterio al principio del archivo) y ejecutar
