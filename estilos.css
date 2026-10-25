@@ -347,3 +347,5 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .tr-item { grid-template-columns: 36px minmax(0, 1fr); }
   .tr-der { grid-column: 2; }
 }
+.bd-env { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 0.72rem; color: var(--accent); }
+.bd-env svg { width: 15px; height: 15px; flex: none; }

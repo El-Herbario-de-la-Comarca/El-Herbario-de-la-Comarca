@@ -990,6 +990,11 @@ function lineaTarro(t) {
   const det = partes.join(" · ");
   return det.charAt(0).toUpperCase() + det.slice(1);
 }
+// El envase con la fecha más antigua (o null si ninguno tiene fecha).
+function masViejo(lista) {
+  const conFecha = lista.filter((t) => t.fecha_anio);
+  return conFecha.length ? conFecha.reduce((a, t) => (mesesDesde(t.fecha_anio, t.fecha_mes) > mesesDesde(a.fecha_anio, a.fecha_mes) ? t : a)) : null;
+}
 // «3 latas», «2 tarros y 1 lata»…
 function resumenEnvases(lista) {
   const cuenta = {};
@@ -1005,8 +1010,7 @@ function tituloTarro(t) {
 function tarrosHTML(id) {
   const lista = tarros[String(id)] || [];
   let abierto = false; try { abierto = localStorage.getItem("herbario-tarros-abiertos") === "1"; } catch (e) {}
-  const conFecha = lista.filter((t) => t.fecha_anio);
-  const viejo = conFecha.length ? conFecha.reduce((a, t) => (mesesDesde(t.fecha_anio, t.fecha_mes) > mesesDesde(a.fecha_anio, a.fecha_mes) ? t : a)) : null;
+  const viejo = masViejo(lista);
   const resumen = lista.length
     ? `<span class="tr-res">${resumenEnvases(lista)} en tu bodega</span>${viejo ? `<span class="tr-viejo">el más antiguo: ${antiguedad(viejo).toLowerCase()}</span>` : ""}`
     : '<span class="tr-res">Apunta tus tarros y latas (opcional)</span>';
@@ -1225,9 +1229,12 @@ async function guardarBodega(id, nuevo) {
 function abrirBodega() {
   const fila = (d, k) => {
     const g = k === "tengo" ? (bodega[String(d.id)] || {}).gramos : null;
+    const lista = k === "tengo" && ctx.tarrosOk ? (tarros[String(d.id)] || []) : [];
+    const viejo = masViejo(lista);
+    const envases = lista.length ? `<span class="bd-env">${ICONO_TARRO}${esc(resumenEnvases(lista))}${viejo ? ` · el más antiguo: ${esc(antiguedad(viejo).toLowerCase())}` : ""}</span>` : "";
     return `<li><button class="bd-item" type="button" data-open="${esc(d.id)}">
         <span class="bd-mini" aria-hidden="true">${art(d)}</span>
-        <span class="bd-txt"><span class="bd-nom">${esc(d.nombre)}</span><span class="muted">${esc(d.marca)}${d.tipo ? " · " + esc(d.tipo) : ""}</span></span>
+        <span class="bd-txt"><span class="bd-nom">${esc(d.nombre)}</span><span class="muted">${esc(d.marca)}${d.tipo ? " · " + esc(d.tipo) : ""}</span>${envases}</span>
         ${g ? `<span class="bd-gr">${gramosTxt(g)}</span>` : ""}
       </button></li>`;
   };
