@@ -189,7 +189,7 @@
 
 /* Cabecera un 20 % más baja en móviles. */
 @media (max-width: 600px) {
-  .comarca .hero { padding-top: 22px; }
+  .comarca .hero { padding-top: 4px; }
   .comarca .hero-top { gap: 12px; }
   .comarca .logo { width: 68px; }
   .comarca .hero-text { gap: 4px; }

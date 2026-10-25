@@ -51,7 +51,8 @@ const fecha = (t) => { try { return new Date(t).toLocaleDateString("es-ES", { da
 const CFG = window.HERBARIO_CONFIG || {};
 const CONFIGURADO = !!(CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase && window.supabase.createClient);
 const sb = CONFIGURADO ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey) : null;
-const ctx = { online: false, session: null, email: "", uid: "", rol: "anonimo", pendientes: 0, misPendientes: 0 };
+const ctx = { online: false, session: null, email: "", uid: "", rol: "anonimo", pendientes: 0, misPendientes: 0,
+  perfil: { nombre: "", avatar: "" }, perfilOk: false };
 const esAdmin = () => ctx.online && ctx.rol === "admin";
 const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor");
 
@@ -872,6 +873,105 @@ function abrirBodega() {
   $("panel").querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.open)));
 }
 
+/* ---------- Mi cuenta ----------
+   Nombre visible y foto de perfil (13_mi_cuenta.sql). Si ese SQL aún no se ha ejecutado,
+   Mi cuenta sigue funcionando sin esas dos opciones. */
+const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector" };
+async function cargarPerfil() {
+  ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false;
+  if (!sb || !ctx.session) return;
+  try {
+    const { data, error } = await sb.from("perfiles").select("nombre,avatar").eq("id", ctx.uid).maybeSingle();
+    if (error) throw error;
+    ctx.perfil = { nombre: (data && data.nombre) || "", avatar: fotoSegura((data && data.avatar) || "") };
+    ctx.perfilOk = true;
+  } catch (e) { console.warn("Perfil sin nombre ni foto (falta 13_mi_cuenta.sql)", e); }
+}
+function avatarHTML(grande) {
+  const cls = grande ? "avatar big" : "avatar";
+  if (ctx.perfil.avatar) return `<img class="${cls}" src="${esc(ctx.perfil.avatar)}" alt="">`;
+  const letra = (ctx.perfil.nombre || ctx.email || "?").trim().charAt(0).toUpperCase();
+  return `<span class="${cls}" aria-hidden="true">${esc(letra)}</span>`;
+}
+function abrirCuenta() {
+  const p = ctx.perfil;
+  abrirPanel(`<div class="info adm cuenta"><h2 id="d-name">Mi cuenta</h2>
+    <div class="cuenta-cab">${avatarHTML(true)}
+      <div><strong>${esc(p.nombre || ctx.email)}</strong><br><span class="muted">${esc(ctx.email)} · ${esc(ROL_TXT[ctx.rol] || ctx.rol)}</span></div>
+    </div>
+    ${ctx.perfilOk ? `
+    <div class="btns">
+      <button class="btn" id="av-pick" type="button">${p.avatar ? "Cambiar foto" : "Subir foto de perfil"}</button>
+      ${p.avatar ? '<button class="btn danger" id="av-del" type="button">Quitar foto</button>' : ""}
+    </div>
+    <input id="av-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+    <form id="nm-form" class="cuenta-nombre">
+      <label for="nm-in">Nombre visible</label>
+      <div class="btns"><input id="nm-in" maxlength="40" value="${esc(p.nombre)}" placeholder="Cómo quieres que te vean">
+      <button class="btn" type="submit">Guardar</button></div>
+    </form>` : '<p class="muted">La foto de perfil y el nombre visible estarán disponibles pronto.</p>'}
+    <p class="msg" id="cu-msg" role="alert"></p>
+    <div class="btns">
+      ${ctx.bodega ? '<button class="btn" id="cu-bodega" type="button">Mi bodega</button>' : ""}
+      <button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>
+      <button class="btn" id="cu-out" type="button">Salir</button>
+    </div>
+    <button class="close" id="d-close" type="button">Cerrar</button></div>`);
+  $("d-close").addEventListener("click", () => closeDetail());
+  $("cu-out").addEventListener("click", async () => { closeDetail(); await sb.auth.signOut(); });
+  $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
+  if ($("cu-bodega")) $("cu-bodega").addEventListener("click", abrirBodega);
+  if (!ctx.perfilOk) return;
+  $("av-pick").addEventListener("click", () => $("av-file").click());
+  $("av-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirAvatar(f); });
+  if ($("av-del")) $("av-del").addEventListener("click", () => guardarPerfil(ctx.perfil.nombre, "", "Foto quitada."));
+  $("nm-form").addEventListener("submit", (e) => { e.preventDefault(); guardarPerfil($("nm-in").value, ctx.perfil.avatar, "Nombre guardado."); });
+}
+// Recorta la foto al centro en un cuadrado de 320 px.
+async function cuadrarAvatar(file) {
+  const bmp = await createImageBitmap(file);
+  const lado = Math.min(bmp.width, bmp.height), t = 320;
+  const c = document.createElement("canvas"); c.width = t; c.height = t;
+  const g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, t, t);
+  g.drawImage(bmp, (bmp.width - lado) / 2, (bmp.height - lado) / 2, lado, lado, 0, 0, t, t);
+  return await new Promise((r) => c.toBlob(r, "image/jpeg", 0.88));
+}
+function rutaAvatar(url) {
+  const marca = "/storage/v1/object/public/avatares/";
+  const i = (url || "").indexOf(marca);
+  return i >= 0 ? decodeURIComponent(url.slice(i + marca.length)) : "";
+}
+async function subirAvatar(file) {
+  const msg = $("cu-msg");
+  if (file.size > 20 * 1024 * 1024) { msg.textContent = "La foto pesa demasiado (máximo 20 MB)."; return; }
+  msg.style.color = "var(--muted)"; msg.textContent = "Subiendo foto…";
+  try {
+    const blob = await cuadrarAvatar(file);
+    if (!blob) throw new Error("imagen");
+    const ruta = `${ctx.uid}/${Date.now()}.jpg`;
+    const up = await sb.storage.from("avatares").upload(ruta, blob, { contentType: "image/jpeg", upsert: false });
+    if (up.error) throw up.error;
+    const url = sb.storage.from("avatares").getPublicUrl(ruta).data.publicUrl;
+    await guardarPerfil(ctx.perfil.nombre, url, "Foto actualizada.");
+  } catch (e) {
+    console.error(e);
+    msg.style.color = ""; msg.textContent = "No se ha podido subir la foto. Prueba con otra imagen (JPG, PNG o WebP).";
+  }
+}
+async function guardarPerfil(nombre, avatar, ok) {
+  const msg = $("cu-msg"), anterior = ctx.perfil.avatar;
+  const { error } = await sb.rpc("actualizar_mi_perfil", { p_nombre: nombre, p_avatar: avatar });
+  if (error) { msg.style.color = ""; msg.textContent = "No se ha podido guardar."; return; }
+  ctx.perfil = { nombre: String(nombre || "").trim(), avatar };
+  if (anterior && anterior !== avatar) {
+    const r = rutaAvatar(anterior);
+    if (r.startsWith(ctx.uid + "/")) { try { await sb.storage.from("avatares").remove([r]); } catch (e) {} }
+  }
+  paintTop(); abrirCuenta();
+  const m = $("cu-msg"); if (m) { m.style.color = "var(--accent)"; m.textContent = ok; }
+}
+
 /* ---------- Acceso (correo y contraseña) ---------- */
 function abrirLogin() {
   $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
@@ -948,6 +1048,7 @@ async function leerSesion(session) {
     const { data, error } = await sb.rpc("mi_rol");
     if (!error && typeof data === "string") ctx.rol = data;
   }
+  await cargarPerfil();
   await contarPendientes();
 }
 async function contarPendientes() {
@@ -983,17 +1084,16 @@ function paintTop() {
     $("bd-open").addEventListener("click", abrirBodega);
   }
 
-  const st = $("status"), box = $("auth-box");
-  if (!CONFIGURADO) { st.textContent = "Base de datos sin configurar: catálogo de solo lectura."; box.innerHTML = ""; return; }
-  if (!ctx.online) { st.textContent = ctx.aviso || ""; }
-  else if (!ctx.session) st.textContent = "";
-  else {
-    const ROL = { admin: "administrador", editor: "editor", lector: "lector (sin permiso de edición todavía)" };
-    st.textContent = `Has entrado como ${ctx.email} · ${ROL[ctx.rol] || ctx.rol}.`;
+  const st = $("status"), top = $("cuenta-top");
+  if (!CONFIGURADO) { st.textContent = "Base de datos sin configurar: catálogo de solo lectura."; top.innerHTML = ""; return; }
+  st.textContent = ctx.online ? "" : (ctx.aviso || "");
+  if (ctx.session) {
+    top.innerHTML = `<button class="btn cuenta-btn" id="cu-open" type="button" aria-label="Mi cuenta">${avatarHTML()}<span>Mi cuenta</span></button>`;
+    $("cu-open").addEventListener("click", abrirCuenta);
+  } else {
+    top.innerHTML = '<button class="btn primary" id="in" type="button">Entrar</button>';
+    $("in").addEventListener("click", abrirLogin);
   }
-  box.innerHTML = ctx.session ? '<button class="link" id="out" type="button">Salir</button>' : '<button class="link" id="in" type="button">Acceso colaboradores</button>';
-  if (ctx.session) $("out").addEventListener("click", async () => { await sb.auth.signOut(); });
-  else $("in").addEventListener("click", abrirLogin);
 }
 
 /* ---------- Eventos globales ---------- */

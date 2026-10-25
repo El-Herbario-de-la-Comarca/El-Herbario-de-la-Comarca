@@ -242,3 +242,17 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .btns.bodega { margin: 4px 0 12px; }
 .bodega-lista { list-style: none; padding: 0; margin: 6px 0 0; }
 .bodega-lista li { padding: 4px 0; border-bottom: 1px solid var(--line, rgba(0,0,0,.1)); }
+
+/* Botón de cuenta arriba a la derecha y sección Mi cuenta */
+.topbar { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 12px; min-height: 54px; }
+.topbar .btn { justify-self: auto; }
+.cuenta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 4px 14px 4px 4px; border-radius: 999px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex: none; display: inline-grid; place-items: center;
+  background: var(--accent); color: var(--accent-fg); font-weight: 600; font-size: 0.95rem; line-height: 1; }
+.avatar.big { width: 96px; height: 96px; font-size: 2.4rem; }
+.cuenta-cab { display: flex; align-items: center; gap: 16px; margin: 6px 0 16px; overflow-wrap: anywhere; }
+.cuenta .btns { margin-bottom: 12px; }
+.cuenta-nombre { display: grid; gap: 6px; margin-top: 4px; }
+.cuenta-nombre input { flex: 1 1 200px; min-width: 0; font: inherit; padding: 9px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); }
+.hero { padding-top: 4px; }
+@media (max-width: 600px) { .topbar { padding-top: 8px; min-height: 48px; } }
