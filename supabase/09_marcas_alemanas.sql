@@ -1,4 +1,4 @@
--- El herbario de la Comarca · Marcas de las tiendas alemanas (293 fichas)
+-- El herbario de la Comarca · Marcas de las tiendas alemanas (294 fichas)
 -- Ejecútalo en Supabase → SQL Editor DESPUÉS de 04_estilo_y_hojas.sql. Si una ficha ya existe, no se toca.
 insert into public.tabacos (id, nombre, marca, pais, tipo, corte, formato, descripcion, fuerza, notas, foto, hojas) values
 ('2000','Asmara','HU Tobacco','Alemania','Inglesa','Ribbon','Lata de 100 g','Asmara es una mezcla de estilo inglés de HU Tobacco, cortado en tiras finas (ribbon). Lleva virginia, orientales, latakia y perique. Forma parte de la African Line. Formato: lata de 100 g.',0,'{}'::text[],'',array['Virginia', 'Oriental', 'Latakia', 'Perique']::text[]),
@@ -293,5 +293,6 @@ insert into public.tabacos (id, nombre, marca, pais, tipo, corte, formato, descr
 ('2289','No. 3','Chacom','','Aromática','Ribbon','Lata de 50 g','No. 3 es una mezcla aromática de Chacom, cortado en tiras finas (ribbon). Lleva virginia, kentucky y cavendish. Aroma de vainilla bourbon. Formato: lata de 50 g.',0,'{}'::text[],'',array['Virginia', 'Kentucky', 'Cavendish']::text[]),
 ('2290','No. 4','Chacom','','Virginia-Perique','Flake','Lata de 50 g','No. 4 es una mezcla de Virginia con perique de Chacom, prensado y cortado en láminas (flake). Lleva virginia y perique. Formato: lata de 50 g.',0,'{}'::text[],'',array['Virginia', 'Perique']::text[]),
 ('2291','No. 5','Chacom','','Inglesa','','Lata de 50 g','No. 5 es una mezcla de estilo inglés de Chacom. Lleva virginia, latakia, perique y cavendish. Inglesa intensa, sin aromatizar. Formato: lata de 50 g.',0,'{}'::text[],'',array['Virginia', 'Latakia', 'Perique', 'Cavendish']::text[]),
-('2292','No. 6','Chacom','','Aromática','','Lata de 50 g','No. 6 es una mezcla aromática de Chacom. Lleva virginia, burley y cavendish. Aroma de ron, café espresso y caramelo. Formato: lata de 50 g.',0,'{}'::text[],'',array['Virginia', 'Burley', 'Cavendish']::text[])
+('2292','No. 6','Chacom','','Aromática','','Lata de 50 g','No. 6 es una mezcla aromática de Chacom. Lleva virginia, burley y cavendish. Aroma de ron, café espresso y caramelo. Formato: lata de 50 g.',0,'{}'::text[],'',array['Virginia', 'Burley', 'Cavendish']::text[]),
+('2293','Ready Rubbed','Condor','Reino Unido','Aromática','Ready Rubbed','Bolsa de 50 g','Ready Rubbed es una mezcla aromática de Condor, desmenuzado y listo para cargar (ready rubbed). Lleva virginia. La de la bolsa verde. Virginia curado al aire con un aroma de licor. Ya no se fabrica. Formato: bolsa de 50 g.',0,'{}'::text[],'',array['Virginia']::text[])
 on conflict (id) do nothing;

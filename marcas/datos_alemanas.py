@@ -543,3 +543,11 @@ EXTRA += [
         ("No. 6", "Aromatic", "Black Cavendish, Virginia, Burley", "", "Lata de 50 g", "Aroma de ron, café espresso y caramelo.", "thepipeshop"),
     ]),
 ]
+
+# Condor (25/10): el usuario conoce la bolsa verde, que es la Ready Rubbed. Ya no se fabrica,
+# pero sigue en la lista del CMT y el usuario quiere tenerla.
+PAIS.setdefault("Condor", "Reino Unido")
+EXTRA += [("Condor", [
+    ("Ready Rubbed", "Aromatic", "Virginia", "Ready Rubbed", "Bolsa de 50 g",
+     "La de la bolsa verde. Virginia curado al aire con un aroma de licor. Ya no se fabrica.", "tr / uktobacco"),
+])]
