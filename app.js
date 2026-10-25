@@ -59,6 +59,7 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
 /* ---------- Estado ---------- */
 let current = [];   // fichas
 let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado }]
+let fotosAutores = {}; // autor -> URL de su foto de perfil (14_fotos_en_resenas.sql)
 let bodega = {};      // tabaco_id -> { tengo, probado, quiero } (solo la del usuario que ha entrado)
 let openId = null, lastFocus = null;
 
@@ -127,6 +128,12 @@ async function cargarTodo() {
       }
       ctx.opiniones = true;
     } catch (e) { console.warn("Reseñas no disponibles", e); ctx.opiniones = false; }
+    fotosAutores = {};
+    try {
+      const { data, error } = await sb.rpc("fotos_resenas");
+      if (error) throw error;
+      (data || []).forEach((x) => { const u = fotoSegura(x.avatar); if (u) fotosAutores[String(x.autor)] = u; });
+    } catch (e) { console.warn("Fotos de las reseñas no disponibles", e); }
     await cargarBodega();
   } catch (e) {
     console.error(e);
@@ -632,7 +639,7 @@ function paintVideo() {
    Cualquier persona registrada deja una reseña por tabaco (puntuación y texto). Se publica al momento;
    cada cual edita o borra la suya y el administrador puede borrar cualquiera. */
 function firmaGuardada() {
-  try { return localStorage.getItem("herbario-firma") || ""; } catch (e) { return ""; }
+  try { return localStorage.getItem("herbario-firma") || ctx.perfil.nombre || ""; } catch (e) { return ctx.perfil.nombre || ""; }
 }
 function paintResenas() {
   const list = $("rv-list"), mine = $("rv-mine");
@@ -657,12 +664,17 @@ function paintResenas() {
     : (mia ? "" : '<p class="muted">Todavía no hay reseñas de este tabaco.</p>');
   [mine, list].forEach((box) => box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena)));
 }
+function avatarResena(o) {
+  const url = (ctx.uid && o.autor === ctx.uid && ctx.perfilOk) ? ctx.perfil.avatar : fotosAutores[o.autor];
+  if (url) return `<img class="avatar" src="${esc(url)}" alt="" loading="lazy">`;
+  return `<span class="avatar" aria-hidden="true">${esc((o.firma || "?").trim().charAt(0).toUpperCase())}</span>`;
+}
 function revHTML(o, propia) {
   const editado = o.actualizado && o.creado && new Date(o.actualizado) - new Date(o.creado) > 60000;
   const acts = propia
     ? `<div class="acts"><button class="link" type="button" data-rv="edit" data-id="${o.id}">Editar</button><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar</button></div>`
     : (esAdmin() ? `<div class="acts"><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar (admin)</button></div>` : "");
-  return `<div class="head"><span class="who">${esc(o.firma)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
+  return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
       <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
       <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
     ${CARACT.some((c) => o[c.k]) ? `<dl class="rev-car">${CARACT.map((c) => o[c.k] ? `<dt>${esc(c.label)}</dt><dd>${esc(c.ops[o[c.k]])}</dd>` : "").join("")}</dl>` : ""}

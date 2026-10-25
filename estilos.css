@@ -151,7 +151,7 @@ form.f .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(
 .rev { display: grid; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line); min-width: 0; }
 .rev:first-child { border-top: 0; padding-top: 0; }
 .rev .head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
-.rev .who { font-weight: 600; overflow-wrap: anywhere; }
+.rev .who { font-weight: 600; overflow-wrap: anywhere; display: inline-flex; align-items: center; gap: 8px; }
 .rev .when { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
 .rev p { margin: 0; max-width: 68ch; overflow-wrap: anywhere; white-space: pre-line; }
 .rev .acts { display: flex; gap: 14px; }
