@@ -241,7 +241,18 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 /* Mi bodega */
 .btns.bodega { margin: 4px 0 12px; }
 .bodega-lista { list-style: none; padding: 0; margin: 6px 0 0; }
-.bodega-lista li { padding: 4px 0; border-bottom: 1px solid var(--line, rgba(0,0,0,.1)); }
+.bodega-lista li { border-bottom: 1px solid var(--line, rgba(0,0,0,.1)); }
+.bd-item { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 2px; }
+.bd-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.bd-item:hover .bd-nom { text-decoration: underline; }
+.bd-mini { flex: none; width: 48px; height: 48px; display: grid; place-items: center; overflow: hidden; border-radius: 6px; background: var(--surface-2, transparent); }
+.bd-mini svg, .bd-mini img { width: 48px; height: 48px; object-fit: cover; }
+.bd-txt { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.bd-nom { font-weight: 600; color: var(--fg); overflow-wrap: anywhere; }
+.bd-gr { flex: none; font-family: var(--mono); font-size: 0.9rem; color: var(--fg); }
+.bd-cant { margin: -4px 0 8px; }
+.confirm .box label { font-size: 0.9rem; color: var(--muted); }
+.confirm .box input[type=number] { font: inherit; padding: 9px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); }
 
 /* Botón de cuenta arriba a la derecha y sección Mi cuenta */
 .topbar { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 12px; min-height: 54px; }

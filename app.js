@@ -835,47 +835,116 @@ async function abrirMisPropuestas() {
    Es privada (reglas de 10_mi_bodega.sql). Si ese SQL aún no se ha ejecutado, la web sigue sin ella. */
 const BODEGA = [["tengo", "Lo tengo"], ["probado", "Lo he probado"], ["quiero", "Quiero probarlo"]];
 async function cargarBodega() {
-  bodega = {}; ctx.bodega = false;
+  bodega = {}; ctx.bodega = false; ctx.gramosOk = false;
   if (!sb || !ctx.session) return;
-  try {
-    for (let desde = 0; ; desde += 1000) {
-      const { data, error } = await sb.from("bodega").select("tabaco_id,tengo,probado,quiero").range(desde, desde + 999);
-      if (error) throw error;
-      data.forEach((x) => { bodega[String(x.tabaco_id)] = { tengo: x.tengo, probado: x.probado, quiero: x.quiero }; });
-      if (data.length < 1000) break;
-    }
-    ctx.bodega = true;
-  } catch (e) { console.warn("Mi bodega no disponible", e); }
+  // Primero con los gramos (15_bodega_gramos.sql); si esa columna aún no existe, sin ellos.
+  for (const conGramos of [true, false]) {
+    try {
+      const cols = "tabaco_id,tengo,probado,quiero" + (conGramos ? ",gramos" : "");
+      const filas = {};
+      for (let desde = 0; ; desde += 1000) {
+        const { data, error } = await sb.from("bodega").select(cols).range(desde, desde + 999);
+        if (error) throw error;
+        data.forEach((x) => { filas[String(x.tabaco_id)] = { tengo: x.tengo, probado: x.probado, quiero: x.quiero,
+          gramos: Number.isInteger(x.gramos) && x.gramos > 0 ? x.gramos : null }; });
+        if (data.length < 1000) break;
+      }
+      bodega = filas; ctx.bodega = true; ctx.gramosOk = conGramos; return;
+    } catch (e) { console.warn(conGramos ? "Mi bodega sin gramos (falta 15_bodega_gramos.sql)" : "Mi bodega no disponible", e); }
+  }
 }
+const gramosTxt = (g) => (g ? `${g.toLocaleString("es-ES")} g` : "");
 function paintBodega() {
   const box = $("d-bodega"); if (!box || openId == null) return;
   if (!ctx.online || !ctx.session || !ctx.bodega) { box.innerHTML = ""; return; }
   const m = bodega[String(openId)] || {};
+  const etiqueta = (k, t) => (m[k] ? "✓ " : "") + t + (k === "tengo" && m.tengo && m.gramos ? ` · ${gramosTxt(m.gramos)}` : "");
   box.innerHTML = `<div class="btns bodega" role="group" aria-label="Mi bodega">
-      ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${m[k] ? "✓ " : ""}${t}</button>`).join("")}
-    </div><p class="msg" id="bd-msg" role="alert"></p>`;
+      ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${esc(etiqueta(k, t))}</button>`).join("")}
+    </div>
+    ${m.tengo && ctx.gramosOk ? `<button class="link bd-cant" type="button" id="bd-gr">${m.gramos ? "Cambiar la cantidad" : "Apuntar cuántos gramos tienes"}</button>` : ""}
+    <p class="msg" id="bd-msg" role="alert"></p>`;
   box.querySelectorAll("[data-bod]").forEach((b) => b.addEventListener("click", () => marcarBodega(openId, b.dataset.bod)));
+  if ($("bd-gr")) $("bd-gr").addEventListener("click", async () => {
+    const g = await pedirGramos(findItem(openId), m.gramos);
+    if (g !== undefined) guardarBodega(openId, { ...m, gramos: g });
+  });
+}
+// Ventanita para apuntar los gramos. Devuelve un número, null (lo deja vacío) o undefined (cancelado).
+function pedirGramos(d, actual) {
+  return new Promise((resolver) => {
+    const dlg = document.createElement("div");
+    dlg.className = "confirm"; dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true");
+    dlg.setAttribute("aria-labelledby", "gr-title");
+    dlg.innerHTML = `<form class="box" id="gr-form">
+        <h2 id="gr-title">¿Cuánto tienes?</h2>
+        <p>${esc(d ? d.nombre + " · " + d.marca : "")}</p>
+        <label for="gr-in">Cantidad en gramos (opcional)</label>
+        <input id="gr-in" type="number" inputmode="numeric" min="1" max="100000" step="1" placeholder="Por ejemplo, 100" value="${actual || ""}">
+        <p class="muted">Si lo dejas vacío, no se apunta ninguna cantidad.</p>
+        <p class="msg" id="gr-msg" role="alert"></p>
+        <div class="acts"><button class="btn primary" type="submit">Guardar</button><button class="btn" type="button" id="gr-no">Cancelar</button></div>
+      </form>`;
+    document.body.appendChild(dlg);
+    const quien = document.activeElement, inp = dlg.querySelector("#gr-in");
+    const cerrar = (v) => { document.removeEventListener("keydown", tecla, true); dlg.remove(); if (quien && quien.focus) quien.focus(); resolver(v); };
+    const tecla = (e) => { if (e.key === "Escape") { e.stopPropagation(); cerrar(undefined); } };
+    document.addEventListener("keydown", tecla, true);
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) cerrar(undefined); });
+    dlg.querySelector("#gr-no").addEventListener("click", () => cerrar(undefined));
+    dlg.querySelector("#gr-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const txt = inp.value.trim();
+      if (!txt) { cerrar(null); return; }
+      const n = Number(txt);
+      if (!Number.isInteger(n) || n < 1 || n > 100000) { dlg.querySelector("#gr-msg").textContent = "Escribe un número entero de gramos (de 1 a 100 000) o déjalo vacío."; return; }
+      cerrar(n);
+    });
+    inp.focus();
+  });
 }
 async function marcarBodega(id, campo) {
   const k = String(id), antes = bodega[k] || { tengo: false, probado: false, quiero: false };
   const nuevo = { ...antes, [campo]: !antes[campo] };
   // Al probarlo, deja de estar en «quiero probarlo».
   if (campo === "probado" && nuevo.probado) nuevo.quiero = false;
+  // Al marcar «Lo tengo» se pregunta la cantidad; al quitarlo, se borra.
+  if (campo === "tengo") {
+    if (nuevo.tengo && ctx.gramosOk) {
+      const g = await pedirGramos(findItem(id), null);
+      if (g === undefined) return;   // cancelado: no se marca
+      nuevo.gramos = g;
+    } else nuevo.gramos = null;
+  }
+  await guardarBodega(id, nuevo);
+}
+async function guardarBodega(id, nuevo) {
+  const k = String(id);
   const vacio = !nuevo.tengo && !nuevo.probado && !nuevo.quiero;
+  const fila = { tabaco_id: k, usuario: ctx.uid, tengo: !!nuevo.tengo, probado: !!nuevo.probado, quiero: !!nuevo.quiero };
+  if (ctx.gramosOk) fila.gramos = nuevo.tengo && nuevo.gramos ? nuevo.gramos : null;
   const { error } = vacio
     ? await sb.from("bodega").delete().eq("tabaco_id", k).eq("usuario", ctx.uid)
-    : await sb.from("bodega").upsert({ tabaco_id: k, usuario: ctx.uid, ...nuevo }, { onConflict: "usuario,tabaco_id" });
+    : await sb.from("bodega").upsert(fila, { onConflict: "usuario,tabaco_id" });
   if (error) { const m = $("bd-msg"); if (m) m.textContent = "No se ha podido guardar en tu bodega."; return; }
-  if (vacio) delete bodega[k]; else bodega[k] = nuevo;
+  if (vacio) delete bodega[k]; else bodega[k] = { ...fila, gramos: fila.gramos || null };
   if (String(openId) === k) paintBodega();
 }
 function abrirBodega() {
-  const fila = (d) => `<li><button class="link" type="button" data-open="${esc(d.id)}">${esc(d.nombre)}</button> <span class="muted">· ${esc(d.marca)}${d.tipo ? " · " + esc(d.tipo) : ""}</span></li>`;
+  const fila = (d, k) => {
+    const g = k === "tengo" ? (bodega[String(d.id)] || {}).gramos : null;
+    return `<li><button class="bd-item" type="button" data-open="${esc(d.id)}">
+        <span class="bd-mini" aria-hidden="true">${art(d)}</span>
+        <span class="bd-txt"><span class="bd-nom">${esc(d.nombre)}</span><span class="muted">${esc(d.marca)}${d.tipo ? " · " + esc(d.tipo) : ""}</span></span>
+        ${g ? `<span class="bd-gr">${gramosTxt(g)}</span>` : ""}
+      </button></li>`;
+  };
   const grupos = BODEGA.map(([k, t]) => {
     const items = current.filter((d) => (bodega[String(d.id)] || {})[k])
       .sort((a, b) => a.marca.localeCompare(b.marca, "es") || a.nombre.localeCompare(b.nombre, "es"));
-    return `<section class="sec"><h3>${t} <span class="muted">(${items.length})</span></h3>
-      ${items.length ? `<ul class="bodega-lista">${items.map(fila).join("")}</ul>` : '<p class="muted">Nada todavía.</p>'}</section>`;
+    const total = k === "tengo" ? items.reduce((s, d) => s + ((bodega[String(d.id)] || {}).gramos || 0), 0) : 0;
+    return `<section class="sec"><h3>${t} <span class="muted">(${items.length}${total ? ` · ${gramosTxt(total)} en total` : ""})</span></h3>
+      ${items.length ? `<ul class="bodega-lista">${items.map((d) => fila(d, k)).join("")}</ul>` : '<p class="muted">Nada todavía.</p>'}</section>`;
   }).join("");
   abrirPanel(`<div class="info adm"><h2 id="d-name">Mi bodega</h2>
     <p class="muted">Marca tus tabacos desde su ficha. Solo tú ves esta lista.</p>
