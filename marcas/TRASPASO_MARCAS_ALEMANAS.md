@@ -1,6 +1,10 @@
 # Traspaso: marcas nuevas de las tiendas alemanas
 
-Estado a 25/10/2026: **HU Tobacco hecha (43 fichas)**. Rama `marcas-alemanas` (sale de `main`).
+Estado a 25/10/2026 (mañana): **134 fichas de 22 marcas** (ids 2000–2133). Rama `marcas-alemanas`, fusionada en `main`.
+
+Hechas: HU Tobacco 43, Kopp +18 (Wood, Cremon Mixture, Pipe 66, Meistermischungen), Solani 10, Ilsted 8, Bentley 7,
+Exclusiv (Pöschl) 7, Reiner 6, Gladora 6, Ermuri 5, Sillems 5, Winsløw 4, Robert Lewis 4, Per G. Jensen 4,
+Thomas Radford (Pöschl) 3, Kentucky Bird, Prestige, Richmond y Käpt'n Barsdorfs Bester (von Eicken) 1 cada una.
 
 ## Cómo funciona
 - `marcas/datos_alemanas.py`: una lista por marca, filas `(nombre, familia, componentes, corte, formato, extra, fuente)`.
@@ -24,14 +28,24 @@ Estado a 25/10/2026: **HU Tobacco hecha (43 fichas)**. Rama `marcas-alemanas` (s
 
 ## Para revisar con el usuario
 - Balcánicas nuevas: HU Zulu Mixture (sin virginia) y HU Balkan Passion.
-- HU sin mezcla (falta familia fiable): Director's Cut, Green Gold, Dockworker Flake, Hadde's Best Irish, Nebari.
+- Sin mezcla (falta familia fiable): HU Director's Cut, Green Gold, Dockworker Flake, Hadde's Best Irish, Nebari;
+  Ermuri No Name No. 3; Prestige Regular Mixture; Kopp Meistermischung Nr. 66.
 
-## Pendiente (marcas)
-En cigarworld: Bentley, Ermuri, Gladora, Kentucky Bird, Per G. Jensen, Poul Ilsted, Poul Winslow,
-Prestige, Reiner, Richmond, Robert Lewis, Sillems, Solani, Thomas Radford.
-Fuera de cigarworld (buscar en Smokingpipes): John Aylesbury, Pöschl, Kohlhase & Kopp (ojo: ya existe
-la marca «Kopp»), Joh. Wilh. von Eicken, A & C Petersen, Kentucky Club.
-Marcas de casa (Pfeifen Huber, Kontor-Tabak, TAK): solo en su tienda; usar su web como con Watch City.
+## Decisiones de esta tanda
+- Agotadas: entran si la tienda las sigue vendiendo con precio y aviso de reposición; las que salen
+  «agotadas» sin precio ni formato, o como Restbestand/Auslauf, no entran.
+- A & C Petersen: en Smokingpipes solo queda Escudo Navy Deluxe, que ya está como marca Escudo. No se añade nada.
+- Kohlhase & Kopp: sus mezclas se añaden a la marca Kopp. Las de Smokingpipes son casi todas ediciones limitadas o anuales (fuera).
+- Pöschl: vende como Exclusiv y Thomas Radford. von Eicken: como Käpt'n Barsdorfs Bester (solo Bright Virginia sigue a la venta; Private Club, agotada).
+- Kentucky Club: no aparece a la venta ni en cigarworld ni en Smokingpipes. No se añade.
+- Per Jensen Aftensmad (Smokingpipes, agotada con aviso) y Sir Henry's (marca de Ermuri en cigarworld): sin añadir, por revisar.
+- Meistermischungen de Kopp: sin componentes publicados; mezcla según el aroma o el nombre que da la tienda.
+
+## Pendiente (preguntar al usuario)
+No están ni en Smokingpipes ni en cigarworld, así que no cumplen el criterio de octubre:
+- John Aylesbury (marca de una cooperativa de estancos; ~13 mezclas fijas en pipehouse.de y Tabak-Kontor).
+- Marcas de casa: Pfeifen Huber (11 subcategorías propias), TAK de Dein-Tabak (Kiel) y Kontor-Tabak.
+Si se aceptan, usar la web de la propia tienda como fuente, como se hizo con Watch City.
 
 ## Al terminar
 Fusionar en `main` y ejecutar `supabase/09_marcas_alemanas.sql` en Supabase → SQL Editor.
