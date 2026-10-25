@@ -370,9 +370,8 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .instalar .muted { font-size: 0.88rem; }
 .meta .es-badge.es-lista { font-size: 1.05rem; margin-left: 0; vertical-align: middle; align-self: center; }
 
-/* Ficha abierta en pantalla ancha: la foto arriba de su columna (no centrada en vertical)
-   y fija mientras se baja por la ficha. En el móvil ya va arriba. */
-@media (min-width: 601px) {
-  .panel .art { align-items: start; align-content: start; }
-  .panel .art > * { position: sticky; top: 28px; }
-}
+/* Ficha abierta: la foto siempre en la parte superior, a todo el ancho (también en el ordenador). */
+.panel { grid-template-columns: minmax(0, 1fr); }
+.panel .art { padding: 22px 20px; border-radius: 8px 8px 0 0; }
+.panel .art svg { max-width: 190px; }
+.panel .photo { max-width: 260px; }
