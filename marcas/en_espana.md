@@ -37,7 +37,7 @@ Fuente: lista oficial de precios de picadura de pipa del Comisionado para el Mer
 - **Thomas Radford**: Sundays Fantasy ← «T.Radford Sunday S Fant.»
 - **W.Ø. Larsen**: 1864 Perfect Mixture ← «W.O. Larsen 1864»; Old Fashioned ← «W.O. Larsen Old Fashion»; Signature Vintage Mixture ← «W.O. Larsen Signature»
 
-## Añadidas después (nombre europeo distinto, confirmadas por el usuario; SQL 17)
+## Añadidas después (SQL 17): se renombran con el nombre europeo, a petición del usuario
 
 - Borkum Riff Bronze
 - Borkum Riff Black
