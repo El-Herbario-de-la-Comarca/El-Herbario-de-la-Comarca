@@ -922,9 +922,172 @@ async function cargarBodega() {
           gramos: Number.isInteger(x.gramos) && x.gramos > 0 ? x.gramos : null }; });
         if (data.length < 1000) break;
       }
-      bodega = filas; ctx.bodega = true; ctx.gramosOk = conGramos; return;
+      bodega = filas; ctx.bodega = true; ctx.gramosOk = conGramos;
+      await cargarTarros(); return;
     } catch (e) { console.warn(conGramos ? "Mi bodega sin gramos (falta 15_bodega_gramos.sql)" : "Mi bodega no disponible", e); }
   }
+}
+/* ---------- Tarros y latas (24_tarros.sql) ----------
+   Cada tabaco de la bodega puede tener varios envases con sus gramos y su fecha. «Lo tengo» y los
+   gramos de la bodega los recalcula la base de datos a partir de los tarros. */
+let tarros = {};   // tabaco_id -> [tarro]
+const ENVASE = { tarro: "Tarro de cristal", lata: "Lata cerrada", bolsa: "Bolsa", "": "Tabaco" };
+const TIPO_FECHA = { embotado: "Embotado", compra: "Comprado", lata: "Fecha de la lata" };
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const ICONO_TARRO = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6.5 10.5h11a1.5 1.5 0 0 1 1.5 1.5v7.5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V12a1.5 1.5 0 0 1 1.5-1.5z"/><path d="M6 7.5h12v1.5H6z"/>
+  <path d="M6.5 9h11" stroke="#D85A30" stroke-width="2"/><path d="M7 7.5c0-2 2.2-3.2 5-3.2s5 1.2 5 3.2"/>
+  <path d="M9 4.6 8.3 2.8h7.4l-.7 1.8"/><path d="M18 8.2c1.6.3 2 1.6 1.4 3.8"/><path d="M8 14h3"/></svg>`;
+const ICONO_LATA = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <ellipse cx="12" cy="7" rx="8" ry="2.5"/><path d="M4 7v10c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5V7"/><path d="M4 10c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5"/></svg>`;
+const ICONO_BOLSA = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6 4h12l1 16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M5.5 8h13"/><path d="M9 12.5h6"/></svg>`;
+const iconoEnvase = (e) => (e === "lata" ? ICONO_LATA : e === "bolsa" ? ICONO_BOLSA : ICONO_TARRO);
+async function cargarTarros() {
+  tarros = {}; ctx.tarrosOk = false;
+  try {
+    for (let desde = 0; ; desde += 1000) {
+      const { data, error } = await sb.from("tarros").select("*").order("creado").range(desde, desde + 999);
+      if (error) throw error;
+      data.forEach((t) => { const k = String(t.tabaco_id); (tarros[k] = tarros[k] || []).push(t); });
+      if (data.length < 1000) break;
+    }
+    ctx.tarrosOk = true;
+  } catch (e) { console.warn("Tarros no disponibles (falta 24_tarros.sql)", e); }
+}
+// Meses desde una fecha (año y, si lo hay, mes) hasta hoy.
+function mesesDesde(anio, mes) {
+  const hoy = new Date();
+  return (hoy.getFullYear() - anio) * 12 + (hoy.getMonth() + 1 - (mes || 1));
+}
+function antiguedad(t) {
+  if (!t.fecha_anio) return "";
+  const m = mesesDesde(t.fecha_anio, t.fecha_mes);
+  if (!t.fecha_mes) {
+    const a = new Date().getFullYear() - t.fecha_anio;
+    return a <= 0 ? "Este año" : a === 1 ? "Un año" : `Unos ${a} años`;
+  }
+  if (m <= 0) return t.tipo_fecha === "compra" ? "Recién llegada" : "Este mes";
+  const a = Math.floor(m / 12), r = m % 12;
+  const txtA = a === 1 ? "1 año" : `${a} años`, txtM = r === 1 ? "1 mes" : `${r} meses`;
+  return a ? (r ? `${txtA} y ${txtM}` : txtA) : txtM;
+}
+const fechaTxt = (anio, mes) => (mes ? `${MESES[mes - 1]} de ${anio}` : String(anio));
+function lineaTarro(t) {
+  const partes = [];
+  if (t.fecha_anio) partes.push(t.tipo_fecha === "lata" ? `Fecha de la lata: ${fechaTxt(t.fecha_anio, t.fecha_mes)}`
+    : `${TIPO_FECHA[t.tipo_fecha] || "Embotado"} en ${fechaTxt(t.fecha_anio, t.fecha_mes)}`);
+  if (t.abierto_anio) partes.push(`abierto en ${fechaTxt(t.abierto_anio, t.abierto_mes)}`);
+  if (t.nota) partes.push(`«${t.nota}»`);
+  const det = partes.join(" · ");
+  return det.charAt(0).toUpperCase() + det.slice(1);
+}
+function tarrosHTML(id) {
+  const lista = tarros[String(id)] || [];
+  let abierto = false; try { abierto = localStorage.getItem("herbario-tarros-abiertos") === "1"; } catch (e) {}
+  const conFecha = lista.filter((t) => t.fecha_anio);
+  const viejo = conFecha.length ? conFecha.reduce((a, t) => (mesesDesde(t.fecha_anio, t.fecha_mes) > mesesDesde(a.fecha_anio, a.fecha_mes) ? t : a)) : null;
+  const resumen = lista.length
+    ? `<span class="tr-res">${lista.length === 1 ? "1 tarro" : `${lista.length} tarros`} en tu bodega</span>${viejo ? `<span class="tr-viejo">el más antiguo: ${antiguedad(viejo).toLowerCase()}</span>` : ""}`
+    : '<span class="tr-res">Apunta tus tarros y latas (opcional)</span>';
+  const filas = lista.map((t) => `<li class="tr-item">
+      <span class="tr-ic">${iconoEnvase(t.envase)}</span>
+      <span class="tr-txt"><span>${esc(ENVASE[t.envase] || "Tabaco")}${t.gramos ? ` · ${gramosTxt(t.gramos)}` : ""}</span>
+        ${lineaTarro(t) ? `<span class="muted">${esc(lineaTarro(t))}</span>` : ""}</span>
+      <span class="tr-der">${t.fecha_anio ? `<span class="tr-edad">${esc(antiguedad(t))}</span>` : ""}
+        <button class="link" type="button" data-tarro="${t.id}">Editar</button></span></li>`).join("");
+  return `<details class="tarros" id="tr-box"${abierto ? " open" : ""}>
+      <summary><span class="tr-chev" aria-hidden="true">›</span><span class="tr-ic sm">${ICONO_TARRO}</span>${resumen}</summary>
+      <div class="tr-cuerpo">
+        ${filas ? `<ul class="tr-lista">${filas}</ul>` : '<p class="muted">Apunta cada lata o tarro con sus gramos y su fecha para saber cuánto lleva madurando.</p>'}
+        <button class="btn" type="button" id="tr-add">+ Añadir tarro</button>
+      </div>
+    </details>`;
+}
+function conectarTarros(id) {
+  const box = $("tr-box"); if (!box) return;
+  box.addEventListener("toggle", () => { try { localStorage.setItem("herbario-tarros-abiertos", box.open ? "1" : "0"); } catch (e) {} });
+  $("tr-add").addEventListener("click", () => formTarro(id, null));
+  box.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
+    formTarro(id, (tarros[String(id)] || []).find((t) => String(t.id) === b.dataset.tarro))));
+}
+// Recalcula en local lo que la base de datos ya ha recalculado (Lo tengo y los gramos).
+function sincronizarLocal(id) {
+  const k = String(id), lista = tarros[k] || [];
+  const m = bodega[k] || { tengo: false, probado: false, quiero: false, gramos: null };
+  if (lista.length) {
+    const g = lista.reduce((s, t) => s + (t.gramos || 0), 0);
+    bodega[k] = { ...m, tengo: true, gramos: lista.some((t) => t.gramos) ? g : null };
+  } else {
+    const n = { ...m, tengo: false, gramos: null };
+    if (n.probado || n.quiero) bodega[k] = n; else delete bodega[k];
+  }
+}
+function opcionesAnio(sel) {
+  const hoy = new Date().getFullYear();
+  let h = '<option value="">—</option>';
+  for (let a = hoy; a >= 1950; a--) h += `<option value="${a}"${sel === a ? " selected" : ""}>${a}</option>`;
+  return h;
+}
+const opcionesMes = (sel) => '<option value="">Sin mes</option>' + MESES.map((m, i) => `<option value="${i + 1}"${sel === i + 1 ? " selected" : ""}>${m}</option>`).join("");
+function formTarro(id, t) {
+  const d = findItem(id), v = t || { envase: "tarro", gramos: null, tipo_fecha: "embotado", fecha_anio: null, fecha_mes: null, abierto_anio: null, abierto_mes: null, nota: "" };
+  const dlg = document.createElement("div");
+  dlg.className = "confirm"; dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true"); dlg.setAttribute("aria-labelledby", "tf-title");
+  dlg.innerHTML = `<form class="box tarro-form" id="tf-form" novalidate>
+      <h2 id="tf-title">${t ? "Editar tarro" : "Añadir tarro"}</h2>
+      <p class="muted">${esc(d ? d.nombre + " · " + d.marca : "")}</p>
+      <div class="tf-grid">
+        <div><label for="tf-env">Envase</label><select id="tf-env">${["tarro", "lata", "bolsa"].map((e) => `<option value="${e}"${v.envase === e ? " selected" : ""}>${ENVASE[e]}</option>`).join("")}${v.envase === "" ? '<option value="" selected>Sin indicar</option>' : ""}</select></div>
+        <div><label for="tf-gr">Gramos</label><input id="tf-gr" type="number" inputmode="numeric" min="1" max="100000" step="1" placeholder="Por ejemplo, 100" value="${v.gramos || ""}"></div>
+        <div><label for="tf-tipo">Qué fecha es</label><select id="tf-tipo">${Object.entries(TIPO_FECHA).map(([k, x]) => `<option value="${k}"${v.tipo_fecha === k ? " selected" : ""}>${x === "Comprado" ? "Compra" : x}</option>`).join("")}</select></div>
+        <div><label for="tf-anio">Año</label><select id="tf-anio">${opcionesAnio(v.fecha_anio)}</select></div>
+        <div><label for="tf-mes">Mes (opcional)</label><select id="tf-mes">${opcionesMes(v.fecha_mes)}</select></div>
+        <div></div>
+        <div><label for="tf-aanio">Abierto en (año)</label><select id="tf-aanio">${opcionesAnio(v.abierto_anio)}</select></div>
+        <div><label for="tf-ames">Mes</label><select id="tf-ames">${opcionesMes(v.abierto_mes)}</select></div>
+      </div>
+      <label for="tf-nota">Nota (opcional)</label>
+      <input id="tf-nota" type="text" maxlength="80" value="${esc(v.nota || "")}" placeholder="Por ejemplo, para abrir en 2030">
+      <p class="msg" id="tf-msg" role="alert"></p>
+      <div class="acts"><button class="btn primary" type="submit">Guardar</button><button class="btn" type="button" id="tf-no">Cancelar</button>
+        ${t ? '<button class="btn danger" type="button" id="tf-del">Borrar tarro</button>' : ""}</div>
+    </form>`;
+  document.body.appendChild(dlg);
+  const quien = document.activeElement;
+  const cerrar = () => { document.removeEventListener("keydown", tecla, true); dlg.remove(); if (quien && quien.focus) quien.focus(); };
+  const tecla = (e) => { if (e.key === "Escape") { e.stopPropagation(); cerrar(); } };
+  document.addEventListener("keydown", tecla, true);
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) cerrar(); });
+  const msg = dlg.querySelector("#tf-msg"), q = (s) => dlg.querySelector(s);
+  ["#tf-gr", "#tf-anio", "#tf-mes", "#tf-aanio", "#tf-ames"].forEach((s) => q(s).addEventListener("input", () => { msg.textContent = ""; }));
+  q("#tf-no").addEventListener("click", cerrar);
+  const terminar = async () => { await cargarTarros(); sincronizarLocal(id); cerrar(); if (String(openId) === String(id)) paintBodega(); };
+  if (t) q("#tf-del").addEventListener("click", async (e) => {
+    const b = e.currentTarget;
+    if (!b.dataset.sure) { b.dataset.sure = "1"; b.textContent = "Pulsa otra vez para borrarlo"; return; }
+    b.disabled = true;
+    const { error } = await sb.from("tarros").delete().eq("id", t.id);
+    if (error) { b.disabled = false; msg.textContent = "No se ha podido borrar el tarro."; return; }
+    terminar();
+  });
+  q("#tf-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const num = (s) => (q(s).value.trim() ? Number(q(s).value) : null);
+    const gr = num("#tf-gr"), fa = num("#tf-anio"), fm = num("#tf-mes"), aa = num("#tf-aanio"), am = num("#tf-ames");
+    if (gr !== null && !(Number.isInteger(gr) && gr >= 1 && gr <= 100000)) { msg.textContent = "Escribe los gramos como un número entero (de 1 a 100 000) o déjalo vacío."; return; }
+    if (fm && !fa) { msg.textContent = "Si pones el mes, elige también el año."; return; }
+    if (am && !aa) { msg.textContent = "Si pones el mes de apertura, elige también el año."; return; }
+    if (fa && aa && (aa < fa || (aa === fa && fm && am && am < fm))) { msg.textContent = "La fecha de apertura no puede ser anterior a la del tarro."; return; }
+    const fila = { envase: q("#tf-env").value, gramos: gr, tipo_fecha: q("#tf-tipo").value, fecha_anio: fa, fecha_mes: fa ? fm : null,
+      abierto_anio: aa, abierto_mes: aa ? am : null, nota: q("#tf-nota").value.trim().slice(0, 80) };
+    const boton = q("button[type=submit]"); boton.disabled = true;
+    const { error } = t ? await sb.from("tarros").update(fila).eq("id", t.id)
+      : await sb.from("tarros").insert({ ...fila, tabaco_id: String(id), usuario: ctx.uid });
+    if (error) { boton.disabled = false; msg.textContent = "No se ha podido guardar el tarro."; return; }
+    terminar();
+  });
+  q("#tf-env").focus();
 }
 const gramosTxt = (g) => (g ? `${g.toLocaleString("es-ES")} g` : "");
 function paintBodega() {
@@ -935,12 +1098,32 @@ function paintBodega() {
   box.innerHTML = `<div class="btns bodega" role="group" aria-label="Mi bodega">
       ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${esc(etiqueta(k, t))}</button>`).join("")}
     </div>
-    ${m.tengo && ctx.gramosOk ? `<button class="link bd-cant" type="button" id="bd-gr">${m.gramos ? "Cambiar la cantidad" : "Apuntar cuántos gramos tienes"}</button>` : ""}
+    ${ctx.tarrosOk ? (m.tengo || (tarros[String(openId)] || []).length ? tarrosHTML(openId) : "")
+      : m.tengo && ctx.gramosOk ? `<button class="link bd-cant" type="button" id="bd-gr">${m.gramos ? "Cambiar la cantidad" : "Apuntar cuántos gramos tienes"}</button>` : ""}
     <p class="msg" id="bd-msg" role="alert"></p>`;
   box.querySelectorAll("[data-bod]").forEach((b) => b.addEventListener("click", () => marcarBodega(openId, b.dataset.bod)));
+  conectarTarros(openId);
   if ($("bd-gr")) $("bd-gr").addEventListener("click", async () => {
     const g = await pedirGramos(findItem(openId), m.gramos);
     if (g !== undefined) guardarBodega(openId, { ...m, gramos: g });
+  });
+}
+// Confirmación sencilla. Devuelve true si se acepta.
+function confirmarBorrado(texto) {
+  return new Promise((resolver) => {
+    const dlg = document.createElement("div");
+    dlg.className = "confirm"; dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true"); dlg.setAttribute("aria-labelledby", "cb-title");
+    dlg.innerHTML = `<div class="box"><h2 id="cb-title">¿Seguro?</h2><p>${esc(texto)}</p>
+      <div class="acts"><button class="btn danger" type="button" id="cb-si">Sí, borrar</button><button class="btn" type="button" id="cb-no">Cancelar</button></div></div>`;
+    document.body.appendChild(dlg);
+    const quien = document.activeElement;
+    const cerrar = (v) => { document.removeEventListener("keydown", tecla, true); dlg.remove(); if (quien && quien.focus) quien.focus(); resolver(v); };
+    const tecla = (e) => { if (e.key === "Escape") { e.stopPropagation(); cerrar(false); } };
+    document.addEventListener("keydown", tecla, true);
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) cerrar(false); });
+    dlg.querySelector("#cb-si").addEventListener("click", () => cerrar(true));
+    dlg.querySelector("#cb-no").addEventListener("click", () => cerrar(false));
+    dlg.querySelector("#cb-no").focus();
   });
 }
 // Ventanita para apuntar los gramos. Devuelve un número, null (lo deja vacío) o undefined (cancelado).
@@ -981,8 +1164,19 @@ async function marcarBodega(id, campo) {
   const nuevo = { ...antes, [campo]: !antes[campo] };
   // Al probarlo, deja de estar en «quiero probarlo».
   if (campo === "probado" && nuevo.probado) nuevo.quiero = false;
-  // Al marcar «Lo tengo» se pregunta la cantidad; al quitarlo, se borra.
-  if (campo === "tengo") {
+  // Con tarros: marcar «Lo tengo» no pregunta nada (los gramos salen de los tarros); al quitarlo
+  // se borran sus tarros, pidiendo antes confirmación.
+  if (campo === "tengo" && ctx.tarrosOk) {
+    const lista = tarros[k] || [];
+    if (!nuevo.tengo && lista.length) {
+      const ok = await confirmarBorrado(`Si quitas «Lo tengo» se borrarán ${lista.length === 1 ? "tu tarro" : `tus ${lista.length} tarros`} de este tabaco.`);
+      if (!ok) return;
+      const { error } = await sb.from("tarros").delete().eq("tabaco_id", k).eq("usuario", ctx.uid);
+      if (error) { const m = $("bd-msg"); if (m) m.textContent = "No se han podido borrar los tarros."; return; }
+      delete tarros[k];
+    }
+    nuevo.gramos = null;
+  } else if (campo === "tengo") {
     if (nuevo.tengo && ctx.gramosOk) {
       const g = await pedirGramos(findItem(id), null);
       if (g === undefined) return;   // cancelado: no se marca
@@ -996,6 +1190,7 @@ async function guardarBodega(id, nuevo) {
   const vacio = !nuevo.tengo && !nuevo.probado && !nuevo.quiero;
   const fila = { tabaco_id: k, usuario: ctx.uid, tengo: !!nuevo.tengo, probado: !!nuevo.probado, quiero: !!nuevo.quiero };
   if (ctx.gramosOk) fila.gramos = nuevo.tengo && nuevo.gramos ? nuevo.gramos : null;
+  if (ctx.tarrosOk && (tarros[k] || []).length) { fila.tengo = true; fila.gramos = (bodega[k] || {}).gramos || null; }
   const { error } = vacio
     ? await sb.from("bodega").delete().eq("tabaco_id", k).eq("usuario", ctx.uid)
     : await sb.from("bodega").upsert(fila, { onConflict: "usuario,tabaco_id" });

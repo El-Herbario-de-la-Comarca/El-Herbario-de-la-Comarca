@@ -319,3 +319,31 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .us-socio { white-space: nowrap; }
 .us-socio label { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; font-family: var(--body); font-size: 0.9rem; color: var(--fg); }
 .us-socio input[type=number] { width: 84px; min-height: 34px; margin-left: 8px; }
+
+/* Tarros y latas de Mi bodega */
+.tarros { border: 1px solid var(--line); border-radius: 6px; margin: 0 0 12px; background: var(--surface); }
+.tarros > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; }
+.tarros > summary::-webkit-details-marker { display: none; }
+.tr-chev { font-size: 1.3rem; line-height: 1; color: var(--muted); transition: transform .15s; width: 10px; }
+.tarros[open] .tr-chev { transform: rotate(90deg); }
+.tr-res { flex: 1; font-size: 0.95rem; }
+.tr-viejo { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+.tr-cuerpo { border-top: 1px solid var(--line); padding: 4px 12px 12px; display: grid; gap: 10px; justify-items: start; }
+.tr-lista { list-style: none; margin: 0; padding: 0; width: 100%; }
+.tr-item { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.tr-ic { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; color: var(--accent);
+  background: color-mix(in srgb, var(--hill-a) 40%, transparent); }
+.tr-ic.sm { width: 26px; height: 26px; background: none; }
+.tr-txt { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.tr-txt .muted { font-size: 0.82rem; }
+.tr-der { display: flex; align-items: center; gap: 12px; }
+.tr-edad { font-family: var(--mono); font-size: 0.72rem; padding: 2px 8px; border-radius: 99px; white-space: nowrap;
+  background: color-mix(in srgb, var(--hill-a) 45%, transparent); color: var(--fg); }
+.tarro-form .tf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.tarro-form .tf-grid > div { display: grid; gap: 4px; }
+.tarro-form select, .tarro-form input[type=text] { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); width: 100%; }
+.confirm .box.tarro-form { width: min(100%, 480px); max-height: calc(100vh - 32px); overflow: auto; }
+@media (max-width: 520px) {
+  .tr-item { grid-template-columns: 36px minmax(0, 1fr); }
+  .tr-der { grid-column: 2; }
+}
