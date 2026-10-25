@@ -557,3 +557,56 @@ EXTRA += [("Samuel Gawith", [
     ("Lakeland Dark", "Burley", "Virginia, Dark Fired Kentucky", "Broken Flake", "Lata de 50 g",
      "Cremosa, con notas dulces, especiadas y de cuero que aporta el kentucky.", "sp (lakeland)"),
 ])]
+
+# Dan Tobacco, 3.ª tanda (25/10 noche): resto de la serie DTM que cigarworld tiene a la venta (69 en total).
+# Fuente: fichas de cada variante en cigarworld (Rohtabak, Typ, Schnitt, Aromatisierung). Familia deducida
+# de los componentes como en la tanda alemana; aromatizada con latakia → English Aromatic.
+# Fuera: Jirsa Magister Kelly, Peter Rasmussen Gold Label, Tordenskjold Black Cavendish y Georgia Brown
+# (Auslauf), The Raven (Restbestand) y The Malthouse (cigarworld no da sus datos).
+_P = "Lata de 50 g · bolsa de 250 g"
+_C = "Lata de 100 g · bolsa de 250 g"
+EXTRA += [("Dan Tobacco", [
+    ("Alter Pinnas", "Aromatic", "Virginia, Burley, Black Cavendish, Kentucky", "Cube Cut", _P, "De estilo danés, con aroma de miel.", "cw"),
+    ("Fleetenkieker", "Aromatic", "Virginia, Perique", "", _P, "De estilo danés, con aroma afrutado.", "cw"),
+    ("Fred the Frog", "English Aromatic", "Virginia, Black Cavendish, Latakia, Perique", "", _P, "Aroma floral.", "cw"),
+    ("Kiboko", "Aromatic", "Virginia, Black Cavendish", "", _P, "Aroma de cereza, con extractos de flor de cerezo y lichi.", "cw"),
+    ("Bill Bailey's Birthday Blend", "Aromatic", "Virginia, Burley, Black Cavendish", "", _C, "Aroma afrutado.", "cw"),
+    ("Bill Bailey's Black Blend", "Aromatic", "Virginia, Black Cavendish", "", _C, "De estilo danés, con aroma de cereza.", "cw"),
+    ("Bill Bailey's Best Blend", "English", "Virginia, Latakia", "", _C, "Sin aromatizar.", "cw"),
+    ("Bulldog Medium Cut", "English Aromatic", "Virginia, Latakia, Kentucky", "", _P, "Aroma floral.", "cw"),
+    ("Bulldog Golden Flake", "Aromatic", "Virginia", "Flake", _P, "Aroma floral.", "cw"),
+    ("Bjarne Flake de Luxe", "Aromatic", "Virginia", "Flake", _P, "Aroma afrutado suave.", "cw"),
+    ("Bjarne White Label", "Aromatic", "Virginia, Black Cavendish", "", _C, "De estilo danés, con aroma de vainilla.", "cw"),
+    ("Dark Moon", "Virginia/Burley", "Burley, Virginia", "Broken Flake", _P, "Sin aromatizar.", "cw"),
+    ("Elwood No. 2", "Virginia", "Virginia, Orientals", "Flake", "Lata de 50 g", "Con un toque de higo.", "cw"),
+    ("Gold of Mysore", "Aromatic", "Virginia", "Ready Rubbed", _C, "De estilo danés, con aroma de vainilla.", "cw"),
+    ("Dan Pipe 2000", "Aromatic", "Virginia, Black Cavendish", "", _C, "De estilo danés, con aroma afrutado.", "cw"),
+    ("Hamburger Pfeifenrunde", "English", "Virginia, Latakia", "Ready Rubbed", _C, "Sin aromatizar.", "cw"),
+    ("Holly's Discovery Extraordinary", "English", "Latakia, Virginia", "Ready Rubbed", _P, "Sin aromatizar.", "cw"),
+    ("Bi Bo – The Other Brother", "English Aromatic", "Black Cavendish, Latakia, Perique, Virginia", "", _P, "Aroma afrutado y de caramelo.", "cw"),
+    ("Tumblin' Dice", "Virginia", "Virginia, Perique", "Cube Cut", _P, "Sin aromatizar.", "cw"),
+    ("Ascanian No. 2 Castle Blend", "Virginia", "Virginia, Orientals, Perique", "", "Lata de 50 g · lata de 100 g · bolsa de 250 g", "Sin aromatizar. Antes se llamaba Sweet & Gentle.", "cw"),
+    ("Jolly Joker", "Aromatic", "Virginia, Burley, Black Cavendish", "", _C, "De estilo danés, con aroma de frutos secos.", "cw"),
+    ("Swatte Deern", "", "Virginia, Black Cavendish", "", _P, "De estilo danés, sin aromatizar.", "cw"),
+    ("Lütte Deern", "Aromatic", "Virginia, Burley, Black Cavendish", "Cube Cut", _P, "De estilo danés, con aroma afrutado. Antes se llamaba Seute Deern.", "cw"),
+    ("Jirsa Olda's Louny Blend", "Aromatic", "Virginia, Burley, Black Cavendish", "", _P, "De estilo danés, con aroma afrutado.", "cw"),
+    ("Käpt'n Brammer Alter Friese", "English Aromatic", "Virginia, Latakia", "", _C, "Aroma floral.", "cw"),
+    ("Kriswill Classical Navy Cut", "Virginia", "Virginia, Perique", "Flake", _P, "Sin aromatizar.", "cw"),
+    ("Kriswill Golden Navy Cut", "Virginia", "Virginia", "Flake", _P, "Sin aromatizar.", "cw"),
+    ("Memories of Tuscany", "Aromatic", "Virginia, Black Cavendish", "", _C, "Aroma afrutado.", "cw"),
+    ("Mona Lisa", "Aromatic", "Virginia, Black Cavendish", "", _C, "De estilo danés, con aroma de miel.", "cw"),
+    ("Mountain Village Evening Standard", "English", "Virginia, Latakia", "", _C, "Sin aromatizar.", "cw"),
+    ("No Name No. 1", "Virginia", "Virginia", "", "Bolsa de 250 g", "Sin aromatizar.", "cw"),
+    ("No Name No. 2", "Aromatic", "Virginia, Black Cavendish", "", "Bolsa de 250 g", "De estilo danés, con aroma de vainilla.", "cw"),
+    ("No Name No. 3", "Aromatic", "Virginia", "Ready Rubbed", "Bolsa de 250 g", "Aroma de miel.", "cw"),
+    ("Olaf Poulsson No. 77", "Aromatic", "Virginia, Black Cavendish", "", "Lata de 50 g · bolsa de 125 g · bolsa de 250 g", "Aroma afrutado.", "cw"),
+    ("Olaf Poulsson No. 88 Black Flake", "Aromatic", "Black Cavendish", "Broken Flake", "Bolsa de 50 g · bolsa de 250 g", "De estilo danés, con aroma de miel y notas de frutos rojos y vainilla.", "cw"),
+    ("Peter Rasmussen Black Label", "Aromatic", "Virginia, Black Cavendish", "", "Bolsa de 50 g · bolsa de 250 g", "Aroma afrutado.", "cw"),
+    ("Peter Rasmussen Green Label", "Aromatic", "Virginia, Burley, Black Cavendish", "", "Lata de 50 g · bolsa de 125 g · bolsa de 250 g", "Aroma de vainilla.", "cw"),
+    ("St. Bernard Flake", "Virginia", "Virginia, Perique", "Flake", _P, "Sin aromatizar.", "cw"),
+    ("Sunday's Best", "Aromatic", "Virginia, Black Cavendish", "", _C, "Aroma afrutado.", "cw"),
+    ("Take your time!", "Aromatic", "Virginia, Black Cavendish", "", _C, "De estilo danés, con aroma afrutado.", "cw"),
+    ("The Mallard Flake plus Perique", "Virginia", "Perique, Virginia", "Flake", _P, "Sin aromatizar.", "cw"),
+    ("Wappen von Hamburg", "Aromatic", "Virginia, Black Cavendish", "", _P, "De estilo danés, con aroma afrutado.", "cw"),
+    ("S.V.H. Flake", "Aromatic", "Virginia", "Flake", _P, "Aroma de vainilla. Antes se llamaba Sweet Vanilla Honeydew Flake.", "cw"),
+])]
