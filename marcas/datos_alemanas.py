@@ -358,7 +358,7 @@ MARCAS["Kontor-Tabak"] = [
 # Tobacco Reviews (tr), Smokingpipes (sp) o cigarworld (cw). Todas llevan la marca de España.
 PAIS.update({"Borkum Riff": "Dinamarca", "Clan": "Dinamarca", "Peterson": "Irlanda",
              "Samuel Gawith": "Reino Unido", "Gawith Hoggarth": "Reino Unido",
-             "W.Ø. Larsen": "Dinamarca", "Dan Tobacco": "Alemania", "Mac Baren": "Dinamarca"})
+             "W.Ø. Larsen": "Dinamarca", "Dan Tobacco": "Alemania", "STG": "Dinamarca"})
 MARCAS["Borkum Riff"] = [
     ("Champagne", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aromatizada con licor.", "tr"),
     ("Copper", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de whisky de malta.", "tr"),
@@ -387,8 +387,8 @@ MARCAS["Dan Tobacco"] = [
     ("Choo Choo Train", "Virginia", "Virginia", "Flake", "Lata de 50 g · bolsa de 250 g", "Un toque de miel.", "cw"),
     ("Rainer Barbi", "Aromatic", "Virginia, Black Cavendish", "", "Lata de 50 g", "Aroma de frutos secos.", "cw"),
 ]
-MARCAS["Mac Baren"] = [
-    ("Mixture Flake", "Aromatic", "Virginia, Burley, Black Cavendish, Kentucky", "Flake", "Lata de 100 g", "Aroma de miel.", "cw"),
+MARCAS["STG"] = [
+    ("Mixture Flake", "Aromatic", "Virginia, Burley, Black Cavendish, Kentucky", "Flake", "Lata de 100 g", "Marca Mac Baren. Aroma de miel.", "cw"),
 ]
 
 # ---------------------------------------------------------------- TAK – Tabak aus Kiel (marca de la casa)
@@ -422,3 +422,18 @@ MARCAS["TAK"] = [
     ("P7 Cake (T&T 1)", "Aromatic", "Virginia, Burley", "Cake", "100 g", _TAK + " Madurada con ron añejo.", "dein-tabak"),
     ("Ralf's Burley Cup", "Burley", "Burley, Virginia", "", "100 g", _TAK + " Un 65 % de burley.", "dein-tabak"),
 ]
+
+# ---------------------------------------------------------------- STG: gama HH de Mac Baren (25/10)
+# Fichas de mac-baren.com que pasó el usuario (PDF, texto recortado); componentes de Smokingpipes (sp)
+# y Tobacco Reviews (tr). Mac Baren es de STG desde 2024: la marca del catálogo es STG.
+# Van en EXTRA (se generan después de todo lo demás) para no mover los ids ya publicados.
+_HH = "Gama HH de Mac Baren: prensado en caliente, con muy poca salsa y sin aromatizar."
+EXTRA = [("STG", [
+    ("HH Balkan Blend", "English", "Virginia, Latakia, Burley, Orientals", "Ribbon", "Lata de 100 g", _HH, "sp"),
+    ("HH Vintage Latakia", "English", "Burley, Kentucky, Latakia, Orientals, Virginia", "Ribbon", "Lata de 50 g · lata de 100 g", _HH + " Inglesa clásica, según el fabricante.", "mac-baren.com / tr"),
+    ("HH Bold Kentucky Flake", "Virginia/Burley", "Kentucky, Virginia", "Flake", "Lata de 50 g", _HH + " Lleva mucho kentucky.", "tr"),
+    ("HH Burley Flake", "Burley", "Burley, Virginia, Dark Fired Kentucky", "Flake", "Lata de 50 g · lata de 100 g", _HH + " Predomina el burley, con un poco de kentucky dark fired.", "sp"),
+    ("HH Old Dark Fired Flake", "Virginia/Burley", "Burley, Kentucky, Virginia", "Flake", "Lata de 100 g", _HH, "tr"),
+    ("HH Pure Virginia Flake", "Virginia", "Virginia", "Flake", "Lata de 50 g", _HH + " Solo virginias.", "tr"),
+    ("HH Rustica Flake", "Virginia", "Virginia, Burley", "Flake", "Lata de 100 g", _HH + " Lleva Nicotiana rustica, la planta de tabaco nativa de América.", "sp"),
+])]

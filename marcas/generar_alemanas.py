@@ -99,7 +99,7 @@ def main():
     nombres_base = Counter(d["nombre"].lower() for d in base)
 
     nuevas, avisos, siguiente = [], [], PRIMER_ID
-    for marca, filas in D.MARCAS.items():
+    for marca, filas in list(D.MARCAS.items()) + list(getattr(D, "EXTRA", [])):
         for nombre, familia, comp, corte, formato, extra, fuente in filas:
             assert corte in CORTE or corte == "", (marca, nombre, corte)
             clave = (nombre.lower(), marca.lower())
@@ -137,7 +137,7 @@ def main():
         for d in nuevas
     ]
     sql = (
-        f"-- El herbario de la Comarca · Marcas de las tiendas alemanas ({len(nuevas)} fichas de {len(D.MARCAS)} marcas)\n"
+        f"-- El herbario de la Comarca · Marcas de las tiendas alemanas ({len(nuevas)} fichas)\n"
         "-- Ejecútalo en Supabase → SQL Editor DESPUÉS de 04_estilo_y_hojas.sql. Si una ficha ya existe, no se toca.\n"
         "insert into public.tabacos (id, nombre, marca, pais, tipo, corte, formato, descripcion, fuerza, notas, foto, hojas) values\n"
         + ",\n".join(filas_sql)
