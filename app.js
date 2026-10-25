@@ -1078,7 +1078,7 @@ function abrirLogin() {
   $("lg-form").hidden = false; $("np-form").hidden = true;
   $("lg-title").textContent = "Entrar en el herbario";
   $("lg-text").textContent = "Entra con tu correo y contraseña. Si es la primera vez, crea tu cuenta: con ella puedes escribir reseñas.";
-  $("lg-nombre-f").hidden = true; $("lg-send").hidden = false; $("lg-forgot").hidden = false;
+  $("lg-nombre-f").hidden = true; $("lg-send").hidden = false; $("lg-forgot").hidden = false; $("lg-new").classList.remove("primary");
   $("login").hidden = false; $("lg-email").focus();
 }
 function cerrarLogin() { $("login").hidden = true; }
@@ -1114,6 +1114,7 @@ async function crearCuenta() {
   // Primera pulsación: se pide también el nombre público.
   if ($("lg-nombre-f").hidden) {
     $("lg-nombre-f").hidden = false; $("lg-send").hidden = true; $("lg-forgot").hidden = true;
+    $("lg-new").classList.add("primary");
     $("lg-title").textContent = "Crear cuenta";
     $("lg-text").textContent = "Escribe tu correo, una contraseña y el nombre público que verán los demás en tus reseñas.";
     $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
