@@ -946,7 +946,17 @@ function abrirBodega() {
     return `<section class="sec"><h3>${t} <span class="muted">(${items.length}${total ? ` · ${gramosTxt(total)} en total` : ""})</span></h3>
       ${items.length ? `<ul class="bodega-lista">${items.map((d) => fila(d, k)).join("")}</ul>` : '<p class="muted">Nada todavía.</p>'}</section>`;
   }).join("");
+  // Resumen: total de gramos de todo lo que tiene.
+  const tengo = current.filter((d) => (bodega[String(d.id)] || {}).tengo);
+  const totalG = tengo.reduce((s, d) => s + ((bodega[String(d.id)] || {}).gramos || 0), 0);
+  const sinCant = tengo.filter((d) => !(bodega[String(d.id)] || {}).gramos).length;
+  const resumen = ctx.gramosOk ? `<div class="bd-total">
+      <span class="bd-total-lbl">Total de tabaco</span>
+      <span class="bd-total-num">${totalG ? gramosTxt(totalG) : "0 g"}</span>
+      <span class="muted">${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`}${sinCant ? ` · ${sinCant} sin cantidad apuntada` : ""}</span>
+    </div>` : "";
   abrirPanel(`<div class="info adm"><h2 id="d-name">Mi bodega</h2>
+    ${resumen}
     <p class="muted">Marca tus tabacos desde su ficha. Solo tú ves esta lista.</p>
     ${grupos}
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
