@@ -932,6 +932,9 @@ async function cargarBodega() {
    gramos de la bodega los recalcula la base de datos a partir de los tarros. */
 let tarros = {};   // tabaco_id -> [tarro]
 const ENVASE = { tarro: "Tarro de cristal", lata: "Lata cerrada", bolsa: "Bolsa", "": "Tabaco" };
+const ENVASES = { tarro: "Tarros de cristal", lata: "Latas cerradas", bolsa: "Bolsas", "": "Envases" };
+const NOMBRE_ENV = { tarro: ["tarro", "tarros"], lata: ["lata", "latas"], bolsa: ["bolsa", "bolsas"], "": ["envase", "envases"] };
+const uds = (t) => (Number.isInteger(t.unidades) && t.unidades > 0 ? t.unidades : 1);
 const TIPO_FECHA = { embotado: "Embotado", compra: "Comprado", lata: "Fecha de la lata" };
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const ICONO_TARRO = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -954,6 +957,11 @@ async function cargarTarros() {
     }
     ctx.tarrosOk = true;
   } catch (e) { console.warn("Tarros no disponibles (falta 24_tarros.sql)", e); }
+  ctx.unidadesOk = false;
+  if (ctx.tarrosOk) try {
+    const { error } = await sb.from("tarros").select("unidades").limit(1);
+    if (error) throw error; ctx.unidadesOk = true;
+  } catch (e) { console.warn("Tarros sin cantidad (falta 25_tarros_unidades.sql)", e); }
 }
 // Meses desde una fecha (año y, si lo hay, mes) hasta hoy.
 function mesesDesde(anio, mes) {
@@ -982,17 +990,29 @@ function lineaTarro(t) {
   const det = partes.join(" · ");
   return det.charAt(0).toUpperCase() + det.slice(1);
 }
+// «3 latas», «2 tarros y 1 lata»…
+function resumenEnvases(lista) {
+  const cuenta = {};
+  lista.forEach((t) => { cuenta[t.envase || ""] = (cuenta[t.envase || ""] || 0) + uds(t); });
+  const partes = ["lata", "tarro", "bolsa", ""].filter((e) => cuenta[e]).map((e) => `${cuenta[e]} ${NOMBRE_ENV[e][cuenta[e] === 1 ? 0 : 1]}`);
+  return partes.length > 1 ? partes.slice(0, -1).join(", ") + " y " + partes[partes.length - 1] : partes[0];
+}
+function tituloTarro(t) {
+  const n = uds(t);
+  if (n === 1) return `${ENVASE[t.envase] || "Tabaco"}${t.gramos ? ` · ${gramosTxt(t.gramos)}` : ""}`;
+  return `${n} ${ENVASES[t.envase || ""].toLowerCase()}${t.gramos ? ` de ${gramosTxt(t.gramos)} · ${gramosTxt(n * t.gramos)}` : ""}`;
+}
 function tarrosHTML(id) {
   const lista = tarros[String(id)] || [];
   let abierto = false; try { abierto = localStorage.getItem("herbario-tarros-abiertos") === "1"; } catch (e) {}
   const conFecha = lista.filter((t) => t.fecha_anio);
   const viejo = conFecha.length ? conFecha.reduce((a, t) => (mesesDesde(t.fecha_anio, t.fecha_mes) > mesesDesde(a.fecha_anio, a.fecha_mes) ? t : a)) : null;
   const resumen = lista.length
-    ? `<span class="tr-res">${lista.length === 1 ? "1 tarro" : `${lista.length} tarros`} en tu bodega</span>${viejo ? `<span class="tr-viejo">el más antiguo: ${antiguedad(viejo).toLowerCase()}</span>` : ""}`
+    ? `<span class="tr-res">${resumenEnvases(lista)} en tu bodega</span>${viejo ? `<span class="tr-viejo">el más antiguo: ${antiguedad(viejo).toLowerCase()}</span>` : ""}`
     : '<span class="tr-res">Apunta tus tarros y latas (opcional)</span>';
   const filas = lista.map((t) => `<li class="tr-item">
       <span class="tr-ic">${iconoEnvase(t.envase)}</span>
-      <span class="tr-txt"><span>${esc(ENVASE[t.envase] || "Tabaco")}${t.gramos ? ` · ${gramosTxt(t.gramos)}` : ""}</span>
+      <span class="tr-txt"><span>${esc(tituloTarro(t))}</span>
         ${lineaTarro(t) ? `<span class="muted">${esc(lineaTarro(t))}</span>` : ""}</span>
       <span class="tr-der">${t.fecha_anio ? `<span class="tr-edad">${esc(antiguedad(t))}</span>` : ""}
         <button class="link" type="button" data-tarro="${t.id}">Editar</button></span></li>`).join("");
@@ -1016,7 +1036,7 @@ function sincronizarLocal(id) {
   const k = String(id), lista = tarros[k] || [];
   const m = bodega[k] || { tengo: false, probado: false, quiero: false, gramos: null };
   if (lista.length) {
-    const g = lista.reduce((s, t) => s + (t.gramos || 0), 0);
+    const g = lista.reduce((s, t) => s + (t.gramos || 0) * uds(t), 0);
     bodega[k] = { ...m, tengo: true, gramos: lista.some((t) => t.gramos) ? g : null };
   } else {
     const n = { ...m, tengo: false, gramos: null };
@@ -1039,11 +1059,12 @@ function formTarro(id, t) {
       <p class="muted">${esc(d ? d.nombre + " · " + d.marca : "")}</p>
       <div class="tf-grid">
         <div><label for="tf-env">Envase</label><select id="tf-env">${["tarro", "lata", "bolsa"].map((e) => `<option value="${e}"${v.envase === e ? " selected" : ""}>${ENVASE[e]}</option>`).join("")}${v.envase === "" ? '<option value="" selected>Sin indicar</option>' : ""}</select></div>
-        <div><label for="tf-gr">Gramos</label><input id="tf-gr" type="number" inputmode="numeric" min="1" max="100000" step="1" placeholder="Por ejemplo, 100" value="${v.gramos || ""}"></div>
+        ${ctx.unidadesOk ? `<div><label for="tf-uds">Cuántos</label><input id="tf-uds" type="number" inputmode="numeric" min="1" max="99" step="1" value="${uds(v)}"></div>` : ""}
+        <div><label for="tf-gr">${ctx.unidadesOk ? "Gramos de cada uno" : "Gramos"}</label><input id="tf-gr" type="number" inputmode="numeric" min="1" max="100000" step="1" placeholder="Por ejemplo, 100" value="${v.gramos || ""}"></div>
         <div><label for="tf-tipo">Qué fecha es</label><select id="tf-tipo">${Object.entries(TIPO_FECHA).map(([k, x]) => `<option value="${k}"${v.tipo_fecha === k ? " selected" : ""}>${x === "Comprado" ? "Compra" : x}</option>`).join("")}</select></div>
         <div><label for="tf-anio">Año</label><select id="tf-anio">${opcionesAnio(v.fecha_anio)}</select></div>
         <div><label for="tf-mes">Mes (opcional)</label><select id="tf-mes">${opcionesMes(v.fecha_mes)}</select></div>
-        <div></div>
+        ${ctx.unidadesOk ? "" : "<div></div>"}
         <div><label for="tf-aanio">Abierto en (año)</label><select id="tf-aanio">${opcionesAnio(v.abierto_anio)}</select></div>
         <div><label for="tf-ames">Mes</label><select id="tf-ames">${opcionesMes(v.abierto_mes)}</select></div>
       </div>
@@ -1060,7 +1081,7 @@ function formTarro(id, t) {
   document.addEventListener("keydown", tecla, true);
   dlg.addEventListener("click", (e) => { if (e.target === dlg) cerrar(); });
   const msg = dlg.querySelector("#tf-msg"), q = (s) => dlg.querySelector(s);
-  ["#tf-gr", "#tf-anio", "#tf-mes", "#tf-aanio", "#tf-ames"].forEach((s) => q(s).addEventListener("input", () => { msg.textContent = ""; }));
+  ["#tf-uds", "#tf-gr", "#tf-anio", "#tf-mes", "#tf-aanio", "#tf-ames"].filter((s) => q(s)).forEach((s) => q(s).addEventListener("input", () => { msg.textContent = ""; }));
   q("#tf-no").addEventListener("click", cerrar);
   const terminar = async () => { await cargarTarros(); sincronizarLocal(id); cerrar(); if (String(openId) === String(id)) paintBodega(); };
   if (t) q("#tf-del").addEventListener("click", async (e) => {
@@ -1074,6 +1095,8 @@ function formTarro(id, t) {
   q("#tf-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const num = (s) => (q(s).value.trim() ? Number(q(s).value) : null);
+    const ud = ctx.unidadesOk ? num("#tf-uds") : 1;
+    if (!(Number.isInteger(ud) && ud >= 1 && ud <= 99)) { msg.textContent = "Escribe cuántos envases iguales tienes (de 1 a 99)."; return; }
     const gr = num("#tf-gr"), fa = num("#tf-anio"), fm = num("#tf-mes"), aa = num("#tf-aanio"), am = num("#tf-ames");
     if (gr !== null && !(Number.isInteger(gr) && gr >= 1 && gr <= 100000)) { msg.textContent = "Escribe los gramos como un número entero (de 1 a 100 000) o déjalo vacío."; return; }
     if (fm && !fa) { msg.textContent = "Si pones el mes, elige también el año."; return; }
@@ -1081,6 +1104,7 @@ function formTarro(id, t) {
     if (fa && aa && (aa < fa || (aa === fa && fm && am && am < fm))) { msg.textContent = "La fecha de apertura no puede ser anterior a la del tarro."; return; }
     const fila = { envase: q("#tf-env").value, gramos: gr, tipo_fecha: q("#tf-tipo").value, fecha_anio: fa, fecha_mes: fa ? fm : null,
       abierto_anio: aa, abierto_mes: aa ? am : null, nota: q("#tf-nota").value.trim().slice(0, 80) };
+    if (ctx.unidadesOk) fila.unidades = ud;
     const boton = q("button[type=submit]"); boton.disabled = true;
     const { error } = t ? await sb.from("tarros").update(fila).eq("id", t.id)
       : await sb.from("tarros").insert({ ...fila, tabaco_id: String(id), usuario: ctx.uid });
