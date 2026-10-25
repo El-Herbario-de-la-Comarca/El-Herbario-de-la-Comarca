@@ -154,3 +154,79 @@ MARCAS["Robert Lewis"] = [
     ("Tree Mixture", "English", "Virginia, Black Cavendish, Latakia, Orientals", "Ribbon", "Lata de 50 g", _RL, "cw"),
     ("Wingfield Mixture", "English", "Virginia, Black Cavendish, Latakia", "Ribbon", "Lata de 50 g", _RL, "cw"),
 ]
+
+# ---------------------------------------------------------------- Ermuri
+PAIS["Ermuri"] = ""
+FUENTES["Ermuri"] = "cigarworld.de (Ermuri Pfeifentabak, oct. 2026)"
+_ER = "Marca de Ermuri, cooperativa de estancos alemanes con sede en Detmold."
+MARCAS["Ermuri"] = [
+    ("Ermuri Tipp", "Aromatic", "Virginia, Burley, Orientals", "Ribbon", "Lata de 250 g", _ER + " Aroma de miel.", "cw"),
+    ("Euro Mixture", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Bolsa de 250 g", _ER + " Aroma de vainilla.", "cw"),
+    ("No Name No. 1", "English", "Virginia, Burley, Latakia", "Ribbon", "Bolsa de 100 g", _ER, "cw"),
+    ("No Name No. 2", "Aromatic", "Virginia, Burley, Orientals", "Ribbon", "Bolsa de 100 g", _ER + " Aroma de caramelo.", "cw"),
+    ("No Name No. 3", "", "", "", "Bolsa de 100 g", _ER, ""),
+]
+
+# ---------------------------------------------------------------- Gladora
+PAIS["Gladora"] = "Turquía"
+FUENTES["Gladora"] = "cigarworld.de (Gladora Pesse Canoe), Smokingpipes y Tobacco Reviews (oct. 2026)"
+_GL = "De la serie Pesse Canoe, hecha solo con tabaco cultivado en Turquía."
+MARCAS["Gladora"] = [
+    ("Pesse Canoe Blue Pearl", "Aromatic", "Orientals, Virginia", "Flake", "Lata de 50 g", _GL + " Aroma de chocolate.", "tr"),
+    ("Pesse Canoe Latakia Flake 20", "English", "Virginia, Latakia, Orientals", "Flake", "Lata de 50 g", _GL + " Latakia turca.", "sp"),
+    ("Pesse Canoe Latakia Flake 40", "English", "Virginia, Latakia, Orientals", "Flake", "Lata de 50 g", _GL + " Latakia turca; más proporción que la Flake 20.", "cw"),
+    ("Pesse Canoe Neon Pearl", "Aromatic", "Burley, Orientals, Virginia", "Flake", "Lata de 50 g", _GL + " Aroma de fruta seca y vainilla.", "cw"),
+    ("Pesse Canoe Oriental Flake", "Virginia", "Virginia, Orientals", "Flake", "Lata de 50 g", _GL, "cw"),
+    ("Pesse Canoe Purple Pearl", "Aromatic", "Orientals", "Flake", "Lata de 50 g", _GL + " Aroma afrutado y de vainilla.", "cw"),
+]
+
+# ---------------------------------------------------------------- Per G. Jensen
+PAIS["Per G. Jensen"] = "Estados Unidos"
+FUENTES["Per G. Jensen"] = "Smokingpipes y cigarworld.de (Legacy Collection, oct. 2026)"
+_PJ = "De la Legacy Collection, creada por el maestro mezclador danés Per Georg Jensen y elaborada por Cornell & Diehl."
+MARCAS["Per G. Jensen"] = [
+    ("Brothers in Arms", "Burley", "Virginia, Perique, Dark Fired Kentucky, Burley, Orientals", "Ribbon", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
+    ("Harbour Dreams", "Aromatic", "Virginia, Burley", "Broken Flake", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
+    ("King's Watch", "Virginia", "Virginia", "Flake", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
+    ("Port Guardian", "Virginia", "Virginia", "Flake", "Lata de 50 g · lata de 2 oz", _PJ, "sp"),
+]
+
+# ---------------------------------------------------------------- Thomas Radford
+PAIS["Thomas Radford"] = "Alemania"
+FUENTES["Thomas Radford"] = "cigarworld.de (Thomas Radford Pfeifentabak, oct. 2026)"
+_TR = "La elabora Pöschl en Baviera."
+MARCAS["Thomas Radford"] = [
+    ("Caribbean Blend", "Aromatic", "Virginia, Burley", "Ribbon", "Bolsa de 50 g · lata de 200 g", _TR + " Aroma de frutos secos.", "cw"),
+    ("Scottish", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Bolsa de 50 g · lata de 200 g", _TR + " Aroma de miel.", "cw"),
+    ("Sundays Fantasy", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Bolsa de 50 g · lata de 100 g", _TR + " Aroma afrutado.", "cw"),
+]
+
+# ---------------------------------------------------------------- Sillems
+PAIS["Sillems"] = ""
+FUENTES["Sillems"] = "cigarworld.de (Sillems Pfeifentabak, oct. 2026)"
+_SI = "La distribuye Kohlhase & Kopp."
+MARCAS["Sillems"] = [
+    ("Blau", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Caja de 100 g", _SI + " Aroma de caramelo.", "cw"),
+    ("Grün", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Caja de 100 g", _SI + " Aroma de frutos secos y piña colada.", "cw"),
+    ("Linea Epoque Antique", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 100 g", _SI + " Aroma de vainilla, ciruela mirabel y capuchino.", "cw"),
+    ("Rot", "Aromatic", "Virginia, Black Cavendish", "Ribbon", "Caja de 100 g", _SI + " Aroma de cereza.", "cw"),
+    ("Schwarz", "English", "Virginia, Burley, Black Cavendish, Latakia", "Ribbon", "Caja de 100 g", _SI + " Mucha latakia; aroma de ciruela mirabel y vainilla.", "cw"),
+]
+
+# ---------------------------------------------------------------- Kentucky Bird, Prestige, Richmond
+PAIS["Kentucky Bird"] = ""
+FUENTES["Kentucky Bird"] = "cigarworld.de (oct. 2026)"
+MARCAS["Kentucky Bird"] = [
+    ("Kentucky Bird", "Aromatic", "Virginia, Burley", "Ribbon", "Bolsa de 50 g · lata de 100 g · lata de 200 g", "La importa Scandinavian Tobacco Group. Aroma afrutado.", "cw"),
+]
+PAIS["Prestige"] = "Dinamarca"
+FUENTES["Prestige"] = "cigarworld.de (oct. 2026)"
+MARCAS["Prestige"] = [
+    ("Regular Mixture", "", "Virginia, Burley, Kentucky", "Ready Rubbed", "Bolsa de 50 g",
+     "La elabora Scandinavian Tobacco Group en Dinamarca. Prensada al modo cavendish y desmenuzada; sin aroma destacado.", "cw"),
+]
+PAIS["Richmond"] = ""
+FUENTES["Richmond"] = "cigarworld.de (oct. 2026)"
+MARCAS["Richmond"] = [
+    ("Navy Cut (Flake)", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Virginia madurada y prensada, sin aroma marcado.", "cw"),
+]
