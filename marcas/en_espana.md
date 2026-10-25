@@ -37,13 +37,25 @@ Fuente: lista oficial de precios de picadura de pipa del Comisionado para el Mer
 - **Thomas Radford**: Sundays Fantasy ← «T.Radford Sunday S Fant.»
 - **W.Ø. Larsen**: 1864 Perfect Mixture ← «W.O. Larsen 1864»; Old Fashioned ← «W.O. Larsen Old Fashion»; Signature Vintage Mixture ← «W.O. Larsen Signature»
 
-## Dudosas (sin marcar; confirmar con el usuario)
+## Añadidas después (nombre europeo distinto, confirmadas por el usuario; SQL 17)
 
-- Clan Original ← «Clan»
-- Samuel Gawith Kendal Cream Flake ← «Samuel Gawith K C Flake»
-- Mac Baren Mixture Scottish Blend ← «Mac Baren Mixture»
-- Mac Baren Classic Amber Loose Cut ← «Mac Baren Classic Loose Cut»
-- Amphora Special Reserve No. 2 y No. 8 ← «Amphora Nº 2» y «Amphora Nº 8» (40 g)
+- Borkum Riff Bronze
+- Borkum Riff Black
+- Borkum Riff Ruby
+- Clan
+- Mac Baren Mixture
+- Mac Baren Classic Loose Cut
+- Amphora Nº 2
+- Amphora Nº 8
+- Samuel Gawith K C Flake
+
+Comprobado en tiendas: Bronze = Bourbon Whiskey, Ruby = Cherry Cavendish, Classic Loose Cut = Vanilla Cream.
+
+## Siguen sin marcar
+
+- Borkum Riff Cherry Liquor (no se sabe a qué nombre europeo corresponde)
+- Mc Lintock Shamrock Isle (¿«Mac Lintock Black C.»?)
+- Mac Baren Classic Amber Loose Cut (no aparece en la lista)
 
 ## En la lista oficial pero sin ficha en el catálogo (posibles fichas nuevas)
 
