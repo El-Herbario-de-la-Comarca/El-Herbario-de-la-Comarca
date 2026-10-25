@@ -349,3 +349,15 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 }
 .bd-env { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 0.72rem; color: var(--accent); }
 .bd-env svg { width: 15px; height: 15px; flex: none; }
+
+/* Rangos por reseñas */
+.rango { font-family: var(--mono); font-size: 0.66rem; font-weight: 400; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 99px;
+  border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.rango.r3, .rango.r4 { border-color: var(--accent); color: var(--accent); }
+.rango.r5 { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.mi-rango { display: grid; gap: 8px; max-width: 380px; margin: 0 0 16px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.mi-rango > div:first-child { display: grid; gap: 2px; }
+.mi-rango strong { font-family: var(--display); font-weight: 400; font-size: 1.25rem; }
+.mi-rango .muted { font-size: 0.85rem; }
+.mr-barra { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.mr-barra span { display: block; height: 100%; background: var(--accent); }

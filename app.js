@@ -711,6 +711,20 @@ function mediasHTML(todas) {
     ${escalas ? `<div class="md-escalas"><h4>Según los fumadores</h4>${escalas}</div>` : ""}
   </div>`;
 }
+/* Rangos por reseñas publicadas: se calculan con las reseñas que ya se cargan. */
+const RANGOS = [["Mediano de la Comarca", 1], ["Caminante", 5], ["Montaraz", 15], ["Guardián del Herbario", 30], ["Sabio de la Pipa", 60]];
+function resenasDe(autor) {
+  let n = 0; Object.values(opiniones).forEach((l) => l.forEach((o) => { if (o.autor === autor) n++; })); return n;
+}
+function rangoDe(n) {
+  let i = -1; RANGOS.forEach(([, u], j) => { if (n >= u) i = j; });
+  return { i, nombre: i >= 0 ? RANGOS[i][0] : "", sig: RANGOS[i + 1] || null, desde: i >= 0 ? RANGOS[i][1] : 0 };
+}
+function rangoHTML(autor) {
+  if (!ctx.opiniones || !autor) return "";
+  const r = rangoDe(resenasDe(autor));
+  return r.i >= 0 ? `<span class="rango r${r.i + 1}">${esc(r.nombre)}</span>` : "";
+}
 function esSocio(autor) {
   return (ctx.uid && autor === ctx.uid && ctx.socioOk) ? !!ctx.perfil.socio : sociosAutores.has(autor);
 }
@@ -724,7 +738,7 @@ function revHTML(o, propia) {
   const acts = propia
     ? `<div class="acts"><button class="link" type="button" data-rv="edit" data-id="${o.id}">Editar</button><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar</button></div>`
     : (esAdmin() ? `<div class="acts"><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar (admin)</button></div>` : "");
-  return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${esSocio(o.autor) ? SELLO_SOCIO : ""}${propia ? " <small>(tu reseña)</small>" : ""}</span>
+  return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${esSocio(o.autor) ? SELLO_SOCIO : ""}${rangoHTML(o.autor)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
       <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
       <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
     ${CARACT.some((c) => o[c.k]) ? `<dl class="rev-car">${CARACT.map((c) => o[c.k] ? `<dt>${esc(c.label)}</dt><dd>${esc(c.ops[o[c.k]])}</dd>` : "").join("")}</dl>` : ""}
@@ -1306,6 +1320,16 @@ function abrirCuenta() {
         <strong>${esc(p.nombre || ctx.email)}</strong>
         <span>${p.socioDesde ? `Socio desde ${p.socioDesde}` : "Socio del club"}</span></div>
     </div>` : ""}
+    ${ctx.opiniones ? (() => {
+      const n = resenasDe(ctx.uid), r = rangoDe(n);
+      const hasta = r.sig ? r.sig[1] : null, pct = r.sig ? Math.round((n - r.desde) / (hasta - r.desde) * 100) : 100;
+      return `<div class="mi-rango">
+        <div><span class="carne-club">Tu rango en el herbario</span>
+          <strong>${r.i >= 0 ? esc(r.nombre) : "Sin rango todavía"}</strong>
+          <span class="muted">${n === 1 ? "1 reseña publicada" : `${n} reseñas publicadas`}</span></div>
+        <div class="mr-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><span style="width:${pct}%"></span></div>
+        <span class="muted">${r.sig ? `Te ${hasta - n === 1 ? "falta 1 reseña" : `faltan ${hasta - n} reseñas`} para ${esc(r.sig[0])}` : "Has llegado al rango más alto"}</span>
+      </div>`; })() : ""}
     ${ctx.perfilOk ? `
     <div class="btns">
       <button class="btn" id="av-pick" type="button">${p.avatar ? "Cambiar foto" : "Subir foto de perfil"}</button>
