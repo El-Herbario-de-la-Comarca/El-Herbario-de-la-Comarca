@@ -63,6 +63,12 @@ def hojas_de(componentes):
     return [h for h, rx in REGLAS_HOJAS if re.search(rx, c)]
 
 
+def es_lakeland(nombre="", src="", i=""):
+    """Lakeland: lista comprobada, marca LAKELAND en la fuente o tonka. Va como nota de sabor."""
+    texto = f"{nombre} {src}".lower()
+    return str(i) in LAKELAND or "lakeland" in texto or bool(re.search(r"tonka|tonquin", texto))
+
+
 def estilo_de(familia, hojas, nombre="", src="", i=""):
     """Devuelve (mezcla, motivo). Orden de las reglas acordadas con el usuario."""
     f = re.sub(r"\s+", " ", (familia or "").lower()).strip()
@@ -81,9 +87,8 @@ def estilo_de(familia, hojas, nombre="", src="", i=""):
     # Sin mezclar: tabacos para mezclar y fichas «Pure».
     if e == "Sin mezclar" or re.match(r"pure\b", nombre.lower()):
         return "Sin mezclar", "para mezclar"
-    # Lakeland: lista comprobada, marca LAKELAND en la fuente o tonka.
-    if i in LAKELAND or "lakeland" in texto or re.search(r"tonka|tonquin", texto):
-        return "Lakeland", "lakeland"
+    # Lakeland ya no es un tipo de mezcla (25/10, decisión del usuario): se pone como nota de sabor
+    # «Lakeland» (ver es_lakeland) y la ficha conserva el tipo de su familia.
     if e == "Aromática":
         return e, "familia"
 
