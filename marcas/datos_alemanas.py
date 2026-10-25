@@ -350,3 +350,43 @@ MARCAS["Kontor-Tabak"] = [
     ("No. 28", "", "", "", "Lata de 100 g", _KT, ""),
     ("No. 33", "Virginia", "Virginia", "", "Lata de 100 g", _KT + " La misma mezcla que la No. 3, madurada el triple de tiempo.", "tabak-kontor"),
 ]
+
+# ---------------------------------------------------------------- Lista oficial española (25/10)
+# Mezclas de la lista de precios del CMT (picadura de pipa, 1 oct. 2026) que no tenían ficha.
+# Entran por estar a la venta en España aunque Smokingpipes o cigarworld no las tengan
+# (Borkum Riff, Clan Raw Blend, Mac Baren Mixture Flake y Rainer Barbi). Fuente de los datos:
+# Tobacco Reviews (tr), Smokingpipes (sp) o cigarworld (cw). Todas llevan la marca de España.
+PAIS.update({"Borkum Riff": "Dinamarca", "Clan": "Dinamarca", "Peterson": "Irlanda",
+             "Samuel Gawith": "Reino Unido", "Gawith Hoggarth": "Reino Unido",
+             "W.Ø. Larsen": "Dinamarca", "Dan Tobacco": "Alemania", "Mac Baren": "Dinamarca"})
+MARCAS["Borkum Riff"] = [
+    ("Champagne", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aromatizada con licor.", "tr"),
+    ("Copper", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de whisky de malta.", "tr"),
+    ("Orange", "Aromatic", "Burley, Kentucky, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de naranja y miel.", "tr"),
+    ("Scandinavian Mixture", "Aromatic", "Burley, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de chocolate y vainilla.", "tr"),
+    ("Special Mixture No. 8", "Aromatic", "Black Cavendish, Burley, Cavendish, Kentucky, Orientals, Virginia", "Ribbon", "Bolsa de 50 g", "Aroma de vainilla.", "tr"),
+]
+MARCAS["Clan"] = [
+    ("Raw Blend", "Burley", "Burley, Kentucky, Virginia", "Ready Rubbed", "Bolsa de 40 g", "Sin aromatizar.", "tr (Burley Based)"),
+]
+MARCAS["Peterson"] = [
+    ("1865 Mixture", "English", "Virginia, Latakia", "Ribbon", "Lata de 100 g", "", "sp"),
+    ("Gold Blend", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g", "", "sp"),
+]
+MARCAS["Samuel Gawith"] = [
+    ("Celtic Talisman", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Lata de 50 g", "Aroma de licor de cereza y vainilla.", "tr"),
+]
+MARCAS["W.Ø. Larsen"] = [
+    ("Classic", "Aromatic", "Black Cavendish, Virginia", "Ribbon", "Lata de 100 g", "Aroma de higo.", "tr"),
+    ("Golden Dream", "Aromatic", "Black Cavendish, Burley, Virginia", "Ribbon", "Lata de 50 g", "Forma parte de la serie Masters Blend. Aroma de arce.", "tr"),
+    ("Mellow & Tasty", "Aromatic", "Black Cavendish, Burley, Virginia", "", "Bolsa de 50 g", "Aroma dulce de melaza.", "tr"),
+    ("A True Delight", "English Aromatic", "Virginia, Burley, Black Cavendish, Latakia", "", "Bolsa de 50 g", "Aroma de vainilla con un toque de latakia.", "cw"),
+    ("Simply Unique", "Aromatic", "Virginia, Burley, Black Cavendish", "", "Bolsa de 50 g", "Aroma suave de nuez y vainilla.", "cw"),
+]
+MARCAS["Dan Tobacco"] = [
+    ("Choo Choo Train", "Virginia", "Virginia", "Flake", "Lata de 50 g · bolsa de 250 g", "Un toque de miel.", "cw"),
+    ("Rainer Barbi", "Aromatic", "Virginia, Black Cavendish", "", "Lata de 50 g", "Aroma de frutos secos.", "cw"),
+]
+MARCAS["Mac Baren"] = [
+    ("Mixture Flake", "Aromatic", "Virginia, Burley, Black Cavendish, Kentucky", "Flake", "Lata de 100 g", "Aroma de miel.", "cw"),
+]
