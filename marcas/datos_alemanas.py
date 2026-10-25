@@ -549,5 +549,5 @@ EXTRA += [
 PAIS.setdefault("Condor", "Reino Unido")
 EXTRA += [("Condor", [
     ("Ready Rubbed", "Aromatic", "Virginia", "Ready Rubbed", "Bolsa de 50 g",
-     "La de la bolsa verde. Virginia curado al aire con un aroma de licor. Ya no se fabrica.", "tr / uktobacco"),
+     "La de la bolsa verde. Virginia curado al aire con esencias florales y un toque de licor. Ya no se fabrica.", "tr / uktobacco (lakeland, según el usuario)"),
 ])]
