@@ -230,3 +230,42 @@ FUENTES["Richmond"] = "cigarworld.de (oct. 2026)"
 MARCAS["Richmond"] = [
     ("Navy Cut (Flake)", "Virginia", "Virginia", "Flake", "Lata de 50 g", "Virginia madurada y prensada, sin aroma marcado.", "cw"),
 ]
+
+# ---------------------------------------------------------------- Kopp (Kohlhase & Kopp): series nuevas
+# La marca Kopp ya existe (Caribbean Blue). Se añaden las series que cigarworld tiene en catálogo
+# y no son ediciones limitadas o anuales: Kopp Wood (Woodland) y Kopp Pfeifentabak.
+PAIS["Kopp"] = "Alemania"
+FUENTES["Kopp"] = "cigarworld.de (Kopp Wood y Kopp Pfeifentabak), pipehouse.de, tabakguru.de, peterheinrichs.de, rauch-lounge.com y Tobacco Reviews (oct. 2026)"
+_KW = "Forma parte de la serie Kopp Wood, de Kohlhase & Kopp: cada mezcla lleva el aroma de una madera."
+MARCAS["Kopp"] = [
+    ("Cremon Mixture", "English", "Latakia, Virginia", "Ribbon", "Lata de 50 g · lata de 200 g", "La elabora Kohlhase & Kopp.", "cw"),
+    ("Pipe 66", "Aromatic", "Black Cavendish, Virginia", "Ribbon", "Lata de 100 g", "La elabora Kohlhase & Kopp. Aroma de licor.", "tr (No. 66)"),
+    ("Wood I", "English", "Black Cavendish, Kentucky, Virginia, Latakia, Orientals, Perique", "Ribbon", "Lata de 50 g", _KW + " Madera de Limousin.", "pipehouse.de"),
+    ("Wood II", "English", "Virginia, Orientals, Latakia, Black Cavendish, Kentucky, Perique", "Ribbon", "Lata de 50 g", _KW + " Madera de limonero.", "tabakguru.de"),
+    ("Wood III", "English", "Virginia, Burley, Orientals, Latakia", "Ribbon", "Lata de 50 g", _KW + " Madera de cedro.", "peterheinrichs.de"),
+    ("Wood IV", "English", "Latakia, Orientals, Virginia, Burley, Perique", "Ribbon", "Lata de 50 g", _KW + " Madera de incienso.", "rauch-lounge.com"),
+    ("Wood V", "English", "Latakia, Orientals, Virginia, Burley, Black Cavendish", "Ribbon", "Lata de 50 g", _KW + " Madera de guayaco.", "rauch-lounge.com"),
+    ("Wood VI", "Aromatic", "Virginia, Orientals, Burley, Kentucky, Perique", "Ribbon", "Lata de 50 g", _KW + " Madera de sándalo.", "pipehouse.de"),
+]
+
+# ---------------------------------------------------------------- Käpt'n Barsdorfs Bester (Joh. Wilh. von Eicken)
+PAIS["Käpt'n Barsdorfs Bester"] = "Alemania"
+FUENTES["Käpt'n Barsdorfs Bester"] = "cigarworld.de (oct. 2026). Las demás variantes están como Restbestand o agotadas."
+MARCAS["Käpt'n Barsdorfs Bester"] = [
+    ("Bright Virginia", "Virginia", "Virginia", "Ribbon", "Lata de 160 g",
+     "La elabora Joh. Wilh. von Eicken en Lübeck. Antes se llamaba Black Virginia.", "cw"),
+]
+
+# ---------------------------------------------------------------- Exclusiv (Pöschl)
+PAIS["Exclusiv"] = "Alemania"
+FUENTES["Exclusiv"] = "cigarworld.de (Exclusiv Pfeifentabak, oct. 2026)"
+_EX = "La elabora Pöschl en Baviera."
+MARCAS["Exclusiv"] = [
+    ("Mixture No. 1", "Dutch-style", "Virginia, Burley, Orientals", "Cube Cut", "Bolsa de 50 g · lata de 100 g · lata de 200 g", _EX + " Sin aromatizar.", "cw (Holländisch)"),
+    ("Mixture No. 2", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Bolsa de 50 g · lata de 200 g", _EX + " Aroma afrutado.", "cw"),
+    ("Mixture No. 3", "Dutch-style", "Virginia, Burley, Orientals", "Ribbon", "Bolsa de 50 g", _EX + " Aroma de miel.", "cw (Holländisch)"),
+    ("Mixture No. 4", "Dutch-style", "Virginia, Burley, Orientals", "Ribbon", "Bolsa de 50 g · lata de 200 g", _EX + " Base de cavendish, sin aromatizar.", "cw (Holländisch)"),
+    ("Mixture No. 5", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Bolsa de 50 g", _EX + " Aroma de miel.", "cw"),
+    ("Mixture No. 6", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", "Bolsa de 50 g · lata de 100 g · lata de 200 g", _EX + " Aroma afrutado.", "cw"),
+    ("Mixture No. 7", "Aromatic", "Black Cavendish", "Ribbon", "Lata de 200 g", _EX + " Aroma de ron de Jamaica y ciruela.", "cw"),
+]
