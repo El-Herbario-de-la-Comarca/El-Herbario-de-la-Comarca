@@ -17,7 +17,7 @@ AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parent
 sys.path.insert(0, str(AQUI))
 import datos_alemanas as D  # noqa: E402
-from estilo_hojas import estilo_de, hojas_de, ESTILOS, HOJAS, es_lakeland  # noqa: E402
+from estilo_hojas import estilo_de, hojas_de, ESTILOS, HOJAS  # noqa: E402
 
 PRIMER_ID = 2000
 
@@ -62,9 +62,6 @@ def formato_texto(formato):
     partes = [p.strip() for p in formato.split("·")]
     partes = [p[0].lower() + p[1:] if p.lower().startswith(("a granel", "bolsa", "bote", "lata")) else p for p in partes]
     return ("Formatos: " if len(partes) > 1 else "Formato: ") + lista_es(partes) + "."
-
-
-LAKELAND_TXT = "Tiene el aroma floral típico de las mezclas Lakeland."
 
 
 def descripcion(nombre, marca, mezcla, hojas, corte, formato, extra):
@@ -118,14 +115,11 @@ def main():
                 if mezcla is None:
                     raise SystemExit(f"Familia sin traducir: {familia} ({marca} | {nombre})")
             assert mezcla in ESTILOS or mezcla == "" and all(h in HOJAS for h in hojas)
-            lakeland = es_lakeland(nombre, fuente)
-            if lakeland:
-                extra = (extra + " " if extra else "") + LAKELAND_TXT
             desc = descripcion(nombre, marca, mezcla, hojas, corte, formato, extra)
             assert len(nombre) <= 120 and len(marca) <= 80 and len(desc) <= 2000 and len(formato) <= 80, (marca, nombre)
             nuevas.append({
                 "nombre": nombre, "marca": marca, "pais": D.PAIS.get(marca, ""), "tipo": mezcla, "corte": corte,
-                "formato": formato, "desc": desc, "fuerza": 0, "notas": ["Lakeland"] if lakeland else [], "id": siguiente,
+                "formato": formato, "desc": desc, "fuerza": 0, "notas": [], "id": siguiente,
                 "descripcion": desc, "hojas": hojas, "en_espana": str(siguiente) in espana,
             })
             siguiente += 1
@@ -138,7 +132,7 @@ def main():
 
     filas_sql = [
         f"({q(d['id'])},{q(d['nombre'])},{q(d['marca'])},{q(d['pais'])},{q(d['tipo'])},{q(d['corte'])},"
-        f"{q(d['formato'])},{q(d['descripcion'])},0,array[{', '.join(q(n) for n in d['notas'])}]::text[],'',"
+        f"{q(d['formato'])},{q(d['descripcion'])},0,'{{}}'::text[],'',"
         f"array[{', '.join(q(h) for h in d['hojas'])}]::text[])"
         for d in nuevas
     ]
