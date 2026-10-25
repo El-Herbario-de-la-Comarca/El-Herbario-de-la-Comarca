@@ -88,7 +88,8 @@ footer .visitas { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; width: min(100%, 860px); display: grid; grid-template-columns: minmax(0, 250px) minmax(0, 1fr); margin-block: auto; }
 .panel .art { padding: 28px 20px; display: grid; place-items: center; background: color-mix(in srgb, var(--line) 35%, transparent); border-radius: 8px 0 0 0; }
 .panel .art svg { width: 100%; max-width: 210px; height: auto; }
-.photo { display: block; width: 100%; height: auto; margin: 0 auto; border-radius: 4px; }
+/* Marco fijo con la proporción de la lata dibujada: todas las fotos ocupan lo mismo, sin recortarlas. */
+.photo { display: block; width: 100%; height: auto; aspect-ratio: 200 / 170; object-fit: contain; margin: 0 auto; border-radius: 4px; }
 .card .photo { max-width: 170px; }
 .panel .photo { max-width: 220px; }
 .panel .info { padding: 24px; display: grid; gap: 14px; align-content: start; min-width: 0; }
