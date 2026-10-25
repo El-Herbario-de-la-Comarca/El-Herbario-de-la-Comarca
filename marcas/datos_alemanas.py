@@ -610,3 +610,38 @@ EXTRA += [("Dan Tobacco", [
     ("Wappen von Hamburg", "Aromatic", "Virginia, Black Cavendish", "", _P, "De estilo danés, con aroma afrutado.", "cw"),
     ("S.V.H. Flake", "Aromatic", "Virginia", "Flake", _P, "Aroma de vainilla. Antes se llamaba Sweet Vanilla Honeydew Flake.", "cw"),
 ])]
+
+# Vauen (26/10, a petición del usuario). Fabricante de pipas de Núremberg; los tabacos los elabora Kopp.
+# Fuente: fichas de cigarworld (Rohtabak, Typ, Schnitt, Aromatisierung) y de Smokingpipes cuando las tiene.
+# cigarworld: «Dänisch» y «Hocharomat» → Aromatic; «Mixture», «Wild Cut» y «Loose Cut» no son un corte
+# de la lista, así que el corte queda vacío salvo que Smokingpipes lo dé. Aromatizada con latakia → English Aromatic.
+# Fuera: Tradition No. 2 (Restbestand/Auslauf y agotada) y las Jubiläumsedition 150 y 175 (aniversario).
+PAIS["Vauen"] = "Alemania"
+FUENTES["Vauen"] = "cigarworld.de (serie Auenland y fichas de cada mezcla), Smokingpipes y Pfeifendepot (oct. 2026)"
+_V = "Lata de 50 g"
+EXTRA += [("Vauen", [
+    ("Auenland", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", _V, "La primera de la serie Auenland («La Comarca» en alemán); antes se llamaba The Shire. Aroma afrutado de naranja y melocotón.", "sp / cw"),
+    ("Auenland Broken Flake", "Virginia", "Virginia, Burley, Perique, Kentucky", "Broken Flake", _V, "Sin aromatizar. Virginia oscuro con burley y un toque de kentucky ahumado y perique.", "cw"),
+    ("Auenland Evening Mixture", "Aromatic", "Virginia, Burley, Black Cavendish", "Ribbon", _V, "De estilo danés, con aroma de piña y un fondo de nuez.", "sp / cw"),
+    ("Auenland Midnight Mixture", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "Aroma de melocotón.", "cw"),
+    ("Auenland Morning Mixture", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "De estilo danés, con base de black cavendish y aroma de vainilla, ciruela mirabel y capuchino.", "cw"),
+    ("Auenland Mountain Mixture", "Aromatic", "Black Cavendish, Burley, Virginia", "", _V, "De estilo danés, con aroma de mora y notas de vainilla y moca.", "cw"),
+    ("Auenland Signature Edition", "Aromatic", "Black Cavendish, Virginia, Burley", "", _V, "Aroma de frutos del bosque, nuez y caramelo.", "cw / pfeifendepot"),
+    ("Auenland Sunset Mixture", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "De estilo danés, con aroma de naranja confitada y miel y un toque de resina de pino.", "cw"),
+    ("Lounge Blend No. 1", "Aromatic", "Black Cavendish, Virginia, Burley", "", _V, "De estilo danés, con aroma de ciruela, vainilla y ron.", "cw"),
+    ("Bavarian Blend No. 3", "Aromatic", "Virginia, Black Cavendish", "", _V, "De estilo danés, con aroma de vainilla, lúpulo y malta.", "cw"),
+    ("Red Blend No. 4", "Aromatic", "Virginia, Black Cavendish", "", _V, "Aroma de uva, cereza y vainilla bourbon.", "cw"),
+    ("Oxford Blend No. 5", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "De estilo danés, con aroma de bergamota, como el té Earl Grey. Antes se llamaba Earl Grey.", "cw"),
+    ("Crusted Blend No. 6", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "De estilo danés, con aroma de vainilla, frutos secos y crème brûlée.", "cw"),
+    ("Crunchy Blend No. 7", "Aromatic", "Virginia, Burley, Black Cavendish", "Broken Flake", _V, "Con mucho black cavendish y aroma de nuez, vainilla y ciruela mirabel. Antes se llamaba Mellow Nut.", "sp"),
+    ("Sparkling Blend No. 8", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "Aroma de fresa y champán. Antes se llamaba Strawberry & Champagne.", "cw"),
+    ("Himalaya Blend No. 9", "Aromatic", "Virginia, Black Cavendish", "", _V, "De estilo danés, con aroma de cereza, cítricos y bayas de goji.", "cw"),
+    ("Hawaii No. 10", "Aromatic", "Virginia, Black Cavendish", "", _V, "Aroma de naranja con notas de chocolate negro y vainilla.", "cw"),
+    ("Grandpa's Blend No. 11", "Aromatic", "Virginia, Black Cavendish", "", _V, "De estilo danés, con aroma de haba tonka, vainilla y caramelo.", "cw"),
+    ("Summer Blend No. 12", "Aromatic", "Virginia, Black Cavendish", "", _V, "Aroma de sandía.", "cw"),
+    ("Virginia Flake No. 14", "Virginia", "Virginia", "Flake", _V, "Virginia dulce, con notas de avellana, vainilla y almendra.", "sp / cw"),
+    ("Italian Blend No. 20", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "Aroma de café espresso y caramelo. Creada con el cocinero Horst Lichter; antes se llamaba Espressotabak.", "cw"),
+    ("Piemont Blend No. 21", "Aromatic", "Virginia, Burley, Black Cavendish", "", _V, "Aroma de vino tinto. Creada con el cocinero Horst Lichter; antes se llamaba Rotweintabak.", "cw"),
+    ("English Blend No. 22", "English Aromatic", "Virginia, Burley, Black Cavendish, Latakia", "", _V, "Inglesa suave con un toque de vainilla. Antes se llamaba English Blend & Vanilla.", "cw"),
+    ("California Blend No. 23", "Aromatic", "Black Cavendish, Burley, Virginia", "", _V, "De estilo danés, con aroma afrutado, de frutos secos y vainilla.", "cw"),
+])]

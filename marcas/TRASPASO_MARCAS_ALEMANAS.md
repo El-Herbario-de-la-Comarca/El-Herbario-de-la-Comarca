@@ -3,6 +3,14 @@
 **Estado a 25/10/2026 (10:40):** 825 fichas de 60 marcas en `datos-iniciales.js`; 163 con el distintivo de España (E).
 Todo está en `main` y publicado. El usuario ejecutó el 20 (junta del 13 al 19); el 21 (nombre al registrarse) estaba pendiente de ejecutar.
 
+## Vauen (26/10/2026)
+- 24 fichas nuevas (ids 2338-2361) al final de `EXTRA`: la serie Auenland (8) y las numeradas No. 1 a No. 23 (16).
+  SQL: `supabase/32_vauen.sql` (o volver a ejecutar el 09). Ninguna está en la lista del CMT: sin E.
+- Fuera: Tradition No. 2 (Restbestand/Auslauf, agotada) y Jubiläumsedition 150 y 175 (aniversario).
+- Por revisar: Grandpa's Blend No. 11 lleva haba tonka (¿Lakeland?); Auenland Signature Edition no consta como limitada.
+- Comprobado el 26/10 que no faltan marcas de la lista del CMT; candidatas europeas sin meter: Sail (STG),
+  Peter Stokkebye y las mezclas de la casa de Peter Heinrichs.
+
 ## Cómo seguir metiendo fichas
 - Añadir filas en `marcas/datos_alemanas.py` (formato y criterio al principio del archivo) y ejecutar
   `python3 marcas/generar_alemanas.py`: regenera `datos-iniciales.js` y `supabase/09_marcas_alemanas.sql`
