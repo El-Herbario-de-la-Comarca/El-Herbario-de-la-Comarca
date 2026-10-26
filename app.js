@@ -1300,7 +1300,7 @@ function formTarro(id, t) {
   const msg = dlg.querySelector("#tf-msg"), q = (s) => dlg.querySelector(s);
   ["#tf-uds", "#tf-gr", "#tf-anio", "#tf-mes", "#tf-aanio", "#tf-ames"].filter((s) => q(s)).forEach((s) => q(s).addEventListener("input", () => { msg.textContent = ""; }));
   q("#tf-no").addEventListener("click", cerrar);
-  const terminar = async () => { await cargarTarros(); sincronizarLocal(id); cerrar(); if (String(openId) === String(id)) paintBodega(); };
+  const terminar = async () => { await cargarTarros(); sincronizarLocal(id); cerrar(); if (String(openId) === String(id)) paintBodega(); else if (document.querySelector(".panel.bodega-p")) abrirBodega(); };
   if (t) q("#tf-del").addEventListener("click", async (e) => {
     const b = e.currentTarget;
     if (!b.dataset.sure) { b.dataset.sure = "1"; b.textContent = "Pulsa otra vez para borrarlo"; return; }
@@ -1439,41 +1439,154 @@ async function guardarBodega(id, nuevo) {
   if (vacio) delete bodega[k]; else bodega[k] = { ...fila, gramos: fila.gramos || null };
   if (String(openId) === k) paintBodega();
 }
+/* ---------- Mi bodega: la estantería ----------
+   Pestañas (tengo, probado, quiero), latas de pie en baldas (rotuladas al ordenar por marca o mezcla),
+   latas más pequeñas a partir de BODEGA_COMPACTA tabacos, reparto por tipo de mezcla y tarros madurando. */
+const BODEGA_COMPACTA = 16;
+const MADURA_TOPE = 120;   // meses: la barra de maduración se llena a los 10 años
+const ORDEN_BODEGA = [["gramos", "Más gramos"], ["antiguo", "Más antiguo"], ["marca", "Marca"], ["mezcla", "Tipo de mezcla"], ["nombre", "Nombre"]];
+const bodegaVista = { tab: "tengo", orden: "" };
+try { const v = JSON.parse(localStorage.getItem("herbario-bodega-vista") || "{}"); if (v.tab) bodegaVista.tab = v.tab; if (v.orden) bodegaVista.orden = v.orden; } catch (e) {}
+function guardarVistaBodega() { try { localStorage.setItem("herbario-bodega-vista", JSON.stringify(bodegaVista)); } catch (e) {} }
+const edadCorta = (t) => {
+  if (!t || !t.fecha_anio) return "";
+  const m = mesesDesde(t.fecha_anio, t.fecha_mes);
+  if (m <= 0) return t.tipo_fecha === "compra" ? "recién llegada" : "este mes";
+  const a = Math.floor(m / 12), r = m % 12;
+  return a ? `${a} a${r ? ` ${r} m` : ""}` : `${r} m`;
+};
 function abrirBodega() {
-  const fila = (d, k) => {
-    const g = k === "tengo" ? (bodega[String(d.id)] || {}).gramos : null;
-    const lista = k === "tengo" && ctx.tarrosOk ? (tarros[String(d.id)] || []) : [];
-    const viejo = masViejo(lista);
-    const envases = lista.length ? `<span class="bd-env">${ICONO_TARRO}${esc(resumenEnvases(lista))}${viejo ? ` · el más antiguo: ${esc(antiguedad(viejo).toLowerCase())}` : ""}</span>` : "";
-    return `<li><button class="bd-item" type="button" data-open="${esc(d.id)}">
-        <span class="bd-mini" aria-hidden="true">${art(d)}</span>
-        <span class="bd-txt"><span class="bd-nom">${esc(d.nombre)}</span><span class="muted">${esc(d.marca)}${d.tipo ? " · " + esc(d.tipo) : ""}</span>${envases}</span>
-        ${g ? `<span class="bd-gr">${gramosTxt(g)}</span>` : ""}
-      </button></li>`;
+  openId = null;
+  const info = (d) => bodega[String(d.id)] || {};
+  const listas = Object.fromEntries(BODEGA.map(([k]) => [k, current.filter((d) => info(d)[k])]));
+  const tab = BODEGA.some(([k]) => k === bodegaVista.tab) ? bodegaVista.tab : "tengo";
+  const orden = bodegaVista.orden || (tab === "tengo" ? "gramos" : "nombre");
+  const envasesDe = (d) => (ctx.tarrosOk ? tarros[String(d.id)] || [] : []);
+  const mesesViejo = (d) => { const v = masViejo(envasesDe(d)); return v ? mesesDesde(v.fecha_anio, v.fecha_mes) : -1; };
+  const porNombre = (a, b) => a.nombre.localeCompare(b.nombre, "es");
+  const comparar = {
+    gramos: (a, b) => (info(b).gramos || 0) - (info(a).gramos || 0) || porNombre(a, b),
+    antiguo: (a, b) => mesesViejo(b) - mesesViejo(a) || porNombre(a, b),
+    marca: (a, b) => a.marca.localeCompare(b.marca, "es") || porNombre(a, b),
+    mezcla: (a, b) => (a.tipo || "~").localeCompare(b.tipo || "~", "es") || porNombre(a, b),
+    nombre: porNombre,
+  }[orden] || porNombre;
+  const items = listas[tab].slice().sort(comparar);
+  const compacta = items.length >= BODEGA_COMPACTA;
+
+  // Resumen
+  const tengo = listas.tengo;
+  const totalG = tengo.reduce((s, d) => s + (info(d).gramos || 0), 0);
+  const todosEnv = tengo.flatMap((d) => envasesDe(d).map((t) => ({ t, d })));
+  const nEnv = todosEnv.reduce((s, x) => s + uds(x.t), 0);
+  const conFecha = todosEnv.filter((x) => x.t.fecha_anio)
+    .sort((a, b) => mesesDesde(b.t.fecha_anio, b.t.fecha_mes) - mesesDesde(a.t.fecha_anio, a.t.fecha_mes));
+  const masMaduro = conFecha[0];
+  const casillas = [
+    ctx.gramosOk ? `<div class="bd-casilla principal"><span class="l">Total de tabaco</span><span class="n">${gramosTxt(totalG) || "0 g"}</span><span class="s">en ${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`}</span></div>` : "",
+    ctx.tarrosOk && nEnv ? `<div class="bd-casilla"><span class="l">Envases</span><span class="n">${nEnv}</span><span class="s">${esc(resumenEnvases(todosEnv.map((x) => x.t)))}</span></div>` : "",
+    masMaduro ? `<div class="bd-casilla"><span class="l">El que más madura</span><span class="n medio">${esc(masMaduro.d.nombre)}</span><span class="s">${esc(antiguedad(masMaduro.t))} en ${esc(NOMBRE_ENV[masMaduro.t.envase || ""][0])}</span></div>` : "",
+    `<div class="bd-casilla"><span class="l">Probados</span><span class="n">${listas.probado.length}</span><span class="s">y ${listas.quiero.length} por probar</span></div>`,
+  ].join("");
+
+  // Estantería: grupos rotulados si se ordena por marca o mezcla
+  const grupoDe = orden === "marca" ? (d) => d.marca : orden === "mezcla" ? (d) => d.tipo || "Sin tipo de mezcla" : null;
+  const grupos = [];
+  items.forEach((d) => {
+    const g = grupoDe ? grupoDe(d) : "";
+    if (!grupos.length || grupos[grupos.length - 1].g !== g) grupos.push({ g, lista: [] });
+    grupos[grupos.length - 1].lista.push(d);
+  });
+  const lata = (d) => {
+    const env = envasesDe(d), viejo = masViejo(env), g = info(d).gramos;
+    const chip = tab === "tengo" && !compacta
+      ? (env.length ? `<span class="bd-chip${viejo && mesesDesde(viejo.fecha_anio, viejo.fecha_mes) >= 12 ? " viejo" : ""}">${esc(resumenEnvases(env))}${viejo ? ` · ${esc(edadCorta(viejo))}` : ""}</span>` : '<span class="bd-chip vacio">Sin envases apuntados</span>')
+      : "";
+    return `<button class="bd-lata" type="button" data-open="${esc(d.id)}" aria-label="${esc(`${d.nombre}, ${d.marca}${g && tab === "tengo" ? `, ${gramosTxt(g)}` : ""}`)}">
+        ${chip}<span class="bd-art" aria-hidden="true">${art(d)}</span><span class="bd-balda" aria-hidden="true"></span>
+        <span class="bd-nombre" aria-hidden="true">${esc(d.nombre)}</span>
+        ${compacta ? "" : `<span class="bd-marca" aria-hidden="true">${esc(d.marca)}</span>`}
+        ${tab === "tengo" && g ? `<span class="bd-gramos" aria-hidden="true">${gramosTxt(g)}</span>` : ""}
+      </button>`;
   };
-  const grupos = BODEGA.map(([k, t]) => {
-    const items = current.filter((d) => (bodega[String(d.id)] || {})[k])
-      .sort((a, b) => a.marca.localeCompare(b.marca, "es") || a.nombre.localeCompare(b.nombre, "es"));
-    const total = k === "tengo" ? items.reduce((s, d) => s + ((bodega[String(d.id)] || {}).gramos || 0), 0) : 0;
-    return `<section class="sec"><h3>${t} <span class="muted">(${items.length}${total ? ` · ${gramosTxt(total)} en total` : ""})</span></h3>
-      ${items.length ? `<ul class="bodega-lista">${items.map((d) => fila(d, k)).join("")}</ul>` : '<p class="muted">Nada todavía.</p>'}</section>`;
-  }).join("");
-  // Resumen: total de gramos de todo lo que tiene.
-  const tengo = current.filter((d) => (bodega[String(d.id)] || {}).tengo);
-  const totalG = tengo.reduce((s, d) => s + ((bodega[String(d.id)] || {}).gramos || 0), 0);
-  const sinCant = tengo.filter((d) => !(bodega[String(d.id)] || {}).gramos).length;
-  const resumen = ctx.gramosOk ? `<div class="bd-total">
-      <span class="bd-total-lbl">Total de tabaco</span>
-      <span class="bd-total-num">${totalG ? gramosTxt(totalG) : "0 g"}</span>
-      <span class="muted">${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`}${sinCant ? ` · ${sinCant} sin cantidad apuntada` : ""}</span>
-    </div>` : "";
-  abrirPanel(`<div class="info adm"><h2 id="d-name">Mi bodega</h2>
-    ${resumen}
-    <p class="muted">Marca tus tabacos desde su ficha. Solo tú ves esta lista.</p>
-    ${grupos}
-    <button class="close" id="d-close" type="button">Cerrar</button></div>`);
+  const vacio = {
+    tengo: "Todavía no has marcado ningún tabaco como «Lo tengo». Hazlo desde su ficha.",
+    probado: "Todavía no has marcado ningún tabaco como probado.",
+    quiero: "Todavía no tienes tabacos pendientes de probar.",
+  }[tab];
+  const estanteria = items.length
+    ? grupos.map((gr) => `<div class="bd-grupo">${gr.g ? `<p class="bd-rotulo"><span>${esc(gr.g)}</span><small>${gr.lista.length}</small></p>` : ""}
+        <div class="bd-estante${compacta ? " compacta" : ""}">${gr.lista.map(lata).join("")}</div></div>`).join("")
+    : `<p class="bd-vacio">${vacio}</p>`;
+
+  // Por tipo de mezcla (solo en «Lo tengo», con gramos)
+  let mezclas = "";
+  if (tab === "tengo" && ctx.gramosOk && totalG) {
+    const suma = {};
+    tengo.forEach((d) => { const g = info(d).gramos || 0; if (g) suma[d.tipo || ""] = (suma[d.tipo || ""] || 0) + g; });
+    const filas = Object.entries(suma).sort((a, b) => b[1] - a[1]);
+    const pct = (g) => Math.round(g / totalG * 100);
+    const color = (k) => TIPOS[k] || "#8A7D68";
+    mezclas = `<section class="bd-mezclas" aria-labelledby="bd-mz-h">
+        <div class="bd-sec-h"><h3 id="bd-mz-h">Por tipo de mezcla</h3><span class="muted">sobre ${gramosTxt(totalG)}</span></div>
+        <div class="bd-mz-barra" aria-hidden="true">${filas.map(([k, g]) => `<span style="flex:${g};background:${color(k)}"></span>`).join("")}</div>
+        <ul class="bd-mz-lista">${filas.map(([k, g]) => `<li><span class="sw" style="background:${color(k)}" aria-hidden="true"></span><span class="t">${esc(k || "Sin tipo de mezcla")}</span><span class="g">${gramosTxt(g)}</span><span class="p">${pct(g)} %</span></li>`).join("")}</ul>
+      </section>`;
+  }
+
+  // Madurando: cada envase con fecha, del más antiguo al más nuevo; la barra se llena a los 10 años
+  let madurando = "";
+  if (tab === "tengo" && ctx.tarrosOk) {
+    const filas = conFecha.map(({ t, d }) => {
+      const m = Math.max(0, mesesDesde(t.fecha_anio, t.fecha_mes));
+      const ancho = Math.max(2, Math.min(100, Math.round(m / MADURA_TOPE * 100)));
+      return `<li class="bd-md">
+          <span class="bd-md-ic">${iconoEnvase(t.envase)}</span>
+          <span class="bd-md-q"><strong>${esc(d.nombre)}</strong><span class="muted">${esc(tituloTarro(t))}</span></span>
+          <span class="bd-md-f muted">${esc(lineaTarro(t))}</span>
+          <span class="bd-md-e"><span class="bd-md-b"><span style="width:${ancho}%"></span></span><span class="muted">${esc(antiguedad(t))}</span></span>
+          <button class="link" type="button" data-tarro="${esc(t.id)}" data-tabaco="${esc(d.id)}">Editar</button>
+        </li>`;
+    }).join("");
+    madurando = `<div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
+      <section class="bd-madura" aria-labelledby="bd-md-h">
+        <div class="bd-sec-h"><h3 id="bd-md-h">Madurando en la bodega</h3></div>
+        ${filas ? `<ul class="bd-md-lista">${filas}</ul><p class="muted">La barra se llena a los 10 años. Los tarros y latas se apuntan desde la ficha de cada tabaco.</p>`
+          : '<p class="muted">Cuando apuntes un tarro o una lata con su fecha desde la ficha de un tabaco, aquí verás cuánto lleva madurando.</p>'}
+      </section>`;
+  }
+
+  abrirPanel(`
+    <div class="d-franja">${FRANJA}</div>
+    <div class="bd-cab">
+      <span class="bd-baul" aria-hidden="true">${ICONO_BAUL}</span>
+      <div><h2 id="d-name">Mi bodega</h2><p class="muted">Solo tú ves esta lista. Marca tus tabacos desde su ficha.</p></div>
+    </div>
+    <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
+    <div class="bd-cuerpo">
+      <div class="bd-casillas">${casillas}</div>
+      <div class="bd-barra">
+        <div class="bd-tabs" role="tablist" aria-label="Listas de la bodega">
+          ${BODEGA.map(([k, t]) => `<button role="tab" type="button" data-tab="${k}" aria-selected="${k === tab}">${t} <span>${listas[k].length}</span></button>`).join("")}
+        </div>
+        <label class="bd-orden">Ordenar por
+          <select id="bd-orden">${ORDEN_BODEGA.filter(([k]) => tab === "tengo" || (k !== "gramos" && k !== "antiguo")).map(([k, t]) => `<option value="${k}"${k === orden ? " selected" : ""}>${t}</option>`).join("")}</select>
+        </label>
+      </div>
+      <div class="bd-estanteria" role="tabpanel">${estanteria}</div>
+      ${mezclas}
+      ${madurando}
+    </div>`, "bodega-p");
   $("d-close").addEventListener("click", () => closeDetail());
-  $("panel").querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.open)));
+  const panel = $("panel");
+  panel.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.open)));
+  panel.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
+    bodegaVista.tab = b.dataset.tab; bodegaVista.orden = ""; guardarVistaBodega(); abrirBodega();
+    const nuevo = panel.querySelector(`[data-tab="${b.dataset.tab}"]`); if (nuevo) nuevo.focus();
+  }));
+  $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(); $("bd-orden").focus(); });
+  panel.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
+    formTarro(b.dataset.tabaco, (tarros[b.dataset.tabaco] || []).find((t) => String(t.id) === b.dataset.tarro))));
 }
 
 /* ---------- Mi cuenta ----------
