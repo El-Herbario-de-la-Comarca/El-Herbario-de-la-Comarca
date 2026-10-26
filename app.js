@@ -1673,7 +1673,7 @@ let avisoInstalar = null;   // Android/Chrome: el aviso de instalación se guard
 // Chrome avisa unos segundos después de cargar; si Mi cuenta ya está abierta, se repinta para enseñar el botón.
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault(); avisoInstalar = e;
-  if (document.querySelector(".info.cuenta") && !document.getElementById("cu-instalar")) abrirCuenta();
+  if (document.querySelector(".panel.cuenta-p") && !document.getElementById("cu-instalar")) abrirCuenta();
 });
 window.addEventListener("appinstalled", () => { avisoInstalar = null; });
 const enApp = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
@@ -1690,46 +1690,78 @@ function instalacionHTML() {
 }
 function abrirCuenta() {
   const p = ctx.perfil;
-  abrirPanel(`<div class="info adm cuenta"><h2 id="d-name">Mi cuenta</h2>
-    <div class="cuenta-cab">${avatarHTML(true)}
-      <div><strong>${esc(p.nombre || ctx.email)}</strong><br><span class="muted">${esc(ctx.email)} · ${esc(ROL_TXT[ctx.rol] || ctx.rol)}</span></div>
+  const nombre = p.nombre || ctx.email;
+  const socio = ctx.socioOk && p.socio;
+  const nRes = ctx.opiniones ? resenasDe(ctx.uid) : 0, r = rangoDe(nRes);
+  // Bodega: lo que tiene y cuántos gramos
+  const tengo = ctx.bodega ? current.filter((d) => (bodega[String(d.id)] || {}).tengo) : [];
+  const gramos = tengo.reduce((s2, d) => s2 + ((bodega[String(d.id)] || {}).gramos || 0), 0);
+  // Camino de rangos: paradas con el número de reseñas de cada una
+  let camino = "";
+  if (ctx.opiniones) {
+    const hasta = r.sig ? r.sig[1] : null;
+    const avance = r.sig ? Math.max(0, Math.min(1, (nRes - r.desde) / (hasta - r.desde))) : 0;
+    const relleno = r.i < 0 ? avance * 0 : Math.min(4, r.i + avance) * 20;   // 20 % entre parada y parada
+    camino = `<div class="cu-camino-c">
+        <div class="cu-sec-h"><span class="cu-et">Tu camino en el herbario</span><span class="muted">${nRes === 1 ? "1 reseña publicada" : `${nRes} reseñas publicadas`}</span></div>
+        <div class="cu-camino-w"><span class="cu-linea" aria-hidden="true"><span style="width:${relleno}%"></span></span>
+        <ol class="cu-camino" aria-label="Rangos del herbario">
+          ${RANGOS.map(([n, u], i) => `<li class="${i < r.i ? "hecho" : i === r.i ? "aqui" : ""}"${i === r.i ? ' aria-current="step"' : ""}><span class="cu-parada">${u}</span><span class="cu-rn">${esc(n)}</span></li>`).join("")}
+        </ol></div>
+        <p class="cu-falta">${r.sig ? `Te ${hasta - nRes === 1 ? "falta <strong>1 reseña</strong>" : `faltan <strong>${hasta - nRes} reseñas</strong>`} para ser <strong>${esc(r.sig[0])}</strong>.` : "Has llegado al rango más alto del herbario."}</p>
+      </div>`;
+  }
+  abrirPanel(`
+    <div class="d-franja">${FRANJA}</div>
+    <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
+    <div class="cu-cab">
+      <div class="cu-puerta"><div class="cu-piedras">${avatarHTML(true)}</div></div>
+      <div class="cu-quien">
+        <h2 id="d-name">${esc(nombre)}</h2>
+        <p class="cu-chips"><span class="muted">${esc(ctx.email)}</span>
+          <span class="cu-chip rol">${esc(ROL_TXT[ctx.rol] || ctx.rol)}</span>
+          ${ctx.opiniones && r.i >= 0 ? `<span class="cu-chip rango">${esc(r.nombre)}</span>` : ""}</p>
+      </div>
+      ${ctx.perfilOk ? `<div class="cu-foto btns">
+        <button class="btn" id="av-pick" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>${p.avatar ? "Cambiar foto" : "Subir foto"}</button>
+        ${p.avatar ? '<button class="btn danger" id="av-del" type="button">Quitar foto</button>' : ""}
+        <input id="av-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+      </div>` : ""}
     </div>
-    ${ctx.socioOk && p.socio ? `<div class="carne">
-      <img src="img/logo.png" alt="" width="64" height="64">
-      <div><span class="carne-club">Pipa Club Fumadas Hobbit</span>
-        <strong>${esc(p.nombre || ctx.email)}</strong>
-        <span>${p.socioDesde ? `Socio desde ${p.socioDesde}` : "Socio del club"}</span></div>
-    </div>` : ""}
-    ${ctx.opiniones ? (() => {
-      const n = resenasDe(ctx.uid), r = rangoDe(n);
-      const hasta = r.sig ? r.sig[1] : null, pct = r.sig ? Math.round((n - r.desde) / (hasta - r.desde) * 100) : 100;
-      return `<div class="mi-rango">
-        <div><span class="carne-club">Tu rango en el herbario</span>
-          <strong>${r.i >= 0 ? esc(r.nombre) : "Sin rango todavía"}</strong>
-          <span class="muted">${n === 1 ? "1 reseña publicada" : `${n} reseñas publicadas`}</span></div>
-        <div class="mr-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><span style="width:${pct}%"></span></div>
-        <span class="muted">${r.sig ? `Te ${hasta - n === 1 ? "falta 1 reseña" : `faltan ${hasta - n} reseñas`} para ${esc(r.sig[0])}` : "Has llegado al rango más alto"}</span>
-      </div>`; })() : ""}
-    ${ctx.perfilOk ? `
-    <div class="btns">
-      <button class="btn" id="av-pick" type="button">${p.avatar ? "Cambiar foto" : "Subir foto de perfil"}</button>
-      ${p.avatar ? '<button class="btn danger" id="av-del" type="button">Quitar foto</button>' : ""}
-    </div>
-    <input id="av-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
-    <form id="nm-form" class="cuenta-nombre">
-      <label for="nm-in">Nombre visible</label>
-      <div class="btns"><input id="nm-in" maxlength="40" value="${esc(p.nombre)}" placeholder="Cómo quieres que te vean">
-      <button class="btn" type="submit">Guardar</button></div>
-    </form>` : '<p class="muted">La foto de perfil y el nombre visible estarán disponibles pronto.</p>'}
-    ${instalacionHTML()}
-    <p class="msg" id="cu-msg" role="alert"></p>
-    <div class="btns">
-      ${ctx.bodega ? '<button class="btn" id="cu-bodega" type="button">Mi bodega</button>' : ""}
-      ${esAdmin() ? '<button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>' : ""}
-      <button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>
-      <button class="btn" id="cu-out" type="button">Salir</button>
-    </div>
-    <button class="close" id="d-close" type="button">Cerrar</button></div>`);
+    <div class="cu-cuerpo">
+      ${socio || camino ? `<div class="cu-fila${socio && camino ? " dos" : ""}">
+        ${socio ? `<div class="cu-carne">
+          <img src="img/logo.png" alt="" width="92" height="92">
+          <div><span class="cu-et">Carné de socio</span>
+            <span class="cu-club">Pipa Club Fumadas Hobbit</span>
+            <strong>${esc(nombre)}</strong>
+            <span>${p.socioDesde ? `Socio desde ${p.socioDesde}` : "Socio del club"}</span></div>
+        </div>` : ""}
+        ${camino}
+      </div>` : ""}
+      <div class="cu-casillas">
+        ${ctx.opiniones ? `<div class="bd-casilla"><span class="l">Reseñas publicadas</span><span class="n">${nRes}</span><span class="s">Firmadas como «${esc(nombre)}»</span></div>` : ""}
+        ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
+        ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button></div>` : ""}
+      </div>
+      <div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
+      <div class="cu-abajo">
+        <section class="cu-datos" aria-labelledby="cu-datos-h">
+          <h3 id="cu-datos-h">Tus datos</h3>
+          ${ctx.perfilOk ? `<form id="nm-form" class="cuenta-nombre">
+            <label for="nm-in">Nombre visible en tus reseñas</label>
+            <div class="btns"><input id="nm-in" maxlength="40" value="${esc(p.nombre)}" placeholder="Cómo quieres que te vean">
+            <button class="btn primary" type="submit">Guardar</button></div>
+          </form>` : '<p class="muted">El nombre visible y la foto de perfil estarán disponibles pronto.</p>'}
+          <p class="msg" id="cu-msg" role="alert"></p>
+          <div class="btns">
+            <button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>
+            <button class="btn danger" id="cu-out" type="button">Salir</button>
+          </div>
+        </section>
+        ${instalacionHTML()}
+      </div>
+    </div>`, "cuenta-p");
   $("d-close").addEventListener("click", () => closeDetail());
   $("cu-out").addEventListener("click", async () => { closeDetail(); await sb.auth.signOut(); });
   $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
