@@ -1455,13 +1455,16 @@ const edadCorta = (t) => {
   const a = Math.floor(m / 12), r = m % 12;
   return a ? `${a} a${r ? ` ${r} m` : ""}` : `${r} m`;
 };
-function abrirBodega() {
+function abrirBodega(fuente) {
+  const prueba = fuente && fuente.prueba ? fuente : null;   // bodega inventada (solo admin); los clics pasan un evento
   openId = null;
-  const info = (d) => bodega[String(d.id)] || {};
+  const B = prueba ? prueba.bodega : bodega, T = prueba ? prueba.tarros : tarros;
+  const conGramos = prueba ? true : ctx.gramosOk, conTarros = prueba ? true : ctx.tarrosOk;
+  const info = (d) => B[String(d.id)] || {};
   const listas = Object.fromEntries(BODEGA.map(([k]) => [k, current.filter((d) => info(d)[k])]));
   const tab = BODEGA.some(([k]) => k === bodegaVista.tab) ? bodegaVista.tab : "tengo";
   const orden = bodegaVista.orden || (tab === "tengo" ? "gramos" : "nombre");
-  const envasesDe = (d) => (ctx.tarrosOk ? tarros[String(d.id)] || [] : []);
+  const envasesDe = (d) => (conTarros ? T[String(d.id)] || [] : []);
   const mesesViejo = (d) => { const v = masViejo(envasesDe(d)); return v ? mesesDesde(v.fecha_anio, v.fecha_mes) : -1; };
   const porNombre = (a, b) => a.nombre.localeCompare(b.nombre, "es");
   const comparar = {
@@ -1483,8 +1486,8 @@ function abrirBodega() {
     .sort((a, b) => mesesDesde(b.t.fecha_anio, b.t.fecha_mes) - mesesDesde(a.t.fecha_anio, a.t.fecha_mes));
   const masMaduro = conFecha[0];
   const casillas = [
-    ctx.gramosOk ? `<div class="bd-casilla principal"><span class="l">Total de tabaco</span><span class="n">${gramosTxt(totalG) || "0 g"}</span><span class="s">en ${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`}</span></div>` : "",
-    ctx.tarrosOk && nEnv ? `<div class="bd-casilla"><span class="l">Envases</span><span class="n">${nEnv}</span><span class="s">${esc(resumenEnvases(todosEnv.map((x) => x.t)))}</span></div>` : "",
+    conGramos ? `<div class="bd-casilla principal"><span class="l">Total de tabaco</span><span class="n">${gramosTxt(totalG) || "0 g"}</span><span class="s">en ${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`}</span></div>` : "",
+    conTarros && nEnv ? `<div class="bd-casilla"><span class="l">Envases</span><span class="n">${nEnv}</span><span class="s">${esc(resumenEnvases(todosEnv.map((x) => x.t)))}</span></div>` : "",
     masMaduro ? `<div class="bd-casilla"><span class="l">El que más madura</span><span class="n medio">${esc(masMaduro.d.nombre)}</span><span class="s">${esc(antiguedad(masMaduro.t))} en ${esc(NOMBRE_ENV[masMaduro.t.envase || ""][0])}</span></div>` : "",
     `<div class="bd-casilla"><span class="l">Probados</span><span class="n">${listas.probado.length}</span><span class="s">y ${listas.quiero.length} por probar</span></div>`,
   ].join("");
@@ -1521,7 +1524,7 @@ function abrirBodega() {
 
   // Por tipo de mezcla (solo en «Lo tengo», con gramos)
   let mezclas = "";
-  if (tab === "tengo" && ctx.gramosOk && totalG) {
+  if (tab === "tengo" && conGramos && totalG) {
     const suma = {};
     tengo.forEach((d) => { const g = info(d).gramos || 0; if (g) suma[d.tipo || ""] = (suma[d.tipo || ""] || 0) + g; });
     const filas = Object.entries(suma).sort((a, b) => b[1] - a[1]);
@@ -1536,16 +1539,16 @@ function abrirBodega() {
 
   // Madurando: cada envase con fecha, del más antiguo al más nuevo; la barra se llena a los 10 años
   let madurando = "";
-  if (tab === "tengo" && ctx.tarrosOk) {
+  if (tab === "tengo" && conTarros) {
     const filas = conFecha.map(({ t, d }) => {
       const m = Math.max(0, mesesDesde(t.fecha_anio, t.fecha_mes));
       const ancho = Math.max(2, Math.min(100, Math.round(m / MADURA_TOPE * 100)));
       return `<li class="bd-md">
-          <span class="bd-md-ic">${iconoEnvase(t.envase)}</span>
+          <span class="bd-md-ic" aria-hidden="true"><span class="bd-md-art">${art(d)}</span><span class="bd-md-env">${iconoEnvase(t.envase)}</span></span>
           <span class="bd-md-q"><strong>${esc(d.nombre)}</strong><span class="muted">${esc(tituloTarro(t))}</span></span>
           <span class="bd-md-f muted">${esc(lineaTarro(t))}</span>
           <span class="bd-md-e"><span class="bd-md-b"><span style="width:${ancho}%"></span></span><span class="muted">${esc(antiguedad(t))}</span></span>
-          <button class="link" type="button" data-tarro="${esc(t.id)}" data-tabaco="${esc(d.id)}">Editar</button>
+          ${prueba ? "" : `<button class="link" type="button" data-tarro="${esc(t.id)}" data-tabaco="${esc(d.id)}">Editar</button>`}
         </li>`;
     }).join("");
     madurando = `<div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
@@ -1560,10 +1563,13 @@ function abrirBodega() {
     <div class="d-franja">${FRANJA}</div>
     <div class="bd-cab">
       <span class="bd-baul" aria-hidden="true">${ICONO_BAUL}</span>
-      <div><h2 id="d-name">Mi bodega</h2><p class="muted">Solo tú ves esta lista. Marca tus tabacos desde su ficha.</p></div>
+      <div>${prueba ? `<h2 id="d-name">Bodega de ${esc(prueba.nombre)}</h2><p class="muted">Bodega de prueba con datos inventados. Solo la ves tú y no se guarda nada.</p>`
+        : '<h2 id="d-name">Mi bodega</h2><p class="muted">Solo tú ves esta lista. Marca tus tabacos desde su ficha.</p>'}</div>
     </div>
     <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
     <div class="bd-cuerpo">
+      ${prueba ? `<div class="bd-prueba"><span>Estás viendo una bodega de prueba: ${prueba.n} tabacos elegidos al azar.</span>
+        <span class="btns"><button class="btn" type="button" id="bd-barajar">Barajar de nuevo</button><button class="btn" type="button" id="bd-salir-prueba">Volver a mi bodega</button></span></div>` : ""}
       <div class="bd-casillas">${casillas}</div>
       <div class="bd-barra">
         <div class="bd-tabs" role="tablist" aria-label="Listas de la bodega">
@@ -1581,14 +1587,51 @@ function abrirBodega() {
   const panel = $("panel");
   panel.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.open)));
   panel.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
-    bodegaVista.tab = b.dataset.tab; bodegaVista.orden = ""; guardarVistaBodega(); abrirBodega();
+    bodegaVista.tab = b.dataset.tab; bodegaVista.orden = ""; guardarVistaBodega(); abrirBodega(prueba);
     const nuevo = panel.querySelector(`[data-tab="${b.dataset.tab}"]`); if (nuevo) nuevo.focus();
   }));
-  $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(); $("bd-orden").focus(); });
+  $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(prueba); $("bd-orden").focus(); });
+  if (prueba) {
+    $("bd-barajar").addEventListener("click", () => abrirBodega(bodegaDePrueba()));
+    $("bd-salir-prueba").addEventListener("click", () => abrirBodega());
+  }
   panel.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(b.dataset.tabaco, (tarros[b.dataset.tabaco] || []).find((t) => String(t.id) === b.dataset.tarro))));
 }
 
+/* Bodega de prueba de «Saruman Blanco» (solo admin, desde Mi cuenta). Se inventa en el navegador:
+   unos 100 tabacos al azar con gramos, tarros y fechas. No se guarda nada en la base de datos. */
+function bodegaDePrueba() {
+  const azar = (n) => Math.floor(Math.random() * n);
+  const elige = (l) => l[azar(l.length)];
+  const lista = current.slice();
+  for (let i = lista.length - 1; i > 0; i--) { const j = azar(i + 1); [lista[i], lista[j]] = [lista[j], lista[i]]; }
+  const n = Math.min(lista.length, 95 + azar(11));
+  const B = {}, T = {};
+  const hoy = new Date(); let idT = 1;
+  lista.slice(0, n).forEach((d, i) => {
+    const k = String(d.id), r = i / n;
+    const m = r < 0.6 ? { tengo: true, probado: Math.random() < 0.5, quiero: false }
+      : r < 0.82 ? { tengo: false, probado: true, quiero: false } : { tengo: false, probado: false, quiero: true };
+    if (m.tengo) {
+      const env = [];
+      const cuantos = Math.random() < 0.15 ? 0 : 1 + (Math.random() < 0.3 ? 1 : 0);
+      for (let e = 0; e < cuantos; e++) {
+        const envase = elige(["tarro", "tarro", "lata", "lata", "bolsa"]);
+        const anio = hoy.getFullYear() - azar(azar(3) === 0 ? 14 : 5);
+        const mes = anio === hoy.getFullYear() ? 1 + azar(hoy.getMonth() + 1) : 1 + azar(12);
+        env.push({ id: "p" + idT++, envase, unidades: 1 + (Math.random() < 0.25 ? 1 + azar(3) : 0),
+          gramos: envase === "lata" ? elige([50, 50, 100, 57, 227]) : envase === "bolsa" ? elige([40, 50, 100]) : elige([50, 100, 100, 150, 250]),
+          tipo_fecha: envase === "tarro" ? "embotado" : envase === "lata" ? elige(["lata", "compra"]) : "compra",
+          fecha_anio: anio, fecha_mes: Math.random() < 0.85 ? mes : null, abierto_anio: null, abierto_mes: null, nota: "" });
+      }
+      T[k] = env;
+      m.gramos = env.length ? env.reduce((s2, t) => s2 + t.gramos * uds(t), 0) : (Math.random() < 0.7 ? elige([50, 100, 200]) : null);
+    }
+    B[k] = m;
+  });
+  return { prueba: true, nombre: "Saruman Blanco", n, bodega: B, tarros: T };
+}
 /* ---------- Mi cuenta ----------
    Nombre visible y foto de perfil (13_mi_cuenta.sql). Si ese SQL aún no se ha ejecutado,
    Mi cuenta sigue funcionando sin esas dos opciones. */
@@ -1682,6 +1725,7 @@ function abrirCuenta() {
     <p class="msg" id="cu-msg" role="alert"></p>
     <div class="btns">
       ${ctx.bodega ? '<button class="btn" id="cu-bodega" type="button">Mi bodega</button>' : ""}
+      ${esAdmin() ? '<button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>' : ""}
       <button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>
       <button class="btn" id="cu-out" type="button">Salir</button>
     </div>
@@ -1689,7 +1733,8 @@ function abrirCuenta() {
   $("d-close").addEventListener("click", () => closeDetail());
   $("cu-out").addEventListener("click", async () => { closeDetail(); await sb.auth.signOut(); });
   $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
-  if ($("cu-bodega")) $("cu-bodega").addEventListener("click", abrirBodega);
+  if ($("cu-bodega")) $("cu-bodega").addEventListener("click", () => abrirBodega());
+  if ($("cu-saruman")) $("cu-saruman").addEventListener("click", () => { if (esAdmin()) abrirBodega(bodegaDePrueba()); });
   if ($("cu-instalar")) $("cu-instalar").addEventListener("click", async () => {
     if (!avisoInstalar) return;
     avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; abrirCuenta();
