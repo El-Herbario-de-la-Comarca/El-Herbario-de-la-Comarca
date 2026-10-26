@@ -656,7 +656,7 @@ PAIS["MyRott"] = "Argentina"
 FUENTES["MyRott"] = "myrott.com (catálogo de la tienda, oct. 2026)"
 _M50, _M70 = "50 g", "Lata de 70 g"
 EXTRA += [("MyRott", [
-    ("Virginia Mellow", "Virginia/Burley", "Virginia, Burley", "Ribbon", _M50, "Virginias y burley de Salta y Tucumán en corte grueso; suave y dulce, pensada para empezar.", "myrott"),
+    ("Virginia Mellow", "Virginia", "Virginia, Burley", "Ribbon", _M50, "Virginias y burley de Salta y Tucumán en corte grueso; suave y dulce, pensada para empezar.", "myrott"),
     ("Black Intense", "English", "Burley, Perique, Virginia, Latakia", "Ribbon", _M50, "De estilo inglés, con criollo y tabaco de cuerda en la base y virginia lemon que aporta dulzor.", "myrott"),
     ("Original Flavour", "Aromatic", "Virginia", "Ribbon", _M50, "Dos tercios de hoja oscura fermentada al calor y un tercio de virginia lemon. Dulce y especiado, con aroma de clavo.", "myrott"),
     ("Lakeland Juliet Rose", "Virginia", "Virginia", "Ribbon", _M50, "Varias virginias con un aderezo floral y frutal; notas de tierra, hierba, frutos negros y cítricos.", "myrott"),
