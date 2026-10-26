@@ -8,7 +8,8 @@ Todo está en `main` y publicado. El usuario ejecutó el 20 (junta del 13 al 19)
   de myrott.com (js/products.js), leído con el navegador porque la tienda carga los productos con JavaScript.
   SQL: `supabase/34_myrott.sql`. Entran las «sin stock temporalmente». Fuera: J.B. Tobacco Blend 9 y 10
   (ediciones especiales), Riddle Misterius (promo) y el rapé.
-- Por revisar con el usuario: Sherlock Full Virginia Flake y Vaper Gondor Grass Flake llevan haba tonka (¿Lakeland?).
+- Decidido por el usuario: Sherlock Full Virginia Flake (Virginia) y Vaper Gondor Grass Flake (Aromática) se quedan así
+  aunque lleven haba tonka; Virginia Mellow es Virginia; Strand No.13 la completan los voluntarios.
 
 ## Vauen (26/10/2026)
 - 24 fichas nuevas (ids 2338-2361) al final de `EXTRA`: la serie Auenland (8) y las numeradas No. 1 a No. 23 (16).
