@@ -334,30 +334,70 @@ function resumenCaract(d) {
   }).join("");
   return filas ? `<div class="caract"><h3>Según las reseñas</h3>${filas}</div>` : "";
 }
+/* Iconos de línea de la ficha (se pintan con el color del texto que los rodea) */
+const ICO = {
+  mezcla: '<path d="M12 3c3 3 5 6 5 9a5 5 0 0 1-10 0c0-3 2-6 5-9z"/><path d="M12 9v9"/>',
+  corte: '<path d="M4 7h16M4 11h16M4 15h16M4 19h16"/>',
+  origen: '<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/>',
+  formato: '<ellipse cx="12" cy="7" rx="7" ry="2.5"/><path d="M5 7v10c0 1.4 3 2.5 7 2.5s7-1.1 7-2.5V7"/>',
+  compartir: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
+  tengo: '<rect x="6" y="7" width="12" height="13" rx="2"/><path d="M8 7V5h8v2"/><path d="M9.5 13.5l2 2 3.5-4"/>',
+  probado: '<path d="M3 14h9a3 3 0 0 0 3-3V8h4v3a7 7 0 0 1-7 7H6a3 3 0 0 1-3-3z"/><path d="M17 5c0-1 1-1.5 1-2.5"/>',
+  quiero: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+  hoja: '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
+};
+const ico = (k) => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
+const HOJA_CLASE = { Virginia: "virginia", Burley: "burley", Oriental: "oriental", Latakia: "latakia", Perique: "perique", Kentucky: "kentucky", Cavendish: "cavendish", Cigarro: "cigarro" };
+const FRANJA = `<svg viewBox="0 0 1040 120" preserveAspectRatio="xMinYMax slice" aria-hidden="true" focusable="false">
+  <path class="fr-a" d="M0 78C120 40 240 36 360 62c110 24 200-8 330-18 130-10 240 16 350 8v68H0z"/>
+  <path class="fr-b" d="M0 98c140-28 300-32 430-14 130 18 270-10 410-12 90-1 150 10 200 14v34H0z"/>
+  <path class="fr-m" d="M720 74c40-44 150-48 200 0z"/>
+  <circle class="fr-ring" cx="820" cy="84" r="22"/><circle class="fr-door" cx="820" cy="84" r="18"/><circle class="fr-knob" cx="828" cy="86" r="2.4"/>
+  <circle class="fr-ring" cx="775" cy="80" r="7"/><circle class="fr-glass" cx="775" cy="80" r="5"/>
+  <circle class="fr-ring" cx="865" cy="80" r="7"/><circle class="fr-glass" cx="865" cy="80" r="5"/>
+  <g class="fr-f1"><circle cx="520" cy="104" r="2.6"/><circle cx="660" cy="96" r="2.6"/><circle cx="975" cy="98" r="2.6"/></g>
+  <g class="fr-f2"><circle cx="534" cy="107" r="2.2"/><circle cx="675" cy="100" r="2.2"/><circle cx="960" cy="102" r="2.2"/></g>
+</svg>`;
 function metaHTML(d) {
+  const st = statsDe(d.id);
+  const sinResenas = !st.n
+    ? `<p class="d-rate"><span class="d-pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Sin reseñas todavía${ctx.online && ctx.opiniones ? ' · <button class="link" type="button" data-ir="resenas">escribe la primera</button>' : ""}</p>`
+    : "";
+  const casilla = (k, t, v) => v ? `<div class="d-dato">${ico(k)}<span class="d-dato-l">${t}</span><span class="d-dato-v">${esc(v)}</span></div>` : "";
+  const datos = casilla("mezcla", "Mezcla", d.tipo) + casilla("corte", "Corte", d.corte) + casilla("origen", "Origen", d.pais) + casilla("formato", "Formato", d.formato);
   return `
       <div class="d-head">
         <div class="d-title">
-          <span class="brandname">${esc(d.marca)}</span>
+          <span class="brandname">${esc(d.marca)}${d.pais ? ` · ${esc(d.pais)}` : ""}</span>
           <h2 id="d-name">${esc(d.nombre)}${d.espana ? ' <span class="es-badge" role="img" aria-label="España">E</span>' : ""}</h2>
+          ${sinResenas}
         </div>
         ${notaGrande(d)}
       </div>
-      ${d.desc ? `<p>${esc(d.desc)}</p>` : ""}
-      <dl>
-        ${d.tipo ? `<dt>Mezcla</dt><dd>${esc(d.tipo)}</dd>` : ""}
-        ${d.hojas.length ? `<dt>Hojas</dt><dd><span class="meta">${d.hojas.map((h) => `<span class="chip">${esc(h)}</span>`).join("")}</span></dd>` : ""}
-        ${d.corte ? `<dt>Corte</dt><dd>${esc(d.corte)}</dd>` : ""}
-        ${d.pais ? `<dt>Origen</dt><dd>${esc(d.pais)}</dd>` : ""}
-        ${d.formato ? `<dt>Formato</dt><dd>${esc(d.formato)}</dd>` : ""}
-        ${d.notas.length ? `<dt>Notas</dt><dd><span class="meta">${d.notas.map((n) => `<span class="chip">${esc(n)}</span>`).join("")}</span></dd>` : ""}
-      </dl>
+      ${datos ? `<div class="d-datos">${datos}</div>` : ""}
+      ${d.hojas.length || d.notas.length ? `<dl class="d-chips">
+        ${d.hojas.length ? `<dt>Hojas</dt><dd>${d.hojas.map((h) => `<span class="chip hoja h-${HOJA_CLASE[h] || "otra"}">${esc(h)}</span>`).join("")}</dd>` : ""}
+        ${d.notas.length ? `<dt>Notas de sabor</dt><dd>${d.notas.map((n) => `<span class="chip sabor">${esc(n)}</span>`).join("")}</dd>` : ""}
+      </dl>` : ""}
+      ${d.desc ? `<hr class="d-sep"><p class="d-desc">${esc(d.desc)}</p>` : ""}
       ${resumenCaract(d)}
       ${!d.notas.length && esEditor() ? '<p class="muted">Ficha básica: faltan las notas de sabor.</p>' : ""}`;
 }
-function abrirPanel(html) {
+/* Otras fichas de la misma marca: primero las que comparten la primera palabra (la «serie») */
+function masDeLaMarca(d) {
+  const otras = current.filter((x) => x.marca === d.marca && x.id !== d.id);
+  if (!otras.length) return null;
+  const pal = (n) => norm(n).split(/[\s.,·\-–]+/)[0];
+  const serie = pal(d.nombre);
+  const deSerie = serie.length > 2 ? otras.filter((x) => pal(x.nombre) === serie) : [];
+  const lista = (deSerie.length ? deSerie : otras).slice(0, 4);
+  const titulo = deSerie.length ? `Más de la serie ${d.nombre.split(/\s+/)[0]}` : `Más de ${d.marca}`;
+  return { titulo, lista };
+}
+function abrirPanel(html, clase) {
   if ($("overlay").hidden) lastFocus = document.activeElement;
   $("overlay").hidden = false;
+  $("panel").className = "panel" + (clase ? " " + clase : "");
   $("panel").innerHTML = html;
 }
 /* ---------- Enlace propio de cada ficha: #/ficha/<id>/<nombre> ----------
@@ -421,28 +461,54 @@ function openDetail(id, desdeUrl) {
   openId = d.id;
   if (!desdeUrl) ponerUrlFicha(d);
   document.title = `${d.nombre} · ${TITULO}`;
+  const mas = masDeLaMarca(d);
   abrirPanel(`
+    <div class="d-franja">${FRANJA}</div>
+    <nav class="d-ruta" aria-label="Ruta">
+      <button class="link" type="button" id="d-r-cat">Catálogo</button><span aria-hidden="true">›</span>
+      <button class="link" type="button" id="d-r-marca">${esc(d.marca)}</button><span aria-hidden="true">›</span>
+      <span class="d-r-yo">${esc(d.nombre)}</span>
+    </nav>
     <button class="x-close" id="d-close" type="button" aria-label="Cerrar ficha" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
-    <div class="art" id="d-art">${art(d)}</div>
+    <div class="d-lado">
+      <div class="nicho"><div class="art" id="d-art">${art(d)}</div><div class="balda" aria-hidden="true"></div></div>
+      <div id="d-bodega"></div>
+      <div class="compartir"><button class="btn" id="d-share" type="button">${ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
+    </div>
     <div class="info">
       <div id="d-meta"></div>
-      <div class="compartir"><button class="btn" id="d-share" type="button">Compartir</button><span class="muted" id="d-share-msg" role="status"></span></div>
-      <div id="d-bodega"></div>
       <div id="d-tools"></div>
     </div>
+    <div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
     <div class="sections">
       <section class="sec" id="d-video" aria-labelledby="vd-h" hidden></section>
-      <section class="sec" aria-labelledby="rv-h">
+      <section class="sec sec-resenas" id="d-resenas" aria-labelledby="rv-h">
         <h3 id="rv-h">Reseñas</h3>
         <div id="rv-medias"></div>
         <div id="rv-mine"></div>
         <div class="reviews" id="rv-list"></div>
       </section>
-    </div>`);
+      ${mas ? `<section class="sec sec-mas" aria-labelledby="mas-h">
+        <h3 id="mas-h">${esc(mas.titulo)}</h3>
+        <div class="mas-lista">${mas.lista.map((x) => `<button class="mas-item" type="button" data-ficha="${esc(x.id)}"><span class="mas-art">${art(x)}</span><span class="mas-nom">${esc(x.nombre)}</span></button>`).join("")}</div>
+      </section>` : ""}
+    </div>`, "ficha");
   $("d-close").addEventListener("click", () => closeDetail());
   $("d-share").addEventListener("click", () => compartirFicha(d));
+  $("d-r-cat").addEventListener("click", () => closeDetail());
+  $("d-r-marca").addEventListener("click", () => verMarca(d.marca));
+  $("panel").querySelectorAll("[data-ficha]").forEach((b) => b.addEventListener("click", () => { openDetail(b.dataset.ficha); $("overlay").scrollTop = 0; }));
   $("d-close").focus();
   paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas();
+}
+/* Desde la ruta de la ficha: cierra y deja el catálogo filtrado por esa marca */
+function verMarca(marca) {
+  closeDetail();
+  state.marca = marca; state.page = 1;
+  if ($("f-marca")) $("f-marca").value = marca;
+  render();
+  const g = $("grid");
+  if (g) window.scrollTo({ top: Math.max(0, g.getBoundingClientRect().top + window.scrollY - document.querySelector(".bar").offsetHeight - 8), behavior: "smooth" });
 }
 function closeDetail(desdeUrl) {
   $("overlay").hidden = true; openId = null;
@@ -451,7 +517,14 @@ function closeDetail(desdeUrl) {
   if (lastFocus && lastFocus.focus) lastFocus.focus();
 }
 function paintArt() { const d = findItem(openId), el = $("d-art"); if (d && el) el.innerHTML = art(d); }
-function paintMeta() { const d = findItem(openId), el = $("d-meta"); if (d && el) el.innerHTML = metaHTML(d); }
+function paintMeta() {
+  const d = findItem(openId), el = $("d-meta"); if (!d || !el) return;
+  el.innerHTML = metaHTML(d);
+  el.querySelectorAll("[data-ir]").forEach((b) => b.addEventListener("click", () => {
+    const sec = $("d-resenas"); if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+    const nuevo = $("rv-new"); if (nuevo) nuevo.focus({ preventScroll: true });
+  }));
+}
 
 /* Botones de la ficha según el rol */
 function paintTools() {
@@ -709,8 +782,18 @@ function paintResenas() {
     mine.innerHTML = '<button class="btn primary" type="button" id="rv-new">Escribir una reseña</button>';
     $("rv-new").addEventListener("click", () => formResena(null));
   }
-  list.innerHTML = resto.length ? resto.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("")
-    : (mia ? "" : '<p class="muted">Todavía no hay reseñas de este tabaco.</p>');
+  if (!todas.length) {
+    const d = findItem(openId);
+    list.innerHTML = `<div class="rv-vacio">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M12 46h26a8 8 0 0 0 8-8v-8h14v10a20 20 0 0 1-20 20H20a8 8 0 0 1-8-8z"/><path d="M60 30h8"/><path class="humo" d="M50 20c0-4 4-5 4-9M56 22c0-4 4-5 4-9"/></svg>
+        <div class="rv-vacio-t"><p>Nadie ha reseñado todavía ${esc(d ? d.nombre : "este tabaco")}.</p>
+        <p class="muted">Cuéntanos a qué sabe, cómo arde y qué tal huele en la habitación.</p><div id="rv-vacio-acc"></div></div>
+      </div>`;
+    $("rv-vacio-acc").append(...mine.childNodes);   // el botón de escribir (o de entrar) va dentro de la tarjeta
+    const nuevo = $("rv-new"); if (nuevo) nuevo.textContent = "Escribir la primera reseña";
+  } else {
+    list.innerHTML = resto.length ? resto.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("") : "";
+  }
   [mine, list].forEach((box) => box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena)));
 }
 /* Medias de las reseñas: nota global, reparto de estrellas y una escala por característica.
@@ -1252,9 +1335,9 @@ function paintBodega() {
   const box = $("d-bodega"); if (!box || openId == null) return;
   if (!ctx.online || !ctx.session || !ctx.bodega) { box.innerHTML = ""; return; }
   const m = bodega[String(openId)] || {};
-  const etiqueta = (k, t) => (m[k] ? "✓ " : "") + t + (k === "tengo" && m.tengo && m.gramos ? ` · ${gramosTxt(m.gramos)}` : "");
-  box.innerHTML = `<div class="btns bodega" role="group" aria-label="Mi bodega">
-      ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${esc(etiqueta(k, t))}</button>`).join("")}
+  const etiqueta = (k, t) => t + (k === "tengo" && m.tengo && m.gramos ? ` · ${gramosTxt(m.gramos)}` : "");
+  box.innerHTML = `<p class="bodega-t">Mi bodega</p><div class="btns bodega" role="group" aria-label="Mi bodega">
+      ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${ico(k)}<span>${esc(etiqueta(k, t))}</span></button>`).join("")}
     </div>
     ${ctx.tarrosOk ? (m.tengo || (tarros[String(openId)] || []).length ? tarrosHTML(openId) : "")
       : m.tengo && ctx.gramosOk ? `<button class="link bd-cant" type="button" id="bd-gr">${m.gramos ? "Cambiar la cantidad" : "Apuntar cuántos gramos tienes"}</button>` : ""}
