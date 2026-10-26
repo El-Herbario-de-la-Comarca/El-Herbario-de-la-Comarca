@@ -3,6 +3,13 @@
 **Estado a 25/10/2026 (10:40):** 825 fichas de 60 marcas en `datos-iniciales.js`; 163 con el distintivo de España (E).
 Todo está en `main` y publicado. El usuario ejecutó el 20 (junta del 13 al 19); el 21 (nombre al registrarse) estaba pendiente de ejecutar.
 
+## MyRott (26/10/2026)
+- 26 fichas nuevas (ids 2362-2387), marca argentina de tienda, con permiso del usuario. Fuente: el catálogo
+  de myrott.com (js/products.js), leído con el navegador porque la tienda carga los productos con JavaScript.
+  SQL: `supabase/34_myrott.sql`. Entran las «sin stock temporalmente». Fuera: J.B. Tobacco Blend 9 y 10
+  (ediciones especiales), Riddle Misterius (promo) y el rapé.
+- Por revisar con el usuario: Sherlock Full Virginia Flake y Vaper Gondor Grass Flake llevan haba tonka (¿Lakeland?).
+
 ## Vauen (26/10/2026)
 - 24 fichas nuevas (ids 2338-2361) al final de `EXTRA`: la serie Auenland (8) y las numeradas No. 1 a No. 23 (16).
   SQL: `supabase/32_vauen.sql` (o volver a ejecutar el 09). Ninguna está en la lista del CMT: sin E.

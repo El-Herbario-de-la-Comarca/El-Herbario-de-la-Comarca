@@ -645,3 +645,41 @@ EXTRA += [("Vauen", [
     ("English Blend No. 22", "English Aromatic", "Virginia, Burley, Black Cavendish, Latakia", "", _V, "Inglesa suave con un toque de vainilla. Antes se llamaba English Blend & Vanilla.", "cw"),
     ("California Blend No. 23", "Aromatic", "Black Cavendish, Burley, Virginia", "", _V, "De estilo danés, con aroma afrutado, de frutos secos y vainilla.", "cw"),
 ])]
+
+# MyRott (26/10, a petición del usuario): tabaquería argentina con mezclas propias hechas a mano.
+# Fuente: el catálogo de su tienda (myrott.com, js/products.js), leído con el navegador.
+# Entran también las que marca «sin stock temporalmente». Fuera: J.B. Tobacco Blend 9 y 10
+# (ediciones especiales), Riddle Misterius (promoción con mezclas al azar) y el rapé.
+# La familia sale de la descripción: aromatizada → Aromatic; con latakia y aroma → English Aromatic.
+# El criollo (hoja argentina curada al aire o al sol) no es una hoja del herbario: va en el texto.
+PAIS["MyRott"] = "Argentina"
+FUENTES["MyRott"] = "myrott.com (catálogo de la tienda, oct. 2026)"
+_M50, _M70 = "50 g", "Lata de 70 g"
+EXTRA += [("MyRott", [
+    ("Virginia Mellow", "Virginia/Burley", "Virginia, Burley", "Ribbon", _M50, "Virginias y burley de Salta y Tucumán en corte grueso; suave y dulce, pensada para empezar.", "myrott"),
+    ("Black Intense", "English", "Burley, Perique, Virginia, Latakia", "Ribbon", _M50, "De estilo inglés, con criollo y tabaco de cuerda en la base y virginia lemon que aporta dulzor.", "myrott"),
+    ("Original Flavour", "Aromatic", "Virginia", "Ribbon", _M50, "Dos tercios de hoja oscura fermentada al calor y un tercio de virginia lemon. Dulce y especiado, con aroma de clavo.", "myrott"),
+    ("Lakeland Juliet Rose", "Virginia", "Virginia", "Ribbon", _M50, "Varias virginias con un aderezo floral y frutal; notas de tierra, hierba, frutos negros y cítricos.", "myrott"),
+    ("Black Frog", "English", "Latakia, Burley, Virginia", "Ribbon", _M50, "Inglesa intensa: más de la mitad es hoja con latakia, sobre burley y virginias, una de ellas con más de 12 años de bodega.", "myrott"),
+    ("Half & Half Christmas", "Aromatic", "Burley, Virginia, Perique", "Ribbon", _M50, "Aroma de pan de Navidad: pasas, canela, cardamomo, clavo y azahar, con un toque de perique.", "myrott"),
+    ("Pipa Club Cañada de Gómez", "Aromatic", "Virginia, Burley", "Flake", _M50, "Virginias y burley con más de 10 años de bodega; aroma afrutado, cítrico y floral con vainilla.", "myrott"),
+    ("Vaper Gondor Grass Flake", "Aromatic", "", "Flake", _M50, "Aroma de bizcocho de frutas: jengibre, cítricos, ron, haba tonka y un final de chocolate.", "myrott"),
+    ("Dark Bite Mixture", "Aromatic", "Burley, Perique, Oriental, Virginia, Cavendish", "Flake", _M50, "Con criollo curado al sol; aroma de pasas, higos y nueces, a la manera de los viejos plugs irlandeses.", "myrott"),
+    ("Revolution Mixture", "Aromatic", "Burley, Virginia, Cavendish", "Flake", _M50, "Burley añejo, virginias y criollo con tabaco de cuerda, ámbar gris y aroma de tabaco negro francés. Bastante fuerte.", "myrott"),
+    ("Widow's Sons Mixture", "Virginia", "Virginia, Burley", "Flake", _M50, "Virginia rojo madurado en torta prensada con vapor, con un poco de burley. Sin aromatizar.", "myrott"),
+    ("English Mixture", "English", "Burley, Virginia, Cavendish, Latakia", "Broken Flake", _M50, "Burley y criollo con virginias y latakia de Chipre.", "myrott"),
+    ("Wizard Choice", "Aromatic", "Burley, Black Cavendish", "Flake", _M50, "Burley con black cavendish; aroma de chocolate con naranja y un dulzor de ron.", "myrott"),
+    ("Scottish Mixture", "Aromatic", "Burley, Virginia, Black Cavendish", "Ready Rubbed", _M50, "Con criollo curado al sol y tres virginias; aroma de café tostado. Doble prensado.", "myrott"),
+    ("Danish Mixture", "Aromatic", "Black Cavendish, Burley, Virginia", "Ready Rubbed", _M50, "De estilo danés, con vainilla, nuez y canela. Doble prensado.", "myrott"),
+    ("Kakaw Mixture", "Aromatic", "Burley, Cavendish, Virginia, Kentucky", "Ready Rubbed", _M50, "Mucho criollo y burley con cavendish; aroma de chocolate. Doble prensado.", "myrott"),
+    ("Sunshine Mixture", "Virginia", "Virginia, Burley", "Ready Rubbed", _M50, "Virginias bright, lemon, rojo y brown con un poco de burley; notas ácidas y cremosas. Doble prensado.", "myrott"),
+    ("One Eye Deer", "Virginia/Perique", "Virginia, Perique", "Ribbon", _M50, "Virginias con perique: cítricos, pan, heno y miel, con especias, higos y ciruelas. Sin aromatizar.", "myrott"),
+    ("St. Patrick's", "Aromatic", "Virginia, Black Cavendish, Burley", "Flake", _M50, "Con criollo; aroma de amaretto, café y naranja.", "myrott"),
+    ("Stone Cabin", "Virginia", "Virginia, Burley, Cavendish", "Flake", _M70, "Virginias bright y rojo con burley y cavendish, madurado; notas de madera, frutos secos y pan tostado.", "myrott"),
+    ("Aged Burley Flake", "Burley", "Burley", "Flake", _M70, "Tres burleys argentinos, uno con 12 años de bodega, tostados y prensados; notas de nuez pecana, tierra y café.", "myrott"),
+    ("Amber Peel", "English Aromatic", "Burley, Virginia, Latakia", "Flake", _M70, "Burley con virginias y un toque de latakia argentina; aroma de chocolate y naranja.", "myrott"),
+    ("Malvinas Plug", "Virginia/Perique", "Virginia, Burley, Perique", "Plug", _M70, "Virginia rojo y brillante con burley y perique, prensado en barra.", "myrott"),
+    ("Wagner", "English Aromatic", "Virginia, Cavendish, Perique, Burley, Latakia", "Flake", _M70, "Virginias rojo y brillante con cavendish aromatizado de cereza negra, perique, burley y un toque de latakia.", "myrott"),
+    ("Sherlock Full Virginia Flake", "Virginia", "Virginia", "Broken Flake", _M70, "Solo virginias, prensadas, fermentadas y desmenuzadas; con un toque de vainilla y haba tonka.", "myrott"),
+    ("Strand No.13", "", "", "Rope", _M70, "Tabaco en cuerda artesanal, de intensidad media-alta, con notas terrosas y dulces.", "myrott"),
+])]
