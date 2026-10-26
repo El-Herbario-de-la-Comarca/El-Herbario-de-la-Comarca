@@ -457,34 +457,27 @@ function paintMeta() { const d = findItem(openId), el = $("d-meta"); if (d && el
 function paintTools() {
   const box = $("d-tools"); if (!box || openId == null) return;
   const d = findItem(openId);
-  if (esAdmin()) {
+  if (esEditor()) {
+    const admin = esAdmin();
     box.innerHTML = `<div class="btns">
         <button class="btn" id="ed-open" type="button">Editar ficha</button>
         <button class="btn" id="ph-pick" type="button">${d.foto ? "Cambiar foto" : "Subir foto"}</button>
         ${d.foto ? '<button class="btn danger" id="ph-del" type="button">Quitar foto</button>' : ""}
-        <button class="btn danger" id="fi-del" type="button">Eliminar ficha</button>
+        ${admin ? '<button class="btn danger" id="fi-del" type="button">Eliminar ficha</button>' : ""}
       </div>
       <input id="ph-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
       <p class="msg" id="ph-msg" role="alert"></p>`;
     $("ed-open").addEventListener("click", () => openEditor(openId));
-    $("fi-del").addEventListener("click", () => askDelete(openId));
+    if (admin) $("fi-del").addEventListener("click", () => askDelete(openId));
     const del = $("ph-del");
     if (del) del.addEventListener("click", async () => {
       if (!del.dataset.sure) { del.dataset.sure = "1"; del.textContent = "Pulsa otra vez para quitarla"; return; }
       const prev = d.foto;
       const { error } = await sb.from("tabacos").update({ foto: "" }).eq("id", d.id);
       if (error) { $("ph-msg").textContent = "No se ha podido quitar la foto."; return; }
-      await borrarFotoDeAlmacen(prev);
+      if (admin) await borrarFotoDeAlmacen(prev);   // el editor no borra archivos: así se puede deshacer
       refrescar();
     });
-  } else if (esEditor()) {
-    box.innerHTML = `<div class="btns">
-        <button class="btn" id="ed-open" type="button">Proponer cambios</button>
-        <button class="btn" id="ph-pick" type="button">Proponer foto</button>
-      </div>
-      <input id="ph-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
-      <p class="msg" id="ph-msg" role="alert"></p>`;
-    $("ed-open").addEventListener("click", () => openEditor(openId));
   } else { box.innerHTML = ""; return; }
   $("ph-pick").addEventListener("click", () => $("ph-file").click());
   $("ph-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirFoto(f); });
@@ -521,14 +514,15 @@ async function subirFoto(file) {
     const blob = await shrink(file);
     if (blob.size > 5 * 1024 * 1024) throw new Error("grande");
     const ext = blob.type === "image/png" ? "png" : blob.type === "image/webp" ? "webp" : "jpg";
-    const ruta = esAdmin() ? `fichas/${id}-${Date.now()}.${ext}` : `propuestas/${ctx.uid}/${id}-${Date.now()}.${ext}`;
+    const ruta = esEditor() ? `fichas/${id}-${Date.now()}.${ext}` : `propuestas/${ctx.uid}/${id}-${Date.now()}.${ext}`;
     const up = await sb.storage.from("fotos").upload(ruta, blob, { contentType: blob.type || "image/jpeg", upsert: false });
     if (up.error) throw up.error;
     const url = sb.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
-    if (esAdmin()) {
-      const { error } = await sb.from("tabacos").update({ foto: url }).eq("id", id);
+    if (esEditor()) {
+      const { data: hechas, error } = await sb.from("tabacos").update({ foto: url }).eq("id", id).select("id");
       if (error) throw error;
-      await borrarFotoDeAlmacen(d.foto);
+      if (!hechas || !hechas.length) throw new Error("sin permiso");
+      if (esAdmin()) await borrarFotoDeAlmacen(d.foto);   // la del editor se guarda para poder deshacer
       msg.textContent = ""; refrescar();
     } else {
       const { error } = await sb.from("propuestas").insert({ tipo: "foto", tabaco_id: id, datos: { foto: url } });
@@ -562,22 +556,23 @@ async function doDelete() {
   closeConfirm(); closeDetail(); refrescar();
 }
 
-/* ---------- Editor de fichas: el admin guarda, el editor propone ---------- */
+/* ---------- Editor de fichas: admin y editores guardan; las fichas nuevas del editor son propuestas ---------- */
 function openEditor(id) {
   if (!esEditor()) return;
   const d = id ? findItem(id) : null;
   if (id && !d) return;
   const admin = esAdmin();
+  const directo = admin || !!d;   // el editor cambia fichas al momento; solo propone las nuevas
   openId = id || null;
   const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "", video: "" };
   const uniq = (k) => [...new Set(current.map((x) => x[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   const dl = (name, vals) => `<datalist id="${name}">${vals.map((x) => `<option value="${esc(x)}">`).join("")}</datalist>`;
   const estilos = v.tipo && !ESTILOS.includes(v.tipo) ? [...ESTILOS, v.tipo] : ESTILOS;
-  const titulo = admin ? (d ? "Editar ficha" : "Añadir tabaco") : (d ? "Proponer cambios" : "Proponer tabaco nuevo");
+  const titulo = d ? "Editar ficha" : (admin ? "Añadir tabaco" : "Proponer tabaco nuevo");
   abrirPanel(`
     <form class="f editor" id="ed-form" novalidate>
       <h2 id="d-name">${titulo}</h2>
-      ${!admin ? '<p class="muted">Tu propuesta quedará pendiente hasta que el administrador la revise.</p>' : ""}
+      ${!directo ? '<p class="muted">Tu propuesta quedará pendiente hasta que el administrador la revise.</p>' : ""}
       <div class="two">
         <div class="field"><label for="ed-nombre">Nombre</label><input id="ed-nombre" type="text" maxlength="120" value="${esc(v.nombre)}" autocomplete="off"></div>
         <div class="field"><label for="ed-marca">Marca</label><input id="ed-marca" type="text" maxlength="80" list="dl-marca" value="${esc(v.marca)}" autocomplete="off"></div>
@@ -596,14 +591,14 @@ function openEditor(id) {
       <fieldset class="hojas-ed"><legend>Hojas que lleva</legend>
         ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
       </fieldset>
-      ${ctx.espanaOk ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Mostrar el distintivo de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
+      ${ctx.espanaOk && admin ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Mostrar el distintivo de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
       ${admin ? `<div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>` : ""}
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
-      ${!admin ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
+      ${!directo ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
       ${dl("dl-marca", uniq("marca"))}${dl("dl-corte", uniq("corte"))}${dl("dl-pais", uniq("pais"))}
       <p class="msg" id="ed-msg" role="alert"></p>
       <div class="btns">
-        <button class="btn primary" type="submit" id="ed-save">${admin ? (d ? "Guardar cambios" : "Crear ficha") : "Enviar propuesta"}</button>
+        <button class="btn primary" type="submit" id="ed-save">${d ? "Guardar cambios" : (admin ? "Crear ficha" : "Enviar propuesta")}</button>
         <button class="btn" type="button" id="ed-cancel">Cancelar</button>
       </div>
     </form>`);
@@ -639,16 +634,15 @@ async function saveEditor(ev, d) {
   }
   btn.disabled = true; msg.textContent = "";
   try {
-    if (esAdmin()) {
-      if (d) {
-        const { error } = await sb.from("tabacos").update(data).eq("id", d.id);
-        if (error) throw error;
-        await refrescar(); openDetail(d.id);
-      } else {
-        const { data: fila, error } = await sb.from("tabacos").insert(data).select("id").single();
-        if (error) throw error;
-        await refrescar(); openDetail(fila.id);
-      }
+    if (d) {
+      const { data: hechas, error } = await sb.from("tabacos").update(data).eq("id", d.id).select("id");
+      if (error) throw error;
+      if (!hechas || !hechas.length) throw new Error("sin permiso");   // las reglas de la base de datos no lo dejaron
+      await refrescar(); openDetail(d.id);
+    } else if (esAdmin()) {
+      const { data: fila, error } = await sb.from("tabacos").insert(data).select("id").single();
+      if (error) throw error;
+      await refrescar(); openDetail(fila.id);
     } else {
       const nota = ($("ed-nota") && $("ed-nota").value.trim().slice(0, 1000)) || "";
       let fila;
@@ -673,7 +667,7 @@ async function saveEditor(ev, d) {
   } catch (e) {
     console.error(e);
     btn.disabled = false;
-    msg.textContent = (e && /50 propuestas/.test(e.message || "")) ? e.message : "No se ha podido guardar. Comprueba la conexión y que tu cuenta tiene permiso.";
+    msg.textContent = (e && /50 propuestas|Solo el administrador/.test(e.message || "")) ? e.message : "No se ha podido guardar. Comprueba la conexión y que tu cuenta tiene permiso.";
   }
 }
 
@@ -902,10 +896,79 @@ async function abrirRevision() {
     await cargarTodo(); fillFilters(); render(); await contarPendientes(); paintTop();
   });
 }
+/* Historial de cambios en las fichas (solo admin): quién cambió qué y botón para deshacer */
+const CAMPOS_HIST = [...CAMPOS, ["foto", "Foto"], ["video_id", "Vídeo"]];
+const fechaHora = (t) => { try { return new Date(t).toLocaleString("es-ES", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } };
+function fmtHist(k, v) {
+  if (Array.isArray(v)) return v.join(", ") || "—";
+  if (k === "en_espana") return v ? "Sí" : "No";
+  return v == null || v === "" ? "—" : String(v);
+}
+function celdaHist(k, v) {
+  if (k === "foto") { const src = fotoSegura(v || ""); return src ? `<img class="prop-foto" src="${esc(src)}" alt="">` : "sin foto"; }
+  return esc(fmtHist(k, v));
+}
+async function abrirHistorial() {
+  if (!esAdmin()) return;
+  abrirPanel(`<div class="info adm"><h2 id="d-name">Historial de cambios</h2>
+    <p class="muted">Los últimos 100 cambios en las fichas. Si algo no está bien, pulsa «Deshacer» y la ficha vuelve a como estaba antes de ese cambio.</p>
+    <div id="hi-list"><p class="muted">Cargando…</p></div>
+    <button class="close" id="d-close" type="button">Cerrar</button></div>`);
+  $("d-close").addEventListener("click", () => closeDetail());
+  const box = $("hi-list");
+  const { data, error } = await sb.from("historial_fichas").select("*").order("cuando", { ascending: false }).limit(100);
+  if (!box) return;
+  if (error) { box.innerHTML = '<p class="msg">No se ha podido cargar el historial. Si no lo has hecho, ejecuta 33_editores_editan.sql en Supabase.</p>'; return; }
+  if (!data.length) { box.innerHTML = '<p class="muted">Todavía no hay cambios registrados.</p>'; return; }
+  const ids = [...new Set(data.map((h) => h.autor).filter(Boolean))];
+  const correos = {};
+  if (ids.length) {
+    const { data: ps } = await sb.from("perfiles").select("id,email,nombre").in("id", ids);
+    (ps || []).forEach((p) => (correos[p.id] = p.nombre || p.email || "usuario"));
+  }
+  box.innerHTML = data.map((h) => {
+    const a = h.antes || {}, b = h.despues || {};
+    const nombre = `${a.nombre || ""} · ${a.marca || ""}`;
+    const quien = esc(correos[h.autor] || (h.autor ? "usuario" : "sistema"));
+    if (h.accion === "borrado") {
+      return `<article class="prop" data-id="${h.id}"><h3>Ficha eliminada: ${esc(nombre)}</h3>
+        <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
+        <div class="btns"><button class="btn" data-act="restaurar" type="button">Restaurar ficha</button></div>
+        <p class="msg" role="alert"></p></article>`;
+    }
+    const cambios = CAMPOS_HIST.filter(([k]) => JSON.stringify(a[k]) !== JSON.stringify(b[k]));
+    if (!cambios.length) return "";
+    return `<article class="prop" data-id="${h.id}"><h3>${esc(nombre)}</h3>
+      <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
+      <dl class="diff">${cambios.map(([k, l]) => `<dt>${l}</dt><dd><span class="antes">${celdaHist(k, a[k])}</span> → <strong>${celdaHist(k, b[k])}</strong></dd>`).join("")}</dl>
+      <div class="btns"><button class="btn" data-act="deshacer" type="button">Deshacer</button>
+        <button class="btn" data-act="ver" type="button">Abrir ficha</button></div>
+      <p class="msg" role="alert"></p></article>`;
+  }).join("") || '<p class="muted">Todavía no hay cambios registrados.</p>';
+  box.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-act]"); if (!btn) return;
+    const art = btn.closest(".prop"), h = data.find((x) => x.id === Number(art.dataset.id)); if (!h) return;
+    if (btn.dataset.act === "ver") { if (findItem(h.tabaco_id)) openDetail(h.tabaco_id); return; }
+    const msg = art.querySelector(".msg");
+    art.querySelectorAll("button").forEach((x) => (x.disabled = true));
+    let r;
+    if (btn.dataset.act === "restaurar") {
+      const fila = { ...h.antes }; delete fila.actualizado; delete fila.actualizado_por;
+      r = await sb.from("tabacos").insert(fila);
+    } else {
+      const vuelta = {};
+      CAMPOS_HIST.forEach(([k]) => { if (JSON.stringify(h.antes[k]) !== JSON.stringify((h.despues || {})[k])) vuelta[k] = h.antes[k]; });
+      r = await sb.from("tabacos").update(vuelta).eq("id", h.tabaco_id);
+    }
+    if (r.error) { msg.textContent = "No se ha podido deshacer. Puede que la ficha ya no exista o haya cambiado después."; art.querySelectorAll("button").forEach((x) => (x.disabled = false)); return; }
+    msg.style.color = "var(--accent)"; msg.textContent = btn.dataset.act === "restaurar" ? "Ficha restaurada." : "Cambio deshecho.";
+    await refrescar();
+  });
+}
 async function abrirUsuarios() {
   if (!esAdmin()) return;
   abrirPanel(`<div class="info adm"><h2 id="d-name">Usuarios y permisos</h2>
-    <p class="muted">Quien entra por primera vez queda como lector. Cambia aquí su rol para que pueda proponer cambios (editor) o administrar (admin).</p>
+    <p class="muted">Quien entra por primera vez queda como lector. Cambia aquí su rol para que pueda editar fichas y fotos (editor) o administrar (admin).</p>
     <div id="us-list"><p class="muted">Cargando…</p></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
   $("d-close").addEventListener("click", () => closeDetail());
@@ -1589,9 +1652,11 @@ function paintTop() {
   const bar = $("admin-bar");
   if (esAdmin()) {
     bar.innerHTML = `<button class="btn" id="rv-open" type="button">Revisar${ctx.pendientes ? ` (${ctx.pendientes})` : ""}</button>
+      <button class="btn" id="hi-open" type="button">Historial</button>
       <button class="btn" id="us-open" type="button">Usuarios</button>
       <button class="btn primary" id="add-open" type="button">Añadir tabaco</button>`;
     $("rv-open").addEventListener("click", abrirRevision);
+    $("hi-open").addEventListener("click", abrirHistorial);
     $("us-open").addEventListener("click", abrirUsuarios);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else if (esEditor()) {

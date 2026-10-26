@@ -78,7 +78,7 @@ update public.perfiles set rol = 'admin' where email = 'tu@correo.com';
 
 1. Pídeles que entren en la web y pulsen **Acceso colaboradores → Crear cuenta**. Entrarán como *lector*, sin permiso para cambiar nada.
 2. Tú abres **Usuarios** y les cambias el rol:
-   - **editor**: puede proponer fichas nuevas, cambios y fotos. Nada se publica hasta que tú lo apruebas.
+   - **editor**: cambia fichas y fotos al momento, sin esperar tu aprobación. Las fichas nuevas las propone y las apruebas tú. No puede borrar fichas ni tocar el vídeo o el distintivo de España. Todo lo que cambia queda en **Historial**, desde donde puedes deshacerlo (necesita `supabase/33_editores_editan.sql`).
    - **admin**: puede hacer lo mismo que tú. Dáselo solo a gente de total confianza.
 3. Las propuestas te aparecen en **Revisar (número)**. Ves qué cambia exactamente (lo anterior tachado y lo nuevo en negrita) y pulsas **Aprobar** o **Rechazar**.
 
