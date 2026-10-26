@@ -1,35 +1,28 @@
--- El herbario de la Comarca · Los editores editan directamente (26/10/2026)
--- Ejecútalo en Supabase → SQL Editor. Se puede ejecutar más de una vez.
+-- El herbario de la Comarca · Los editores crean y editan fichas directamente (26/10/2026)
+-- Ejecútalo en Supabase → SQL Editor. Se puede ejecutar más de una vez
+-- (si ya ejecutaste una versión anterior de este archivo, vuelve a ejecutarlo).
 --
--- · Editores y admin pueden cambiar las fichas y sus fotos sin pasar por la revisión.
--- · Crear fichas nuevas y borrarlas sigue siendo solo del admin (el editor propone las nuevas).
--- · El vídeo y el distintivo de España (E) solo los cambia el admin.
--- · Cada cambio queda en el historial (quién, cuándo, antes y después) y el admin puede deshacerlo.
+-- · Editores y admin crean fichas y cambian todo lo de la ficha (vídeo y distintivo de España incluidos)
+--   y sus fotos, sin pasar por la revisión.
+-- · Borrar fichas sigue siendo solo del admin.
+-- · Cada alta, cambio o borrado queda en el historial (quién, cuándo, antes y después)
+--   y el admin puede deshacerlo.
 -- · Los editores suben fotos a fichas/, pero no pueden borrar archivos: la foto anterior se queda
 --   guardada, así que un cambio de foto siempre se puede deshacer.
 
--- ---------- Fichas: editar ----------
+-- ---------- Fichas: crear y editar ----------
+drop policy if exists "admin crea tabacos" on public.tabacos;
+drop policy if exists "editor crea tabacos" on public.tabacos;
+create policy "editor crea tabacos" on public.tabacos for insert to authenticated with check (public.es_editor());
+
 drop policy if exists "admin edita tabacos" on public.tabacos;
 drop policy if exists "editor edita tabacos" on public.tabacos;
 create policy "editor edita tabacos" on public.tabacos for update to authenticated
   using (public.es_editor()) with check (public.es_editor());
 
--- Campos que solo toca el admin (aunque la página no los enseñe, se comprueba aquí)
-create or replace function public.campos_solo_admin() returns trigger
-language plpgsql security definer set search_path = public as $$
-begin
-  if not public.es_admin() then
-    if new.id is distinct from old.id
-       or new.video_id is distinct from old.video_id
-       or new.en_espana is distinct from old.en_espana then
-      raise exception 'Solo el administrador puede cambiar el vídeo o el distintivo de España.';
-    end if;
-  end if;
-  return new;
-end $$;
+-- (Una versión anterior de este archivo reservaba el vídeo y la E al admin: se quita.)
 drop trigger if exists tabacos_campos_solo_admin on public.tabacos;
-create trigger tabacos_campos_solo_admin before update on public.tabacos
-  for each row execute function public.campos_solo_admin();
+drop function if exists public.campos_solo_admin();
 
 -- ---------- Historial de cambios ----------
 create table if not exists public.historial_fichas (
@@ -37,10 +30,14 @@ create table if not exists public.historial_fichas (
   tabaco_id  text not null,
   autor      uuid,
   cuando     timestamptz not null default now(),
-  accion     text not null default 'cambio' check (accion in ('cambio', 'borrado')),
-  antes      jsonb not null,
+  accion     text not null default 'cambio',
+  antes      jsonb,
   despues    jsonb
 );
+alter table public.historial_fichas alter column antes drop not null;
+alter table public.historial_fichas drop constraint if exists historial_fichas_accion_check;
+alter table public.historial_fichas add constraint historial_fichas_accion_check
+  check (accion in ('alta', 'cambio', 'borrado'));
 create index if not exists historial_fichas_cuando on public.historial_fichas (cuando desc);
 create index if not exists historial_fichas_tabaco on public.historial_fichas (tabaco_id);
 alter table public.historial_fichas enable row level security;
@@ -54,9 +51,15 @@ grant select, delete on public.historial_fichas to authenticated;
 create or replace function public.guardar_historial() returns trigger
 language plpgsql security definer set search_path = public as $$
 declare
-  a jsonb := to_jsonb(old) - 'actualizado' - 'actualizado_por';
+  a jsonb;
   d jsonb;
 begin
+  if tg_op = 'INSERT' then
+    insert into public.historial_fichas (tabaco_id, autor, accion, despues)
+    values (new.id, auth.uid(), 'alta', to_jsonb(new) - 'actualizado' - 'actualizado_por');
+    return new;
+  end if;
+  a := to_jsonb(old) - 'actualizado' - 'actualizado_por';
   if tg_op = 'DELETE' then
     insert into public.historial_fichas (tabaco_id, autor, accion, antes) values (old.id, auth.uid(), 'borrado', a);
     return old;
@@ -68,10 +71,8 @@ begin
   return new;
 end $$;
 drop trigger if exists tabacos_historial on public.tabacos;
-create trigger tabacos_historial after update or delete on public.tabacos
+create trigger tabacos_historial after insert or update or delete on public.tabacos
   for each row execute function public.guardar_historial();
-
--- Para enseñar quién hizo cada cambio: el admin ya lee todos los perfiles.
 
 -- ---------- Fotos ----------
 drop policy if exists "fotos: subir admin o editor" on storage.objects;

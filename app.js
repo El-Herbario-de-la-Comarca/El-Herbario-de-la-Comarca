@@ -556,23 +556,21 @@ async function doDelete() {
   closeConfirm(); closeDetail(); refrescar();
 }
 
-/* ---------- Editor de fichas: admin y editores guardan; las fichas nuevas del editor son propuestas ---------- */
+/* ---------- Editor de fichas: admin y editores crean y cambian fichas al momento ---------- */
 function openEditor(id) {
   if (!esEditor()) return;
   const d = id ? findItem(id) : null;
   if (id && !d) return;
   const admin = esAdmin();
-  const directo = admin || !!d;   // el editor cambia fichas al momento; solo propone las nuevas
   openId = id || null;
   const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "", video: "" };
   const uniq = (k) => [...new Set(current.map((x) => x[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   const dl = (name, vals) => `<datalist id="${name}">${vals.map((x) => `<option value="${esc(x)}">`).join("")}</datalist>`;
   const estilos = v.tipo && !ESTILOS.includes(v.tipo) ? [...ESTILOS, v.tipo] : ESTILOS;
-  const titulo = d ? "Editar ficha" : (admin ? "Añadir tabaco" : "Proponer tabaco nuevo");
+  const titulo = d ? "Editar ficha" : "Añadir tabaco";
   abrirPanel(`
     <form class="f editor" id="ed-form" novalidate>
       <h2 id="d-name">${titulo}</h2>
-      ${!directo ? '<p class="muted">Tu propuesta quedará pendiente hasta que el administrador la revise.</p>' : ""}
       <div class="two">
         <div class="field"><label for="ed-nombre">Nombre</label><input id="ed-nombre" type="text" maxlength="120" value="${esc(v.nombre)}" autocomplete="off"></div>
         <div class="field"><label for="ed-marca">Marca</label><input id="ed-marca" type="text" maxlength="80" list="dl-marca" value="${esc(v.marca)}" autocomplete="off"></div>
@@ -591,14 +589,13 @@ function openEditor(id) {
       <fieldset class="hojas-ed"><legend>Hojas que lleva</legend>
         ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
       </fieldset>
-      ${ctx.espanaOk && admin ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Mostrar el distintivo de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
-      ${admin ? `<div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>` : ""}
+      ${ctx.espanaOk ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Mostrar el distintivo de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
+      <div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
-      ${!directo ? '<div class="field"><label for="ed-nota">Nota para el administrador (opcional)</label><input id="ed-nota" type="text" maxlength="1000" placeholder="De dónde sale el dato, por ejemplo la web del fabricante"></div>' : ""}
       ${dl("dl-marca", uniq("marca"))}${dl("dl-corte", uniq("corte"))}${dl("dl-pais", uniq("pais"))}
       <p class="msg" id="ed-msg" role="alert"></p>
       <div class="btns">
-        <button class="btn primary" type="submit" id="ed-save">${d ? "Guardar cambios" : (admin ? "Crear ficha" : "Enviar propuesta")}</button>
+        <button class="btn primary" type="submit" id="ed-save">${d ? "Guardar cambios" : "Crear ficha"}</button>
         <button class="btn" type="button" id="ed-cancel">Cancelar</button>
       </div>
     </form>`);
@@ -626,7 +623,7 @@ async function saveEditor(ev, d) {
   const msg = $("ed-msg"), btn = $("ed-save");
   const data = leerFormulario();
   if (!data.nombre || !data.marca) { msg.textContent = "El nombre y la marca son obligatorios."; return; }
-  if (esAdmin() && $("ed-video")) {
+  if ($("ed-video")) {
     const raw = $("ed-video").value.trim();
     const vid = raw ? ytId(raw) : "";
     if (raw && !vid) { msg.textContent = "No reconozco ese enlace. Pega la dirección del vídeo de YouTube, por ejemplo https://www.youtube.com/watch?v=abcdefghijk"; return; }
@@ -639,7 +636,7 @@ async function saveEditor(ev, d) {
       if (error) throw error;
       if (!hechas || !hechas.length) throw new Error("sin permiso");   // las reglas de la base de datos no lo dejaron
       await refrescar(); openDetail(d.id);
-    } else if (esAdmin()) {
+    } else if (esEditor()) {
       const { data: fila, error } = await sb.from("tabacos").insert(data).select("id").single();
       if (error) throw error;
       await refrescar(); openDetail(fila.id);
@@ -671,7 +668,7 @@ async function saveEditor(ev, d) {
   }
 }
 
-/* ---------- Vídeo de la ficha (lo pone solo el administrador, desde «Editar ficha») ----------
+/* ---------- Vídeo de la ficha (lo ponen admin y editores, desde «Editar ficha») ----------
    El reproductor de YouTube se carga embebido al abrir la ficha, sin reproducir solo.
    Se usa youtube-nocookie.com para que YouTube no guarde cookies hasta que se reproduce. */
 function paintVideo() {
@@ -930,6 +927,14 @@ async function abrirHistorial() {
     const a = h.antes || {}, b = h.despues || {};
     const nombre = `${a.nombre || ""} · ${a.marca || ""}`;
     const quien = esc(correos[h.autor] || (h.autor ? "usuario" : "sistema"));
+    if (h.accion === "alta") {
+      const n = h.despues || {};
+      return `<article class="prop" data-id="${h.id}"><h3>Ficha nueva: ${esc(`${n.nombre || ""} · ${n.marca || ""}`)}</h3>
+        <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
+        <div class="btns"><button class="btn" data-act="ver" type="button">Abrir ficha</button>
+          <button class="btn danger" data-act="quitar" type="button">Deshacer (borrar la ficha)</button></div>
+        <p class="msg" role="alert"></p></article>`;
+    }
     if (h.accion === "borrado") {
       return `<article class="prop" data-id="${h.id}"><h3>Ficha eliminada: ${esc(nombre)}</h3>
         <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
@@ -952,7 +957,10 @@ async function abrirHistorial() {
     const msg = art.querySelector(".msg");
     art.querySelectorAll("button").forEach((x) => (x.disabled = true));
     let r;
-    if (btn.dataset.act === "restaurar") {
+    if (btn.dataset.act === "quitar") {
+      if (!btn.dataset.sure) { btn.dataset.sure = "1"; btn.textContent = "Pulsa otra vez para borrarla"; art.querySelectorAll("button").forEach((x) => (x.disabled = false)); return; }
+      r = await sb.from("tabacos").delete().eq("id", h.tabaco_id);
+    } else if (btn.dataset.act === "restaurar") {
       const fila = { ...h.antes }; delete fila.actualizado; delete fila.actualizado_por;
       r = await sb.from("tabacos").insert(fila);
     } else {
@@ -961,14 +969,14 @@ async function abrirHistorial() {
       r = await sb.from("tabacos").update(vuelta).eq("id", h.tabaco_id);
     }
     if (r.error) { msg.textContent = "No se ha podido deshacer. Puede que la ficha ya no exista o haya cambiado después."; art.querySelectorAll("button").forEach((x) => (x.disabled = false)); return; }
-    msg.style.color = "var(--accent)"; msg.textContent = btn.dataset.act === "restaurar" ? "Ficha restaurada." : "Cambio deshecho.";
+    msg.style.color = "var(--accent)"; msg.textContent = btn.dataset.act === "restaurar" ? "Ficha restaurada." : btn.dataset.act === "quitar" ? "Ficha borrada." : "Cambio deshecho.";
     await refrescar();
   });
 }
 async function abrirUsuarios() {
   if (!esAdmin()) return;
   abrirPanel(`<div class="info adm"><h2 id="d-name">Usuarios y permisos</h2>
-    <p class="muted">Quien entra por primera vez queda como lector. Cambia aquí su rol para que pueda editar fichas y fotos (editor) o administrar (admin).</p>
+    <p class="muted">Quien entra por primera vez queda como lector. Cambia aquí su rol para que pueda crear y editar fichas y fotos (editor) o administrar (admin).</p>
     <div id="us-list"><p class="muted">Cargando…</p></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
   $("d-close").addEventListener("click", () => closeDetail());
@@ -1660,9 +1668,9 @@ function paintTop() {
     $("us-open").addEventListener("click", abrirUsuarios);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else if (esEditor()) {
-    bar.innerHTML = `<button class="btn" id="mp-open" type="button">Mis propuestas${ctx.misPendientes ? ` (${ctx.misPendientes} pendientes)` : ""}</button>
-      <button class="btn primary" id="add-open" type="button">Proponer tabaco</button>`;
-    $("mp-open").addEventListener("click", abrirMisPropuestas);
+    bar.innerHTML = `${ctx.misPendientes ? `<button class="btn" id="mp-open" type="button">Mis propuestas (${ctx.misPendientes} pendientes)</button>` : ""}
+      <button class="btn primary" id="add-open" type="button">Añadir tabaco</button>`;
+    if ($("mp-open")) $("mp-open").addEventListener("click", abrirMisPropuestas);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else bar.innerHTML = "";
 
