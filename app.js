@@ -627,6 +627,38 @@ async function subirFoto(file) {
   }
 }
 
+/* Miniaturas de las fotos subidas antes de que existieran (solo admin, desde Mi cuenta).
+   Para cada foto del almacén sin «-m.jpg», la descarga, hace la miniatura y la sube. De paso vuelve a
+   subir la grande igual que estaba, pero con caché de un año. Se puede repetir: salta las que ya tienen. */
+async function crearMiniaturasQueFaltan() {
+  if (!esAdmin()) return;
+  const btn = $("cu-minis"), msg = $("cu-minis-msg");
+  const lista = current.filter((d) => miniDe(fotoSegura(d.foto)) && rutaEnAlmacen(d.foto));
+  if (!lista.length) { msg.textContent = "No hay fotos en el almacén."; return; }
+  btn.disabled = true;
+  let hechas = 0, ya = 0, fallos = 0;
+  for (const [i, d] of lista.entries()) {
+    msg.textContent = `Revisando ${i + 1} de ${lista.length}: ${d.nombre}…`;
+    const grande = d.foto, mini = miniDe(grande);
+    try {
+      const existe = await fetch(mini, { method: "HEAD", cache: "no-store" });
+      if (existe.ok) { ya++; continue; }
+      const r = await fetch(grande, { cache: "no-store" });
+      if (!r.ok) throw new Error("No se pudo descargar " + grande);
+      const original = await r.blob();
+      const peque = await shrink(original, 400, 0.82);
+      if (!peque || peque === original || peque.type !== "image/jpeg") throw new Error("No se pudo reducir");
+      const up = await sb.storage.from("fotos").upload(rutaEnAlmacen(mini), peque, { contentType: "image/jpeg", upsert: true, cacheControl: "31536000" });
+      if (up.error) throw up.error;
+      // La grande, tal cual, pero con caché de un año (si falla no pasa nada).
+      try { await sb.storage.from("fotos").upload(rutaEnAlmacen(grande), original, { contentType: original.type || "image/jpeg", upsert: true, cacheControl: "31536000" }); } catch (e) {}
+      hechas++;
+    } catch (e) { console.warn("Miniatura", d.id, e); fallos++; }
+  }
+  msg.textContent = `Listo: ${hechas} miniaturas nuevas, ${ya} ya la tenían${fallos ? `, ${fallos} con error (puedes volver a pulsar)` : ""}.`;
+  btn.disabled = false;
+}
+
 /* ---------- Eliminar ficha (solo admin) ---------- */
 let delTarget = null;
 function askDelete(id) {
@@ -1760,7 +1792,8 @@ function abrirCuenta() {
       <div class="cu-casillas">
         ${ctx.opiniones ? `<div class="bd-casilla"><span class="l">Reseñas publicadas</span><span class="n">${nRes}</span><span class="s">Firmadas como «${esc(nombre)}»</span></div>` : ""}
         ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
-        ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button></div>` : ""}
+        ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>
+          <button class="btn" id="cu-minis" type="button">Crear las miniaturas que faltan</button><p class="muted" id="cu-minis-msg" role="status"></p></div>` : ""}
       </div>
       <div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
       <div class="cu-abajo">
@@ -1785,6 +1818,7 @@ function abrirCuenta() {
   $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
   if ($("cu-bodega")) $("cu-bodega").addEventListener("click", () => abrirBodega());
   if ($("cu-saruman")) $("cu-saruman").addEventListener("click", () => { if (esAdmin()) abrirBodega(bodegaDePrueba()); });
+  if ($("cu-minis")) $("cu-minis").addEventListener("click", crearMiniaturasQueFaltan);
   if ($("cu-instalar")) $("cu-instalar").addEventListener("click", async () => {
     if (!avisoInstalar) return;
     avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; abrirCuenta();
