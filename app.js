@@ -202,10 +202,22 @@ function tin(d) {
     <ellipse cx="100" cy="52" rx="62" ry="10" fill="none" stroke="#000" stroke-opacity=".18"/>
   </svg>`;
 }
-function art(d) {
-  const src = fotoSegura(d.foto);
-  return src ? `<img class="photo" src="${esc(src)}" alt="Lata de ${esc(d.nombre)}" loading="lazy">` : tin(d);
+/* Fotos: cada foto subida tiene una miniatura al lado (mismo nombre acabado en «-m.jpg»).
+   La miniatura se usa en las vistas pequeñas y la grande solo en la ficha abierta.
+   Si una foto antigua no tiene miniatura, el navegador carga la grande (ver «error» más abajo). */
+function miniDe(url) {
+  return /\/storage\/v1\/object\/public\/fotos\/.+-\d+\.(jpe?g|png|webp)$/i.test(url || "") ? url.replace(/\.(jpe?g|png|webp)$/i, "-m.jpg") : "";
 }
+function art(d, grande) {
+  const src = fotoSegura(d.foto);
+  if (!src) return tin(d);
+  const mini = grande ? "" : miniDe(src);
+  return `<img class="photo" src="${esc(mini || src)}"${mini ? ` data-grande="${esc(src)}"` : ""} alt="Lata de ${esc(d.nombre)}" loading="lazy" decoding="async">`;
+}
+document.addEventListener("error", (e) => {
+  const img = e.target;
+  if (img && img.tagName === "IMG" && img.dataset && img.dataset.grande) { const g = img.dataset.grande; delete img.dataset.grande; img.src = g; }
+}, true);
 function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i = 1; i <= 5; i++) h += `<i class="${i <= n ? "on" : ""}"></i>`; return h + "</span>"; }
 
 /* ---------- Catálogo ---------- */
@@ -471,7 +483,7 @@ function openDetail(id, desdeUrl) {
     </nav>
     <button class="x-close" id="d-close" type="button" aria-label="Cerrar ficha" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
     <div class="d-lado">
-      <div class="nicho"><div class="art" id="d-art">${art(d)}</div><div class="balda" aria-hidden="true"></div></div>
+      <div class="nicho"><div class="art" id="d-art">${art(d, true)}</div><div class="balda" aria-hidden="true"></div></div>
       <div id="d-bodega"></div>
       <div class="compartir"><button class="btn" id="d-share" type="button">${ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
     </div>
@@ -516,7 +528,7 @@ function closeDetail(desdeUrl) {
   if (!desdeUrl) quitarUrlFicha();
   if (lastFocus && lastFocus.focus) lastFocus.focus();
 }
-function paintArt() { const d = findItem(openId), el = $("d-art"); if (d && el) el.innerHTML = art(d); }
+function paintArt() { const d = findItem(openId), el = $("d-art"); if (d && el) el.innerHTML = art(d, true); }
 function paintMeta() {
   const d = findItem(openId), el = $("d-meta"); if (!d || !el) return;
   el.innerHTML = metaHTML(d);
@@ -557,16 +569,16 @@ function paintTools() {
 }
 
 /* ---------- Fotos ---------- */
-async function shrink(file) {
+async function shrink(file, lado = 1200, calidad = 0.86) {
   try {
     const bmp = await createImageBitmap(file);
-    const k = Math.min(1, 1200 / Math.max(bmp.width, bmp.height));
+    const k = Math.min(1, lado / Math.max(bmp.width, bmp.height));
     const c = document.createElement("canvas");
     c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
     const g = c.getContext("2d");
     g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
     g.drawImage(bmp, 0, 0, c.width, c.height);
-    const b = await new Promise((r) => c.toBlob(r, "image/jpeg", 0.86));
+    const b = await new Promise((r) => c.toBlob(r, "image/jpeg", calidad));
     return b || file;
   } catch (e) { return file; }
 }
@@ -577,19 +589,25 @@ function rutaEnAlmacen(url) {
 }
 async function borrarFotoDeAlmacen(url) {
   const ruta = rutaEnAlmacen(url);
-  if (ruta) { try { await sb.storage.from("fotos").remove([ruta]); } catch (e) {} }
+  if (!ruta) return;
+  const mini = rutaEnAlmacen(miniDe(url));
+  try { await sb.storage.from("fotos").remove(mini ? [ruta, mini] : [ruta]); } catch (e) {}
 }
 async function subirFoto(file) {
   const msg = $("ph-msg"), id = openId, d = findItem(id);
   if (file.size > 20 * 1024 * 1024) { msg.textContent = "La foto pesa demasiado (máximo 20 MB)."; return; }
   msg.style.color = "var(--muted)"; msg.textContent = "Subiendo foto…";
   try {
-    const blob = await shrink(file);
+    const [blob, mini] = await Promise.all([shrink(file), shrink(file, 400, 0.82)]);
     if (blob.size > 5 * 1024 * 1024) throw new Error("grande");
     const ext = blob.type === "image/png" ? "png" : blob.type === "image/webp" ? "webp" : "jpg";
     const ruta = esEditor() ? `fichas/${id}-${Date.now()}.${ext}` : `propuestas/${ctx.uid}/${id}-${Date.now()}.${ext}`;
-    const up = await sb.storage.from("fotos").upload(ruta, blob, { contentType: blob.type || "image/jpeg", upsert: false });
+    // Cada foto tiene un nombre nuevo, así que los navegadores pueden guardarla un año sin volver a pedirla.
+    const up = await sb.storage.from("fotos").upload(ruta, blob, { contentType: blob.type || "image/jpeg", upsert: false, cacheControl: "31536000" });
     if (up.error) throw up.error;
+    if (mini && mini.type === "image/jpeg" && mini !== file) {   // si falla, se usa la grande en todas partes
+      try { await sb.storage.from("fotos").upload(ruta.replace(/\.(jpe?g|png|webp)$/i, "-m.jpg"), mini, { contentType: "image/jpeg", upsert: false, cacheControl: "31536000" }); } catch (e) { console.warn("Sin miniatura", e); }
+    }
     const url = sb.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
     if (esEditor()) {
       const { data: hechas, error } = await sb.from("tabacos").update({ foto: url }).eq("id", id).select("id");
@@ -1800,7 +1818,7 @@ async function subirAvatar(file) {
     const blob = await cuadrarAvatar(file);
     if (!blob) throw new Error("imagen");
     const ruta = `${ctx.uid}/${Date.now()}.jpg`;
-    const up = await sb.storage.from("avatares").upload(ruta, blob, { contentType: "image/jpeg", upsert: false });
+    const up = await sb.storage.from("avatares").upload(ruta, blob, { contentType: "image/jpeg", upsert: false, cacheControl: "31536000" });
     if (up.error) throw up.error;
     const url = sb.storage.from("avatares").getPublicUrl(ruta).data.publicUrl;
     await guardarPerfil(ctx.perfil.nombre, url, "Foto actualizada.");
