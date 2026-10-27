@@ -1106,51 +1106,194 @@ async function abrirHistorial() {
     await refrescar();
   });
 }
+/* ---------- Usuarios (solo admin) ----------
+   Con 36_panel_usuarios.sql: nombre, foto, última conexión, reseñas, bodega y borrar cuentas.
+   Sin él, la lista sale con lo que hay en perfiles y sin esas opciones. */
+const ICONO_VECINOS = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5c.6-3.4 3.1-5.4 6.2-5.4s5.6 2 6.2 5.4"/><path d="M15.2 4.9a3.2 3.2 0 0 1 0 6.2M17.4 14.4c2 .6 3.4 2.4 3.8 5.1"/></svg>`;
+const ICONO_PAPELERA = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg>`;
+const DIA = 86400000;
+function haceCuanto(t) {
+  if (!t) return "nunca";
+  const ms = Date.now() - new Date(t).getTime();
+  if (ms < 3600000) return "hace un momento";
+  if (ms < DIA) { const h = Math.floor(ms / 3600000); return h === 1 ? "hace 1 hora" : `hace ${h} horas`; }
+  if (ms < 2 * DIA) return "ayer";
+  if (ms < 30 * DIA) return `hace ${Math.floor(ms / DIA)} días`;
+  return `el ${fecha(t)}`;
+}
+// Apunta la visita del usuario que ha entrado (como mucho una vez por hora; necesita el 36).
+function marcarVisita() {
+  if (!sb || !ctx.uid) return;
+  const k = "herbario-visita-" + ctx.uid;
+  try { if (Date.now() - Number(localStorage.getItem(k) || 0) < 3600000) return; localStorage.setItem(k, String(Date.now())); } catch (e) {}
+  sb.rpc("marcar_visita").then(() => {}, () => {});
+}
+const usVista = { filtro: "todos", orden: "recientes", q: "" };
+const US_FILTROS = [["todos", "Todos"], ["admin", "Admin"], ["editor", "Editores"], ["lector", "Lectores"], ["socio", "Socios"]];
+const US_ORDEN = [["recientes", "Más recientes"], ["conexion", "Última conexión"], ["nombre", "Nombre"], ["resenas", "Más reseñas"]];
 async function abrirUsuarios() {
   if (!esAdmin()) return;
-  abrirPanel(`<div class="info adm"><h2 id="d-name">Usuarios y permisos</h2>
-    <p class="muted">Quien entra por primera vez queda como lector. Cambia aquí su rol para que pueda crear y editar fichas y fotos (editor) o administrar (admin).</p>
-    <div id="us-list"><p class="muted">Cargando…</p></div>
-    <button class="close" id="d-close" type="button">Cerrar</button></div>`);
+  abrirPanel(`
+    <div class="d-franja">${FRANJA}</div>
+    <div class="bd-cab">
+      <span class="bd-baul" aria-hidden="true">${ICONO_VECINOS}</span>
+      <div><h2 id="d-name">Usuarios</h2><p class="muted">Los vecinos registrados en el herbario, sus permisos y su actividad.</p></div>
+    </div>
+    <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
+    <div class="bd-cuerpo" id="us-cuerpo"><p class="muted">Cargando…</p></div>`, "bodega-p usuarios-p");
   $("d-close").addEventListener("click", () => closeDetail());
-  let socios = true;
-  let { data, error } = await sb.from("perfiles").select("id,email,rol,creado,socio,socio_desde").order("creado");
-  if (error) { socios = false; ({ data, error } = await sb.from("perfiles").select("id,email,rol,creado").order("creado")); }
-  const box = $("us-list"); if (!box) return;
-  if (error) { box.innerHTML = '<p class="msg">No se han podido cargar los usuarios.</p>'; return; }
-  box.innerHTML = `<table class="usuarios"><thead><tr><th>Correo</th><th>Rol</th>${socios ? "<th>Socio del club</th>" : ""}</tr></thead><tbody>${data.map((u) => `
-    <tr><td>${esc(u.email || "—")}<br><small class="muted">desde ${fecha(u.creado)}</small></td>
-    <td><select data-uid="${esc(u.id)}" aria-label="Rol de ${esc(u.email || "")}"${u.id === ctx.uid ? " disabled" : ""}>
-      ${["lector", "editor", "admin"].map((r) => `<option value="${r}"${u.rol === r ? " selected" : ""}>${r}</option>`).join("")}
-    </select></td>
-    ${socios ? `<td class="us-socio"><label><input type="checkbox" data-socio="${esc(u.id)}"${u.socio ? " checked" : ""}> Socio</label>
-      <input type="number" data-desde="${esc(u.id)}" min="1950" max="2100" step="1" placeholder="Año" value="${u.socio_desde || ""}" aria-label="Socio desde (año)"></td>` : ""}</tr>`).join("")}</tbody></table>
-    ${socios ? "" : '<p class="muted">Para marcar socios del club, ejecuta 23_socios_del_club.sql en Supabase.</p>'}
-    <p class="msg" id="us-msg" role="alert"></p>`;
+
+  // Con el 36, todo en una llamada; si no, lo básico de perfiles.
+  let completo = true, socios = true;
+  let { data, error } = await sb.rpc("admin_usuarios");
+  if (error) {
+    completo = false;
+    ({ data, error } = await sb.from("perfiles").select("id,email,nombre,avatar,rol,creado,socio,socio_desde").order("creado"));
+    if (error) { socios = false; ({ data, error } = await sb.from("perfiles").select("id,email,rol,creado").order("creado")); }
+  }
+  const cuerpo = $("us-cuerpo"); if (!cuerpo) return;
+  if (error) { cuerpo.innerHTML = '<p class="msg">No se han podido cargar los usuarios.</p>'; return; }
+  let lista = data || [];
+
+  const ahora = Date.now();
+  const casillas = () => {
+    const nuevos = lista.filter((u) => ahora - new Date(u.creado).getTime() < 30 * DIA).length;
+    const activos = lista.filter((u) => u.ultima_conexion && ahora - new Date(u.ultima_conexion).getTime() < 30 * DIA).length;
+    return `<div class="bd-casilla principal"><span class="l">Usuarios</span><span class="n">${lista.length}</span><span class="s">registrados en el herbario</span></div>
+      <div class="bd-casilla"><span class="l">Nuevos</span><span class="n">${nuevos}</span><span class="s">en los últimos 30 días</span></div>
+      ${completo ? `<div class="bd-casilla"><span class="l">Activos</span><span class="n">${activos}</span><span class="s">han entrado en 30 días</span></div>` : ""}
+      ${socios ? `<div class="bd-casilla"><span class="l">Socios del club</span><span class="n">${lista.filter((u) => u.socio).length}</span><span class="s">con el sello del Pipa Club</span></div>` : ""}
+`;
+  };
+  cuerpo.innerHTML = `
+    <div class="bd-casillas" id="us-casillas">${casillas()}</div>
+    <div class="bd-barra us-barra">
+      <div class="bd-tabs" role="tablist" aria-label="Filtrar usuarios" id="us-tabs"></div>
+      <div class="us-busca">
+        <input id="us-q" type="search" placeholder="Buscar por nombre o correo" aria-label="Buscar usuarios" autocomplete="off" value="${esc(usVista.q)}">
+        <label class="bd-orden">Ordenar por <select id="us-orden">${US_ORDEN.filter(([k]) => completo || (k !== "conexion" && k !== "resenas")).map(([k, t]) => `<option value="${k}"${k === usVista.orden ? " selected" : ""}>${t}</option>`).join("")}</select></label>
+      </div>
+    </div>
+    <p class="msg" id="us-msg" role="status"></p>
+    <div class="us-lista" id="us-list"></div>
+    ${completo ? "" : '<p class="notice">Para ver la última conexión, las reseñas y la bodega de cada usuario, y poder borrar cuentas, ejecuta <strong>36_panel_usuarios.sql</strong> en Supabase.</p>'}
+    ${socios ? "" : '<p class="notice">Para marcar socios del club, ejecuta 23_socios_del_club.sql en Supabase.</p>'}`;
+
+  const box = $("us-list");
+  const aviso = (txt, ok) => { const m = $("us-msg"); m.style.color = ok ? "var(--accent)" : ""; m.textContent = txt; };
+  const visibles = () => {
+    const q = usVista.q.trim().toLowerCase();
+    let v = lista.filter((u) => usVista.filtro === "todos" ? true : usVista.filtro === "socio" ? u.socio : u.rol === usVista.filtro);
+    if (q) v = v.filter((u) => `${u.nombre || ""} ${u.email || ""}`.toLowerCase().includes(q));
+    const t = (x) => (x ? new Date(x).getTime() : 0);
+    const nom = (u) => (u.nombre || u.email || "").toLowerCase();
+    const ord = { recientes: (a, b) => t(b.creado) - t(a.creado), conexion: (a, b) => t(b.ultima_conexion) - t(a.ultima_conexion),
+      nombre: (a, b) => nom(a).localeCompare(nom(b), "es"), resenas: (a, b) => (b.resenas || 0) - (a.resenas || 0) };
+    return v.sort(ord[usVista.orden] || ord.recientes);
+  };
+  const fila = (u) => {
+    const yo = u.id === ctx.uid, foto = fotoSegura(u.avatar || "");
+    const letra = (u.nombre || u.email || "?").trim().charAt(0).toUpperCase();
+    const borrable = completo && !yo && u.rol !== "admin";
+    return `<article class="us-fila" data-uid="${esc(u.id)}">
+      <span class="us-foto">${foto ? `<img class="avatar" src="${esc(foto)}" alt="" loading="lazy">` : `<span class="avatar" aria-hidden="true">${esc(letra)}</span>`}</span>
+      <div class="us-quien">
+        <strong class="us-nombre">${u.nombre ? esc(u.nombre) : '<span class="muted">Sin nombre público</span>'}</strong>
+        <span class="us-correo">${esc(u.email || "—")}</span>
+        <span class="us-chips"><span class="cu-chip rol r-${esc(u.rol)}">${esc(ROL_TXT[u.rol] || u.rol)}</span>
+          ${u.socio ? `<span class="cu-chip rango us-socio-chip"><img src="img/logo.png" alt="" width="16" height="16">Socio${u.socio_desde ? ` desde ${u.socio_desde}` : ""}</span>` : ""}
+          ${yo ? '<span class="cu-chip tu">Tú</span>' : ""}</span>
+      </div>
+      <dl class="us-datos">
+        <div><dt>Alta</dt><dd>${fecha(u.creado)}</dd></div>
+        ${completo ? `<div><dt>Última conexión</dt><dd>${haceCuanto(u.ultima_conexion)}</dd></div>
+        <div><dt>Actividad</dt><dd>${u.resenas === 1 ? "1 reseña" : `${u.resenas || 0} reseñas`} · ${u.en_bodega || 0} en bodega</dd></div>` : ""}
+      </dl>
+      <div class="us-acc">
+        <label class="us-campo">Rol
+          <select data-rol="${esc(u.id)}"${yo ? " disabled title=\"No puedes cambiar tu propio rol\"" : ""}>
+            ${["lector", "editor", "admin"].map((r) => `<option value="${r}"${u.rol === r ? " selected" : ""}>${ROL_TXT[r]}</option>`).join("")}
+          </select></label>
+        ${socios ? `<div class="us-campo us-socio"><label class="check"><input type="checkbox" data-socio="${esc(u.id)}"${u.socio ? " checked" : ""}> Socio</label>
+          <input type="number" data-desde="${esc(u.id)}" min="1950" max="2100" step="1" placeholder="Año" value="${u.socio_desde || ""}" aria-label="Socio desde (año)"></div>` : ""}
+        ${completo ? `<button class="btn danger us-borrar" type="button" data-borrar="${esc(u.id)}"${borrable ? "" : ` disabled title="${yo ? "No puedes borrar tu propia cuenta" : "Quítale antes el rol de administrador"}"`}>${ICONO_PAPELERA}<span>Borrar cuenta</span></button>` : ""}
+      </div>
+    </article>`;
+  };
+  const pintarLista = () => {
+    const cuenta = (k) => k === "todos" ? lista.length : k === "socio" ? lista.filter((u) => u.socio).length : lista.filter((u) => u.rol === k).length;
+    $("us-tabs").innerHTML = US_FILTROS.filter(([k]) => socios || k !== "socio")
+      .map(([k, t]) => `<button role="tab" type="button" data-filtro="${k}" aria-selected="${k === usVista.filtro}">${t} <span>${cuenta(k)}</span></button>`).join("");
+    const v = visibles();
+    box.innerHTML = v.length ? v.map(fila).join("") : '<p class="muted us-vacio">Nadie coincide con la búsqueda.</p>';
+  };
+  pintarLista();
+
+  $("us-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-filtro]"); if (!b) return; usVista.filtro = b.dataset.filtro; pintarLista(); });
+  $("us-q").addEventListener("input", (e) => { usVista.q = e.target.value; pintarLista(); });
+  $("us-orden").addEventListener("change", (e) => { usVista.orden = e.target.value; pintarLista(); });
+
   box.addEventListener("change", async (e) => {
     const cs = e.target.closest("[data-socio],[data-desde]");
     if (cs) {
       const id = cs.dataset.socio || cs.dataset.desde;
       const marca = box.querySelector(`[data-socio="${id}"]`), anio = box.querySelector(`[data-desde="${id}"]`);
       const n = anio.value.trim() ? Number(anio.value) : null;
-      if (n !== null && !(Number.isInteger(n) && n >= 1950 && n <= 2100)) {
-        $("us-msg").style.color = ""; $("us-msg").textContent = "El año tiene que estar entre 1950 y 2100."; return;
-      }
+      if (n !== null && !(Number.isInteger(n) && n >= 1950 && n <= 2100)) { aviso("El año tiene que estar entre 1950 y 2100."); return; }
       marca.disabled = anio.disabled = true;
       const { error } = await sb.from("perfiles").update({ socio: marca.checked, socio_desde: n }).eq("id", id);
-      $("us-msg").style.color = error ? "" : "var(--accent)";
-      $("us-msg").textContent = error ? "No se ha podido guardar el socio." : (marca.checked ? "Socio guardado." : "Ya no figura como socio.");
       marca.disabled = anio.disabled = false;
-      if (!error && id === ctx.uid) { ctx.perfil.socio = marca.checked; ctx.perfil.socioDesde = n; }
-      if (!error) { if (marca.checked) sociosAutores.add(id); else sociosAutores.delete(id); }
+      if (error) { aviso("No se ha podido guardar el socio."); return; }
+      aviso(marca.checked ? "Socio guardado." : "Ya no figura como socio.", true);
+      const u = lista.find((x) => x.id === id); if (u) { u.socio = marca.checked; u.socio_desde = n; }
+      if (id === ctx.uid) { ctx.perfil.socio = marca.checked; ctx.perfil.socioDesde = n; }
+      if (marca.checked) sociosAutores.add(id); else sociosAutores.delete(id);
+      $("us-casillas").innerHTML = casillas(); pintarLista();
       return;
     }
-    const s = e.target.closest("select[data-uid]"); if (!s) return;
+    const s = e.target.closest("select[data-rol]"); if (!s) return;
     s.disabled = true;
-    const { error } = await sb.from("perfiles").update({ rol: s.value }).eq("id", s.dataset.uid);
-    $("us-msg").style.color = error ? "" : "var(--accent)";
-    $("us-msg").textContent = error ? "No se ha podido cambiar el rol." : "Rol actualizado.";
+    const { error } = await sb.from("perfiles").update({ rol: s.value }).eq("id", s.dataset.rol);
     s.disabled = false;
+    if (error) { aviso("No se ha podido cambiar el rol."); return; }
+    const u = lista.find((x) => x.id === s.dataset.rol); if (u) u.rol = s.value;
+    aviso(`Rol actualizado: ${u && (u.nombre || u.email) ? `${u.nombre || u.email} ahora es ${ROL_TXT[s.value].toLowerCase()}.` : "hecho."}`, true);
+    $("us-casillas").innerHTML = casillas(); pintarLista();
+  });
+
+  // Borrar cuenta: primero se pide confirmación dentro de la propia fila.
+  box.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-borrar]");
+    if (b) {
+      const u = lista.find((x) => x.id === b.dataset.borrar); if (!u) return;
+      const art = b.closest(".us-fila");
+      art.insertAdjacentHTML("beforeend", `<div class="us-confirma" role="alertdialog" aria-label="Confirmar borrado">
+        <p><strong>¿Borrar la cuenta de ${esc(u.nombre || u.email || "este usuario")}?</strong>
+        Se borrarán también sus reseñas${u.resenas ? ` (${u.resenas})` : ""}, su bodega, sus tarros, sus propuestas y su foto. No se puede deshacer.</p>
+        <span class="btns"><button class="btn danger fuerte" type="button" data-si="${esc(u.id)}">Sí, borrar la cuenta</button><button class="btn" type="button" data-no>Cancelar</button></span></div>`);
+      b.disabled = true; art.querySelector("[data-no]").focus();
+      return;
+    }
+    if (e.target.closest("[data-no]")) { const art = e.target.closest(".us-fila"); art.querySelector(".us-confirma").remove(); art.querySelector("[data-borrar]").disabled = false; return; }
+    const si = e.target.closest("[data-si]"); if (!si) return;
+    const id = si.dataset.si, u = lista.find((x) => x.id === id), art = si.closest(".us-fila");
+    art.querySelectorAll("button,select,input").forEach((x) => (x.disabled = true));
+    // La foto de perfil, antes (después ya no quedaría rastro de la carpeta)
+    try {
+      const { data: fs } = await sb.storage.from("avatares").list(id);
+      if (fs && fs.length) await sb.storage.from("avatares").remove(fs.map((f) => `${id}/${f.name}`));
+    } catch (er) { console.warn("No se ha podido borrar la foto de perfil", er); }
+    const { error } = await sb.rpc("admin_borrar_usuario", { p_id: id });
+    if (error) {
+      aviso(error.message || "No se ha podido borrar la cuenta.");
+      art.querySelectorAll("button,select,input").forEach((x) => (x.disabled = false));
+      art.querySelector(".us-confirma").remove(); return;
+    }
+    lista = lista.filter((x) => x.id !== id);
+    aviso(`Cuenta de ${u.nombre || u.email} borrada.`, true);
+    $("us-casillas").innerHTML = casillas(); pintarLista();
+    if (u.resenas) { await cargarExtras(); pintar(); }
   });
 }
 async function abrirMisPropuestas() {
@@ -1966,6 +2109,7 @@ async function leerSesion(session) {
     if (!error && typeof data === "string") ctx.rol = data;
   };
   await Promise.all([rol(), cargarPerfil()]);
+  marcarVisita();
   await contarPendientes();
 }
 async function contarPendientes() {
@@ -1986,11 +2130,9 @@ function paintTop() {
   if (esAdmin()) {
     bar.innerHTML = `<button class="btn" id="rv-open" type="button">Revisar${ctx.pendientes ? ` (${ctx.pendientes})` : ""}</button>
       <button class="btn" id="hi-open" type="button">Historial</button>
-      <button class="btn" id="us-open" type="button">Usuarios</button>
       <button class="btn primary" id="add-open" type="button">Añadir tabaco</button>`;
     $("rv-open").addEventListener("click", abrirRevision);
     $("hi-open").addEventListener("click", abrirHistorial);
-    $("us-open").addEventListener("click", abrirUsuarios);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else if (esEditor()) {
     bar.innerHTML = `${ctx.misPendientes ? `<button class="btn" id="mp-open" type="button">Mis propuestas (${ctx.misPendientes} pendientes)</button>` : ""}
@@ -2003,10 +2145,13 @@ function paintTop() {
   if (!CONFIGURADO) { st.textContent = "Base de datos sin configurar: catálogo de solo lectura."; top.innerHTML = ""; return; }
   st.textContent = ctx.online ? "" : (ctx.aviso || "");
   if (ctx.session) {
-    top.innerHTML = (ctx.online && ctx.bodega
+    top.innerHTML = (ctx.online && esAdmin()
+        ? `<button class="btn cuenta-btn us-top" id="us-open" type="button" aria-label="Usuarios" title="Usuarios"><span class="avatar" aria-hidden="true">${ICONO_VECINOS}</span><span>Usuarios</span></button>` : "")
+      + (ctx.online && ctx.bodega
         ? `<button class="btn cuenta-btn" id="bd-open" type="button"><span class="avatar" aria-hidden="true">${ICONO_BAUL}</span><span>Mi bodega</span></button>` : "")
       + `<button class="btn cuenta-btn" id="cu-open" type="button" aria-label="Mi cuenta">${avatarHTML()}<span>Mi cuenta</span></button>`;
     if ($("bd-open")) $("bd-open").addEventListener("click", abrirBodega);
+    if ($("us-open")) $("us-open").addEventListener("click", abrirUsuarios);
     $("cu-open").addEventListener("click", abrirCuenta);
   } else {
     top.innerHTML = '<button class="btn primary" id="in" type="button">Entrar</button>';
