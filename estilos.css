@@ -918,3 +918,32 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .tr-item { grid-template-columns: 52px minmax(0, 1fr); gap: 12px; padding: 12px 14px; }
   .tr-art { width: 52px; height: 44px; }
 }
+
+/* ---------- Ayuda de Mi bodega ---------- */
+.bodega-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; }
+.bodega-h .bodega-t { margin: 0; }
+.ayuda-btn { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--accent);
+  font: 600 0.95rem var(--display, inherit); cursor: pointer; display: grid; place-items: center; padding: 0; }
+.ayuda-btn:hover, .ayuda-btn[aria-expanded="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-fg); }
+.ayuda-caja { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--casilla, var(--surface));
+  font-size: 0.92rem; line-height: 1.4; display: grid; gap: 6px; }
+.ayuda-caja[hidden] { display: none; }
+.ayuda-caja ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.ayuda-caja p { margin: 0; color: var(--muted); }
+.ayuda-caja a { color: var(--accent); }
+.tarro-form .tf-ayuda { margin: 10px 0 4px; font-size: 0.85rem; line-height: 1.4; }
+
+.bd-guia { display: grid; gap: 16px; padding: 20px 22px; border: 1.5px dashed color-mix(in srgb, var(--accent) 45%, var(--line)); border-radius: 14px; background: var(--casilla); }
+.bd-gu-pasos { list-style: none; margin: 0; padding: 0; counter-reset: paso; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.bd-gu-pasos li { counter-increment: paso; display: grid; gap: 4px; align-content: start; }
+.bd-gu-pasos li::before { content: counter(paso); width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--accent-fg);
+  display: grid; place-items: center; font-family: var(--mono); font-size: 0.9rem; margin-bottom: 4px; }
+.bd-gu-pasos strong { font-weight: 600; }
+.bd-gu-pasos span { color: var(--muted); font-size: 0.95rem; line-height: 1.4; }
+.bd-guia .btns { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
+.bd-guia a.btn { text-decoration: none; display: inline-flex; align-items: center; }
+.bd-barra-d { display: flex; align-items: center; gap: 12px 18px; flex-wrap: wrap; }
+.bd-como { font-size: 1rem; }
+@media (max-width: 760px) { .bd-gu-pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .bd-guia { padding: 16px; } .bd-gu-pasos { grid-template-columns: 1fr; gap: 12px; }
+  .bd-gu-pasos li { grid-template-columns: 30px 1fr; column-gap: 10px; } .bd-gu-pasos li::before { grid-row: span 2; margin: 0; } }

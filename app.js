@@ -1701,6 +1701,7 @@ function formTarro(id, t) {
         <div><label for="tf-aanio">Abierto en (año)</label><select id="tf-aanio">${opcionesAnio(v.abierto_anio)}</select></div>
         <div><label for="tf-ames">Mes</label><select id="tf-ames">${opcionesMes(v.abierto_mes)}</select></div>
       </div>
+      <p class="muted tf-ayuda"><strong>Embotado</strong>: cuando llenaste y cerraste el tarro. <strong>Compra</strong>: cuando lo compraste. <strong>Fecha de la lata</strong>: la que trae impresa. Con ella se calcula cuánto lleva madurando.</p>
       <label for="tf-nota">Nota (opcional)</label>
       <input id="tf-nota" type="text" maxlength="80" value="${esc(v.nota || "")}" placeholder="Por ejemplo, para abrir en 2030">
       <p class="msg" id="tf-msg" role="alert"></p>
@@ -1747,18 +1748,35 @@ function formTarro(id, t) {
   q("#tf-env").focus();
 }
 const gramosTxt = (g) => (g ? `${g.toLocaleString("es-ES")} g` : "");
+let bodegaAyudaAbierta = false;   // la explicación (?) del recuadro de la ficha sigue abierta al repintar
 function paintBodega() {
   const box = $("d-bodega"); if (!box || openId == null) return;
   if (!ctx.online || !ctx.session || !ctx.bodega) { box.innerHTML = ""; return; }
   const m = bodega[String(openId)] || {};
   const etiqueta = (k, t) => t + (k === "tengo" && m.tengo && m.gramos ? ` · ${gramosTxt(m.gramos)}` : "");
-  box.innerHTML = `<p class="bodega-t">Mi bodega</p><div class="btns bodega" role="group" aria-label="Mi bodega">
+  box.innerHTML = `<div class="bodega-h"><p class="bodega-t">Mi bodega</p>
+      <button class="ayuda-btn" type="button" id="bd-ay" aria-expanded="${bodegaAyudaAbierta}" aria-controls="bd-ay-txt" title="¿Cómo funciona?"><span aria-hidden="true">?</span><span class="sr">¿Cómo funciona Mi bodega?</span></button></div>
+    <div class="ayuda-caja" id="bd-ay-txt"${bodegaAyudaAbierta ? "" : " hidden"}>
+      <ul>
+        <li><strong>Lo tengo:</strong> lo tienes en casa. Si quieres, apunta después tus tarros y latas.</li>
+        <li><strong>Lo he probado:</strong> lo has fumado alguna vez. Al marcarlo sale de «Quiero probarlo».</li>
+        <li><strong>Quiero probarlo:</strong> tu lista de pendientes.</li>
+      </ul>
+      <p>Puedes marcar varias a la vez. Para quitar una, vuelve a pulsarla. Tu bodega solo la veis tú y el administrador.</p>
+      <a href="ayuda.html#bodega">Ayuda completa de Mi bodega →</a>
+    </div>
+    <div class="btns bodega" role="group" aria-label="Mi bodega">
       ${BODEGA.map(([k, t]) => `<button class="btn${m[k] ? " primary" : ""}" type="button" data-bod="${k}" aria-pressed="${m[k] ? "true" : "false"}">${ico(k)}<span>${esc(etiqueta(k, t))}</span></button>`).join("")}
     </div>
     ${ctx.tarrosOk ? (m.tengo || (tarros[String(openId)] || []).length ? tarrosHTML(openId) : "")
       : m.tengo && ctx.gramosOk ? `<button class="link bd-cant" type="button" id="bd-gr">${m.gramos ? "Cambiar la cantidad" : "Apuntar cuántos gramos tienes"}</button>` : ""}
     <p class="msg" id="bd-msg" role="alert"></p>`;
   box.querySelectorAll("[data-bod]").forEach((b) => b.addEventListener("click", () => marcarBodega(openId, b.dataset.bod)));
+  $("bd-ay").addEventListener("click", (e) => {
+    bodegaAyudaAbierta = !bodegaAyudaAbierta;
+    e.currentTarget.setAttribute("aria-expanded", String(bodegaAyudaAbierta));
+    $("bd-ay-txt").hidden = !bodegaAyudaAbierta;
+  });
   conectarTarros(openId);
   if ($("bd-gr")) $("bd-gr").addEventListener("click", async () => {
     const g = await pedirGramos(findItem(openId), m.gramos);
@@ -1863,6 +1881,8 @@ const MADURA_TOPE = 120;   // meses: la barra de maduración se llena a los 10 a
 const ORDEN_BODEGA = [["gramos", "Más gramos"], ["antiguo", "Más antiguo"], ["marca", "Marca"], ["mezcla", "Tipo de mezcla"], ["nombre", "Nombre"]];
 const bodegaVista = { tab: "tengo", orden: "" };
 try { const v = JSON.parse(localStorage.getItem("herbario-bodega-vista") || "{}"); if (v.tab) bodegaVista.tab = v.tab; if (v.orden) bodegaVista.orden = v.orden; } catch (e) {}
+const bodegaGuia = { abierta: false };   // la guía, vuelta a abrir con «¿Cómo funciona?»
+function guiaVista() { try { return localStorage.getItem("herbario-bodega-guia") === "1"; } catch (e) { return true; } }
 function guardarVistaBodega() { try { localStorage.setItem("herbario-bodega-vista", JSON.stringify(bodegaVista)); } catch (e) {} }
 const edadCorta = (t) => {
   if (!t || !t.fecha_anio) return "";
@@ -1892,6 +1912,22 @@ function abrirBodega(fuente) {
   }[orden] || porNombre;
   const items = listas[tab].slice().sort(comparar);
   const compacta = items.length >= BODEGA_COMPACTA;
+
+  // Guía: con la bodega vacía hace de bienvenida; si no, sale la primera vez y con «¿Cómo funciona?»
+  const vacia = !current.some((d) => { const m = info(d); return m.tengo || m.probado || m.quiero; });
+  const verGuia = !prueba && (vacia || bodegaGuia.abierta || !guiaVista());
+  const soloGuia = vacia && !prueba;   // bodega vacía: solo la bienvenida, sin casillas ni baldas vacías
+  const guia = verGuia ? `<section class="bd-guia" aria-labelledby="bd-gu-h">
+      <div class="bd-sec-h"><h3 id="bd-gu-h">${vacia ? "Tu bodega está vacía… de momento" : "Cómo funciona Mi bodega"}</h3></div>
+      <ol class="bd-gu-pasos">
+        <li><strong>Abre una ficha</strong><span>Busca un tabaco en el catálogo y ábrelo. Todo se marca desde su ficha.</span></li>
+        <li><strong>Márcalo</strong><span><em>Lo tengo</em>, <em>Lo he probado</em> o <em>Quiero probarlo</em>. Puedes marcar varias a la vez.</span></li>
+        <li><strong>Apunta tus tarros</strong><span>Si lo tienes, añade tus tarros y latas con sus gramos y su fecha. Es opcional.</span></li>
+        <li><strong>Míralo aquí</strong><span>Tu colección aparece aquí, colocada en baldas, con el total de gramos y lo que lleva más tiempo madurando.</span></li>
+      </ol>
+      <div class="btns">${vacia ? '<button class="btn primary" type="button" id="bd-gu-cat">Ir al catálogo</button>' : '<button class="btn primary" type="button" id="bd-gu-ok">Entendido</button>'}
+        <a class="btn" href="ayuda.html#bodega">Ver la ayuda completa</a></div>
+    </section>` : "";
 
   // Resumen
   const tengo = listas.tengo;
@@ -1989,18 +2025,22 @@ function abrirBodega(fuente) {
         <span class="btns"><button class="btn" type="button" id="bd-volver-us">${ICONO_VECINOS}<span>Volver a Usuarios</span></button></span></div>`
       : prueba ? `<div class="bd-prueba"><span>Estás viendo una bodega de prueba: ${prueba.n} tabacos elegidos al azar.</span>
         <span class="btns"><button class="btn" type="button" id="bd-barajar">Barajar de nuevo</button><button class="btn" type="button" id="bd-salir-prueba">Volver a mi bodega</button></span></div>` : ""}
-      <div class="bd-casillas">${casillas}</div>
+      ${guia}
+      ${soloGuia ? "" : `<div class="bd-casillas">${casillas}</div>
       <div class="bd-barra">
         <div class="bd-tabs" role="tablist" aria-label="Listas de la bodega">
           ${BODEGA.map(([k, t]) => `<button role="tab" type="button" data-tab="${k}" aria-selected="${k === tab}">${t} <span>${listas[k].length}</span></button>`).join("")}
         </div>
-        <label class="bd-orden">Ordenar por
-          <select id="bd-orden">${ORDEN_BODEGA.filter(([k]) => tab === "tengo" || (k !== "gramos" && k !== "antiguo")).map(([k, t]) => `<option value="${k}"${k === orden ? " selected" : ""}>${t}</option>`).join("")}</select>
-        </label>
+        <div class="bd-barra-d">
+          ${prueba || verGuia ? "" : '<button class="link bd-como" type="button" id="bd-como">¿Cómo funciona?</button>'}
+          <label class="bd-orden">Ordenar por
+            <select id="bd-orden">${ORDEN_BODEGA.filter(([k]) => tab === "tengo" || (k !== "gramos" && k !== "antiguo")).map(([k, t]) => `<option value="${k}"${k === orden ? " selected" : ""}>${t}</option>`).join("")}</select>
+          </label>
+        </div>
       </div>
       <div class="bd-estanteria" role="tabpanel">${estanteria}</div>
       ${mezclas}
-      ${madurando}
+      ${madurando}`}
     </div>`, "bodega-p");
   $("d-close").addEventListener("click", () => closeDetail());
   const panel = $("panel");
@@ -2009,7 +2049,19 @@ function abrirBodega(fuente) {
     bodegaVista.tab = b.dataset.tab; bodegaVista.orden = ""; guardarVistaBodega(); abrirBodega(prueba);
     const nuevo = panel.querySelector(`[data-tab="${b.dataset.tab}"]`); if (nuevo) nuevo.focus();
   }));
-  $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(prueba); $("bd-orden").focus(); });
+  if ($("bd-orden")) $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(prueba); $("bd-orden").focus(); });
+  if ($("bd-como")) $("bd-como").addEventListener("click", () => {
+    bodegaGuia.abierta = true; abrirBodega(); const h = $("bd-gu-h"); if (h) h.scrollIntoView({ behavior: "smooth", block: "center" });
+    const ok = $("bd-gu-ok"); if (ok) ok.focus({ preventScroll: true });
+  });
+  if ($("bd-gu-ok")) $("bd-gu-ok").addEventListener("click", () => {
+    bodegaGuia.abierta = false; try { localStorage.setItem("herbario-bodega-guia", "1"); } catch (e) {}
+    abrirBodega(); const c = $("bd-como"); if (c) c.focus();
+  });
+  if ($("bd-gu-cat")) $("bd-gu-cat").addEventListener("click", () => {
+    closeDetail();
+    const q = $("q"); if (q) { q.scrollIntoView({ behavior: "smooth", block: "center" }); q.focus({ preventScroll: true }); }
+  });
   if (prueba && prueba.ajena) $("bd-volver-us").addEventListener("click", () => { abrirUsuarios(); $("overlay").scrollTop = 0; });
   else if (prueba) {
     $("bd-barajar").addEventListener("click", () => abrirBodega(bodegaDePrueba()));

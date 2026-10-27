@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es" class="comarca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ayuda · El herbario de la Comarca</title>
+<meta name="description" content="Cómo funciona El herbario de la Comarca: Mi bodega, tarros y latas, reseñas, tipos de mezcla y la app en el móvil.">
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@400;500&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="temporada.js"></script>
+<link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="tema-comarca.css">
+<style>
+  .ayuda { max-width: 72ch; margin: 0 auto; padding-block: 32px 48px; display: grid; gap: 14px; }
+  .ayuda .volver { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); }
+  .ayuda h1 { font-family: "Uncial Antiqua", var(--display); font-weight: 400; font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.1; margin: 8px 0 0; }
+  .ayuda h2 { font-family: var(--display); font-weight: 400; font-size: 1.5rem; margin: 26px 0 0; padding-top: 18px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+  .ayuda h3 { font-family: var(--display); font-weight: 400; font-size: 1.15rem; margin: 12px 0 0; scroll-margin-top: 16px; }
+  .ayuda p, .ayuda li { margin: 0; text-wrap: pretty; }
+  .ayuda ul, .ayuda ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+  .ayuda .entrada { font-size: 1.1rem; }
+  .ayuda .indice { border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; background: color-mix(in srgb, var(--line) 15%, transparent); }
+  .ayuda .indice p { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .ayuda .indice a { color: var(--accent); }
+  .ayuda dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 16px; margin: 0; align-items: start; }
+  .ayuda dt { font-weight: 700; }
+  .ayuda dd { margin: 0; }
+  .ayuda .muestra { display: inline-flex; align-items: center; gap: 6px; font-family: var(--sans, inherit); font-size: 0.85rem; font-weight: 500;
+    border: 1px solid var(--line); border-radius: 4px; padding: 3px 9px; white-space: nowrap; vertical-align: 0.05em; }
+  .ayuda .muestra.on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .ayuda .muestra svg { width: 16px; height: 16px; }
+  .ayuda .consejo { border-left: 3px solid var(--accent); padding: 8px 14px; background: color-mix(in srgb, var(--accent) 8%, transparent); border-radius: 0 6px 6px 0; }
+  .ayuda .pasos { counter-reset: paso; list-style: none; padding: 0; gap: 10px; }
+  .ayuda .pasos li { counter-increment: paso; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+  .ayuda .pasos li::before { content: counter(paso); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: var(--accent-fg); font-family: var(--mono); font-size: 0.8rem; margin-top: 1px; }
+  .ayuda .tabla { overflow-x: auto; }
+  .ayuda table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  .ayuda th, .ayuda td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .ayuda th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .ayuda .sw { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 2px; margin-right: 6px; vertical-align: -0.05em; }
+  @media (max-width: 560px) { .ayuda dl { grid-template-columns: 1fr; gap: 2px 0; } .ayuda dd { margin-bottom: 8px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<main class="ayuda">
+  <a class="volver" href="./">← Volver al catálogo</a>
+  <h1>Cómo funciona el herbario</h1>
+  <p class="entrada">Una guía breve para sacar partido al herbario, sobre todo a <strong>Mi bodega</strong>, tu despensa particular de tabaco de pipa.</p>
+
+  <nav class="indice" aria-label="Contenido de la ayuda">
+    <p>En esta página</p>
+    <ul>
+      <li><a href="#bodega">Mi bodega</a>: <a href="#listas">las tres listas</a>, <a href="#tarros">tarros y latas</a>, <a href="#estanteria">la estantería</a> y <a href="#privacidad">quién la ve</a></li>
+      <li><a href="#resenas">Reseñas y rangos</a></li>
+      <li><a href="#mezclas">Tipos de mezcla</a></li>
+      <li><a href="#espana">El distintivo de España</a></li>
+      <li><a href="#movil">El herbario en el móvil</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="bodega">Mi bodega</h2>
+  <p>Mi bodega es tu lista personal de tabacos: los que tienes, los que has probado y los que te gustaría probar. Para usarla necesitas una cuenta; cuando entras, aparece el botón <strong>Mi bodega</strong> arriba a la derecha.</p>
+  <p>Todo se marca <strong>desde la ficha de cada tabaco</strong>, en el recuadro «Mi bodega» que hay debajo de la foto. La página Mi bodega sirve para ver y ordenar lo que has marcado.</p>
+  <ol class="pasos">
+    <li><span>Busca un tabaco en el catálogo y abre su ficha.</span></li>
+    <li><span>Pulsa <span class="muestra">Lo tengo</span>, <span class="muestra">Lo he probado</span> o <span class="muestra">Quiero probarlo</span>. El botón se rellena de color cuando está marcado.</span></li>
+    <li><span>Si lo tienes y quieres llevar la cuenta, despliega los tarros y apunta tus tarros y latas. Es opcional.</span></li>
+    <li><span>Abre <strong>Mi bodega</strong>, arriba a la derecha, para ver toda tu colección.</span></li>
+  </ol>
+
+  <h3 id="listas">Las tres listas</h3>
+  <dl>
+    <dt><span class="muestra on">Lo tengo</span></dt>
+    <dd>Tienes este tabaco en casa. Basta con marcarlo; si además quieres apuntar cuánto tienes y desde cuándo, usa los <a href="#tarros">tarros y latas</a>.</dd>
+    <dt><span class="muestra on">Lo he probado</span></dt>
+    <dd>Lo has fumado alguna vez, lo tengas o no. Al marcarlo, el tabaco sale de «Quiero probarlo», porque ya no está pendiente.</dd>
+    <dt><span class="muestra on">Quiero probarlo</span></dt>
+    <dd>Tu lista de pendientes. Puedes marcarlo aunque ya lo tengas en casa sin abrir.</dd>
+  </dl>
+  <p>Las listas no se excluyen: un mismo tabaco puede estar en varias a la vez. Por ejemplo, lo tienes y ya lo has probado. Para quitar una marca, vuelve a pulsar el mismo botón.</p>
+
+  <h3 id="tarros">Tarros y latas</h3>
+  <p>Cuando un tabaco está marcado como <strong>Lo tengo</strong>, debajo de los botones aparece un desplegable con el icono del tarro. Ábrelo y pulsa <strong>+ Añadir tarro</strong> para apuntar cada envase:</p>
+  <dl>
+    <dt>Envase</dt><dd>Tarro de cristal, lata cerrada o bolsa.</dd>
+    <dt>Cuántos</dt><dd>Si tienes varios envases iguales (por ejemplo, tres latas de 50 g compradas a la vez), apúntalos de una vez.</dd>
+    <dt>Gramos</dt><dd>Los gramos de cada envase. La bodega suma el total por ti.</dd>
+    <dt>Qué fecha es</dt><dd><strong>Embotado</strong>: el día en que llenaste y cerraste el tarro. <strong>Compra</strong>: cuando lo compraste. <strong>Fecha de la lata</strong>: la que viene impresa en la lata.</dd>
+    <dt>Año y mes</dt><dd>El mes es opcional. Si no lo pones, la antigüedad se calcula por años.</dd>
+    <dt>Abierto en</dt><dd>Si ya has abierto el envase, apunta cuándo.</dd>
+    <dt>Nota</dt><dd>Una línea para ti, por ejemplo «para abrir en 2030».</dd>
+  </dl>
+  <p class="consejo">Si tienes varios tarros de la misma mezcla embotados en fechas distintas, apúntalos por separado. Así sabrás cuál lleva más tiempo y cuál abrir primero.</p>
+  <ul>
+    <li>Para corregir o borrar un envase, pulsa <strong>Editar</strong> junto a él.</li>
+    <li>Apuntar envases es opcional: si solo quieres dejar constancia de que lo tienes, basta con «Lo tengo».</li>
+    <li>Si quitas «Lo tengo» de un tabaco que tiene envases apuntados, se borran también sus envases. Antes de hacerlo, la web te pide confirmación.</li>
+  </ul>
+
+  <h3 id="madurar">¿Por qué importa la fecha?</h3>
+  <p>Muchos tabacos de pipa cambian con el tiempo dentro de un envase cerrado: se suavizan y ganan dulzor y profundidad. Se nota sobre todo en los que llevan mucha Virginia o Perique. Por eso muchos aficionados embotan tabaco y lo dejan reposar años. Con la fecha apuntada, la bodega calcula cuánto lleva madurando cada envase.</p>
+
+  <h3 id="estanteria">La estantería de Mi bodega</h3>
+  <ul>
+    <li><strong>Las casillas de arriba</strong> resumen tu colección: el total de gramos, cuántos envases tienes, el que más tiempo lleva madurando y cuántos tabacos has probado o tienes pendientes.</li>
+    <li><strong>Las pestañas</strong> cambian entre las tres listas. Con <strong>Ordenar por</strong> puedes verlas por gramos, antigüedad, marca, tipo de mezcla o nombre. Al ordenar por marca o por mezcla, las latas se agrupan en baldas con su rótulo.</li>
+    <li><strong>Por tipo de mezcla</strong> (en «Lo tengo») muestra qué parte de tus gramos es Inglesa, Virginia, Aromática…</li>
+    <li><strong>Madurando en la bodega</strong> lista cada envase con fecha, del más antiguo al más nuevo. La barra se llena a los 10 años.</li>
+    <li>Pulsa cualquier lata de la estantería para abrir su ficha.</li>
+  </ul>
+
+  <h3 id="privacidad">¿Quién ve mi bodega?</h3>
+  <p>Tu bodega <strong>no es pública</strong>: no aparece en tu perfil ni junto a tus reseñas, y ningún otro usuario puede verla. El <strong>administrador del herbario</strong> sí puede consultarla, en solo lectura, desde el panel de gestión de usuarios. Más detalles en la <a href="privacidad.html">política de privacidad</a>.</p>
+
+  <h2 id="resenas">Reseñas y rangos</h2>
+  <p>Cualquier persona con cuenta puede escribir una reseña en la ficha de un tabaco, con su puntuación y, si quiere, su valoración de la fuerza, la intensidad de sabor, el aromatizante y la nota de habitación. Las reseñas se publican al momento con la firma que elijas en Mi cuenta; tu correo nunca se muestra.</p>
+  <p>Según las reseñas que lleves publicadas, tu firma lleva un rango: <strong>Mediano de la Comarca</strong> (1), <strong>Caminante</strong> (5), <strong>Montaraz</strong> (15), <strong>Guardián del Herbario</strong> (30) y <strong>Sabio de la Pipa</strong> (60). En Mi cuenta ves cuánto te falta para el siguiente.</p>
+
+  <h2 id="mezclas">Tipos de mezcla</h2>
+  <p>Cada ficha indica el tipo de mezcla, según las hojas que lleva y cómo se combinan:</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Mezcla</th><th>Qué es</th></tr></thead>
+    <tbody>
+      <tr><td><span class="sw" style="background:#2F3E4E"></span>Inglesa</td><td>Virginia con orientales, con o sin latakia; también virginia con latakia. Humo seco, a menudo ahumado.</td></tr>
+      <tr><td><span class="sw" style="background:#4A3B5C"></span>Balcánica</td><td>Como una inglesa, pero con mucho más peso de los orientales, y poca o ninguna virginia.</td></tr>
+      <tr><td><span class="sw" style="background:#8C5A3C"></span>Oriental</td><td>Mezclas en las que mandan las hojas orientales (turcas, griegas…).</td></tr>
+      <tr><td><span class="sw" style="background:#B8862B"></span>Virginia</td><td>Basadas en la hoja Virginia: dulce, a heno, a pan tostado o a cítricos.</td></tr>
+      <tr><td><span class="sw" style="background:#7A5A1E"></span>Virginia-Perique</td><td>Virginia con un toque de Perique de Luisiana, que aporta notas de fruta oscura y pimienta.</td></tr>
+      <tr><td><span class="sw" style="background:#6B4A2F"></span>Burley</td><td>Basadas en el Burley: notas de nuez y chocolate, poco azúcar.</td></tr>
+      <tr><td><span class="sw" style="background:#3F6E5A"></span>Lakeland</td><td>La tradición de Kendal (Inglaterra): tabaco perfumado con esencias florales o de tonka.</td></tr>
+      <tr><td><span class="sw" style="background:#7B2D4B"></span>Aromática</td><td>Con aromatizantes añadidos (vainilla, frutas, licores…), a menudo con base de Cavendish.</td></tr>
+      <tr><td><span class="sw" style="background:#5B6B73"></span>Sin mezclar</td><td>Una sola hoja, o componentes pensados para que cada uno haga sus propias mezclas.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="espana">El distintivo de España</h2>
+  <p>Algunas fichas llevan un circulito con los colores de la bandera y una <span class="es-badge" role="img" aria-label="E">E</span>. Indica que esa mezcla se encuentra en España. Si un tabaco tiene un nombre distinto en Estados Unidos y en Europa, la ficha usa siempre el nombre europeo.</p>
+
+  <h2 id="movil">El herbario en el móvil</h2>
+  <p>Puedes instalar el herbario como una app, con el logo del club en tu pantalla de inicio:</p>
+  <ul>
+    <li><strong>Android (Chrome):</strong> abre Mi cuenta y pulsa <strong>Instalar la app</strong>. Si no aparece, usa el menú de Chrome (⋮) y elige «Instalar aplicación» o «Añadir a pantalla de inicio».</li>
+    <li><strong>iPhone (Safari):</strong> pulsa el botón Compartir y elige «Añadir a pantalla de inicio».</li>
+  </ul>
+
+  <a class="volver" href="./">← Volver al catálogo</a>
+</main>
+</div>
+</body>
+</html>
