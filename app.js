@@ -278,6 +278,7 @@ function render() {
   $("count").textContent = (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
     (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "");
   pintarPaginador(paginas);
+  pintarUltimas(!q && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
   $("grid").innerHTML = list.length ? visibles.map((d) => {
     const st = statsDe(d.id);
     const rate = st.n ? `${fmtMedia(st.media)} de 5 · ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}` : "Sin reseñas todavía";
@@ -293,6 +294,68 @@ function render() {
       </div>
     </button>`;
   }).join("") : `<p class="empty">Ningún tabaco coincide con la búsqueda. Prueba con menos filtros.</p>`;
+}
+
+/* ---------- Últimas reseñas (portada) ----------
+   Cuatro tarjetas encima del catálogo, solo en la primera página y sin filtros. */
+const ICONO_RESENA = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12.5h5"/></svg>`;
+function estrellas(n) { return `<span class="est" role="img" aria-label="${n} de 5">${"★".repeat(n)}<span>${"★".repeat(5 - n)}</span></span>`; }
+// Todas las reseñas de las fichas que existen, de la más nueva a la más antigua.
+function resenasRecientes() {
+  const l = [];
+  Object.entries(opiniones).forEach(([k, os]) => { const d = findItem(k); if (d) os.forEach((o) => { if (o.score) l.push({ o, d }); }); });
+  return l.sort((a, b) => new Date(b.o.creado) - new Date(a.o.creado));
+}
+function firmaResena(o) {
+  return `<span class="firma">${avatarResena(o)}<b>${esc(o.firma)}</b>${esSocio(o.autor) ? SELLO_SOCIO : ""}</span>`;
+}
+function irAResenas(id) {
+  openDetail(id);
+  setTimeout(() => { const sec = $("d-resenas"); if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" }); }, 80);
+}
+function pintarUltimas(mostrar) {
+  const box = $("ultimas"); if (!box) return;
+  const lista = mostrar && ctx.online && ctx.opiniones ? resenasRecientes() : [];
+  if (!lista.length) { box.hidden = true; box.innerHTML = ""; return; }
+  box.hidden = false;
+  box.innerHTML = `<div class="ult-h"><h2 id="ult-t">${ICONO_RESENA}Últimas reseñas</h2>
+      ${lista.length > 4 ? `<button class="link" type="button" id="ult-todas">Ver todas las reseñas</button>` : ""}</div>
+    <div class="ult-fila">${lista.slice(0, 4).map(({ o, d }) => `
+      <button class="ult-tj" type="button" data-ult="${esc(d.id)}" aria-label="Reseña de ${esc(o.firma)} sobre ${esc(d.nombre)}">
+        <span class="ult-c"><span class="ult-art">${art(d)}</span><span class="ult-n"><strong>${esc(d.nombre)}</strong><small>${esc(d.marca)}</small></span></span>
+        ${o.texto.trim() ? `<q>${esc(o.texto.trim())}</q>` : '<span class="muted ult-solo">Solo puntuación, sin comentario.</span>'}
+        <span class="ult-pie">${firmaResena(o)}${estrellas(o.score)}</span>
+        <span class="ult-cuando">${haceCuanto(o.creado)}</span>
+      </button>`).join("")}</div>`;
+  box.querySelectorAll("[data-ult]").forEach((b) => b.addEventListener("click", () => irAResenas(b.dataset.ult)));
+  if ($("ult-todas")) $("ult-todas").addEventListener("click", () => abrirTodasResenas());
+}
+// Todas las reseñas, de 30 en 30.
+function abrirTodasResenas(cuantas) {
+  const n = cuantas || 30, lista = resenasRecientes();
+  abrirPanel(`
+    <div class="d-franja">${FRANJA}</div>
+    <div class="bd-cab">
+      <span class="bd-baul" aria-hidden="true">${ICONO_RESENA}</span>
+      <div><h2 id="d-name">Todas las reseñas</h2><p class="muted">${lista.length} reseñas de los vecinos del herbario, de la más nueva a la más antigua.</p></div>
+    </div>
+    <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
+    <div class="bd-cuerpo"><div class="tr-lista">${lista.slice(0, n).map(({ o, d }) => `
+      <article class="tr-item">
+        <button class="tr-art" type="button" data-ult="${esc(d.id)}" aria-label="Abrir ${esc(d.nombre)}">${art(d)}</button>
+        <div class="tr-c">
+          <div class="tr-h"><button class="link tr-nom" type="button" data-ult="${esc(d.id)}">${esc(d.nombre)}</button><span class="muted">${esc(d.marca)}</span>${estrellas(o.score)}</div>
+          ${o.texto.trim() ? `<p>${esc(o.texto.trim())}</p>` : '<p class="muted">Solo puntuación, sin comentario.</p>'}
+          <div class="tr-pie">${firmaResena(o)}${rangoHTML(o.autor)}<span class="muted">· ${haceCuanto(o.creado)}</span></div>
+        </div>
+      </article>`).join("")}</div>
+      ${lista.length > n ? `<button class="btn tr-mas" type="button" id="tr-mas">Ver ${Math.min(30, lista.length - n)} más</button>` : ""}
+    </div>`, "bodega-p resenas-p");
+  $("d-close").addEventListener("click", () => closeDetail());
+  $("panel").querySelectorAll("[data-ult]").forEach((b) => b.addEventListener("click", () => irAResenas(b.dataset.ult)));
+  if ($("tr-mas")) $("tr-mas").addEventListener("click", () => {
+    const y = $("overlay").scrollTop; abrirTodasResenas(n + 30); $("overlay").scrollTop = y;
+  });
 }
 
 /* Paginador: 20 tabacos por página */
@@ -1406,7 +1469,7 @@ async function abrirUsuarios() {
       aviso("Reseña borrada.", true);
       if (!u.resenas) { abiertos[id] = ""; }
       repintar();
-      await cargarExtras(); pintar();
+      await cargarExtras(); render();
       return;
     }
 
@@ -1453,7 +1516,7 @@ async function abrirUsuarios() {
     lista = lista.filter((x) => x.id !== id);
     aviso(`Cuenta de ${quien(u)} borrada.`, true);
     repintar();
-    if (u.resenas) { await cargarExtras(); pintar(); }
+    if (u.resenas) { await cargarExtras(); render(); }
   });
 }
 async function abrirMisPropuestas() {
