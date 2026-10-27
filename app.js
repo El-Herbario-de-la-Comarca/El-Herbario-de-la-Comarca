@@ -1130,10 +1130,37 @@ function marcarVisita() {
   sb.rpc("marcar_visita").then(() => {}, () => {});
 }
 const usVista = { filtro: "todos", orden: "recientes", q: "" };
-const US_FILTROS = [["todos", "Todos"], ["admin", "Admin"], ["editor", "Editores"], ["lector", "Lectores"], ["socio", "Socios"]];
+const US_FILTROS = [["todos", "Todos"], ["admin", "Admin"], ["editor", "Editores"], ["lector", "Lectores"], ["socio", "Socios"], ["suspendido", "Suspendidas"]];
 const US_ORDEN = [["recientes", "Más recientes"], ["conexion", "Última conexión"], ["nombre", "Nombre"], ["resenas", "Más reseñas"]];
+const ICONO_CANDADO = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>`;
+const ICONO_NOTA = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8.5 12h7M8.5 15.5h5"/></svg>`;
+const ICONO_RESENAS = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12.5h5"/></svg>`;
+const ICONO_HOJA_CALC = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M4 9h16M4 14.5h16M10 9v11.5"/></svg>`;
+// Usuarios nuevos desde la última vez que el administrador abrió el panel (para el numerito del botón).
+const US_VISTO = "herbario-usuarios-visto";
+function usuariosVisto() { try { return Number(localStorage.getItem(US_VISTO) || 0); } catch (e) { return 0; } }
+async function contarUsuariosNuevos() {
+  ctx.usuariosNuevos = 0;
+  if (!sb || ctx.rol !== "admin") return;
+  let visto = usuariosVisto();
+  if (!visto) { visto = Date.now(); try { localStorage.setItem(US_VISTO, String(visto)); } catch (e) {} }
+  const { count } = await sb.from("perfiles").select("id", { count: "exact", head: true }).gt("creado", new Date(visto).toISOString());
+  ctx.usuariosNuevos = count || 0;
+}
+function descargarCSV(nombre, filas) {
+  const celda = (v) => { const t = v == null ? "" : String(v); return /[";\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+  const csv = "﻿" + filas.map((f) => f.map(celda).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = nombre; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
 async function abrirUsuarios() {
   if (!esAdmin()) return;
+  // Lo que se registró después de la última visita al panel se marca como «Nuevo».
+  const vistoAntes = usuariosVisto();
+  try { localStorage.setItem(US_VISTO, String(Date.now())); } catch (e) {}
+  if (ctx.usuariosNuevos) { ctx.usuariosNuevos = 0; paintTop(); }
   abrirPanel(`
     <div class="d-franja">${FRANJA}</div>
     <div class="bd-cab">
@@ -1144,7 +1171,7 @@ async function abrirUsuarios() {
     <div class="bd-cuerpo" id="us-cuerpo"><p class="muted">Cargando…</p></div>`, "bodega-p usuarios-p");
   $("d-close").addEventListener("click", () => closeDetail());
 
-  // Con el 36, todo en una llamada; si no, lo básico de perfiles.
+  // Con el 36 (y el 37), todo en una llamada; si no, lo básico de perfiles.
   let completo = true, socios = true;
   let { data, error } = await sb.rpc("admin_usuarios");
   if (error) {
@@ -1155,6 +1182,8 @@ async function abrirUsuarios() {
   const cuerpo = $("us-cuerpo"); if (!cuerpo) return;
   if (error) { cuerpo.innerHTML = '<p class="msg">No se han podido cargar los usuarios.</p>'; return; }
   let lista = data || [];
+  const extra = completo && lista.length > 0 && "suspendido" in lista[0];   // 37_usuarios_extra.sql
+  const abiertos = {};   // id -> "resenas" | "nota" (lo que está desplegado en cada tarjeta)
 
   const ahora = Date.now();
   const casillas = () => {
@@ -1163,29 +1192,34 @@ async function abrirUsuarios() {
     return `<div class="bd-casilla principal"><span class="l">Usuarios</span><span class="n">${lista.length}</span><span class="s">registrados en el herbario</span></div>
       <div class="bd-casilla"><span class="l">Nuevos</span><span class="n">${nuevos}</span><span class="s">en los últimos 30 días</span></div>
       ${completo ? `<div class="bd-casilla"><span class="l">Activos</span><span class="n">${activos}</span><span class="s">han entrado en 30 días</span></div>` : ""}
-      ${socios ? `<div class="bd-casilla"><span class="l">Socios del club</span><span class="n">${lista.filter((u) => u.socio).length}</span><span class="s">con el sello del Pipa Club</span></div>` : ""}
-`;
+      ${socios ? `<div class="bd-casilla"><span class="l">Socios del club</span><span class="n">${lista.filter((u) => u.socio).length}</span><span class="s">con el sello del Pipa Club</span></div>` : ""}`;
   };
   cuerpo.innerHTML = `
     <div class="bd-casillas" id="us-casillas">${casillas()}</div>
     <div class="bd-barra us-barra">
       <div class="bd-tabs" role="tablist" aria-label="Filtrar usuarios" id="us-tabs"></div>
       <div class="us-busca">
-        <input id="us-q" type="search" placeholder="Buscar por nombre o correo" aria-label="Buscar usuarios" autocomplete="off" value="${esc(usVista.q)}">
-        <label class="bd-orden">Ordenar por <select id="us-orden">${US_ORDEN.filter(([k]) => completo || (k !== "conexion" && k !== "resenas")).map(([k, t]) => `<option value="${k}"${k === usVista.orden ? " selected" : ""}>${t}</option>`).join("")}</select></label>
+        <input id="us-q" type="search" placeholder="Buscar por nombre, correo o nota" aria-label="Buscar usuarios" autocomplete="off" value="${esc(usVista.q)}">
+        <span class="us-busca-d">
+          <label class="bd-orden">Ordenar por <select id="us-orden">${US_ORDEN.filter(([k]) => completo || (k !== "conexion" && k !== "resenas")).map(([k, t]) => `<option value="${k}"${k === usVista.orden ? " selected" : ""}>${t}</option>`).join("")}</select></label>
+          <button class="btn us-exportar" id="us-csv" type="button" title="Descarga la lista que ves ahora (con los filtros aplicados)">${ICONO_HOJA_CALC}<span>Exportar</span></button>
+        </span>
       </div>
     </div>
     <p class="msg" id="us-msg" role="status"></p>
     <div class="us-lista" id="us-list"></div>
     ${completo ? "" : '<p class="notice">Para ver la última conexión, las reseñas y la bodega de cada usuario, y poder borrar cuentas, ejecuta <strong>36_panel_usuarios.sql</strong> en Supabase.</p>'}
+    ${completo && !extra && lista.length ? '<p class="notice">Para suspender cuentas y escribir notas privadas, ejecuta <strong>37_usuarios_extra.sql</strong> en Supabase.</p>' : ""}
     ${socios ? "" : '<p class="notice">Para marcar socios del club, ejecuta 23_socios_del_club.sql en Supabase.</p>'}`;
 
   const box = $("us-list");
   const aviso = (txt, ok) => { const m = $("us-msg"); m.style.color = ok ? "var(--accent)" : ""; m.textContent = txt; };
+  const quien = (u) => u.nombre || u.email || "este usuario";
+  const enFiltro = (u, f) => f === "todos" ? true : f === "socio" ? u.socio : f === "suspendido" ? u.suspendido : u.rol === f && !u.suspendido;
   const visibles = () => {
     const q = usVista.q.trim().toLowerCase();
-    let v = lista.filter((u) => usVista.filtro === "todos" ? true : usVista.filtro === "socio" ? u.socio : u.rol === usVista.filtro);
-    if (q) v = v.filter((u) => `${u.nombre || ""} ${u.email || ""}`.toLowerCase().includes(q));
+    let v = lista.filter((u) => enFiltro(u, usVista.filtro));
+    if (q) v = v.filter((u) => `${u.nombre || ""} ${u.email || ""} ${u.nota || ""}`.toLowerCase().includes(q));
     const t = (x) => (x ? new Date(x).getTime() : 0);
     const nom = (u) => (u.nombre || u.email || "").toLowerCase();
     const ord = { recientes: (a, b) => t(b.creado) - t(a.creado), conexion: (a, b) => t(b.ultima_conexion) - t(a.ultima_conexion),
@@ -1196,14 +1230,20 @@ async function abrirUsuarios() {
     const yo = u.id === ctx.uid, foto = fotoSegura(u.avatar || "");
     const letra = (u.nombre || u.email || "?").trim().charAt(0).toUpperCase();
     const borrable = completo && !yo && u.rol !== "admin";
-    return `<article class="us-fila" data-uid="${esc(u.id)}">
+    const nuevo = vistoAntes && new Date(u.creado).getTime() > vistoAntes;
+    const abierto = abiertos[u.id] || "";
+    return `<article class="us-fila${u.suspendido ? " suspendida" : ""}${nuevo ? " nueva" : ""}" data-uid="${esc(u.id)}">
       <span class="us-foto">${foto ? `<img class="avatar" src="${esc(foto)}" alt="" loading="lazy">` : `<span class="avatar" aria-hidden="true">${esc(letra)}</span>`}</span>
       <div class="us-quien">
         <strong class="us-nombre">${u.nombre ? esc(u.nombre) : '<span class="muted">Sin nombre público</span>'}</strong>
         <span class="us-correo">${esc(u.email || "—")}</span>
-        <span class="us-chips"><span class="cu-chip rol r-${esc(u.rol)}">${esc(ROL_TXT[u.rol] || u.rol)}</span>
+        <span class="us-chips">
+          ${nuevo ? '<span class="cu-chip nuevo">Nuevo</span>' : ""}
+          ${u.suspendido ? `<span class="cu-chip suspendida">${ICONO_CANDADO}Suspendida</span>` : ""}
+          <span class="cu-chip rol r-${esc(u.rol)}">${esc(ROL_TXT[u.rol] || u.rol)}</span>
           ${u.socio ? `<span class="cu-chip rango us-socio-chip"><img src="img/logo.png" alt="" width="16" height="16">Socio${u.socio_desde ? ` desde ${u.socio_desde}` : ""}</span>` : ""}
           ${yo ? '<span class="cu-chip tu">Tú</span>' : ""}</span>
+        ${extra && u.nota && abierto !== "nota" ? `<span class="us-nota-ver">${ICONO_NOTA}${esc(u.nota)}</span>` : ""}
       </div>
       <dl class="us-datos">
         <div><dt>Alta</dt><dd>${fecha(u.creado)}</dd></div>
@@ -1217,22 +1257,71 @@ async function abrirUsuarios() {
           </select></label>
         ${socios ? `<div class="us-campo us-socio"><label class="check"><input type="checkbox" data-socio="${esc(u.id)}"${u.socio ? " checked" : ""}> Socio</label>
           <input type="number" data-desde="${esc(u.id)}" min="1950" max="2100" step="1" placeholder="Año" value="${u.socio_desde || ""}" aria-label="Socio desde (año)"></div>` : ""}
-        ${completo ? `<button class="btn danger us-borrar" type="button" data-borrar="${esc(u.id)}"${borrable ? "" : ` disabled title="${yo ? "No puedes borrar tu propia cuenta" : "Quítale antes el rol de administrador"}"`}>${ICONO_PAPELERA}<span>Borrar cuenta</span></button>` : ""}
+        <span class="us-acc-d">
+          ${completo ? `<button class="btn us-mini" type="button" data-ver="resenas" aria-expanded="${abierto === "resenas"}"${u.resenas ? "" : " disabled"}>${ICONO_RESENAS}<span>Reseñas${u.resenas ? ` (${u.resenas})` : ""}</span></button>` : ""}
+          ${extra ? `<button class="btn us-mini" type="button" data-ver="nota" aria-expanded="${abierto === "nota"}">${ICONO_NOTA}<span>${u.nota ? "Nota" : "Añadir nota"}</span></button>` : ""}
+          ${extra && !yo ? `<button class="btn us-mini${u.suspendido ? " readmitir" : " suspender"}" type="button" data-suspender="${u.suspendido ? "0" : "1"}"${!u.suspendido && u.rol === "admin" ? ' disabled title="Quítale antes el rol de administrador"' : ""}>${ICONO_CANDADO}<span>${u.suspendido ? "Readmitir" : "Suspender"}</span></button>` : ""}
+          ${completo ? `<button class="btn danger us-borrar us-mini" type="button" data-borrar="${esc(u.id)}"${borrable ? "" : ` disabled title="${yo ? "No puedes borrar tu propia cuenta" : "Quítale antes el rol de administrador"}"`}>${ICONO_PAPELERA}<span>Borrar cuenta</span></button>` : ""}
+        </span>
       </div>
+      ${abierto === "nota" ? `<div class="us-extra us-nota">
+        <label for="us-nota-${esc(u.id)}">Nota privada <span class="muted">(solo la ves tú)</span></label>
+        <textarea id="us-nota-${esc(u.id)}" maxlength="2000" rows="3" placeholder="Por ejemplo: socio del grupo de Valladolid, lo conocí en la quedada de octubre…">${esc(u.nota || "")}</textarea>
+        <span class="btns"><button class="btn primary" type="button" data-nota-guardar>Guardar nota</button><button class="btn" type="button" data-ver="nota">Cerrar</button></span>
+      </div>` : ""}
+      ${abierto === "resenas" ? `<div class="us-extra us-resenas" data-resenas="${esc(u.id)}"><p class="muted">Cargando reseñas…</p></div>` : ""}
     </article>`;
   };
   const pintarLista = () => {
-    const cuenta = (k) => k === "todos" ? lista.length : k === "socio" ? lista.filter((u) => u.socio).length : lista.filter((u) => u.rol === k).length;
-    $("us-tabs").innerHTML = US_FILTROS.filter(([k]) => socios || k !== "socio")
-      .map(([k, t]) => `<button role="tab" type="button" data-filtro="${k}" aria-selected="${k === usVista.filtro}">${t} <span>${cuenta(k)}</span></button>`).join("");
+    $("us-tabs").innerHTML = US_FILTROS.filter(([k]) => (socios || k !== "socio") && (extra || k !== "suspendido"))
+      .map(([k, t]) => `<button role="tab" type="button" data-filtro="${k}" aria-selected="${k === usVista.filtro}">${t} <span>${lista.filter((u) => enFiltro(u, k)).length}</span></button>`).join("");
     const v = visibles();
     box.innerHTML = v.length ? v.map(fila).join("") : '<p class="muted us-vacio">Nadie coincide con la búsqueda.</p>';
+    box.querySelectorAll("[data-resenas]").forEach((el) => cargarResenasDe(el));
   };
-  pintarLista();
+  const repintar = () => { $("us-casillas").innerHTML = casillas(); pintarLista(); };
 
+  // Reseñas de un usuario, con la ficha, la puntuación y el botón de borrar.
+  async function cargarResenasDe(el) {
+    const id = el.dataset.resenas;
+    const { data: rs, error: er } = await sb.from("opiniones").select("id,tabaco_id,puntuacion,texto,creado").eq("autor", id).order("creado", { ascending: false });
+    if (!el.isConnected) return;
+    if (er) { el.innerHTML = '<p class="msg">No se han podido cargar sus reseñas.</p>'; return; }
+    if (!rs.length) { el.innerHTML = '<p class="muted">No tiene reseñas publicadas.</p>'; return; }
+    el.innerHTML = `<p class="us-extra-t">Sus reseñas</p>` + rs.map((r) => {
+      const d = findItem(r.tabaco_id);
+      const texto = (r.texto || "").trim();
+      return `<div class="us-res" data-rid="${r.id}">
+        <div class="us-res-c">
+          <span class="us-res-h">${d ? `<button class="link" type="button" data-ficha="${esc(r.tabaco_id)}">${esc(d.nombre)}</button> <span class="muted">· ${esc(d.marca)}</span>` : '<span class="muted">Ficha eliminada</span>'}
+            <span class="us-res-p" aria-label="${r.puntuacion} de 5">${"★".repeat(r.puntuacion)}<span>${"★".repeat(5 - r.puntuacion)}</span></span>
+            <span class="muted">· ${fecha(r.creado)}</span></span>
+          ${texto ? `<p>${esc(texto.length > 280 ? texto.slice(0, 280) + "…" : texto)}</p>` : '<p class="muted">Sin texto, solo puntuación.</p>'}
+        </div>
+        <button class="btn danger us-mini" type="button" data-borrar-resena="${r.id}">${ICONO_PAPELERA}<span>Borrar</span></button>
+      </div>`;
+    }).join("");
+  }
+
+  pintarLista();
   $("us-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-filtro]"); if (!b) return; usVista.filtro = b.dataset.filtro; pintarLista(); });
   $("us-q").addEventListener("input", (e) => { usVista.q = e.target.value; pintarLista(); });
   $("us-orden").addEventListener("change", (e) => { usVista.orden = e.target.value; pintarLista(); });
+  $("us-csv").addEventListener("click", () => {
+    const v = visibles();
+    const cab = ["Nombre público", "Correo", "Rol", "Socio", "Socio desde", "Alta"];
+    if (completo) cab.push("Última conexión", "Reseñas", "Tabacos en bodega");
+    if (extra) cab.push("Suspendida", "Nota");
+    const fh = (t) => (t ? new Date(t).toLocaleDateString("es-ES") : "");
+    const filas = v.map((u) => {
+      const f = [u.nombre || "", u.email || "", ROL_TXT[u.rol] || u.rol, u.socio ? "Sí" : "No", u.socio_desde || "", fh(u.creado)];
+      if (completo) f.push(fh(u.ultima_conexion), u.resenas || 0, u.en_bodega || 0);
+      if (extra) f.push(u.suspendido ? "Sí" : "No", u.nota || "");
+      return f;
+    });
+    descargarCSV(`usuarios-herbario-${new Date().toISOString().slice(0, 10)}.csv`, [cab, ...filas]);
+    aviso(`Descargada la lista de ${v.length === 1 ? "1 usuario" : `${v.length} usuarios`}.`, true);
+  });
 
   box.addEventListener("change", async (e) => {
     const cs = e.target.closest("[data-socio],[data-desde]");
@@ -1249,7 +1338,7 @@ async function abrirUsuarios() {
       const u = lista.find((x) => x.id === id); if (u) { u.socio = marca.checked; u.socio_desde = n; }
       if (id === ctx.uid) { ctx.perfil.socio = marca.checked; ctx.perfil.socioDesde = n; }
       if (marca.checked) sociosAutores.add(id); else sociosAutores.delete(id);
-      $("us-casillas").innerHTML = casillas(); pintarLista();
+      repintar();
       return;
     }
     const s = e.target.closest("select[data-rol]"); if (!s) return;
@@ -1258,41 +1347,94 @@ async function abrirUsuarios() {
     s.disabled = false;
     if (error) { aviso("No se ha podido cambiar el rol."); return; }
     const u = lista.find((x) => x.id === s.dataset.rol); if (u) u.rol = s.value;
-    aviso(`Rol actualizado: ${u && (u.nombre || u.email) ? `${u.nombre || u.email} ahora es ${ROL_TXT[s.value].toLowerCase()}.` : "hecho."}`, true);
-    $("us-casillas").innerHTML = casillas(); pintarLista();
+    aviso(`Rol actualizado: ${quien(u)} ahora es ${ROL_TXT[s.value].toLowerCase()}.`, true);
+    repintar();
   });
 
-  // Borrar cuenta: primero se pide confirmación dentro de la propia fila.
   box.addEventListener("click", async (e) => {
+    const art = e.target.closest(".us-fila"); if (!art) return;
+    const id = art.dataset.uid, u = lista.find((x) => x.id === id); if (!u) return;
+    const bloquear = (si) => art.querySelectorAll("button,select,input,textarea").forEach((x) => (x.disabled = si));
+
+    // Abrir o cerrar reseñas / nota
+    const ver = e.target.closest("[data-ver]");
+    if (ver) { abiertos[id] = abiertos[id] === ver.dataset.ver ? "" : ver.dataset.ver; pintarLista();
+      if (abiertos[id] === "nota") { const t = $("us-nota-" + id); if (t) t.focus(); } return; }
+    const fic = e.target.closest("[data-ficha]");
+    if (fic) { openDetail(fic.dataset.ficha); return; }
+
+    // Guardar la nota privada
+    if (e.target.closest("[data-nota-guardar]")) {
+      const txt = $("us-nota-" + id).value.trim();
+      bloquear(true);
+      const { error } = txt
+        ? await sb.from("notas_usuarios").upsert({ usuario: id, nota: txt, actualizado: new Date().toISOString() })
+        : await sb.from("notas_usuarios").delete().eq("usuario", id);
+      bloquear(false);
+      if (error) { aviso("No se ha podido guardar la nota."); return; }
+      u.nota = txt; abiertos[id] = ""; aviso(txt ? "Nota guardada." : "Nota borrada.", true); pintarLista();
+      return;
+    }
+
+    // Borrar una reseña suya (con confirmación en el propio botón)
+    const br = e.target.closest("[data-borrar-resena]");
+    if (br) {
+      if (!br.dataset.seguro) { br.dataset.seguro = "1"; br.querySelector("span").textContent = "¿Seguro? Pulsa otra vez"; return; }
+      br.disabled = true;
+      const { error } = await sb.from("opiniones").delete().eq("id", Number(br.dataset.borrarResena));
+      if (error) { br.disabled = false; aviso("No se ha podido borrar la reseña."); return; }
+      br.closest(".us-res").remove();
+      u.resenas = Math.max(0, (u.resenas || 1) - 1);
+      aviso("Reseña borrada.", true);
+      if (!u.resenas) { abiertos[id] = ""; }
+      repintar();
+      await cargarExtras(); pintar();
+      return;
+    }
+
+    // Suspender o readmitir
+    const sus = e.target.closest("[data-suspender]");
+    if (sus) {
+      const suspender = sus.dataset.suspender === "1";
+      if (suspender && !sus.dataset.seguro) {
+        sus.dataset.seguro = "1"; sus.querySelector("span").textContent = "¿Suspender? Pulsa otra vez";
+        aviso(`${quien(u)} no podrá entrar ni escribir. Sus reseñas se quedan publicadas y puedes readmitirle cuando quieras.`, true);
+        return;
+      }
+      bloquear(true);
+      const { error } = await sb.rpc("admin_suspender", { p_id: id, p_suspender: suspender });
+      bloquear(false);
+      if (error) { aviso(error.message || "No se ha podido completar."); return; }
+      u.suspendido = suspender;
+      aviso(suspender ? `Cuenta de ${quien(u)} suspendida.` : `${quien(u)} vuelve a tener acceso.`, true);
+      repintar();
+      return;
+    }
+
+    // Borrar la cuenta: primero se pide confirmación dentro de la propia fila
     const b = e.target.closest("[data-borrar]");
     if (b) {
-      const u = lista.find((x) => x.id === b.dataset.borrar); if (!u) return;
-      const art = b.closest(".us-fila");
+      if (art.querySelector(".us-confirma")) return;
       art.insertAdjacentHTML("beforeend", `<div class="us-confirma" role="alertdialog" aria-label="Confirmar borrado">
-        <p><strong>¿Borrar la cuenta de ${esc(u.nombre || u.email || "este usuario")}?</strong>
-        Se borrarán también sus reseñas${u.resenas ? ` (${u.resenas})` : ""}, su bodega, sus tarros, sus propuestas y su foto. No se puede deshacer.</p>
-        <span class="btns"><button class="btn danger fuerte" type="button" data-si="${esc(u.id)}">Sí, borrar la cuenta</button><button class="btn" type="button" data-no>Cancelar</button></span></div>`);
+        <p><strong>¿Borrar la cuenta de ${esc(quien(u))}?</strong>
+        Se borrarán también sus reseñas${u.resenas ? ` (${u.resenas})` : ""}, su bodega, sus tarros, sus propuestas, su foto y tu nota. No se puede deshacer.${extra && !u.suspendido ? " Si solo quieres apartarle, mejor «Suspender»." : ""}</p>
+        <span class="btns"><button class="btn danger fuerte" type="button" data-si>Sí, borrar la cuenta</button><button class="btn" type="button" data-no>Cancelar</button></span></div>`);
       b.disabled = true; art.querySelector("[data-no]").focus();
       return;
     }
-    if (e.target.closest("[data-no]")) { const art = e.target.closest(".us-fila"); art.querySelector(".us-confirma").remove(); art.querySelector("[data-borrar]").disabled = false; return; }
-    const si = e.target.closest("[data-si]"); if (!si) return;
-    const id = si.dataset.si, u = lista.find((x) => x.id === id), art = si.closest(".us-fila");
-    art.querySelectorAll("button,select,input").forEach((x) => (x.disabled = true));
+    if (e.target.closest("[data-no]")) { art.querySelector(".us-confirma").remove(); art.querySelector("[data-borrar]").disabled = false; return; }
+    if (!e.target.closest("[data-si]")) return;
+    bloquear(true);
     // La foto de perfil, antes (después ya no quedaría rastro de la carpeta)
     try {
       const { data: fs } = await sb.storage.from("avatares").list(id);
       if (fs && fs.length) await sb.storage.from("avatares").remove(fs.map((f) => `${id}/${f.name}`));
     } catch (er) { console.warn("No se ha podido borrar la foto de perfil", er); }
     const { error } = await sb.rpc("admin_borrar_usuario", { p_id: id });
-    if (error) {
-      aviso(error.message || "No se ha podido borrar la cuenta.");
-      art.querySelectorAll("button,select,input").forEach((x) => (x.disabled = false));
-      art.querySelector(".us-confirma").remove(); return;
-    }
+    if (error) { aviso(error.message || "No se ha podido borrar la cuenta."); bloquear(false); art.querySelector(".us-confirma").remove(); return; }
     lista = lista.filter((x) => x.id !== id);
-    aviso(`Cuenta de ${u.nombre || u.email} borrada.`, true);
-    $("us-casillas").innerHTML = casillas(); pintarLista();
+    aviso(`Cuenta de ${quien(u)} borrada.`, true);
+    repintar();
     if (u.resenas) { await cargarExtras(); pintar(); }
   });
 }
@@ -1832,7 +1974,7 @@ function bodegaDePrueba() {
 const ICONO_BAUL = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
   <path d="M4 10.5V8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2.5"/><rect x="3" y="10.5" width="18" height="9.5" rx="1.6"/>
   <path d="M3 13.5h18M8 4.4v6.1M16 4.4v6.1"/><rect x="10.3" y="12.2" width="3.4" height="3.6" rx=".6" fill="currentColor" stroke="none"/></svg>`;
-const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector" };
+const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector", suspendido: "Suspendida" };
 async function cargarPerfil() {
   ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false;
   ctx.socioOk = false;
@@ -2036,6 +2178,7 @@ function datosLogin(conPass) {
 }
 function errorLogin(err) {
   const m = (err && err.message) || "";
+  if (/banned/i.test(m)) return "Tu cuenta está suspendida. Si crees que es un error, habla con el administrador del herbario.";
   if (/invalid login/i.test(m)) return "Correo o contraseña incorrectos.";
   if (/not confirmed/i.test(m)) return "Tienes que confirmar tu correo antes de entrar. Busca el mensaje en tu bandeja de entrada.";
   if (/already registered/i.test(m)) return "Ya existe una cuenta con ese correo. Pulsa «Entrar».";
@@ -2110,7 +2253,7 @@ async function leerSesion(session) {
   };
   await Promise.all([rol(), cargarPerfil()]);
   marcarVisita();
-  await contarPendientes();
+  await Promise.all([contarPendientes(), contarUsuariosNuevos()]);
 }
 async function contarPendientes() {
   ctx.pendientes = 0; ctx.misPendientes = 0;
@@ -2146,7 +2289,7 @@ function paintTop() {
   st.textContent = ctx.online ? "" : (ctx.aviso || "");
   if (ctx.session) {
     top.innerHTML = (ctx.online && esAdmin()
-        ? `<button class="btn cuenta-btn us-top" id="us-open" type="button" aria-label="Usuarios" title="Usuarios"><span class="avatar" aria-hidden="true">${ICONO_VECINOS}</span><span>Usuarios</span></button>` : "")
+        ? `<button class="btn cuenta-btn us-top" id="us-open" type="button" aria-label="Usuarios${ctx.usuariosNuevos ? ` (${ctx.usuariosNuevos} nuevos)` : ""}" title="Usuarios"><span class="avatar" aria-hidden="true">${ICONO_VECINOS}</span><span>Usuarios</span>${ctx.usuariosNuevos ? `<span class="us-badge" title="Usuarios nuevos desde tu última visita">${ctx.usuariosNuevos}<span class="sr"> nuevos</span></span>` : ""}</button>` : "")
       + (ctx.online && ctx.bodega
         ? `<button class="btn cuenta-btn" id="bd-open" type="button"><span class="avatar" aria-hidden="true">${ICONO_BAUL}</span><span>Mi bodega</span></button>` : "")
       + `<button class="btn cuenta-btn" id="cu-open" type="button" aria-label="Mi cuenta">${avatarHTML()}<span>Mi cuenta</span></button>`;
