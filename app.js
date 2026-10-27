@@ -1259,6 +1259,7 @@ async function abrirUsuarios() {
           <input type="number" data-desde="${esc(u.id)}" min="1950" max="2100" step="1" placeholder="Año" value="${u.socio_desde || ""}" aria-label="Socio desde (año)"></div>` : ""}
         <span class="us-acc-d">
           ${completo ? `<button class="btn us-mini" type="button" data-ver="resenas" aria-expanded="${abierto === "resenas"}"${u.resenas ? "" : " disabled"}>${ICONO_RESENAS}<span>Reseñas${u.resenas ? ` (${u.resenas})` : ""}</span></button>` : ""}
+          ${completo ? `<button class="btn us-mini" type="button" data-bodega${u.en_bodega ? "" : ' disabled title="No tiene nada en su bodega"'}>${ICONO_BAUL}<span>Bodega${u.en_bodega ? ` (${u.en_bodega})` : ""}</span></button>` : ""}
           ${extra ? `<button class="btn us-mini" type="button" data-ver="nota" aria-expanded="${abierto === "nota"}">${ICONO_NOTA}<span>${u.nota ? "Nota" : "Añadir nota"}</span></button>` : ""}
           ${extra && !yo ? `<button class="btn us-mini${u.suspendido ? " readmitir" : " suspender"}" type="button" data-suspender="${u.suspendido ? "0" : "1"}"${!u.suspendido && u.rol === "admin" ? ' disabled title="Quítale antes el rol de administrador"' : ""}>${ICONO_CANDADO}<span>${u.suspendido ? "Readmitir" : "Suspender"}</span></button>` : ""}
           ${completo ? `<button class="btn danger us-borrar us-mini" type="button" data-borrar="${esc(u.id)}"${borrable ? "" : ` disabled title="${yo ? "No puedes borrar tu propia cuenta" : "Quítale antes el rol de administrador"}"`}>${ICONO_PAPELERA}<span>Borrar cuenta</span></button>` : ""}
@@ -1362,6 +1363,23 @@ async function abrirUsuarios() {
       if (abiertos[id] === "nota") { const t = $("us-nota-" + id); if (t) t.focus(); } return; }
     const fic = e.target.closest("[data-ficha]");
     if (fic) { openDetail(fic.dataset.ficha); return; }
+
+    // Ver su bodega (solo lectura, con el 38)
+    const bod = e.target.closest("[data-bodega]");
+    if (bod) {
+      bod.disabled = true;
+      const [rb, rt] = await Promise.all([sb.rpc("admin_bodega_de", { p_id: id }), sb.rpc("admin_tarros_de", { p_id: id })]);
+      bod.disabled = false;
+      if (rb.error) { aviso("Para ver la bodega de cada usuario, ejecuta 38_ver_bodegas.sql en Supabase."); return; }
+      const B = {}, T = {};
+      (rb.data || []).forEach((x) => { B[String(x.tabaco_id)] = { tengo: x.tengo, probado: x.probado, quiero: x.quiero,
+        gramos: Number.isInteger(x.gramos) && x.gramos > 0 ? x.gramos : null }; });
+      (rt.error ? [] : rt.data || []).forEach((t) => { const k = String(t.tabaco_id); (T[k] = T[k] || []).push(t); });
+      const n = Object.keys(B).filter((k) => findItem(k)).length;
+      abrirBodega({ prueba: true, ajena: true, nombre: quien(u), n, bodega: B, tarros: T });
+      $("overlay").scrollTop = 0; $("panel").scrollTop = 0;
+      return;
+    }
 
     // Guardar la nota privada
     if (e.target.closest("[data-nota-guardar]")) {
@@ -1898,12 +1916,15 @@ function abrirBodega(fuente) {
     <div class="d-franja">${FRANJA}</div>
     <div class="bd-cab">
       <span class="bd-baul" aria-hidden="true">${ICONO_BAUL}</span>
-      <div>${prueba ? `<h2 id="d-name">Bodega de ${esc(prueba.nombre)}</h2><p class="muted">Bodega de prueba con datos inventados. Solo la ves tú y no se guarda nada.</p>`
-        : '<h2 id="d-name">Mi bodega</h2><p class="muted">Solo tú ves esta lista. Marca tus tabacos desde su ficha.</p>'}</div>
+      <div>${prueba && prueba.ajena ? `<h2 id="d-name">Bodega de ${esc(prueba.nombre)}</h2><p class="muted">La ves como administrador, en solo lectura: no puedes cambiar nada.</p>`
+        : prueba ? `<h2 id="d-name">Bodega de ${esc(prueba.nombre)}</h2><p class="muted">Bodega de prueba con datos inventados. Solo la ves tú y no se guarda nada.</p>`
+        : '<h2 id="d-name">Mi bodega</h2><p class="muted">Solo tú y el administrador del herbario podéis verla. Marca tus tabacos desde su ficha.</p>'}</div>
     </div>
     <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
     <div class="bd-cuerpo">
-      ${prueba ? `<div class="bd-prueba"><span>Estás viendo una bodega de prueba: ${prueba.n} tabacos elegidos al azar.</span>
+      ${prueba && prueba.ajena ? `<div class="bd-prueba bd-ajena"><span>Estás viendo la bodega de <strong>${esc(prueba.nombre)}</strong>: ${prueba.n === 1 ? "1 tabaco" : `${prueba.n} tabacos`}.</span>
+        <span class="btns"><button class="btn" type="button" id="bd-volver-us">${ICONO_VECINOS}<span>Volver a Usuarios</span></button></span></div>`
+      : prueba ? `<div class="bd-prueba"><span>Estás viendo una bodega de prueba: ${prueba.n} tabacos elegidos al azar.</span>
         <span class="btns"><button class="btn" type="button" id="bd-barajar">Barajar de nuevo</button><button class="btn" type="button" id="bd-salir-prueba">Volver a mi bodega</button></span></div>` : ""}
       <div class="bd-casillas">${casillas}</div>
       <div class="bd-barra">
@@ -1926,7 +1947,8 @@ function abrirBodega(fuente) {
     const nuevo = panel.querySelector(`[data-tab="${b.dataset.tab}"]`); if (nuevo) nuevo.focus();
   }));
   $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(prueba); $("bd-orden").focus(); });
-  if (prueba) {
+  if (prueba && prueba.ajena) $("bd-volver-us").addEventListener("click", () => { abrirUsuarios(); $("overlay").scrollTop = 0; });
+  else if (prueba) {
     $("bd-barajar").addEventListener("click", () => abrirBodega(bodegaDePrueba()));
     $("bd-salir-prueba").addEventListener("click", () => abrirBodega());
   }
