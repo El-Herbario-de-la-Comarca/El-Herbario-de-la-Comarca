@@ -947,3 +947,11 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 @media (max-width: 760px) { .bd-gu-pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .bd-guia { padding: 16px; } .bd-gu-pasos { grid-template-columns: 1fr; gap: 12px; }
   .bd-gu-pasos li { grid-template-columns: 30px 1fr; column-gap: 10px; } .bd-gu-pasos li::before { grid-row: span 2; margin: 0; } }
+.topbar a.cuenta-btn { text-decoration: none; color: var(--fg); }
+.ayuda-top .avatar { font-family: var(--display, inherit); font-size: 1.15rem; font-weight: 400; }
+.topbar { flex-wrap: wrap; }
+@media (max-width: 600px) {
+  /* En el móvil, Ayuda es solo el círculo con la «?» para que quepan los demás botones */
+  .ayuda-top { padding: 4px; min-width: 42px; justify-content: center; }
+  .ayuda-top .ayuda-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}

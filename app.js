@@ -2405,6 +2405,8 @@ async function contarPendientes() {
 }
 
 /* Barra superior (botones por rol) y pie (estado de la sesión) */
+// Ayuda: lleva a ayuda.html, a la izquierda de Mi bodega (o de Entrar)
+const AYUDA_BTN = '<a class="btn cuenta-btn ayuda-top" href="ayuda.html" title="Cómo funciona el herbario"><span class="avatar" aria-hidden="true">?</span><span class="ayuda-txt">Ayuda</span></a>';
 function paintTop() {
   const bar = $("admin-bar");
   if (esAdmin()) {
@@ -2427,6 +2429,7 @@ function paintTop() {
   if (ctx.session) {
     top.innerHTML = (ctx.online && esAdmin()
         ? `<button class="btn cuenta-btn us-top" id="us-open" type="button" aria-label="Usuarios${ctx.usuariosNuevos ? ` (${ctx.usuariosNuevos} nuevos)` : ""}" title="Usuarios"><span class="avatar" aria-hidden="true">${ICONO_VECINOS}</span><span>Usuarios</span>${ctx.usuariosNuevos ? `<span class="us-badge" title="Usuarios nuevos desde tu última visita">${ctx.usuariosNuevos}<span class="sr"> nuevos</span></span>` : ""}</button>` : "")
+      + AYUDA_BTN
       + (ctx.online && ctx.bodega
         ? `<button class="btn cuenta-btn" id="bd-open" type="button"><span class="avatar" aria-hidden="true">${ICONO_BAUL}</span><span>Mi bodega</span></button>` : "")
       + `<button class="btn cuenta-btn" id="cu-open" type="button" aria-label="Mi cuenta">${avatarHTML()}<span>Mi cuenta</span></button>`;
@@ -2434,7 +2437,7 @@ function paintTop() {
     if ($("us-open")) $("us-open").addEventListener("click", abrirUsuarios);
     $("cu-open").addEventListener("click", abrirCuenta);
   } else {
-    top.innerHTML = '<button class="btn primary" id="in" type="button">Entrar</button>';
+    top.innerHTML = AYUDA_BTN + '<button class="btn primary" id="in" type="button">Entrar</button>';
     $("in").addEventListener("click", abrirLogin);
   }
 }
