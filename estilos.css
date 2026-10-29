@@ -156,6 +156,14 @@ form.f .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(
 .rev .when { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
 .rev p { margin: 0; max-width: 68ch; overflow-wrap: anywhere; white-space: pre-line; }
 .rev .acts { display: flex; gap: 14px; }
+.rev-pie { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 2px; }
+.gusta-btn, .gusta-ct { display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: 0.85rem; }
+.gusta-btn { background: none; border: 0; padding: 3px 2px; cursor: pointer; color: var(--muted); }
+.gusta-btn:hover { color: var(--danger, #9A3324); }
+.gusta-btn .ico, .gusta-ct .ico { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.gusta-btn.on { color: var(--danger, #9A3324); }
+.gusta-btn.on .ico { fill: currentColor; }
+.gusta-ct { color: var(--muted); }
 @media (max-width: 600px) {
   .panel { grid-template-columns: minmax(0, 1fr); }
   .panel .art { padding: 18px; border-radius: 8px 8px 0 0; }

@@ -58,7 +58,8 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
 
 /* ---------- Estado ---------- */
 let current = [];   // fichas
-let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado }]
+let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado, likes }]
+let misLikes = new Set();   // ids de reseñas que el usuario ha marcado con «me gusta» (strings)
 let fotosAutores = {};
 let sociosAutores = new Set(); // autores que son socios del club (23_socios_del_club.sql)
 const SELLO_SOCIO = '<img class="sello-socio" src="img/logo.png" alt="Socio del Pipa Club Fumadas Hobbit" title="Socio del Pipa Club Fumadas Hobbit" width="18" height="18">'; // autor -> URL de su foto de perfil (14_fotos_en_resenas.sql)
@@ -80,7 +81,7 @@ function mapItem(r) {
 function mapOpinion(r) {
   const score = Number.isInteger(r.puntuacion) && r.puntuacion >= 1 && r.puntuacion <= 5 ? r.puntuacion : 0;
   const o = { id: r.id, autor: String(r.autor || ""), firma: str(r.firma, 40), score, texto: str(r.texto, 5000),
-    creado: r.creado, actualizado: r.actualizado };
+    creado: r.creado, actualizado: r.actualizado, likes: Number.isInteger(r.likes) && r.likes > 0 ? r.likes : 0 };
   CARACT.forEach((c) => { const v = Number(r[c.col]); o[c.k] = Number.isInteger(v) && v > 0 && v < c.ops.length ? v : 0; });
   return o;
 }
@@ -132,7 +133,22 @@ async function cargarTabacos() {
 }
 // Después, todo lo demás a la vez: reseñas, fotos y socios de las reseñas, y Mi bodega.
 async function cargarExtras() {
-  await Promise.all([cargarOpiniones(), cargarFotosAutores(), cargarSocios(), cargarBodega()]);
+  await Promise.all([cargarOpiniones(), cargarFotosAutores(), cargarSocios(), cargarBodega(), cargarMisLikes()]);
+}
+async function cargarMisLikes() {
+  misLikes = new Set(); ctx.likesOk = false;
+  if (!sb || !ctx.session) return;
+  try {
+    const filas = [];
+    for (let desde = 0; ; desde += 1000) {
+      const { data, error } = await sb.from("me_gusta").select("opinion_id").range(desde, desde + 999);
+      if (error) throw error;
+      filas.push(...data);
+      if (data.length < 1000) break;
+    }
+    misLikes = new Set(filas.map((x) => String(x.opinion_id)));
+    ctx.likesOk = true;
+  } catch (e) { console.warn("«Me gusta» no disponible (falta 39_me_gusta_resenas.sql)", e); }
 }
 async function cargarOpiniones() {
   {
@@ -420,6 +436,7 @@ const ICO = {
   probado: '<path d="M3 14h9a3 3 0 0 0 3-3V8h4v3a7 7 0 0 1-7 7H6a3 3 0 0 1-3-3z"/><path d="M17 5c0-1 1-1.5 1-2.5"/>',
   quiero: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
   hoja: '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
+  gusta: '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
 };
 const ico = (k) => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
 const HOJA_CLASE = { Virginia: "virginia", Burley: "burley", Oriental: "oriental", Latakia: "latakia", Perique: "perique", Kentucky: "kentucky", Cavendish: "cavendish", Cigarro: "cigarro" };
@@ -907,7 +924,24 @@ function paintResenas() {
   } else {
     list.innerHTML = resto.length ? resto.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("") : "";
   }
-  [mine, list].forEach((box) => box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena)));
+  [mine, list].forEach((box) => {
+    box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena));
+    box.querySelectorAll("[data-gusta]").forEach((b) => b.addEventListener("click", toggleGusta));
+  });
+}
+async function toggleGusta(e) {
+  const b = e.currentTarget, id = Number(b.dataset.gusta);
+  if (!ctx.session) { abrirLogin(); return; }
+  const o = opinionesDe(openId).find((x) => x.id === id); if (!o) return;
+  const activo = misLikes.has(String(id));
+  b.disabled = true;
+  const { error } = activo
+    ? await sb.from("me_gusta").delete().eq("opinion_id", id)
+    : await sb.from("me_gusta").insert({ opinion_id: id });
+  if (error) { b.disabled = false; return; }
+  if (activo) { misLikes.delete(String(id)); o.likes = Math.max(0, o.likes - 1); }
+  else { misLikes.add(String(id)); o.likes = (o.likes || 0) + 1; }
+  paintResenas();
 }
 /* Medias de las reseñas: nota global, reparto de estrellas y una escala por característica.
    Con menos de MIN_MEDIAS reseñas no se muestran, para que una sola opinión no fije la ficha. */
@@ -964,16 +998,25 @@ function avatarResena(o) {
   if (url) return `<img class="avatar" src="${esc(url)}" alt="" loading="lazy">`;
   return `<span class="avatar" aria-hidden="true">${esc((o.firma || "?").trim().charAt(0).toUpperCase())}</span>`;
 }
+function gustaHTML(o, propia) {
+  if (!ctx.likesOk) return "";
+  if (propia) return o.likes ? `<span class="gusta-ct" title="A ${o.likes} ${o.likes === 1 ? "persona le" : "personas les"} gusta">${ico("gusta")}<span>${o.likes}</span></span>` : "";
+  const activo = misLikes.has(String(o.id));
+  return `<button class="gusta-btn${activo ? " on" : ""}" type="button" data-gusta="${o.id}" aria-pressed="${activo}"
+      aria-label="${activo ? "Quitar «me gusta»" : "Me gusta"}" title="${activo ? "Quitar «me gusta»" : "Me gusta"}">${ico("gusta")}${o.likes ? `<span>${o.likes}</span>` : ""}</button>`;
+}
 function revHTML(o, propia) {
   const editado = o.actualizado && o.creado && new Date(o.actualizado) - new Date(o.creado) > 60000;
   const acts = propia
     ? `<div class="acts"><button class="link" type="button" data-rv="edit" data-id="${o.id}">Editar</button><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar</button></div>`
     : (esAdmin() ? `<div class="acts"><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar (admin)</button></div>` : "");
+  const gusta = gustaHTML(o, propia);
   return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${esSocio(o.autor) ? SELLO_SOCIO : ""}${rangoHTML(o.autor)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
       <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
       <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
     ${CARACT.some((c) => o[c.k]) ? `<dl class="rev-car">${CARACT.map((c) => o[c.k] ? `<dt>${esc(c.label)}</dt><dd>${esc(c.ops[o[c.k]])}</dd>` : "").join("")}</dl>` : ""}
-    ${o.texto ? `<p>${esc(o.texto)}</p>` : ""}${acts}`;
+    ${o.texto ? `<p>${esc(o.texto)}</p>` : ""}
+    ${gusta || acts ? `<div class="rev-pie">${gusta}${acts}</div>` : ""}`;
 }
 async function accionResena(e) {
   const b = e.currentTarget, id = Number(b.dataset.id);
