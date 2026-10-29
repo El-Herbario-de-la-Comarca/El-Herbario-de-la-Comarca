@@ -2538,11 +2538,15 @@ async function contarVisita() {
   // (fallo conocido de supabase-js). Por eso el trabajo se aplaza con setTimeout.
   sb.auth.onAuthStateChange((ev, session) => {
     if (ev === "INITIAL_SESSION" || ev === "TOKEN_REFRESHED") return;
+    // Al volver a la pestaña, Supabase repite «SIGNED_IN» con la misma cuenta ya abierta: no es un
+    // cambio de usuario y no debe cerrar la ficha que se estuviera viendo.
+    const antes = ctx.uid;
     setTimeout(async () => {
       await leerSesion(session);
+      const cambioUsuario = ctx.uid !== antes;
       if (ev === "PASSWORD_RECOVERY") { paintTop(); pedirNuevaPass(); return; }
-      if (ev === "SIGNED_IN") cerrarLogin();
-      if (!$("overlay").hidden) closeDetail();
+      if (ev === "SIGNED_IN" && cambioUsuario) cerrarLogin();
+      if (cambioUsuario && !$("overlay").hidden) closeDetail();
       await refrescar();
     }, 0);
   });
