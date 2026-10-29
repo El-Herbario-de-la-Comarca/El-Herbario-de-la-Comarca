@@ -238,7 +238,9 @@ function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i 
 
 /* ---------- Catálogo ---------- */
 const POR_PAGINA = 20;
-const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1 };
+const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" };
+// Fichas incompletas (solo admin, desde Mi cuenta): «foto» o «notas».
+const FALTAS = { foto: ["Sin foto", (d) => !fotoSegura(d.foto)], notas: ["Sin notas de sabor", (d) => !d.notas.length] };
 const FILTERS = [["f-marca", "marca", "Todas"], ["f-corte", "corte", "Todos"], ["f-pais", "pais", "Todos"]];
 function fillSelect(id, label, values) {
   $(id).innerHTML = `<option value="">${label}</option>` + values.map((v) => `<option value="${esc(v.value)}">${esc(v.text)}</option>`).join("");
@@ -262,7 +264,7 @@ function setupFilters() {
     $(id).addEventListener("change", (e) => { state[k] = e.target.value; state.page = 1; render(); });
   });
   $("reset").addEventListener("click", () => {
-    Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1 });
+    Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" });
     $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
     render();
   });
@@ -271,7 +273,9 @@ function render() {
   const q = norm(state.q.trim());
   const byName = (a, b) => a.nombre.localeCompare(b.nombre, "es");
   const score = (d) => statsDe(d.id).media;
+  const falta = FALTAS[state.falta];
   const list = current.filter((d) => {
+    if (falta && !falta[1](d)) return false;
     if (state.marca && d.marca !== state.marca) return false;
     if (state.tipo && d.tipo !== state.tipo) return false;
     if (state.hoja && !d.hojas.includes(state.hoja)) return false;
@@ -291,10 +295,10 @@ function render() {
   state.page = Math.min(Math.max(1, state.page), paginas);
   const desde = (state.page - 1) * POR_PAGINA;
   const visibles = list.slice(desde, desde + POR_PAGINA);
-  $("count").textContent = (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
+  $("count").textContent = (falta ? `${falta[0]} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
     (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "");
   pintarPaginador(paginas);
-  pintarUltimas(!q && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
+  pintarUltimas(!falta && !q && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
   $("grid").innerHTML = list.length ? visibles.map((d) => {
     const st = statsDe(d.id);
     const rate = st.n ? `${fmtMedia(st.media)} de 5 · ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}` : "Sin reseñas todavía";
@@ -2257,6 +2261,8 @@ function abrirCuenta() {
       <div class="cu-casillas">
         ${ctx.opiniones ? `<div class="bd-casilla"><span class="l">Reseñas publicadas</span><span class="n">${nRes}</span><span class="s">Firmadas como «${esc(nombre)}»</span></div>` : ""}
         ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
+        ${esAdmin() ? Object.entries(FALTAS).map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
+          return `<button class="bd-casilla cu-ir cu-pend" type="button" data-falta="${k}"><span class="l">${txt}</span><span class="n">${n}</span><span class="s">${n === 1 ? "ficha" : "fichas"} · ${n ? "Verlas en el catálogo ›" : "¡Todo completo!"}</span></button>`; }).join("") : ""}
         ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>
           <button class="btn" id="cu-minis" type="button">Crear las miniaturas que faltan</button><p class="muted" id="cu-minis-msg" role="status"></p></div>` : ""}
       </div>
@@ -2284,6 +2290,7 @@ function abrirCuenta() {
   if ($("cu-bodega")) $("cu-bodega").addEventListener("click", () => abrirBodega());
   if ($("cu-saruman")) $("cu-saruman").addEventListener("click", () => { if (esAdmin()) abrirBodega(bodegaDePrueba()); });
   if ($("cu-minis")) $("cu-minis").addEventListener("click", crearMiniaturasQueFaltan);
+  document.querySelectorAll("[data-falta]").forEach((b) => b.addEventListener("click", () => verFichasSin(b.dataset.falta)));
   if ($("cu-instalar")) $("cu-instalar").addEventListener("click", async () => {
     if (!avisoInstalar) return;
     avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; abrirCuenta();
@@ -2293,6 +2300,15 @@ function abrirCuenta() {
   $("av-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirAvatar(f); });
   if ($("av-del")) $("av-del").addEventListener("click", () => guardarPerfil(ctx.perfil.nombre, "", "Foto quitada."));
   $("nm-form").addEventListener("submit", (e) => { e.preventDefault(); guardarPerfil($("nm-in").value, ctx.perfil.avatar, "Nombre guardado."); });
+}
+// Abre el catálogo solo con las fichas a las que les falta la foto o las notas de sabor.
+function verFichasSin(k) {
+  if (!esAdmin() || !FALTAS[k]) return;
+  closeDetail();
+  Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "marca", page: 1, falta: k });
+  $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "marca";
+  render();
+  $("count").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 // Recorta la foto al centro en un cuadrado de 320 px.
 async function cuadrarAvatar(file) {

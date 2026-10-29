@@ -714,6 +714,9 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .cu-ir { all: unset; box-sizing: border-box; cursor: pointer; }
 .panel.cuenta-p .cu-ir.bd-casilla { display: grid; gap: 4px; align-content: start; padding: 16px 18px; border-radius: 14px; background: var(--accent); color: var(--accent-fg); border: 1px solid var(--accent); }
 .cu-ir:hover { filter: brightness(1.08); }
+.panel.cuenta-p .cu-ir.cu-pend.bd-casilla { background: var(--casilla); color: inherit; border-color: var(--line); }
+.panel.cuenta-p .cu-pend .l, .panel.cuenta-p .cu-pend .s { color: var(--muted); }
+.panel.cuenta-p .cu-pend:hover { border-color: var(--accent); filter: none; }
 .cu-ir:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .cu-admin { border-style: dashed; border-color: var(--gold, var(--accent)); background: var(--surface); gap: 8px; }
 .cu-admin .l { color: var(--oro-tinta); }
