@@ -81,6 +81,9 @@ def hojas_de(componentes):
     return [h for h, rx in REGLAS_HOJAS if re.search(rx, c)]
 
 
+NO_ES_PURE = {"pure gold virginia"}
+
+
 def estilo_de(familia, hojas, nombre="", src="", i=""):
     """Devuelve (mezcla, motivo). Orden de las reglas acordadas con el usuario."""
     f = re.sub(r"\s+", " ", (familia or "").lower()).strip()
@@ -97,7 +100,8 @@ def estilo_de(familia, hojas, nombre="", src="", i=""):
         return None, "familia sin traducir"
 
     # Sin mezclar: tabacos para mezclar y fichas «Pure».
-    if e == "Sin mezclar" or re.match(r"pure\b", nombre.lower()):
+    # «Pure Gold Virginia» de Doctor Pipe es una mezcla completa, no un tabaco para mezclar.
+    if e == "Sin mezclar" or (re.match(r"pure\b", nombre.lower()) and nombre.lower() not in NO_ES_PURE):
         return "Sin mezclar", "para mezclar"
     # Lakeland: lista comprobada, marca LAKELAND en la fuente o tonka.
     if i in LAKELAND or "lakeland" in texto or re.search(r"tonka|tonquin", texto):

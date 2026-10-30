@@ -683,3 +683,33 @@ EXTRA += [("MyRott", [
     ("Sherlock Full Virginia Flake", "Virginia", "Virginia", "Broken Flake", _M70, "Solo virginias, prensadas, fermentadas y desmenuzadas; con un toque de vainilla y haba tonka.", "myrott"),
     ("Strand No.13", "", "", "Rope", _M70, "Tabaco en cuerda artesanal, de intensidad media-alta, con notas terrosas y dulces.", "myrott"),
 ])]
+
+# ---------------------------------------------------------------- Doctor Pipe (30/10)
+# Marca brasileña de Tabacco Way. Fuente: catálogo internacional de 2023 que pasó el usuario
+# (PDF «DOCTOR-PIPE-Catalog-Product-EURO-2023»). Todas en lata de 50 g, lata de 100 g y bolsa de 50 g.
+# Familia según los componentes y aromas del catálogo; el corte solo cuando el catálogo lo dice.
+PAIS["Doctor Pipe"] = "Brasil"
+FUENTES["Doctor Pipe"] = "Catálogo internacional de Doctor Pipe (Tabacco Way), 2023"
+_DP = "Lata de 50 g · lata de 100 g · bolsa de 50 g"
+EXTRA += [("Doctor Pipe", [
+    ("Old Dark Fired", "Burley", "Burley, Virginia", "", _DP, "Burley curado al fuego con virginia dorado; terrosa y con cuerpo, sin aromatizar.", "catálogo DP 2023"),
+    ("Sunset", "Aromatic", "Virginia, Burley, Black Cavendish, Orientals", "", _DP, "Con oriental de Esmirna. Aroma de almendra y amaretto.", "catálogo DP 2023"),
+    ("Gold", "Aromatic", "Virginia, Cavendish", "", _DP, "Notas de chocolate.", "catálogo DP 2023"),
+    ("Pure Gold Virginia", "Virginia", "Virginia", "", _DP, "Solo virginias brasileños curados al aire caliente; sin aromatizar.", "catálogo DP 2023"),
+    ("Vanilla Cream", "Aromatic", "Virginia, Black Cavendish", "", _DP, "Aroma de vainilla.", "catálogo DP 2023"),
+    ("Cherry", "Aromatic", "Virginia, Burley, Black Cavendish", "", _DP, "Aroma de cereza.", "catálogo DP 2023"),
+    ("Royal", "Aromatic", "Virginia, Black Cavendish", "", _DP, "Notas de maíz y crema de nuez.", "catálogo DP 2023"),
+    ("Midnight Mixture", "Aromatic", "Black Cavendish, Virginia, Orientals", "", _DP, "Con mucho black cavendish. Notas de crema de melocotón.", "catálogo DP 2023"),
+    ("Virginia Blend", "Virginia", "Virginia", "", _DP, "Suave, pensada para quien empieza; sin aromatizar.", "catálogo DP 2023"),
+    ("Brazilian Blend", "Aromatic", "Burley, Virginia", "", _DP, "Notas de cardamomo, cilantro y maíz.", "catálogo DP 2023"),
+    ("Harmony", "Aromatic", "Burley, Virginia, Cavendish", "Ready Rubbed", _DP, "Suave, con un toque dulce de chocolate.", "catálogo DP 2023"),
+    ("Good Morning", "English", "Orientals, Virginia, Latakia", "", _DP, "Prensada y ligeramente cocida al horno; pensada como primera pipa del día.", "catálogo DP 2023"),
+    ("Crunchy Blend", "Aromatic", "Black Cavendish, Virginia, Burley", "", _DP, "Aroma de nuez, vainilla y ciruela mirabel.", "catálogo DP 2023"),
+    ("Scottish Mixture", "English", "Virginia, Kentucky, Black Cavendish, Latakia", "", _DP, "Virginia rojo con kentucky, black cavendish y latakia.", "catálogo DP 2023"),
+    ("Classic", "English", "Virginia, Orientals, Latakia", "Ribbon", _DP, "Inglesa de fuerza media, con predominio del virginia y un toque sutil de latakia.", "catálogo DP 2023"),
+    ("English Blend", "English", "Latakia, Orientals, Virginia, Black Cavendish", "", _DP, "Inglesa con cuerpo.", "catálogo DP 2023"),
+    ("Latakia Blend", "English", "Virginia, Cavendish, Latakia", "", _DP, "Virginia madurado con poca latakia y un aroma muy ligero.", "catálogo DP 2023"),
+    ("Black Diamond", "English Aromatic", "Burley, Black Cavendish, Virginia, Orientals, Latakia", "", _DP, "Aroma de crema de nuez y cítricos.", "catálogo DP 2023"),
+    ("Shadow Valley", "English Aromatic", "Virginia, Black Cavendish, Burley, Orientals, Latakia", "", _DP, "Aroma de café espresso con un toque de whisky.", "catálogo DP 2023"),
+    ("Night Darkness", "English", "Virginia, Orientals, Burley, Black Cavendish, Latakia, Perique", "", _DP, "Virginia rojo de Brasil con latakia y un toque de perique; ahumada, pensada para la noche.", "catálogo DP 2023"),
+])]
