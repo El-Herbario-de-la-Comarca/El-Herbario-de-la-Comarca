@@ -258,15 +258,45 @@ function fillFilters() {
   fillSelect("f-hoja", "Cualquiera", orden(HOJAS, "hojas").map((v) => ({ value: v, text: v })));
   $("f-hoja").value = state.hoja; if ($("f-hoja").value !== state.hoja) state.hoja = $("f-hoja").value;
 }
+/* ---------- Atrás en el catálogo filtrado ----------
+   Al pasar del catálogo completo a uno filtrado se añade una entrada al historial; mientras se
+   sigue filtrando, esa misma entrada se va actualizando. Así, Atrás (gesto del móvil o botón del
+   navegador) vuelve siempre al catálogo sin filtros. */
+const SIN_FILTROS = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" };
+const SELECTS_FILTRO = [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-pais", "pais"], ["sort", "sort"]];
+const hayFiltros = () => !!(state.q.trim() || state.marca || state.tipo || state.hoja || state.corte || state.pais || state.falta);
+const fotoFiltros = () => Object.fromEntries(Object.keys(SIN_FILTROS).map((k) => [k, state[k]]));
+const urlSinFicha = () => location.pathname + location.search;
+const enEntradaFiltrada = () => !!(history.state && history.state.filtros);
+function anotarFiltros() {
+  if (idDeHash()) return;   // con una ficha abierta manda la URL de la ficha
+  if (enEntradaFiltrada()) {
+    if (hayFiltros()) history.replaceState({ filtros: fotoFiltros() }, "", urlSinFicha());
+    else history.back();   // se han quitado todos: se vuelve a la entrada sin filtros
+  } else if (hayFiltros()) history.pushState({ filtros: fotoFiltros() }, "", urlSinFicha());
+}
+// Pone en el catálogo (y en los desplegables) los filtros indicados.
+function ponerFiltros(f) {
+  Object.assign(state, SIN_FILTROS, f);
+  $("q").value = state.q;
+  SELECTS_FILTRO.forEach(([id, k]) => { $(id).value = state[k]; });
+  render();
+}
+// Vuelve al catálogo completo, como al entrar (botón «Quitar filtros» y logo).
+function quitarFiltros() { ponerFiltros({}); }
 function setupFilters() {
+  // Al recargar la página se conservan los filtros de esa entrada del historial.
+  if (enEntradaFiltrada()) { Object.assign(state, SIN_FILTROS, history.state.filtros); $("q").value = state.q; $("sort").value = state.sort; }
   $("q").addEventListener("input", (e) => { state.q = e.target.value; state.page = 1; render(); });
-  [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-pais", "pais"], ["sort", "sort"]].forEach(([id, k]) => {
+  SELECTS_FILTRO.forEach(([id, k]) => {
     $(id).addEventListener("change", (e) => { state[k] = e.target.value; state.page = 1; render(); });
   });
-  $("reset").addEventListener("click", () => {
-    Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" });
-    $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "nombre";
-    render();
+  $("reset").addEventListener("click", quitarFiltros);
+  $("logo-inicio").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!$("overlay").hidden && !idDeHash()) closeDetail();
+    quitarFiltros();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 function render() {
@@ -314,6 +344,7 @@ function render() {
       </div>
     </button>`;
   }).join("") : `<p class="empty">Ningún tabaco coincide con la búsqueda. Prueba con menos filtros.</p>`;
+  anotarFiltros();
 }
 
 /* ---------- Últimas reseñas (portada) ----------
@@ -525,8 +556,11 @@ function abrirFichaDeUrl() {
   if (id && String(openId) !== id && findItem(id)) openDetail(id, true);
 }
 window.addEventListener("popstate", () => {
-  if (idDeHash()) abrirFichaDeUrl();
-  else if (!$("overlay").hidden) closeDetail(true);
+  if (idDeHash()) { abrirFichaDeUrl(); return; }
+  if (!$("overlay").hidden) closeDetail(true);
+  // Catálogo: se ponen los filtros de la entrada a la que se ha vuelto (ninguno si no los tenía).
+  const destino = enEntradaFiltrada() ? { ...SIN_FILTROS, ...history.state.filtros } : { ...SIN_FILTROS, sort: state.sort };
+  if (JSON.stringify(destino) !== JSON.stringify(fotoFiltros())) ponerFiltros(destino);
 });
 
 /* ---------- Compartir una ficha ----------
@@ -599,8 +633,11 @@ function openDetail(id, desdeUrl) {
 }
 /* Desde la ruta de la ficha: cierra y deja el catálogo filtrado por esa marca */
 function verMarca(marca) {
-  closeDetail();
+  // La entrada de la ficha pasa a ser la del catálogo filtrado, así Atrás lleva al catálogo sin filtros.
+  const desdeLista = history.state && history.state.ficha;
   state.marca = marca; state.page = 1;
+  if (idDeHash()) history.replaceState(desdeLista ? { filtros: fotoFiltros() } : null, "", urlSinFicha());
+  closeDetail(true);
   if ($("f-marca")) $("f-marca").value = marca;
   render();
   const g = $("grid");

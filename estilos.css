@@ -184,6 +184,7 @@ form.f .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(
 @media (prefers-reduced-motion: no-preference) { .card, .video, .btn { transition: border-color .15s; } }
 .hero { padding-block: 28px 0; gap: 0; }
 .hero-top { display: flex; align-items: center; gap: clamp(14px, 3vw, 28px); }
+.logo-link { flex: none; display: block; line-height: 0; border-radius: 50%; }
 .logo { flex: none; width: clamp(84px, 20vw, 132px); height: auto; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 2px 0 var(--line), 0 6px 18px rgb(0 0 0 / .18); }
 .hero-text { display: grid; gap: 6px; min-width: 0; }
 .eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
