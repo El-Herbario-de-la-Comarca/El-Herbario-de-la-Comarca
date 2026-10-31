@@ -713,3 +713,16 @@ EXTRA += [("Doctor Pipe", [
     ("Shadow Valley", "English Aromatic", "Virginia, Black Cavendish, Burley, Orientals, Latakia", "", _DP, "Aroma de café espresso con un toque de whisky.", "catálogo DP 2023"),
     ("Night Darkness", "English", "Virginia, Orientals, Burley, Black Cavendish, Latakia, Perique", "", _DP, "Virginia rojo de Brasil con latakia y un toque de perique; ahumada, pensada para la noche.", "catálogo DP 2023"),
 ])]
+
+# Dan Tobacco, tabacos para mezclar Torben Dansk (31/10). Los ocho que cigarworld lista a la venta y no
+# teníamos. Son monovarietales: el componente sale del nombre. Corte sin dato.
+EXTRA += [("Dan Tobacco", [
+    ("Torben Dansk Black Cavendish Danish Style", "Blending", "Black Cavendish", "", "50 g", "Black cavendish endulzado al estilo danés, para mezclar.", "cw"),
+    ("Torben Dansk Black Cavendish English Style", "Blending", "Black Cavendish", "", "50 g", "Black cavendish sin endulzar, al estilo inglés, para mezclar.", "cw"),
+    ("Torben Dansk Kentucky U.S.A.", "Blending", "Kentucky", "", "50 g", "Kentucky para mezclar.", "cw"),
+    ("Torben Dansk Orient", "Blending", "Orientals", "", "50 g", "Tabaco oriental para mezclar.", "cw"),
+    ("Torben Dansk Latakia Spezial", "Blending", "Latakia", "", "50 g", "Latakia para mezclar.", "cw"),
+    ("Torben Dansk Virginia 1,6 Mysore", "Blending", "Virginia", "", "50 g", "Virginia de Mysore (India) en corte de 1,6 mm, para mezclar.", "cw"),
+    ("Torben Dansk Virginia 4,0 Mysore", "Blending", "Virginia", "", "50 g", "Virginia de Mysore (India) en corte ancho de 4 mm, para mezclar.", "cw"),
+    ("Torben Dansk Virginia Mysore Ready Rubbed Flake", "Blending", "Virginia", "Ready Rubbed", "50 g", "Virginia de Mysore (India) en flake desmenuzado, para mezclar.", "cw"),
+])]
