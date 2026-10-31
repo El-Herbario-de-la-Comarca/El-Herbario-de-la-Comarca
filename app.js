@@ -618,6 +618,7 @@ function openDetail(id, desdeUrl) {
         <div id="rv-mine"></div>
         <div class="reviews" id="rv-list"></div>
       </section>
+      <section class="sec sec-resto" id="d-resto" aria-labelledby="rr-h" hidden></section>
       ${mas ? `<section class="sec sec-mas" aria-labelledby="mas-h">
         <h3 id="mas-h">${esc(mas.titulo)}</h3>
         <div class="mas-lista">${mas.lista.map((x) => `<button class="mas-item" type="button" data-ficha="${esc(x.id)}"><span class="mas-art">${art(x)}</span><span class="mas-nom">${esc(x.nombre)}</span></button>`).join("")}</div>
@@ -963,9 +964,17 @@ function paintResenas() {
     $("rv-vacio-acc").append(...mine.childNodes);   // el botón de escribir (o de entrar) va dentro de la tarjeta
     const nuevo = $("rv-new"); if (nuevo) nuevo.textContent = "Escribir la primera reseña";
   } else {
-    list.innerHTML = resto.length ? resto.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("") : "";
+    // La más reciente va arriba, junto a las medias; el resto, debajo a todo lo ancho de la ficha.
+    list.innerHTML = resto.length ? `<div class="rev rev-ultima"><span class="rev-etq">Última reseña</span>${revHTML(resto[0], false)}</div>` : "";
   }
-  [mine, list].forEach((box) => {
+  const masRes = todas.length ? resto.slice(1) : [];
+  const caja = $("d-resto");
+  if (caja) {
+    caja.hidden = !masRes.length;
+    caja.innerHTML = masRes.length ? `<h3 id="rr-h">Más reseñas <small>${masRes.length}</small></h3>
+      <div class="reviews rev-rejilla">${masRes.map((o) => `<div class="rev">${revHTML(o, false)}</div>`).join("")}</div>` : "";
+  }
+  [mine, list, caja].filter(Boolean).forEach((box) => {
     box.querySelectorAll("[data-rv]").forEach((b) => b.addEventListener("click", accionResena));
     box.querySelectorAll("[data-gusta]").forEach((b) => b.addEventListener("click", toggleGusta));
   });

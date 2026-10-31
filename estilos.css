@@ -472,6 +472,16 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .d-orn .ico { width: 22px; height: 22px; stroke-width: 1.4; }
 .panel.ficha .sections { border-top: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); column-gap: 40px; padding: 8px 48px 40px; }
 .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-columns: minmax(0, 1fr); }
+/* Reseñas: medias y la última a la izquierda, tabacos relacionados a la derecha, y el resto debajo a todo lo ancho */
+.panel.ficha .sections { grid-template-areas: "video video" "res mas" "resto resto"; }
+.panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "video" "res" "resto"; }
+.panel.ficha #d-video { grid-area: video; }
+.panel.ficha .sec-resenas { grid-area: res; }
+.panel.ficha .sec-mas { grid-area: mas; }
+.panel.ficha .sec-resto { grid-area: resto; border-top: 1px solid var(--line); margin-top: 6px; padding-top: 26px; }
+.rev-etq { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.reviews.rev-rejilla { grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 16px; align-items: start; }
+.rev-rejilla .rev, .rev-rejilla .rev:first-child { padding: 16px 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .panel.ficha .sec { padding: 20px 0; }
 .panel.ficha .sec + .sec { border-top: 0; }
 .panel.ficha #d-video { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }
@@ -499,6 +509,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .d-lado { padding-left: 28px; } .panel.ficha .info { padding-right: 28px; }
   .nicho { height: 280px; } .panel.ficha .nicho .art { width: 210px; }
   .panel.ficha .sections { grid-template-columns: minmax(0, 1fr); padding-inline: 28px; }
+  .panel.ficha .sections, .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "video" "res" "resto" "mas"; }
   .d-orn { padding-inline: 28px; }
   .panel.ficha dl.d-chips { grid-template-columns: 110px minmax(0, 1fr); }
 }
@@ -526,6 +537,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .d-lado .compartir { order: 4; padding: 12px 20px 0; }
   .d-orn { order: 5; padding: 18px 20px 0; }
   .panel.ficha .sections { order: 6; grid-template-columns: minmax(0, 1fr); padding: 0 20px 32px; }
+  .panel.ficha .sections, .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "video" "res" "resto" "mas"; }
   .rv-vacio { flex-direction: column; text-align: center; padding: 20px; }
   .rv-vacio svg { width: 60px; height: 60px; }
   .rv-vacio-t { justify-items: center; }
