@@ -838,8 +838,6 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 @media (max-width: 600px) {
   .overlay:has(.panel.usuarios-p) { padding: 0; }
   .overlay .panel.usuarios-p { border-radius: 0; border: 0; min-height: 100dvh; margin-block: 0; box-shadow: none; }
-  .us-top span:last-child { display: none; }
-  .us-top { padding: 4px; }
   .us-busca { justify-content: stretch; }
   .us-busca input[type=search] { max-width: none; }
   .panel.usuarios-p .bd-tabs button { font-size: 0.85rem; padding: 2px; }
@@ -976,7 +974,8 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .ayuda-top .avatar { font-family: var(--display, inherit); font-size: 1.15rem; font-weight: 400; }
 .topbar { flex-wrap: wrap; }
 @media (max-width: 600px) {
-  /* En el móvil, Ayuda es solo el círculo con la «?» para que quepan los demás botones */
-  .ayuda-top { padding: 4px; min-width: 42px; justify-content: center; }
-  .ayuda-top .ayuda-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* En el móvil, los botones de arriba son solo el círculo con su icono, todos en una fila */
+  .topbar { flex-wrap: nowrap; }
+  .topbar .cuenta-btn { padding: 4px; min-width: 42px; justify-content: center; position: relative; }
+  .topbar .tb-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
