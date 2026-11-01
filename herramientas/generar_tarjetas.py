@@ -119,56 +119,42 @@ def imagen(foto):
 
 
 ESTILO = """
-:root{--bg:#E9ECE6;--surface:#F5F6F2;--fg:#1D2320;--muted:#5B655F;--line:#CBD1C8;--accent:#3E5A2B;--accent-fg:#F5F6F2;--hill-a:#B9C9A6;--hill-b:#8FAE74;
---display:"Young Serif",Georgia,serif;--body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
-@media (prefers-color-scheme:dark){:root{--bg:#121614;--surface:#1A201D;--fg:#E6EAE3;--muted:#9AA59D;--line:#2B342F;--accent:#9DC27A;--accent-fg:#121614;--hill-a:#24352A;--hill-b:#2F4A31;color-scheme:dark}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 var(--body)}
-a{color:var(--accent)}
-.wrap{max-width:760px;margin:0 auto;padding:0 16px 48px}
-.top{display:flex;align-items:center;gap:14px;padding:20px 0 8px;text-decoration:none;color:inherit}
-.top img{width:64px;height:64px}
-.top b{font:400 1.35rem/1.1 "Uncial Antiqua",var(--display);display:block}
-.top small{color:var(--muted)}
-.hills{display:block;width:100%;height:48px;margin-bottom:20px}
-.hills .a{fill:var(--hill-a)}.hills .b{fill:var(--hill-b)}
-.ficha{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px}
-.marca{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.82rem;margin:0}
-h1{font:400 2rem/1.15 var(--display);margin:4px 0 16px}
-.es{display:inline-grid;place-items:center;width:1.15em;height:1.15em;margin-left:.3em;vertical-align:.12em;border-radius:50%;
-font:700 .55em/1 system-ui,sans-serif;color:#AA151B;background:linear-gradient(#AA151B 0 25%,#F1BF00 25% 75%,#AA151B 75%);box-shadow:0 0 0 1px rgba(0,0,0,.18)}
-.foto{display:block;max-width:100%;max-height:340px;margin:0 auto 18px;border-radius:6px}
-dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 18px}
-dl div{border:1px solid var(--line);border-radius:6px;padding:8px 10px}
-dt{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-dd{margin:2px 0 0;font-weight:500}
-.desc{margin:0 0 18px}
-.abrir{display:inline-block;background:var(--accent);color:var(--accent-fg);text-decoration:none;font-weight:600;border-radius:4px;padding:11px 18px}
-h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
-ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
-ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
-footer{margin-top:36px;color:var(--muted);font-size:.88rem}
-.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.hero .sitio{margin:0;font-family:"Uncial Antiqua",var(--display);font-weight:400;letter-spacing:.01em;line-height:1.08;text-wrap:balance;color:var(--fg);font-size:clamp(1.9rem,6.6vw,3.4rem)}
+@media (max-width:600px){.comarca .hero .sitio{font-size:1.55rem}}
+.pag{max-width:900px;margin:0 auto;padding:22px 0 8px}
+.pag a{color:var(--accent)}
+.migas{font-size:.95rem;color:var(--muted);margin:0 0 14px}
 .migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
 .migas li+li::before{content:"›";margin-right:4px}
 .migas a{color:inherit}
-dd a{color:inherit}
+.ficha{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:clamp(18px,4vw,28px);box-shadow:var(--shadow,none)}
+.ficha .marca{color:var(--muted);font-size:.95rem;letter-spacing:.06em;margin:0}
+.ficha .marca a{color:inherit;text-decoration:none}
+.ficha h1{font:400 clamp(1.8rem,5vw,2.4rem)/1.12 var(--display);letter-spacing:0;margin:4px 0 16px;text-wrap:balance}
+.es{display:inline-grid;place-items:center;width:1.15em;height:1.15em;margin-left:.3em;vertical-align:.12em;border-radius:50%;
+font:700 .55em/1 system-ui,sans-serif;color:#AA151B;background:linear-gradient(#AA151B 0 25%,#F1BF00 25% 75%,#AA151B 75%);box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+h1 .es{font-size:.5em}
+.foto{display:block;max-width:100%;max-height:340px;margin:0 auto 18px;border-radius:8px}
+.ficha dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:0 0 18px}
+.ficha dl div{border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.ficha dt{font-size:.88rem;color:var(--muted);margin:0}
+.ficha dd{margin:2px 0 0;font-weight:500}
+.ficha dd a{color:inherit}
+.desc{margin:0 0 18px}
 .texto p{margin:0 0 12px}
-.resumen{color:var(--muted);margin:0 0 18px}
-h1+.resumen{margin-top:-8px}
+.resumen{color:var(--muted);margin:-8px 0 18px}
+.abrir{display:inline-flex;align-items:center;min-height:44px;background:var(--accent);color:var(--accent-fg)!important;text-decoration:none;font-weight:600;border-radius:6px;padding:10px 18px}
+.pag h2{font:400 1.35rem/1.2 var(--display);margin:34px 0 12px}
 .grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
-.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+.grupo h2 small{font:400 .9rem/1.2 var(--body);color:var(--muted)}
+.grupo p{margin:0}
+ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 14px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.otras a:hover,ul.tabacos a:hover{border-color:var(--accent)}
 ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
-ul.tabacos a:hover{border-color:var(--accent)}
-ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:10px;padding:9px 13px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.88rem}
 .mas-link{margin:12px 0 0}
-.gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
-.gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
-.gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
-.gate .acts{display:flex;gap:10px;flex-wrap:wrap}
-.gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
-.gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 """
 
 AVISO = """<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
@@ -182,6 +168,22 @@ document.getElementById("gate-no").onclick=function(){document.getElementById("g
 document.getElementById("gate-text").textContent="Esta página solo está disponible para mayores de 18 años.";document.getElementById("gate-acts").hidden=true}})();</script>"""
 
 
+def de_portada():
+    """Saca de index.html las fuentes, las versiones de los estilos y el encabezado de las colinas,
+    para que las paginas generadas se vean igual que la web y cambien solas si cambia la portada."""
+    txt = (RAIZ / "index.html").read_text(encoding="utf-8")
+    fuentes = re.search(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com/[^"]*">', txt)
+    ver = lambda nombre: (re.search(re.escape(nombre) + r'\?v=(\w+)', txt) or [None, "1"])[1]
+    hero = re.search(r'<header class="hero">.*?</header>', txt, re.S).group(0)
+    hero = hero.replace('href="./"', 'href="../"').replace('src="img/', 'src="../img/')
+    hero = re.sub(r'<h1>(.*?)</h1>', r'<p class="sitio">\1</p>', hero, flags=re.S)   # el h1 de cada pagina es su ficha
+    return {"fuentes": fuentes.group(0) if fuentes else "", "hero": hero,
+            "estilos": ver("estilos.css"), "tema": ver("tema-comarca.css"), "temporada": ver("temporada.js")}
+
+
+PORTADA = de_portada()
+
+
 def lista(v):
     if isinstance(v, list):
         return [str(x) for x in v if str(x).strip()]
@@ -189,9 +191,11 @@ def lista(v):
 
 
 e = lambda s: html.escape(str(s), quote=True)
-PIE = """<footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
-<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
-<a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>"""
+PIE = """<footer>
+<span><strong>El herbario de la Comarca no vende tabaco</strong> ni incluye enlaces a tiendas. Es un sitio informativo.</span>
+<span>Fumar perjudica gravemente la salud. Prohibida la venta a menores de 18 años.</span>
+<span class="legal-links"><a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> · <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Política de privacidad</a></span>
+</footer>"""
 
 
 def url_marca(marca):
@@ -216,9 +220,9 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website"):
         {"@type": "ListItem", "position": i + 1, "name": n, **({"item": BASE + r} if r is not None else {})}
         for i, (n, r) in enumerate(migas)]}, ensure_ascii=False).replace("</", "<\\/")
     return f"""<!doctype html>
-<html lang="es"><head><meta charset="utf-8">
+<html lang="es" class="comarca"><head><meta charset="utf-8">
 <title>{e(titulo)} · El herbario de la Comarca</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{e(url)}">
 <meta property="og:type" content="{tipo_og}">
@@ -232,16 +236,23 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website"):
 <meta name="theme-color" content="#3E5A2B">
 <link rel="icon" href="../img/logo.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{PORTADA["fuentes"]}
+<script src="../temporada.js?v={PORTADA["temporada"]}"></script>
+<link rel="stylesheet" href="../estilos.css?v={PORTADA["estilos"]}">
+<link rel="stylesheet" href="../tema-comarca.css?v={PORTADA["tema"]}">
 <style>{ESTILO}</style>
 <script type="application/ld+json">{ld}</script>
 </head><body>
 {AVISO}
 <div class="wrap">
-<a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
-<svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+{PORTADA["hero"]}
+<div class="pag">
 <nav class="migas" aria-label="Estás en"><ol>{nav}</ol></nav>
 {cuerpo}
+</div>
 {PIE}
 </div>
 </body></html>
@@ -273,7 +284,7 @@ def pagina(d, otras):
         mas = (f'<h2>Más de {e(marca)}</h2><ul class="otras">{enlaces}</ul>'
                f'<p class="mas-link"><a href="../{e(url_marca(marca))}">Todo sobre {e(marca)}</a></p>')
     cuerpo = f"""<main class="ficha">
-<p class="marca"><a href="../{e(url_marca(marca))}" style="color:inherit;text-decoration:none">{e(marca)}</a></p>
+<p class="marca"><a href="../{e(url_marca(marca))}">{e(marca)}</a></p>
 <h1>{e(d.get("nombre", ""))}{es}</h1>
 {img}<dl>{dl}</dl>
 {parrafo}
