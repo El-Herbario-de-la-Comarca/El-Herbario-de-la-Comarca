@@ -494,6 +494,7 @@ const ICO = {
   quiero: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
   hoja: '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
   gusta: '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
+  etiqueta: '<path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1.5 1.5 0 0 1 0 2.1l-6.9 6.9a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8.5" cy="8.5" r="1.6"/>',
 };
 const ico = (k) => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
 const HOJA_CLASE = { Virginia: "virginia", Burley: "burley", Oriental: "oriental", Latakia: "latakia", Perique: "perique", Kentucky: "kentucky", Cavendish: "cavendish", Cigarro: "cigarro" };
@@ -635,6 +636,7 @@ function openDetail(id, desdeUrl) {
       <div class="nicho"><div class="art" id="d-art">${art(d, true)}</div><div class="balda" aria-hidden="true"></div></div>
       <div id="d-bodega"></div>
       <div class="compartir"><button class="btn" id="d-share" type="button">${ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
+      <div class="compartir" id="d-etq" hidden></div>
     </div>
     <div class="info">
       <div id="d-meta"></div>
@@ -1939,8 +1941,20 @@ function formTarro(id, t) {
 }
 const gramosTxt = (g) => (g ? `${g.toLocaleString("es-ES")} g` : "");
 let bodegaAyudaAbierta = false;   // la explicación (?) del recuadro de la ficha sigue abierta al repintar
+/* Etiquetas para el tarro (etiquetas.js): solo para quien ha entrado con su cuenta */
+function paintEtiquetas() {
+  const box = $("d-etq"); if (!box || openId == null) return;
+  const d = findItem(openId);
+  const ver = !!(d && ctx.session && window.Etiquetas);
+  box.hidden = !ver;
+  if (!ver) { box.innerHTML = ""; return; }
+  box.innerHTML = `<button class="btn" id="d-etq-btn" type="button">${ico("etiqueta")}Descargar etiquetas</button>`;
+  $("d-etq-btn").addEventListener("click", () => window.Etiquetas.abrir({ nombre: d.nombre, marca: d.marca, tipo: d.tipo, corte: d.corte,
+    pais: d.pais, color: TIPOS[d.tipo] || "#5A5548", archivo: slug(d.nombre) || d.id }));
+}
 function paintBodega() {
-  const box = $("d-bodega"); if (!box || openId == null) return;
+  const box = $("d-bodega"); paintEtiquetas();
+  if (!box || openId == null) return;
   if (!ctx.online || !ctx.session || !ctx.bodega) { box.innerHTML = ""; return; }
   const m = bodega[String(openId)] || {};
   const etiqueta = (k, t) => t + (k === "tengo" && m.tengo && m.gramos ? ` · ${gramosTxt(m.gramos)}` : "");

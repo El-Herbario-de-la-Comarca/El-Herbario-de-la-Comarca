@@ -257,7 +257,8 @@ def de_portada():
     hero = hero.replace('href="./"', 'href="../"').replace('src="img/', 'src="../img/')
     hero = re.sub(r'<h1>(.*?)</h1>', r'<p class="sitio">\1</p>', hero, flags=re.S)   # el h1 de cada pagina es su ficha
     return {"fuentes": fuentes.group(0) if fuentes else "", "hero": hero,
-            "estilos": ver("estilos.css"), "tema": ver("tema-comarca.css"), "temporada": ver("temporada.js")}
+            "estilos": ver("estilos.css"), "tema": ver("tema-comarca.css"), "temporada": ver("temporada.js"),
+            "etiquetas": ver("etiquetas.js")}
 
 
 PORTADA = de_portada()
@@ -369,6 +370,7 @@ ICO = {
     "quiero": '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
     "hoja": '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
     "gusta": '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
+    "etiqueta": '<path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1.5 1.5 0 0 1 0 2.1l-6.9 6.9a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8.5" cy="8.5" r="1.6"/>',
 }
 ico = lambda k: f'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">{ICO[k]}</svg>'
 FRANJA = """<svg viewBox="0 0 1040 120" preserveAspectRatio="xMinYMax slice" aria-hidden="true" focusable="false">
@@ -652,6 +654,7 @@ def pagina(d, otras):
       <div class="nicho"><div class="art" id="d-art">{art(d, True)}</div><div class="balda" aria-hidden="true"></div></div>
       {bodega}
       <div class="compartir"><button class="btn" id="d-share" type="button">{ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
+      <div class="compartir" id="d-etq" hidden><button class="btn" id="d-etq-btn" type="button">{ico("etiqueta")}Descargar etiquetas</button></div>
     </div>
     <div class="info">
       <div id="d-meta">{meta}</div>
@@ -669,12 +672,15 @@ def pagina(d, otras):
       {mas_html}
     </div>
   </main>"""
-    script = """<script>(function(){
+    datos_etq = json.dumps({"nombre": nombre, "marca": marca, "tipo": tipo, "corte": d.get("corte") or "", "pais": d.get("pais") or "",
+                            "color": COLORES.get(tipo, "#5A5548"), "archivo": slug(nombre) or ident}, ensure_ascii=False).replace("</", "<\\/")
+    script = f'<script src="../etiquetas.js?v={PORTADA["etiquetas"]}"></script>\n<script type="application/json" id="d-etq-datos">{datos_etq}</script>\n' + """<script>(function(){
 var t=document.title.replace(/ · El herbario de la Comarca$/,""),u=location.href.split("#")[0],m=document.getElementById("d-share-msg");
 document.getElementById("d-share").addEventListener("click",function(){
  if(navigator.share){navigator.share({title:t,text:t+" en El herbario de la Comarca",url:u}).catch(function(){});return}
  if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){m.textContent="Enlace copiado. Pégalo en WhatsApp o Telegram."},function(){m.textContent=u})}else m.textContent=u});
-try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sb-.*-auth-token$/.test(k)&&localStorage.getItem(k)){document.getElementById("d-bodega").hidden=false;break}}}catch(e){}
+try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sb-.*-auth-token$/.test(k)&&localStorage.getItem(k)){document.getElementById("d-bodega").hidden=false;if(window.Etiquetas)document.getElementById("d-etq").hidden=false;break}}}catch(e){}
+document.getElementById("d-etq-btn").addEventListener("click",function(){window.Etiquetas.abrir(JSON.parse(document.getElementById("d-etq-datos").textContent))});
 })();</script>"""
     migas = [("Inicio", "")] + ([(marca, url_marca(marca))] if marca else []) + [(nombre, None)]
     return marco(titulo, desc, f"f/{ident}.html", cuerpo + script, migas, imagen(str(d.get("foto") or "")), "article", ficha=True)
