@@ -1043,3 +1043,9 @@ a.btn { text-decoration: none; }
 .logo-marca .lm-txt .muted { font-size: 0.9rem; }
 .logo-marca .btns { margin: 4px 0 0; }
 .logo-marca .msg:empty { display: none; }
+
+/* Mi bodega: descargar el inventario en PDF */
+.bd-pdf { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin: 14px 0 4px; }
+.bd-pdf .btn { display: inline-flex; align-items: center; gap: 8px; }
+.bd-pdf .btn[disabled] { opacity: .6; cursor: progress; }
+.bd-pdf .muted { font-size: 0.95rem; }

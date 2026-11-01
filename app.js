@@ -2111,6 +2111,39 @@ const edadCorta = (t) => {
   const a = Math.floor(m / 12), r = m % 12;
   return a ? `${a} a${r ? ` ${r} m` : ""}` : `${r} m`;
 };
+/* Inventario en PDF: lo hace bodega-pdf.js (con jsPDF), que solo se descarga al pulsar el botón. */
+const ICONO_PDF = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/></svg>`;
+let cargandoPDF = null;
+async function descargarInventario(lista, envasesDe, info, titular) {
+  const btn = $("bd-pdf"), msg = $("bd-pdf-msg");
+  if (!btn || btn.disabled) return;
+  btn.disabled = true; msg.textContent = "Preparando el PDF…"; msg.style.color = "";
+  try {
+    if (!window.inventarioBodegaPDF) {
+      if (!cargandoPDF) cargandoPDF = new Promise((ok, mal) => {
+        const s = document.createElement("script");
+        s.src = "bodega-pdf.js?v=202611011720"; s.onload = ok; s.onerror = () => { cargandoPDF = null; mal(new Error("bodega-pdf.js")); };
+        document.head.appendChild(s);
+      });
+      await cargandoPDF;
+    }
+    await window.inventarioBodegaPDF({
+      titular,
+      colores: TIPOS, ordenTipos: ESTILOS,
+      tabacos: lista.map((d) => {
+        const src = fotoSegura(d.foto);
+        return { id: d.id, nombre: d.nombre, marca: d.marca, tipo: d.tipo, corte: d.corte,
+          foto: src ? miniDe(src) || src : "", gramos: info(d).gramos || 0, envases: envasesDe(d).slice() };
+      }),
+    });
+    msg.textContent = "";
+  } catch (e) {
+    console.error(e);
+    msg.style.color = "var(--danger)"; msg.textContent = "No se ha podido crear el PDF. Comprueba la conexión y vuelve a intentarlo.";
+  }
+  btn.disabled = false;
+}
 function abrirBodega(fuente) {
   const prueba = fuente && fuente.prueba ? fuente : null;   // bodega inventada (solo admin); los clics pasan un evento
   openId = null;
@@ -2247,6 +2280,7 @@ function abrirBodega(fuente) {
         <span class="btns"><button class="btn" type="button" id="bd-barajar">Barajar de nuevo</button><button class="btn" type="button" id="bd-salir-prueba">Volver a mi bodega</button></span></div>` : ""}
       ${guia}
       ${soloGuia ? "" : `<div class="bd-casillas">${casillas}</div>
+      ${listas.tengo.length ? `<div class="bd-pdf"><button class="btn" type="button" id="bd-pdf">${ICONO_PDF}<span>Descargar inventario en PDF</span></button><span class="muted" id="bd-pdf-msg" role="status"></span></div>` : ""}
       <div class="bd-barra">
         <div class="bd-tabs" role="tablist" aria-label="Listas de la bodega">
           ${BODEGA.map(([k, t]) => `<button role="tab" type="button" data-tab="${k}" aria-selected="${k === tab}">${t} <span>${listas[k].length}</span></button>`).join("")}
@@ -2269,6 +2303,8 @@ function abrirBodega(fuente) {
     bodegaVista.tab = b.dataset.tab; bodegaVista.orden = ""; guardarVistaBodega(); abrirBodega(prueba);
     const nuevo = panel.querySelector(`[data-tab="${b.dataset.tab}"]`); if (nuevo) nuevo.focus();
   }));
+  if ($("bd-pdf")) $("bd-pdf").addEventListener("click", () => descargarInventario(listas.tengo, envasesDe, info,
+    prueba ? prueba.nombre : (ctx.perfil.nombre || (ctx.email || "").split("@")[0] || "mi bodega")));
   if ($("bd-orden")) $("bd-orden").addEventListener("change", (e) => { bodegaVista.orden = e.target.value; guardarVistaBodega(); abrirBodega(prueba); $("bd-orden").focus(); });
   if ($("bd-como")) $("bd-como").addEventListener("click", () => {
     bodegaGuia.abierta = true; abrirBodega(); const h = $("bd-gu-h"); if (h) h.scrollIntoView({ behavior: "smooth", block: "center" });
