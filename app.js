@@ -227,11 +227,13 @@ function tin(d) {
     <ellipse cx="100" cy="52" rx="62" ry="10" fill="none" stroke="#000" stroke-opacity=".18"/>
   </svg>`;
 }
-/* Fotos: cada foto subida tiene una miniatura al lado (mismo nombre acabado en «-m.jpg»).
-   La miniatura se usa en las vistas pequeñas y la grande solo en la ficha abierta.
-   Si una foto antigua no tiene miniatura, el navegador carga la grande (ver «error» más abajo). */
+/* Fotos: cada foto subida tiene una miniatura al lado (mismo nombre acabado en «-m.webp» si la grande
+   es WebP, o en «-m.jpg» en las fotos JPG de antes). La miniatura se usa en las vistas pequeñas y la
+   grande solo en la ficha abierta. Si falta la miniatura, el navegador carga la grande (ver «error»). */
 function miniDe(url) {
-  return /\/storage\/v1\/object\/public\/fotos\/.+-\d+\.(jpe?g|png|webp)$/i.test(url || "") ? url.replace(/\.(jpe?g|png|webp)$/i, "-m.jpg") : "";
+  const m = /\/storage\/v1\/object\/public\/fotos\/.+-\d+\.(jpe?g|png|webp)$/i.exec(url || "");
+  if (!m) return "";
+  return url.replace(/\.(jpe?g|png|webp)$/i, m[1].toLowerCase() === "webp" ? "-m.webp" : "-m.jpg");
 }
 function art(d, grande) {
   const src = fotoSegura(d.foto);
@@ -726,7 +728,9 @@ function paintTools() {
 }
 
 /* ---------- Fotos ---------- */
-async function shrink(file, lado = 1200, calidad = 0.86) {
+// Reduce la foto y la guarda en WebP (pesa bastante menos con la misma calidad). Si el navegador
+// no sabe hacer WebP (algunos Safari antiguos devuelven PNG), se queda en JPG como antes.
+async function shrink(file, lado = 1200, calidad = 0.86, webp = true) {
   try {
     const bmp = await createImageBitmap(file);
     const k = Math.min(1, lado / Math.max(bmp.width, bmp.height));
@@ -735,6 +739,10 @@ async function shrink(file, lado = 1200, calidad = 0.86) {
     const g = c.getContext("2d");
     g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
     g.drawImage(bmp, 0, 0, c.width, c.height);
+    if (webp) {
+      const w = await new Promise((r) => c.toBlob(r, "image/webp", calidad));
+      if (w && w.type === "image/webp") return w;
+    }
     const b = await new Promise((r) => c.toBlob(r, "image/jpeg", calidad));
     return b || file;
   } catch (e) { return file; }
@@ -762,8 +770,10 @@ async function subirFoto(file) {
     // Cada foto tiene un nombre nuevo, así que los navegadores pueden guardarla un año sin volver a pedirla.
     const up = await sb.storage.from("fotos").upload(ruta, blob, { contentType: blob.type || "image/jpeg", upsert: false, cacheControl: "31536000" });
     if (up.error) throw up.error;
-    if (mini && mini.type === "image/jpeg" && mini !== file) {   // si falla, se usa la grande en todas partes
-      try { await sb.storage.from("fotos").upload(ruta.replace(/\.(jpe?g|png|webp)$/i, "-m.jpg"), mini, { contentType: "image/jpeg", upsert: false, cacheControl: "31536000" }); } catch (e) { console.warn("Sin miniatura", e); }
+    // La miniatura va en el mismo formato que la grande, porque su nombre sale de ella (ver miniDe).
+    const tipoMini = ext === "webp" ? "image/webp" : "image/jpeg";
+    if (mini && mini !== file && (ext === "webp" || ext === "jpg") && mini.type === tipoMini) {   // si falla, se usa la grande en todas partes
+      try { await sb.storage.from("fotos").upload(ruta.replace(/\.(jpe?g|webp)$/i, `-m.${ext}`), mini, { contentType: tipoMini, upsert: false, cacheControl: "31536000" }); } catch (e) { console.warn("Sin miniatura", e); }
     }
     const url = sb.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
     if (esEditor()) {
@@ -849,7 +859,7 @@ function prepararLogoMarca(d) {
 }
 
 /* Miniaturas de las fotos subidas antes de que existieran (solo admin, desde Mi cuenta).
-   Para cada foto del almacén sin «-m.jpg», la descarga, hace la miniatura y la sube. De paso vuelve a
+   Para cada foto del almacén sin miniatura («-m.jpg» o «-m.webp»), la descarga, hace la miniatura y la sube. De paso vuelve a
    subir la grande igual que estaba, pero con caché de un año. Se puede repetir: salta las que ya tienen. */
 async function crearMiniaturasQueFaltan() {
   if (!esAdmin()) return;
@@ -867,9 +877,10 @@ async function crearMiniaturasQueFaltan() {
       const r = await fetch(grande, { cache: "no-store" });
       if (!r.ok) throw new Error("No se pudo descargar " + grande);
       const original = await r.blob();
-      const peque = await shrink(original, 400, 0.82);
-      if (!peque || peque === original || peque.type !== "image/jpeg") throw new Error("No se pudo reducir");
-      const up = await sb.storage.from("fotos").upload(rutaEnAlmacen(mini), peque, { contentType: "image/jpeg", upsert: true, cacheControl: "31536000" });
+      const tipoMini = /\.webp$/i.test(mini) ? "image/webp" : "image/jpeg";
+      const peque = await shrink(original, 400, 0.82, tipoMini === "image/webp");
+      if (!peque || peque === original || peque.type !== tipoMini) throw new Error("No se pudo reducir");
+      const up = await sb.storage.from("fotos").upload(rutaEnAlmacen(mini), peque, { contentType: tipoMini, upsert: true, cacheControl: "31536000" });
       if (up.error) throw up.error;
       // La grande, tal cual, pero con caché de un año (si falla no pasa nada).
       try { await sb.storage.from("fotos").upload(rutaEnAlmacen(grande), original, { contentType: original.type || "image/jpeg", upsert: true, cacheControl: "31536000" }); } catch (e) {}
@@ -1245,7 +1256,7 @@ function describirPropuesta(p) {
   } else {
     titulo = `Foto para ${esc(nombre)}`;
     const src = fotoSegura(p.datos.foto);
-    cuerpo = src ? `<img class="prop-foto" src="${esc(src)}" alt="Foto propuesta">` : "<p class='muted'>Sin imagen.</p>";
+    cuerpo = src ? `<img class="prop-foto" src="${esc(src)}" alt="Foto propuesta" loading="lazy" decoding="async">` : "<p class='muted'>Sin imagen.</p>";
   }
   return { titulo, cuerpo };
 }
@@ -1290,7 +1301,7 @@ function fmtHist(k, v) {
   return v == null || v === "" ? "—" : String(v);
 }
 function celdaHist(k, v) {
-  if (k === "foto") { const src = fotoSegura(v || ""); return src ? `<img class="prop-foto" src="${esc(src)}" alt="">` : "sin foto"; }
+  if (k === "foto") { const src = fotoSegura(v || ""); return src ? `<img class="prop-foto" src="${esc(src)}" alt="" loading="lazy" decoding="async">` : "sin foto"; }
   return esc(fmtHist(k, v));
 }
 async function abrirHistorial() {

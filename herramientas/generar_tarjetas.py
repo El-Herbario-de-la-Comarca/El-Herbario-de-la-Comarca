@@ -30,6 +30,11 @@ CARPETA_MARCA = RAIZ / "marca"
 CARPETA_MEZCLA = RAIZ / "mezcla"
 
 
+
+def mini_de(src):
+    """Nombre de la miniatura de una foto: «-m.webp» si la grande es WebP y «-m.jpg» si no (como miniDe en app.js)."""
+    return re.sub(r"\.(jpe?g|png|webp)$", "-m.webp" if src.lower().endswith(".webp") else "-m.jpg", src, flags=re.I)
+
 def config():
     txt = (RAIZ / "config.js").read_text(encoding="utf-8")
     url = re.search(r'supabaseUrl:\s*"([^"]*)"', txt)
@@ -437,7 +442,7 @@ def art(d, grande, prefijo="../"):
     nombre = str(d.get("nombre") or "")
     if foto.startswith(("https://", "img/")):
         src = foto if foto.startswith("https://") else prefijo + foto
-        mini = "" if grande else (re.sub(r"\.(jpe?g|png|webp)$", "-m.jpg", src, flags=re.I)
+        mini = "" if grande else (mini_de(src)
                                   if re.search(r"/storage/v1/object/public/fotos/.+-\d+\.(jpe?g|png|webp)$", src, re.I) else "")
         alterna = f' onerror="this.onerror=null;this.src=\'{e(src)}\'"' if mini else ""
         return (f'<img class="photo" src="{e(mini or src)}"{alterna} alt="Lata de {e(nombre)}" '
@@ -698,12 +703,12 @@ COLORES = colores_tipo()
 
 
 def miniatura(d):
-    """Foto pequena del tabaco (la version -m.jpg que usa el catalogo) o, si no hay foto, la lata dibujada."""
+    """Foto pequena del tabaco (la version -m.jpg o -m.webp que usa el catalogo) o, si no hay foto, la lata dibujada."""
     foto = str(d.get("foto") or "")
     nombre = d.get("nombre", "")
     if foto.startswith(("https://", "img/")):
         src = foto if foto.startswith("https://") else "../" + foto
-        mini = re.sub(r"\.(jpe?g|png|webp)$", "-m.jpg", src, flags=re.I) \
+        mini = mini_de(src) \
             if re.search(r"/storage/v1/object/public/fotos/.+-\d+\.(jpe?g|png|webp)$", src, re.I) else ""
         alterna = f' onerror="this.onerror=null;this.src=\'{e(src)}\'"' if mini else ""
         return (f'<img class="mini" src="{e(mini or src)}"{alterna} alt="" loading="lazy" decoding="async" '
