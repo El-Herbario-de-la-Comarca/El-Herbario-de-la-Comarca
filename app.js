@@ -268,7 +268,20 @@ const hayFiltros = () => !!(state.q.trim() || state.marca || state.tipo || state
 const fotoFiltros = () => Object.fromEntries(Object.keys(SIN_FILTROS).map((k) => [k, state[k]]));
 const urlSinFicha = () => location.pathname + location.search;
 const enEntradaFiltrada = () => !!(history.state && history.state.filtros);
+/* «Más filtros» (móvil): muestra u oculta Lleva, Corte, País y Ordenar, y dice cuántos de ellos están en uso */
+function pintarMasFiltros() {
+  const b = $("mas-filtros"); if (!b) return;
+  const n = [state.hoja, state.corte, state.pais, state.sort !== "nombre"].filter(Boolean).length;
+  const abierta = $("filtros-row").classList.contains("abierta");
+  $("mas-filtros-t").textContent = (abierta ? "Menos filtros" : "Más filtros") + (n ? ` (${n})` : "");
+  b.classList.toggle("activos", n > 0);
+  b.setAttribute("aria-expanded", String(abierta));
+}
+if ($("mas-filtros")) $("mas-filtros").addEventListener("click", () => {
+  $("filtros-row").classList.toggle("abierta"); pintarMasFiltros();
+});
 function anotarFiltros() {
+  pintarMasFiltros();
   if (idDeHash()) return;   // con una ficha abierta manda la URL de la ficha
   if (enEntradaFiltrada()) {
     if (hayFiltros()) history.replaceState({ filtros: fotoFiltros() }, "", urlSinFicha());

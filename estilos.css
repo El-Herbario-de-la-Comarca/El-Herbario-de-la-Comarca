@@ -993,3 +993,15 @@ a.btn { text-decoration: none; }
 /* En la ficha: la marca y el tipo de mezcla llevan a sus páginas */
 .panel.ficha a.d-enlace { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
 .panel.ficha a.d-enlace:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+/* «Más filtros»: en el móvil solo se ven Buscar, Marca y Mezcla; el resto se despliega */
+.mas-filtros { display: none; }
+@media (max-width: 600px) {
+  .mas-filtros { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 100%; justify-content: center; min-height: 40px;
+    font: inherit; font-size: 0.95rem; color: var(--accent); background: transparent; border: 1px dashed var(--line); border-radius: 8px; cursor: pointer; }
+  .mas-filtros svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+  .mas-filtros[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .mas-filtros.activos { border-style: solid; border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .row:not(.abierta) .field.extra { display: none; }
+  .row.abierta .mas-filtros { order: 10; }
+}
