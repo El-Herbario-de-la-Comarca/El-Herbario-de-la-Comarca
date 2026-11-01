@@ -660,8 +660,10 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .overlay:has(.panel.bodega-p) { padding: 0; }
   .overlay .panel.bodega-p { border-radius: 0; border: 0; min-height: 100dvh; margin-block: 0; box-shadow: none; }
   .panel.bodega-p .x-close { top: 12px; right: 12px; }
-  .panel.bodega-p .d-franja { height: 130px; }
-  .bd-cab { left: 20px; top: 16px; right: 64px; gap: 12px; align-items: flex-start; }
+  .panel.bodega-p .d-franja { height: 84px; }
+  /* En el móvil el título va debajo de las colinas, no encima: así el texto nunca se monta en el dibujo */
+  .bd-cab { position: relative; left: auto; top: auto; right: auto; margin: 16px 20px 0; gap: 12px; align-items: center; }
+  .bd-cab > div { min-width: 0; }
   .bd-baul { width: 44px; height: 44px; box-shadow: 0 0 0 3px var(--surface); }
   .bd-baul svg { width: 22px; height: 22px; }
   .bd-cab h2 { font-size: 1.9rem; }
