@@ -152,7 +152,10 @@ ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 14px;text-decoration:none;background:var(--surface);color:var(--fg)}
 ul.otras a:hover,ul.tabacos a:hover{border-color:var(--accent)}
 ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:10px;padding:9px 13px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a{display:flex;align-items:center;gap:12px;height:100%;border:1px solid var(--line);border-radius:10px;padding:8px 12px 8px 8px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos .mini{flex:none;width:56px;height:56px;object-fit:cover;border-radius:6px}
+ul.tabacos svg.mini{border-radius:0}
+ul.tabacos a>span{min-width:0;overflow-wrap:anywhere}
 ul.tabacos small{display:block;color:var(--muted);font-size:.88rem}
 .mas-link{margin:12px 0 0}
 """
@@ -295,11 +298,44 @@ def pagina(d, otras):
     return marco(titulo, desc, f"f/{ident}.html", cuerpo, migas, imagen(foto), "article")
 
 
+def colores_tipo():
+    """Colores de cada tipo de mezcla, sacados de TIPOS en app.js (los mismos de las latas del catalogo)."""
+    txt = (RAIZ / "app.js").read_text(encoding="utf-8")
+    bloque = re.search(r"const TIPOS = \{(.*?)\};", txt, re.S)
+    return dict(re.findall(r'"([^"]+)":\s*"(#[0-9A-Fa-f]{6})"', bloque.group(1))) if bloque else {}
+
+
+COLORES = colores_tipo()
+
+
+def miniatura(d):
+    """Foto pequena del tabaco (la version -m.jpg que usa el catalogo) o, si no hay foto, la lata dibujada."""
+    foto = str(d.get("foto") or "")
+    nombre = d.get("nombre", "")
+    if foto.startswith(("https://", "img/")):
+        src = foto if foto.startswith("https://") else "../" + foto
+        mini = re.sub(r"\.(jpe?g|png|webp)$", "-m.jpg", src, flags=re.I) \
+            if re.search(r"/storage/v1/object/public/fotos/.+-\d+\.(jpe?g|png|webp)$", src, re.I) else ""
+        alterna = f' onerror="this.onerror=null;this.src=\'{e(src)}\'"' if mini else ""
+        return (f'<img class="mini" src="{e(mini or src)}"{alterna} alt="" loading="lazy" decoding="async" '
+                f'width="56" height="56">')
+    c = COLORES.get(d.get("tipo") or "", "#5A5548")
+    letra = e(nombre.strip()[:1].upper())
+    return (f'<svg class="mini" viewBox="0 0 200 170" aria-hidden="true">'
+            f'<ellipse cx="100" cy="152" rx="76" ry="10" fill="#000" opacity=".16"/>'
+            f'<rect x="28" y="52" width="144" height="92" fill="{c}"/><ellipse cx="100" cy="144" rx="72" ry="14" fill="{c}"/>'
+            f'<rect x="28" y="52" width="144" height="92" fill="#000" opacity=".12"/>'
+            f'<rect x="28" y="82" width="144" height="40" fill="#15130F" opacity=".88"/>'
+            f'<rect x="28" y="86" width="144" height="1.5" fill="#D9B45A"/><rect x="28" y="116.5" width="144" height="1.5" fill="#D9B45A"/>'
+            f'<text x="100" y="112" text-anchor="middle" font-family="Young Serif, Georgia, serif" font-size="32" fill="#F2E9D0">{letra}</text>'
+            f'<ellipse cx="100" cy="52" rx="72" ry="14" fill="{c}"/><ellipse cx="100" cy="52" rx="72" ry="14" fill="#fff" opacity=".28"/></svg>')
+
+
 def item_tabaco(d, con_marca=False):
     meta = [x for x in ((d.get("marca") if con_marca else None), d.get("corte")) if x]
     es = ' <span class="es" role="img" aria-label="España" title="España">E</span>' if d.get("en_espana") is True else ""
-    return (f'<li><a href="../f/{e(d["id"])}.html">{e(d["nombre"])}{es}'
-            + (f'<small>{e(" · ".join(meta))}</small>' if meta else "") + "</a></li>")
+    return (f'<li><a href="../f/{e(d["id"])}.html">{miniatura(d)}<span>{e(d["nombre"])}{es}'
+            + (f'<small>{e(" · ".join(meta))}</small>' if meta else "") + "</span></a></li>")
 
 
 def cuenta(n, uno, varios):
