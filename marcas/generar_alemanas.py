@@ -95,6 +95,7 @@ def main():
     datos = json.loads(cuerpo.strip().rstrip(";"))
     base = [d for d in datos if int(d["id"]) < PRIMER_ID]
     espana = {str(d["id"]) for d in datos if d.get("en_espana")}   # se conserva la marca de España (SQL 16-17)
+    notas_previas = {str(d["id"]): d.get("notas") or [] for d in datos}   # se conservan las notas de sabor (SQL 44)
     claves = {(d["nombre"].lower(), d["marca"].lower()) for d in base}
     nombres_base = Counter(d["nombre"].lower() for d in base)
 
@@ -119,7 +120,7 @@ def main():
             assert len(nombre) <= 120 and len(marca) <= 80 and len(desc) <= 2000 and len(formato) <= 80, (marca, nombre)
             nuevas.append({
                 "nombre": nombre, "marca": marca, "pais": D.PAIS.get(marca, ""), "tipo": mezcla, "corte": corte,
-                "formato": formato, "desc": desc, "fuerza": 0, "notas": [], "id": siguiente,
+                "formato": formato, "desc": desc, "fuerza": 0, "notas": notas_previas.get(str(siguiente), []), "id": siguiente,
                 "descripcion": desc, "hojas": hojas, "en_espana": str(siguiente) in espana,
             })
             siguiente += 1
