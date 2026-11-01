@@ -980,3 +980,4 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .topbar .cuenta-btn { padding: 4px; min-width: 42px; justify-content: center; position: relative; }
   .topbar .tb-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
+a.btn { text-decoration: none; }

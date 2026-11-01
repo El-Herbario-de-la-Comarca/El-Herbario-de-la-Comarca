@@ -2520,15 +2520,97 @@ async function contarPendientes() {
 
 /* Barra superior (botones por rol) y pie (estado de la sesión) */
 // Ayuda: lleva a ayuda.html, a la izquierda de Mi bodega (o de Entrar)
+/* ---------- Textos de las páginas de marca y de tipo de mezcla (solo administrador) ----------
+   Las páginas marca/<marca>.html y mezcla/<tipo>.html se generan cada noche. Su texto de presentación
+   sale de la tabla textos_seccion (lo que se guarda aquí) o, si no hay nada, de secciones/textos.json. */
+let textosIniciales = null;
+async function abrirTextos() {
+  if (!esAdmin()) return;
+  abrirPanel(`<div class="info adm"><h2 id="d-name">Textos de marcas y mezclas</h2>
+    <p class="muted">Cada marca y cada tipo de mezcla tiene su propia página, con este texto de presentación y la lista de sus tabacos.
+      Separa los párrafos con una línea en blanco. Si dejas el texto vacío y guardas, vuelve el texto inicial del herbario.
+      Los cambios se ven en las páginas después de la regeneración de esta noche.</p>
+    <form class="f" id="tx-form" novalidate>
+      <div class="two">
+        <div class="field"><label for="tx-tipo">Página de</label><select id="tx-tipo"><option value="marca">Una marca</option><option value="mezcla">Un tipo de mezcla</option></select></div>
+        <div class="field"><label for="tx-clave">Cuál</label><select id="tx-clave"></select></div>
+      </div>
+      <p class="muted" id="tx-estado"></p>
+      <div class="field"><label for="tx-texto">Texto</label><textarea id="tx-texto" maxlength="6000" rows="12" disabled>Cargando…</textarea></div>
+      <p class="msg" id="tx-msg" role="alert"></p>
+      <div class="btns">
+        <button class="btn primary" type="submit" id="tx-save" disabled>Guardar</button>
+        <a class="btn" id="tx-ver" href="#" target="_blank" rel="noopener">Ver la página</a>
+        <button class="btn" type="button" id="d-close">Cerrar</button>
+      </div>
+    </form></div>`);
+  $("d-close").addEventListener("click", () => closeDetail());
+  if (textosIniciales === null) {
+    try { const r = await fetch("secciones/textos.json", { cache: "no-cache" }); textosIniciales = r.ok ? await r.json() : {}; }
+    catch (e) { textosIniciales = {}; }
+  }
+  const { data, error } = await sb.from("textos_seccion").select("tipo,clave,texto");
+  if (!$("tx-form")) return;
+  if (error) {
+    $("tx-texto").value = "";
+    $("tx-msg").textContent = "No se han podido cargar los textos. Si no lo has hecho, ejecuta 42_textos_marcas_mezclas.sql en Supabase.";
+    return;
+  }
+  const guardados = { marca: {}, mezcla: {} };
+  (data || []).forEach((f) => { if (guardados[f.tipo]) guardados[f.tipo][f.clave] = f.texto; });
+  const inicial = (tipo, clave) => ((textosIniciales || {})[tipo] || {})[clave] || "";
+  const opciones = () => {
+    if ($("tx-tipo").value === "mezcla") return ESTILOS.map((t) => [slug(t), t]);
+    const marcas = [...new Set(current.map((x) => x.marca).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+    return [...new Map(marcas.map((m) => [slug(m), m])).entries()].filter(([k]) => k);
+  };
+  const pintarLista = () => {
+    const tipo = $("tx-tipo").value;
+    $("tx-clave").innerHTML = opciones().map(([k, n]) => {
+      const marca = guardados[tipo][k] ? " · editado" : inicial(tipo, k) ? "" : " · sin texto";
+      return `<option value="${esc(k)}">${esc(n)}${marca}</option>`;
+    }).join("");
+    pintarTexto();
+  };
+  const pintarTexto = () => {
+    const tipo = $("tx-tipo").value, clave = $("tx-clave").value;
+    const propio = guardados[tipo][clave], base = inicial(tipo, clave);
+    $("tx-texto").value = propio || base;
+    $("tx-texto").disabled = false; $("tx-save").disabled = false; $("tx-msg").textContent = "";
+    $("tx-estado").textContent = propio ? "Texto editado desde la web." : base ? "Texto inicial del herbario (aún sin editar)." : "Esta página todavía no tiene texto: solo muestra el resumen y la lista de tabacos.";
+    $("tx-ver").href = `${tipo}/${encodeURIComponent(clave)}.html`;
+  };
+  $("tx-tipo").addEventListener("change", pintarLista);
+  $("tx-clave").addEventListener("change", pintarTexto);
+  pintarLista();
+  $("tx-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const tipo = $("tx-tipo").value, clave = $("tx-clave").value;
+    const texto = $("tx-texto").value.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim().slice(0, 6000);
+    const msg = $("tx-msg"), btn = $("tx-save");
+    btn.disabled = true; msg.textContent = "Guardando…";
+    const vuelveAlInicial = !texto || texto === inicial(tipo, clave).trim();
+    const { error: err } = vuelveAlInicial
+      ? await sb.from("textos_seccion").delete().eq("tipo", tipo).eq("clave", clave)
+      : await sb.from("textos_seccion").upsert({ tipo, clave, texto });
+    btn.disabled = false;
+    if (err) { msg.textContent = "No se ha podido guardar: " + err.message; return; }
+    if (vuelveAlInicial) delete guardados[tipo][clave]; else guardados[tipo][clave] = texto;
+    const elegido = clave; pintarLista(); $("tx-clave").value = elegido; pintarTexto();
+    $("tx-msg").textContent = vuelveAlInicial ? "Hecho: la página usará el texto inicial del herbario." : "Guardado. Se verá en la página tras la regeneración de esta noche.";
+  });
+}
 const AYUDA_BTN = '<a class="btn cuenta-btn ayuda-top" href="ayuda.html" title="Cómo funciona el herbario"><span class="avatar" aria-hidden="true">?</span><span class="ayuda-txt tb-txt">Ayuda</span></a>';
 function paintTop() {
   const bar = $("admin-bar");
   if (esAdmin()) {
     bar.innerHTML = `<button class="btn" id="rv-open" type="button">Revisar${ctx.pendientes ? ` (${ctx.pendientes})` : ""}</button>
       <button class="btn" id="hi-open" type="button">Historial</button>
+      <button class="btn" id="tx-open" type="button">Textos de marcas</button>
       <button class="btn primary" id="add-open" type="button">Añadir tabaco</button>`;
     $("rv-open").addEventListener("click", abrirRevision);
     $("hi-open").addEventListener("click", abrirHistorial);
+    $("tx-open").addEventListener("click", abrirTextos);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else if (esEditor()) {
     bar.innerHTML = `${ctx.misPendientes ? `<button class="btn" id="mp-open" type="button">Mis propuestas (${ctx.misPendientes} pendientes)</button>` : ""}
