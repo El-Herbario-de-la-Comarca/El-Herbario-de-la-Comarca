@@ -981,3 +981,27 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .topbar .tb-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 a.btn { text-decoration: none; }
+
+/* Explorar: enlaces a las páginas de marcas y de tipos de mezcla, bajo las colinas */
+.explorar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 16px 0 4px; }
+.explorar .exp-l { color: var(--muted); font-size: 0.95rem; margin-right: 2px; }
+.explorar a { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 6px 14px 6px 11px; border: 1px solid var(--line);
+  border-radius: 999px; background: var(--surface); color: var(--fg); text-decoration: none; font-size: 0.98rem; }
+.explorar a:hover { border-color: var(--accent); color: var(--accent); }
+.explorar svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: var(--accent); }
+@media (max-width: 600px) { .explorar { margin-top: 12px; } .explorar a { font-size: 0.93rem; padding: 5px 12px 5px 9px; } }
+/* En la ficha: la marca y el tipo de mezcla llevan a sus páginas */
+.panel.ficha a.d-enlace { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
+.panel.ficha a.d-enlace:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+/* «Más filtros»: en el móvil solo se ven Buscar, Marca y Mezcla; el resto se despliega */
+.mas-filtros { display: none; }
+@media (max-width: 600px) {
+  .mas-filtros { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 100%; justify-content: center; min-height: 40px;
+    font: inherit; font-size: 0.95rem; color: var(--accent); background: transparent; border: 1px dashed var(--line); border-radius: 8px; cursor: pointer; }
+  .mas-filtros svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+  .mas-filtros[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .mas-filtros.activos { border-style: solid; border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .row:not(.abierta) .field.extra { display: none; }
+  .row.abierta .mas-filtros { order: 10; }
+}
