@@ -374,10 +374,10 @@ ico = lambda k: f'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">{ICO[k
 FRANJA = """<svg viewBox="0 0 1040 120" preserveAspectRatio="xMinYMax slice" aria-hidden="true" focusable="false">
   <path class="fr-a" d="M0 78C120 40 240 36 360 62c110 24 200-8 330-18 130-10 240 16 350 8v68H0z"/>
   <path class="fr-b" d="M0 98c140-28 300-32 430-14 130 18 270-10 410-12 90-1 150 10 200 14v34H0z"/>
-  <path class="fr-m" d="M720 74c40-44 150-48 200 0z"/>
+  <g class="fr-casa"><path class="fr-m" d="M720 74c40-44 150-48 200 0z"/>
   <circle class="fr-ring" cx="820" cy="84" r="22"/><circle class="fr-door" cx="820" cy="84" r="18"/><circle class="fr-knob" cx="828" cy="86" r="2.4"/>
   <circle class="fr-ring" cx="775" cy="80" r="7"/><circle class="fr-glass" cx="775" cy="80" r="5"/>
-  <circle class="fr-ring" cx="865" cy="80" r="7"/><circle class="fr-glass" cx="865" cy="80" r="5"/>
+  <circle class="fr-ring" cx="865" cy="80" r="7"/><circle class="fr-glass" cx="865" cy="80" r="5"/></g>
   <g class="fr-f1"><circle cx="520" cy="104" r="2.6"/><circle cx="660" cy="96" r="2.6"/><circle cx="975" cy="98" r="2.6"/></g>
   <g class="fr-f2"><circle cx="534" cy="107" r="2.2"/><circle cx="675" cy="100" r="2.2"/><circle cx="960" cy="102" r="2.2"/></g>
 </svg>"""
