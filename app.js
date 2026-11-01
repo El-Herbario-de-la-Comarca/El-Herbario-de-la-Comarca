@@ -333,7 +333,7 @@ function render() {
     const st = statsDe(d.id);
     const rate = st.n ? `${fmtMedia(st.media)} de 5 · ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}` : "Sin reseñas todavía";
     return `
-    <button class="card" type="button" data-id="${esc(d.id)}" aria-label="Ver ficha de ${esc(d.nombre)}">
+    <a class="card" href="${esc(hrefFicha(d))}" data-id="${esc(d.id)}" aria-label="Ver ficha de ${esc(d.nombre)}">
       <div class="art">${art(d)}</div>
       <div class="body">
         <span class="brandname">${esc(d.marca)}</span>
@@ -342,7 +342,7 @@ function render() {
         ${st.n ? `<div class="str">${pips(Math.round(st.media))}<span>${rate}</span></div>` : `<span class="rate none">${rate}</span>`}
         <p>${esc(d.desc)}</p>
       </div>
-    </button>`;
+    </a>`;
   }).join("") : `<p class="empty">Ningún tabaco coincide con la búsqueda. Prueba con menos filtros.</p>`;
   anotarFiltros();
 }
@@ -568,12 +568,21 @@ window.addEventListener("popstate", () => {
    con su nombre y su foto, para que WhatsApp y Telegram muestren una tarjeta. Si la ficha es de hoy
    y aún no tiene la suya, se comparte el enlace normal. */
 let tarjetas = null;   // ids con página propia (f/lista.json)
+let leyendoTarjetas = null;
+function cargarTarjetas() {
+  if (!leyendoTarjetas) leyendoTarjetas = fetch("f/lista.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : [])).catch(() => [])
+    .then((l) => { tarjetas = new Set(l.map(String)); });
+  return leyendoTarjetas;
+}
+// Enlace de cada tarjeta del catálogo: su página propia; si la ficha es de hoy y aún no la tiene, el enlace interno.
+function hrefFicha(d) {
+  const id = String(d.id);
+  return tarjetas === null || tarjetas.has(id) ? `f/${encodeURIComponent(id)}.html` : `#/ficha/${encodeURIComponent(id)}`;
+}
 async function enlaceFicha(d) {
   const base = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "");
-  if (tarjetas === null) {
-    try { const r = await fetch("f/lista.json", { cache: "no-cache" }); tarjetas = new Set(r.ok ? await r.json() : []); }
-    catch (e) { tarjetas = new Set(); }
-  }
+  if (tarjetas === null) await cargarTarjetas();
   return tarjetas.has(String(d.id)) ? `${base}f/${encodeURIComponent(d.id)}.html` : `${base}index.html#/ficha/${encodeURIComponent(d.id)}`;
 }
 async function compartirFicha(d) {
@@ -2548,7 +2557,13 @@ function paintTop() {
 }
 
 /* ---------- Eventos globales ---------- */
-$("grid").addEventListener("click", (e) => { const b = e.target.closest(".card"); if (b) openDetail(b.dataset.id); });
+// Las tarjetas son enlaces reales a f/<id>.html (para Google y para abrir en otra pestaña),
+// pero un clic normal abre la ficha en la ventana de siempre, sin salir del catálogo.
+$("grid").addEventListener("click", (e) => {
+  const b = e.target.closest(".card"); if (!b) return;
+  if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+  e.preventDefault(); openDetail(b.dataset.id);
+});
 $("pager").addEventListener("click", (e) => { const b = e.target.closest("button[data-page]"); if (b && !b.disabled) irAPagina(Number(b.dataset.page)); });
 $("overlay").addEventListener("click", (e) => { if (e.target === $("overlay")) closeDetail(); });
 document.addEventListener("keydown", (e) => {
@@ -2589,6 +2604,7 @@ async function contarVisita() {
 (async function iniciar() {
   setupFilters();
   usarRespaldo(); fillFilters(); render(); paintTop();   // se ve algo al instante
+  cargarTarjetas().then(() => { if ([...tarjetas].length) render(); });   // ajusta los enlaces de las fichas sin página
   abrirFichaDeUrl();                                      // quien entra por el enlace de una ficha
   if (!sb) return;
   contarVisita();
