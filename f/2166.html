@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8">
+<html lang="es" class="comarca"><head><meta charset="utf-8">
 <title>No. 499 – Masterblend · Pfeifendepot · El herbario de la Comarca</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Aromática · Ribbon · Alemania. No. 499 – Masterblend es una mezcla aromática de Pfeifendepot, cortado en tiras finas (ribbon). Lleva virginia y cavendish. Mezcla de la casa de la tienda Gerd Jansens…">
 <link rel="canonical" href="https://elherbariodelacomarca.es/f/2166.html">
 <meta property="og:type" content="article">
@@ -15,58 +15,50 @@
 <meta name="theme-color" content="#3E5A2B">
 <link rel="icon" href="../img/logo.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@400;500&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="../temporada.js?v=202610292355"></script>
+<link rel="stylesheet" href="../estilos.css?v=202611010200">
+<link rel="stylesheet" href="../tema-comarca.css?v=202610292355">
 <style>
-:root{--bg:#E9ECE6;--surface:#F5F6F2;--fg:#1D2320;--muted:#5B655F;--line:#CBD1C8;--accent:#3E5A2B;--accent-fg:#F5F6F2;--hill-a:#B9C9A6;--hill-b:#8FAE74;
---display:"Young Serif",Georgia,serif;--body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
-@media (prefers-color-scheme:dark){:root{--bg:#121614;--surface:#1A201D;--fg:#E6EAE3;--muted:#9AA59D;--line:#2B342F;--accent:#9DC27A;--accent-fg:#121614;--hill-a:#24352A;--hill-b:#2F4A31;color-scheme:dark}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 var(--body)}
-a{color:var(--accent)}
-.wrap{max-width:760px;margin:0 auto;padding:0 16px 48px}
-.top{display:flex;align-items:center;gap:14px;padding:20px 0 8px;text-decoration:none;color:inherit}
-.top img{width:64px;height:64px}
-.top b{font:400 1.35rem/1.1 "Uncial Antiqua",var(--display);display:block}
-.top small{color:var(--muted)}
-.hills{display:block;width:100%;height:48px;margin-bottom:20px}
-.hills .a{fill:var(--hill-a)}.hills .b{fill:var(--hill-b)}
-.ficha{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px}
-.marca{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.82rem;margin:0}
-h1{font:400 2rem/1.15 var(--display);margin:4px 0 16px}
-.es{display:inline-grid;place-items:center;width:1.15em;height:1.15em;margin-left:.3em;vertical-align:.12em;border-radius:50%;
-font:700 .55em/1 system-ui,sans-serif;color:#AA151B;background:linear-gradient(#AA151B 0 25%,#F1BF00 25% 75%,#AA151B 75%);box-shadow:0 0 0 1px rgba(0,0,0,.18)}
-.foto{display:block;max-width:100%;max-height:340px;margin:0 auto 18px;border-radius:6px}
-dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 18px}
-dl div{border:1px solid var(--line);border-radius:6px;padding:8px 10px}
-dt{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-dd{margin:2px 0 0;font-weight:500}
-.desc{margin:0 0 18px}
-.abrir{display:inline-block;background:var(--accent);color:var(--accent-fg);text-decoration:none;font-weight:600;border-radius:4px;padding:11px 18px}
-h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
-ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
-ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
-footer{margin-top:36px;color:var(--muted);font-size:.88rem}
-.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.hero .sitio{margin:0;font-family:"Uncial Antiqua",var(--display);font-weight:400;letter-spacing:.01em;line-height:1.08;text-wrap:balance;color:var(--fg);font-size:clamp(1.9rem,6.6vw,3.4rem)}
+@media (max-width:600px){.comarca .hero .sitio{font-size:1.55rem}}
+.pag{max-width:900px;margin:0 auto;padding:22px 0 8px}
+.pag a{color:var(--accent)}
+.migas{font-size:.95rem;color:var(--muted);margin:0 0 14px}
 .migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
 .migas li+li::before{content:"›";margin-right:4px}
 .migas a{color:inherit}
-dd a{color:inherit}
+.ficha{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:clamp(18px,4vw,28px);box-shadow:var(--shadow,none)}
+.ficha .marca{color:var(--muted);font-size:.95rem;letter-spacing:.06em;margin:0}
+.ficha .marca a{color:inherit;text-decoration:none}
+.ficha h1{font:400 clamp(1.8rem,5vw,2.4rem)/1.12 var(--display);letter-spacing:0;margin:4px 0 16px;text-wrap:balance}
+.es{display:inline-grid;place-items:center;width:1.15em;height:1.15em;margin-left:.3em;vertical-align:.12em;border-radius:50%;
+font:700 .55em/1 system-ui,sans-serif;color:#AA151B;background:linear-gradient(#AA151B 0 25%,#F1BF00 25% 75%,#AA151B 75%);box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+h1 .es{font-size:.5em}
+.foto{display:block;max-width:100%;max-height:340px;margin:0 auto 18px;border-radius:8px}
+.ficha dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:0 0 18px}
+.ficha dl div{border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.ficha dt{font-size:.88rem;color:var(--muted);margin:0}
+.ficha dd{margin:2px 0 0;font-weight:500}
+.ficha dd a{color:inherit}
+.desc{margin:0 0 18px}
 .texto p{margin:0 0 12px}
-.resumen{color:var(--muted);margin:0 0 18px}
-h1+.resumen{margin-top:-8px}
+.resumen{color:var(--muted);margin:-8px 0 18px}
+.abrir{display:inline-flex;align-items:center;min-height:44px;background:var(--accent);color:var(--accent-fg)!important;text-decoration:none;font-weight:600;border-radius:6px;padding:10px 18px}
+.pag h2{font:400 1.35rem/1.2 var(--display);margin:34px 0 12px}
 .grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
-.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+.grupo h2 small{font:400 .9rem/1.2 var(--body);color:var(--muted)}
+.grupo p{margin:0}
+ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 14px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.otras a:hover,ul.tabacos a:hover{border-color:var(--accent)}
 ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
-ul.tabacos a:hover{border-color:var(--accent)}
-ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:10px;padding:9px 13px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.88rem}
 .mas-link{margin:12px 0 0}
-.gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
-.gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
-.gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
-.gate .acts{display:flex;gap:10px;flex-wrap:wrap}
-.gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
-.gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Pfeifendepot", "item": "https://elherbariodelacomarca.es/marca/pfeifendepot.html"}, {"@type": "ListItem", "position": 3, "name": "No. 499 – Masterblend"}]}</script>
 </head><body>
@@ -80,19 +72,68 @@ document.getElementById("gate-yes").onclick=function(){c();try{localStorage.setI
 document.getElementById("gate-no").onclick=function(){document.getElementById("gate-title").textContent="Gracias por tu visita";
 document.getElementById("gate-text").textContent="Esta página solo está disponible para mayores de 18 años.";document.getElementById("gate-acts").hidden=true}})();</script>
 <div class="wrap">
-<a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
-<svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<header class="hero">
+    <div class="hero-top">
+      <a class="logo-link" id="logo-inicio" href="../" title="Ir al inicio"><img class="logo" src="../img/logo.png" alt="Inicio. Logo del Pipa Club Fumadas Hobbit: un hobbit fumando en pipa a la puerta de su casa" width="132" height="132"></a>
+      <div class="hero-text">
+        <span class="eyebrow">Pipa Club Fumadas Hobbit</span>
+        <div class="brand"><p class="sitio">El herbario de la Comarca</p></div>
+        <span class="tag">Catálogo de hierba de pipa</span>
+      </div>
+    </div>
+    <svg class="hills hole" viewBox="0 0 1200 210" preserveAspectRatio="xMinYMax slice" aria-hidden="true">
+      <defs>
+        <clipPath id="hh-door"><circle cx="222" cy="160" r="31"/></clipPath>
+      </defs>
+      <g class="t-halloween"><mask id="hh-luna"><rect x="500" y="-40" width="140" height="120" fill="#fff"/><circle cx="571" cy="30" r="15" fill="#000"/></mask><circle cx="562" cy="36" r="17" class="moon" mask="url(#hh-luna)"/><g transform="translate(470 42) scale(1.1)"><g class="bat b1"><path d="M0 1 C-2 -2 -5 -4 -10 -3 C-8 -1 -8.5 1.5 -7 3 C-5.5 1.2 -3.5 1.5 -2.5 3.2 L0 2 L2.5 3.2 C3.5 1.5 5.5 1.2 7 3 C8.5 1.5 8 -1 10 -3 C5 -4 2 -2 0 1Z"/><circle cx="0" cy="0.4" r="1.7"/></g></g><g transform="translate(510 22) scale(0.85)"><g class="bat b2"><path d="M0 1 C-2 -2 -5 -4 -10 -3 C-8 -1 -8.5 1.5 -7 3 C-5.5 1.2 -3.5 1.5 -2.5 3.2 L0 2 L2.5 3.2 C3.5 1.5 5.5 1.2 7 3 C8.5 1.5 8 -1 10 -3 C5 -4 2 -2 0 1Z"/><circle cx="0" cy="0.4" r="1.7"/></g></g><g transform="translate(650 40) scale(1)"><g class="bat b3"><path d="M0 1 C-2 -2 -5 -4 -10 -3 C-8 -1 -8.5 1.5 -7 3 C-5.5 1.2 -3.5 1.5 -2.5 3.2 L0 2 L2.5 3.2 C3.5 1.5 5.5 1.2 7 3 C8.5 1.5 8 -1 10 -3 C5 -4 2 -2 0 1Z"/><circle cx="0" cy="0.4" r="1.7"/></g></g><g transform="translate(700 16) scale(0.7)"><g class="bat b2"><path d="M0 1 C-2 -2 -5 -4 -10 -3 C-8 -1 -8.5 1.5 -7 3 C-5.5 1.2 -3.5 1.5 -2.5 3.2 L0 2 L2.5 3.2 C3.5 1.5 5.5 1.2 7 3 C8.5 1.5 8 -1 10 -3 C5 -4 2 -2 0 1Z"/><circle cx="0" cy="0.4" r="1.7"/></g></g></g>
+      <path class="h-far" d="M0 120 C70 104 120 92 190 96 C260 100 300 84 380 88 C470 92 520 116 600 110 C700 102 760 78 860 82 C960 86 1040 112 1200 100 V210 H0Z"/>
+      <g class="t-navidad"><path class="snow-line far" d="M0 120 C70 104 120 92 190 96 C260 100 300 84 380 88 C470 92 520 116 600 110 C700 102 760 78 860 82 C960 86 1040 112 1200 100"/></g>
+      <path class="h-mound" d="M0 150 C28 134 58 114 88 99 C118 85 146 76 170 68 C196 62 230 57 262 60 C296 63 320 71 344 85 C372 101 398 115 432 123 C482 133 540 128 600 120 C680 110 742 118 822 126 C922 136 1040 120 1200 126 V210 H0Z"/>
+      <path class="h-shade" d="M330 78 C356 92 382 108 412 118 C440 126 470 130 500 130 C466 136 430 132 400 124 C372 114 350 98 330 78Z"/>
+      <g class="t-navidad"><path class="snow-line" d="M0 150 C28 134 58 114 88 99 C118 85 146 76 170 68 C196 62 230 57 262 60 C296 63 320 71 344 85 C372 101 398 115 432 123 C482 133 540 128 600 120 C680 110 742 118 822 126 C922 136 1040 120 1200 126"/></g>
+      <path class="h-grass" d="M96 108 l3 -9 l2 8 l4 -11 l1 11 M150 78 l4 -8 l2 7 M184 66 l3 -10 l3 9 l3 -7 M336 86 l3 -8 l3 8 M360 104 l4 -10 l1 9 l4 -6 M392 148 l3 -9 l2 8 M62 160 l3 -8 l3 7"/>
+      <g class="chimney"><path d="M277 68 L275.5 52 L274 51 L274.5 46 L294 45.5 L295 50.5 L292.5 51.5 L291.5 68Z"/><path class="ch-lines" d="M275.8 57 H292.6 M276.4 63 H292 M283 51.5 V57 M287 57 V63 M281 63 V68"/></g>
+      <g class="t-navidad"><path class="snow-fill" d="M272.5 46 C274 41 281 40.5 284 41.5 C288 40 294 40.5 296 45 C292 44 289 46.5 284 45.5 C279 46.5 276 44.5 272.5 46Z"/></g>
+      <g class="smoke"><circle cx="285" cy="30" r="5"/><circle cx="292" cy="18" r="6.5"/><circle cx="286" cy="4" r="8"/></g>
+      <g class="ring ring-b"><g class="ring-w"><path d="M284.41 45.72 C284.09 45.78 283.14 46.09 282.49 46.07 C281.83 46.06 281.11 45.95 280.47 45.62 C279.84 45.29 279.20 44.73 278.68 44.09 C278.17 43.44 277.72 42.60 277.36 41.74 C277.01 40.89 276.73 39.93 276.55 38.97 C276.38 38.02 276.29 36.98 276.32 36.00 C276.36 35.02 276.54 34.01 276.78 33.12 C277.03 32.22 277.41 31.39 277.79 30.63 C278.18 29.86 278.62 29.17 279.09 28.54 C279.57 27.90 280.07 27.28 280.64 26.82 C281.20 26.37 281.83 25.97 282.47 25.79 C283.10 25.61 284.10 25.74 284.43 25.73 L284.33 28.01 C284.08 28.03 283.29 27.91 282.82 28.11 C282.34 28.31 281.87 28.73 281.50 29.19 C281.14 29.65 280.87 30.31 280.63 30.87 C280.38 31.43 280.23 32.01 280.03 32.57 C279.84 33.12 279.64 33.61 279.46 34.19 C279.27 34.76 279.04 35.35 278.92 36.00 C278.80 36.65 278.71 37.39 278.73 38.10 C278.75 38.82 278.86 39.59 279.05 40.28 C279.25 40.97 279.53 41.70 279.90 42.24 C280.26 42.78 280.75 43.28 281.24 43.54 C281.72 43.80 282.32 43.84 282.83 43.78 C283.34 43.73 284.06 43.30 284.30 43.21 Z"/></g></g><g class="ship"><g class="ship-w"><path d="M272.5 37.2 L291.2 37.2 L291.8 33.8 L295.6 33.6 L295.2 37.4 C294 42.2 290.4 43.8 284.6 43.8 C278.8 43.8 275.4 42.2 272.5 37.2 Z M275.6 36.8 L270.2 33.6 M277.2 36.6 V26.8 M284.6 36.6 V21.8 M291.2 33.6 V26.6 M284.6 21.8 L288 22.6 L284.6 23.4 M281.9 24.6 L287.3 24.6 L287.8 29.4 L281.4 29.4 Z M281.3 30.6 L287.9 30.6 L288.4 35.6 L280.8 35.6 Z M274.9 28.4 L279.5 28.4 L279.8 31.8 L274.6 31.8 Z M274.6 32.8 L279.8 32.8 L280 35.8 L274.4 35.8 Z M291.2 27.4 L291.2 33 L295 32.6 Z M276.4 39.6 H292.6"/></g></g><g class="ring ring-f"><g class="ring-w"><path d="M283.57 25.64 C283.89 25.71 284.87 25.83 285.49 26.05 C286.12 26.28 286.71 26.62 287.30 27.00 C287.89 27.38 288.50 27.78 289.05 28.33 C289.59 28.88 290.17 29.52 290.59 30.30 C291.01 31.07 291.37 32.03 291.58 32.98 C291.78 33.93 291.86 35.00 291.84 36.00 C291.82 37.00 291.68 38.04 291.45 38.97 C291.22 39.91 290.89 40.84 290.47 41.60 C290.06 42.37 289.51 43.04 288.97 43.56 C288.42 44.07 287.78 44.40 287.19 44.71 C286.60 45.01 286.01 45.19 285.41 45.40 C284.81 45.60 283.89 45.85 283.58 45.94 L283.68 43.52 C283.91 43.40 284.59 43.02 285.02 42.79 C285.45 42.56 285.83 42.37 286.25 42.13 C286.66 41.88 287.12 41.68 287.49 41.32 C287.87 40.95 288.27 40.47 288.53 39.92 C288.79 39.37 288.95 38.67 289.06 38.02 C289.17 37.37 289.18 36.68 289.20 36.00 C289.22 35.32 289.23 34.63 289.16 33.94 C289.08 33.26 288.97 32.52 288.74 31.90 C288.51 31.28 288.15 30.71 287.79 30.24 C287.42 29.78 286.97 29.43 286.53 29.11 C286.09 28.78 285.63 28.49 285.16 28.30 C284.68 28.10 283.91 28.00 283.66 27.94 Z"/></g></g>
+      <path class="ivy" d="M330 96 C320 104 324 116 314 124 C306 130 310 140 302 142 M330 96 C338 108 334 118 342 128"/>
+      <g class="leaves"><circle cx="324" cy="104" r="3.2"/><circle cx="318" cy="118" r="3"/><circle cx="310" cy="128" r="2.8"/><circle cx="336" cy="112" r="3"/><circle cx="341" cy="124" r="2.6"/><circle cx="328" cy="98" r="2.6"/></g>
+      <g class="stones"><path d="M286.2 145.8 L280.1 145.7 L281.6 138.2 L287.3 140.3Z"/><path d="M287.9 140.1 L283.8 138.4 L288.9 131.6 L291.8 134.6Z"/><path d="M292.7 135.0 L289.4 130.9 L297.4 126.9 L298.6 132.0Z"/><path d="M299.0 131.7 L298.0 125.8 L305.1 125.5 L304.2 131.6Z"/><path d="M304.6 131.3 L306.0 125.2 L313.6 128.5 L310.2 133.5Z"/><path d="M310.9 133.2 L313.6 129.3 L317.5 132.7 L313.9 135.9Z"/><path d="M314.2 136.2 L319.2 132.1 L323.5 139.9 L317.1 141.9Z"/><path d="M316.2 142.6 L321.7 141.2 L322.0 149.3 L316.4 148.3Z"/><path d="M137.1 155.8 L131.9 156.6 L132.2 150.3 L137.3 151.3Z"/><path d="M136.8 150.8 L132.0 149.5 L134.3 144.3 L138.4 147.4Z"/><path d="M139.3 147.6 L135.2 144.7 L140.7 140.0 L143.0 144.4Z"/><path d="M143.5 144.7 L141.3 140.5 L147.8 139.0 L147.9 143.7Z"/><path d="M148.2 143.3 L147.9 139.1 L155.4 140.9 L153.3 144.7Z"/><path d="M153.4 145.1 L155.9 140.6 L162.4 148.0 L157.5 149.9Z"/><path d="M158.4 149.9 L162.0 148.4 L163.0 156.3 L159.0 155.8Z"/></g>
+      <g class="win"><circle cx="302" cy="146" r="14.5" class="w-frame"/><circle cx="302" cy="146" r="11" class="w-glass"/><path class="w-bars" d="M302 135 V157 M291 146 H313"/></g>
+      <g class="win"><circle cx="148" cy="154" r="10.5" class="w-frame"/><circle cx="148" cy="154" r="7.6" class="w-glass"/><path class="w-bars" d="M148 146.4 V161.6 M140.4 154 H155.6"/></g>
+      <path class="sill" d="M286 162 C294 160 310 160 318 162 L317 165 C308 163.5 296 163.5 287 165Z"/>
+            <g class="flowers fl-pot"><circle cx="291" cy="160.5" r="2.4"/><circle cx="297" cy="159.6" r="2"/><circle cx="307" cy="159.6" r="2.2"/><circle cx="313" cy="160.5" r="2.4"/></g>
+      <g class="stones door-stones"><path d="M187.5 159.5 L179.0 159.4 L180.1 149.8 L188.4 152.0Z"/><path d="M188.5 151.0 L178.1 148.2 L181.2 139.4 L190.8 144.8Z"/><path d="M192.5 144.6 L180.3 138.3 L187.9 128.4 L197.8 137.2Z"/><path d="M198.3 136.4 L191.2 128.9 L196.8 124.2 L202.9 132.6Z"/><path d="M203.3 131.5 L196.7 121.8 L207.4 116.7 L211.1 127.7Z"/><path d="M212.2 128.2 L209.0 119.2 L219.0 117.4 L219.6 126.8Z"/><path d="M220.5 126.1 L220.2 116.0 L227.8 116.3 L226.5 126.4Z"/><path d="M227.4 126.8 L229.8 114.1 L240.6 117.2 L235.5 129.1Z"/><path d="M236.5 129.1 L241.8 119.1 L247.9 123.3 L241.6 132.1Z"/><path d="M242.1 133.0 L249.7 121.9 L258.5 129.5 L247.9 138.5Z"/><path d="M249.1 138.8 L256.0 133.3 L260.2 139.1 L252.4 143.9Z"/><path d="M252.7 144.8 L263.6 139.4 L266.6 147.9 L254.9 150.6Z"/><path d="M254.6 151.6 L266.6 148.6 L268.0 159.5 L255.7 159.5Z"/></g>
+      <circle cx="222" cy="160" r="34" class="d-frame"/>
+      <circle cx="222" cy="160" r="31" class="d-door"/>
+      <g clip-path="url(#hh-door)"><path class="d-planks" d="M203 120 V200 M214.5 120 V200 M229 120 V200 M241 120 V200"/></g>
+      <circle cx="241" cy="162" r="3.4" class="d-knob"/>
+      <g class="t-navidad"><path class="cable" d="M175.3 155.1 A47 47 0 0 1 269.0 160"/><g class="lights"><circle cx="175.3" cy="155.1" r="2.3" class="l0"/><circle cx="177.3" cy="145.5" r="2.3" class="l1"/><circle cx="181.3" cy="136.5" r="2.3" class="l2"/><circle cx="187.1" cy="128.6" r="2.3" class="l3"/><circle cx="194.4" cy="122.0" r="2.3" class="l0"/><circle cx="202.9" cy="117.1" r="2.3" class="l1"/><circle cx="212.2" cy="114.0" r="2.3" class="l2"/><circle cx="222.0" cy="113.0" r="2.3" class="l3"/><circle cx="231.8" cy="114.0" r="2.3" class="l0"/><circle cx="241.1" cy="117.1" r="2.3" class="l1"/><circle cx="249.6" cy="122.0" r="2.3" class="l2"/><circle cx="256.9" cy="128.6" r="2.3" class="l3"/><circle cx="262.7" cy="136.5" r="2.3" class="l0"/><circle cx="266.7" cy="145.5" r="2.3" class="l1"/><circle cx="268.7" cy="155.1" r="2.3" class="l2"/></g><circle cx="222" cy="146" r="9" class="wreath"/><g class="berries"><circle cx="231.0" cy="146.0" r="1.4"/><circle cx="228.4" cy="152.4" r="1.4"/><circle cx="222.0" cy="155.0" r="1.4"/><circle cx="215.6" cy="152.4" r="1.4"/><circle cx="213.0" cy="146.0" r="1.4"/><circle cx="215.6" cy="139.6" r="1.4"/><circle cx="222.0" cy="137.0" r="1.4"/><circle cx="228.4" cy="139.6" r="1.4"/></g><path class="bow" d="M222 155 L216 151.5 L216.5 158 Z M222 155 L228 151.5 L227.5 158 Z M222 155 L219 162 M222 155 L225 162"/></g>
+      <g class="t-halloween"><path class="web" d="M338 176 L356 176 M338 176 L338 192 M338 176 L353 189 M338 176 L347 191 M338 176 L355 183 M341.5 176 C341.5 178 340 179.5 338 179.5 M346 176 C346 180 342 184 338 184 M351 176 C350.5 182 344 188.5 338 188.5"/><path class="spider" d="M352 181 V186"/><circle cx="352" cy="187.5" r="1.8" class="spider-b"/></g>
+      <g class="fence"><path d="M342.0 197.0 L340.8 180.4 M361.0 197.5 L360.5 179.9 M381.0 198.5 L382.0 181.5 M400.0 199.5 L398.6 177.8 M338 184 C356 182 380 186 404 184 M338 192 C360 191 384 193 404 192"/></g>
+      <path class="h-front" d="M0 202 C40 198 80 196 120 197 C160 198 190 194 230 195 C280 196 320 197 370 194 C430 190 470 172 540 168 C620 164 680 170 760 166 C840 162 900 188 980 186 C1060 184 1120 176 1200 180 V210 H0Z"/>
+      <g class="h-path"><ellipse cx="221.5" cy="197" rx="8.0" ry="2.5" transform="rotate(-6.0 222 197)"/><ellipse cx="215.4" cy="203" rx="10.0" ry="3.0" transform="rotate(7.9 214 203)"/><ellipse cx="227.9" cy="208" rx="11.0" ry="3.0" transform="rotate(-0.3 228 208)"/></g>
+      <g class="bush"><path d="M66 200 C60 190 70 182 78 186 C82 178 94 178 96 188 C104 186 108 196 102 202Z"/><path d="M402 200 C398 192 406 186 412 189 C416 182 426 184 426 192 C432 192 434 200 430 203Z"/></g>
+      <g class="flowers"><circle cx="112" cy="199" r="3.2"/><circle cx="124" cy="203" r="2.6"/><circle cx="134" cy="198" r="3"/><circle cx="292" cy="201" r="3"/><circle cx="305" cy="205" r="2.6"/><circle cx="318" cy="200" r="3"/><circle cx="880" cy="190" r="3"/><circle cx="894" cy="194" r="2.4"/><circle cx="1010" cy="190" r="3.2"/></g>
+      <g class="t-halloween"><g class="pumpkin" transform="translate(184 192) scale(1.15)"><path class="stem" d="M-1 -11 C-1 -14 0 -16 2.5 -17 L3 -15.5 C1.5 -14.5 1.5 -13 1.5 -11Z"/><ellipse cx="-6" cy="0" rx="7" ry="10" class="pk"/><ellipse cx="6" cy="0" rx="7" ry="10" class="pk"/><ellipse cx="0" cy="0" rx="7.5" ry="11" class="pk pk-c"/><path class="face" d="M-6.5 -3 L-3.5 -7 L-1.5 -3Z M1.5 -3 L3.5 -7 L6.5 -3Z M-7 2 L-4.5 4 L-2.5 2.2 L0 4.5 L2.5 2.2 L4.5 4 L7 2 C5 7 -5 7 -7 2Z"/></g><g class="pumpkin" transform="translate(266 194) scale(0.9)"><path class="stem" d="M-1 -11 C-1 -14 0 -16 2.5 -17 L3 -15.5 C1.5 -14.5 1.5 -13 1.5 -11Z"/><ellipse cx="-6" cy="0" rx="7" ry="10" class="pk"/><ellipse cx="6" cy="0" rx="7" ry="10" class="pk"/><ellipse cx="0" cy="0" rx="7.5" ry="11" class="pk pk-c"/><path class="face" d="M-6.5 -3 L-3.5 -7 L-1.5 -3Z M1.5 -3 L3.5 -7 L6.5 -3Z M-7 2 L-4.5 4 L-2.5 2.2 L0 4.5 L2.5 2.2 L4.5 4 L7 2 C5 7 -5 7 -7 2Z"/></g><g class="pumpkin" transform="translate(283 199) scale(0.6)"><path class="stem" d="M-1 -11 C-1 -14 0 -16 2.5 -17 L3 -15.5 C1.5 -14.5 1.5 -13 1.5 -11Z"/><ellipse cx="-6" cy="0" rx="7" ry="10" class="pk"/><ellipse cx="6" cy="0" rx="7" ry="10" class="pk"/><ellipse cx="0" cy="0" rx="7.5" ry="11" class="pk pk-c"/></g></g>
+      <g class="t-navidad"><g class="snow-patches"><ellipse cx="60" cy="202" rx="40" ry="3.5"/><ellipse cx="340" cy="199" rx="34" ry="3"/><ellipse cx="610" cy="168" rx="46" ry="3.5"/><ellipse cx="900" cy="184" rx="38" ry="3"/><ellipse cx="1110" cy="180" rx="44" ry="3.5"/></g><g class="tree" transform="translate(462 186)"><path class="trunk" d="M-2 0 H2 V8 H-2Z"/><path class="fir" d="M0 -34 L-9 -20 H-5 L-13 -8 H-7 L-16 4 H16 L7 -8 H13 L5 -20 H9Z"/><path class="snow-fill" d="M0 -34 L-4 -27.5 C-2 -26.5 2 -26.5 4 -27.5Z M-9 -20 C-6 -19 -4 -20.5 -5 -20Z"/><circle cx="-5" cy="-12" r="1.6" class="l0"/><circle cx="4" cy="-17" r="1.6" class="l2"/><circle cx="6" cy="-3" r="1.6" class="l1"/><circle cx="-8" cy="0" r="1.6" class="l3"/><path class="star" d="M0 -40 L1.2 -36.6 L4.8 -36.6 L1.9 -34.5 L3 -31 L0 -33.2 L-3 -31 L-1.9 -34.5 L-4.8 -36.6 L-1.2 -36.6Z"/></g><g class="snowfall"><circle cx="543" cy="-12" r="2.1" style="animation-duration:13.5s;animation-delay:-6.5s"/><circle cx="609" cy="-12" r="2.1" style="animation-duration:8.3s;animation-delay:-7.2s"/><circle cx="756" cy="-12" r="2.5" style="animation-duration:7.7s;animation-delay:-4.2s"/><circle cx="109" cy="-12" r="2.5" style="animation-duration:11.9s;animation-delay:-0.6s"/><circle cx="1179" cy="-12" r="2.7" style="animation-duration:11.6s;animation-delay:-8.6s"/><circle cx="189" cy="-12" r="1.2" style="animation-duration:10.7s;animation-delay:-0.8s"/><circle cx="228" cy="-12" r="1.6" style="animation-duration:7.2s;animation-delay:-6.5s"/><circle cx="529" cy="-12" r="2.5" style="animation-duration:10.6s;animation-delay:-9.0s"/><circle cx="600" cy="-12" r="2.3" style="animation-duration:10.2s;animation-delay:-3.9s"/><circle cx="1197" cy="-12" r="2.8" style="animation-duration:12.9s;animation-delay:-9.9s"/><circle cx="378" cy="-12" r="1.6" style="animation-duration:9.0s;animation-delay:-1.0s"/><circle cx="920" cy="-12" r="1.8" style="animation-duration:12.9s;animation-delay:-5.4s"/><circle cx="1150" cy="-12" r="2.6" style="animation-duration:7.0s;animation-delay:-2.9s"/><circle cx="1092" cy="-12" r="2.0" style="animation-duration:13.9s;animation-delay:-5.6s"/><circle cx="88" cy="-12" r="2.2" style="animation-duration:12.4s;animation-delay:-3.8s"/><circle cx="105" cy="-12" r="1.7" style="animation-duration:13.7s;animation-delay:-10.6s"/><circle cx="142" cy="-12" r="1.6" style="animation-duration:7.7s;animation-delay:-0.8s"/><circle cx="956" cy="-12" r="1.5" style="animation-duration:10.9s;animation-delay:-6.3s"/><circle cx="229" cy="-12" r="2.4" style="animation-duration:7.9s;animation-delay:-9.0s"/><circle cx="140" cy="-12" r="1.9" style="animation-duration:8.5s;animation-delay:-3.8s"/><circle cx="1165" cy="-12" r="2.5" style="animation-duration:9.1s;animation-delay:-12.4s"/><circle cx="253" cy="-12" r="1.8" style="animation-duration:13.0s;animation-delay:-9.0s"/><circle cx="120" cy="-12" r="2.8" style="animation-duration:8.5s;animation-delay:-3.6s"/><circle cx="927" cy="-12" r="1.7" style="animation-duration:9.1s;animation-delay:-1.0s"/><circle cx="108" cy="-12" r="2.1" style="animation-duration:8.7s;animation-delay:-8.4s"/><circle cx="446" cy="-12" r="1.9" style="animation-duration:13.7s;animation-delay:-6.8s"/><circle cx="689" cy="-12" r="2.6" style="animation-duration:8.3s;animation-delay:-2.2s"/><circle cx="1090" cy="-12" r="2.5" style="animation-duration:8.7s;animation-delay:-2.7s"/><circle cx="887" cy="-12" r="2.7" style="animation-duration:8.4s;animation-delay:-13.3s"/><circle cx="1059" cy="-12" r="2.2" style="animation-duration:10.0s;animation-delay:-1.5s"/><circle cx="46" cy="-12" r="2.7" style="animation-duration:8.7s;animation-delay:-9.9s"/><circle cx="308" cy="-12" r="2.5" style="animation-duration:11.2s;animation-delay:-4.1s"/><circle cx="211" cy="-12" r="2.4" style="animation-duration:7.5s;animation-delay:-3.2s"/><circle cx="671" cy="-12" r="2.6" style="animation-duration:11.3s;animation-delay:-3.9s"/></g></g>
+    </svg>
+  </header>
+<div class="pag">
 <nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/pfeifendepot.html">Pfeifendepot</a></li><li aria-current="page">No. 499 – Masterblend</li></ol></nav>
 <main class="ficha">
-<p class="marca"><a href="../marca/pfeifendepot.html" style="color:inherit;text-decoration:none">Pfeifendepot</a></p>
+<p class="marca"><a href="../marca/pfeifendepot.html">Pfeifendepot</a></p>
 <h1>No. 499 – Masterblend</h1>
 <dl><div><dt>Mezcla</dt><dd><a href="../mezcla/aromatica.html">Aromática</a></dd></div><div><dt>Corte</dt><dd>Ribbon</dd></div><div><dt>País</dt><dd>Alemania</dd></div><div><dt>Formato</dt><dd>Lata de 100 g</dd></div><div><dt>Hojas</dt><dd>Virginia, Cavendish</dd></div></dl>
 <p class="desc">No. 499 – Masterblend es una mezcla aromática de Pfeifendepot, cortado en tiras finas (ribbon). Lleva virginia y cavendish. Mezcla de la casa de la tienda Gerd Jansens Pfeifendepot. Forma parte de la serie Masterblend. Aroma de ciruela mirabel. Formato: lata de 100 g.</p>
 <a class="abrir" href="../index.html#/ficha/2166">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
 <h2>Más de Pfeifendepot</h2><ul class="otras"><li><a href="2134.html">No. 032 – Extra White</a></li><li><a href="2135.html">No. 034</a></li><li><a href="2136.html">No. 037 – Copenhagen Curlies</a></li><li><a href="2137.html">No. 038 – Copenhagen B</a></li><li><a href="2138.html">No. 041 – Fiesta</a></li><li><a href="2139.html">No. 045 – Copenhagen Ø</a></li><li><a href="2140.html">No. 047</a></li><li><a href="2141.html">No. 056 – Cremon</a></li><li><a href="2142.html">No. 057 – V-Cubes</a></li><li><a href="2143.html">No. 064 – Rosemoor</a></li><li><a href="2144.html">No. 066 – Fredensborg White</a></li><li><a href="2145.html">No. 070 – Flake Cut</a></li><li><a href="2146.html">No. 079 – Gerd Jansens Scottish</a></li><li><a href="2147.html">No. 080 – Gerd Jansens English</a></li><li><a href="2148.html">No. 081 – Golden Balkan</a></li><li><a href="2149.html">No. 088 – DSK Flake</a></li><li><a href="2151.html">No. 089 – DSK Ready Rubbed</a></li><li><a href="2152.html">No. 090 – Merlin Cut Plug</a></li><li><a href="2153.html">No. 091 – Camelot Broken</a></li><li><a href="2154.html">No. 098 – Copenhagen 1970</a></li><li><a href="2155.html">No. 101 – Copenhagen Dannebrog</a></li><li><a href="2156.html">No. 125 – 125 Years Jubilee</a></li><li><a href="2157.html">No. 200 – Bengals</a></li><li><a href="2158.html">No. 202 – Crown „A“</a></li><li><a href="2150.html">No. 209 – White Balkan</a></li><li><a href="2159.html">No. 411 – Masterblend</a></li><li><a href="2160.html">No. 422 – Masterblend</a></li><li><a href="2161.html">No. 433 – Masterblend</a></li><li><a href="2162.html">No. 444 – Masterblend</a></li><li><a href="2163.html">No. 455 – Masterblend</a></li><li><a href="2164.html">No. 466 – Masterblend</a></li><li><a href="2165.html">No. 477 – Masterblend</a></li><li><a href="2167.html">No. 500 – Kori-Flake</a></li><li><a href="2168.html">No. 501 – The Good</a></li><li><a href="2169.html">No. 502 – The Bad</a></li><li><a href="2170.html">No. 503 – The Ugly</a></li><li><a href="2171.html">No. 999 – Curly Cut</a></li><li><a href="2172.html">VAPERizer (Plug)</a></li></ul><p class="mas-link"><a href="../marca/pfeifendepot.html">Todo sobre Pfeifendepot</a></p>
-<footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
-<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
-<a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
+</div>
+<footer>
+<span><strong>El herbario de la Comarca no vende tabaco</strong> ni incluye enlaces a tiendas. Es un sitio informativo.</span>
+<span>Fumar perjudica gravemente la salud. Prohibida la venta a menores de 18 años.</span>
+<span class="legal-links"><a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> · <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Política de privacidad</a></span>
+</footer>
 </div>
 </body></html>
