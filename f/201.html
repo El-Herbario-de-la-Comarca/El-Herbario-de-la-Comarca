@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@400;500&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script src="../temporada.js?v=202610292355"></script>
-<link rel="stylesheet" href="../estilos.css?v=202611011050">
+<link rel="stylesheet" href="../estilos.css?v=202611011100">
 <link rel="stylesheet" href="../tema-comarca.css?v=202610292355">
 <style>
 .overlay.estatica{position:static;inset:auto;z-index:auto;min-height:100dvh;overflow:visible}
@@ -64,6 +64,7 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
       <div id="d-bodega" hidden><div class="bodega-h"><p class="bodega-t">Mi bodega</p></div>
       <div class="btns bodega" role="group" aria-label="Mi bodega"><a class="btn" href="../index.html#/ficha/201"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="7" width="12" height="13" rx="2"/><path d="M8 7V5h8v2"/><path d="M9.5 13.5l2 2 3.5-4"/></svg><span>Lo tengo</span></a><a class="btn" href="../index.html#/ficha/201"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14h9a3 3 0 0 0 3-3V8h4v3a7 7 0 0 1-7 7H6a3 3 0 0 1-3-3z"/><path d="M17 5c0-1 1-1.5 1-2.5"/></svg><span>Lo he probado</span></a><a class="btn" href="../index.html#/ficha/201"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg><span>Quiero probarlo</span></a></div></div>
       <div class="compartir"><button class="btn" id="d-share" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
+      <div class="compartir" id="d-etq" hidden><button class="btn" id="d-etq-btn" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1.5 1.5 0 0 1 0 2.1l-6.9 6.9a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8.5" cy="8.5" r="1.6"/></svg>Descargar etiquetas</button></div>
     </div>
     <div class="info">
       <div id="d-meta">
@@ -97,12 +98,15 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
       
       <section class="sec sec-mas" aria-labelledby="mas-h"><h3 id="mas-h">Más de la serie Carolina</h3><div class="mas-lista"><a class="mas-item" href="202.html"><span class="mas-art"><img class="photo" src="https://yqargaygohhktbhmpcqk.supabase.co/storage/v1/object/public/fotos/fichas/202-1793402066947-m.jpg" onerror="this.onerror=null;this.src='https://yqargaygohhktbhmpcqk.supabase.co/storage/v1/object/public/fotos/fichas/202-1793402066947.jpg'" alt="Lata de Carolina Red Flake with Perique" loading="lazy" decoding="async"></span><span class="mas-nom">Carolina Red Flake with Perique</span></a></div></section>
     </div>
-  </main><script>(function(){
+  </main><script src="../etiquetas.js?v=202611011100"></script>
+<script type="application/json" id="d-etq-datos">{"nombre": "Carolina Red Flake", "marca": "Cornell & Diehl", "tipo": "Virginia", "corte": "Flake", "pais": "Estados Unidos", "color": "#B8862B", "archivo": "carolina-red-flake"}</script>
+<script>(function(){
 var t=document.title.replace(/ · El herbario de la Comarca$/,""),u=location.href.split("#")[0],m=document.getElementById("d-share-msg");
 document.getElementById("d-share").addEventListener("click",function(){
  if(navigator.share){navigator.share({title:t,text:t+" en El herbario de la Comarca",url:u}).catch(function(){});return}
  if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){m.textContent="Enlace copiado. Pégalo en WhatsApp o Telegram."},function(){m.textContent=u})}else m.textContent=u});
-try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sb-.*-auth-token$/.test(k)&&localStorage.getItem(k)){document.getElementById("d-bodega").hidden=false;break}}}catch(e){}
+try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sb-.*-auth-token$/.test(k)&&localStorage.getItem(k)){document.getElementById("d-bodega").hidden=false;if(window.Etiquetas)document.getElementById("d-etq").hidden=false;break}}}catch(e){}
+document.getElementById("d-etq-btn").addEventListener("click",function(){window.Etiquetas.abrir(JSON.parse(document.getElementById("d-etq-datos").textContent))});
 })();</script></div><div class="estatica"><footer>
 <span><strong>El herbario de la Comarca no vende tabaco</strong> ni incluye enlaces a tiendas. Es un sitio informativo.</span>
 <span>Fumar perjudica gravemente la salud. Prohibida la venta a menores de 18 años.</span>
