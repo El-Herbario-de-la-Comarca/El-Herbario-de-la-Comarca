@@ -979,6 +979,9 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .topbar { flex-wrap: nowrap; }
   .topbar .cuenta-btn { padding: 4px; min-width: 42px; justify-content: center; position: relative; }
   .topbar .tb-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* Mi bodega va la primera, a la izquierda, y con su texto */
+  .topbar #bd-open { order: -1; margin-right: auto; padding: 4px 14px 4px 4px; min-width: 0; }
+  .topbar #bd-open .tb-txt { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
 }
 a.btn { text-decoration: none; }
 
