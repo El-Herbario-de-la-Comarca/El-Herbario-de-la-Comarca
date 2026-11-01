@@ -490,12 +490,12 @@ function metaHTML(d) {
   const sinResenas = !st.n
     ? `<p class="d-rate"><span class="d-pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Sin reseñas todavía${ctx.online && ctx.opiniones ? ' · <button class="link" type="button" data-ir="resenas">escribe la primera</button>' : ""}</p>`
     : "";
-  const casilla = (k, t, v) => v ? `<div class="d-dato">${ico(k)}<span class="d-dato-l">${t}</span><span class="d-dato-v">${esc(v)}</span></div>` : "";
-  const datos = casilla("mezcla", "Mezcla", d.tipo) + casilla("corte", "Corte", d.corte) + casilla("origen", "Origen", d.pais) + casilla("formato", "Formato", d.formato);
+  const casilla = (k, t, v, url) => v ? `<div class="d-dato">${ico(k)}<span class="d-dato-l">${t}</span><span class="d-dato-v">${url ? `<a class="d-enlace" href="${esc(url)}" title="Qué es: ${esc(v)}">${esc(v)}</a>` : esc(v)}</span></div>` : "";
+  const datos = casilla("mezcla", "Mezcla", d.tipo, ESTILOS.includes(d.tipo) ? `mezcla/${slug(d.tipo)}.html` : "") + casilla("corte", "Corte", d.corte) + casilla("origen", "Origen", d.pais) + casilla("formato", "Formato", d.formato);
   return `
       <div class="d-head">
         <div class="d-title">
-          <span class="brandname">${esc(d.marca)}${d.pais ? ` · ${esc(d.pais)}` : ""}</span>
+          <span class="brandname">${d.marca ? `<a class="d-enlace" href="marca/${esc(slug(d.marca))}.html" title="Todo sobre ${esc(d.marca)}">${esc(d.marca)}</a>` : ""}${d.pais ? ` · ${esc(d.pais)}` : ""}</span>
           <h2 id="d-name">${esc(d.nombre)}${d.espana ? ' <span class="es-badge" role="img" aria-label="España">E</span>' : ""}</h2>
           ${sinResenas}
         </div>
