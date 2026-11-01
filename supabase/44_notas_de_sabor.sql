@@ -280,5 +280,5 @@ from (values
   (2406, array['café', 'whisky']::text[]),
   (2407, array['ahumado']::text[])
 ) as v(id, notas)
-where t.id = v.id
+where t.id = v.id::text
   and cardinality(t.notas) = 0;
