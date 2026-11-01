@@ -236,7 +236,7 @@ ul.tabacos .lmarca img{max-width:48px;max-height:48px;object-fit:contain}
 ul.tabacos .lmarca.sin{background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-color:transparent;font:400 1.5rem/1 var(--display);color:var(--accent)}
 """
 
-AVISO = """<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+AVISO = """<div class="gate" id="gate" data-nosnippet role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
 <p id="gate-text">El herbario de la Comarca es un catálogo informativo sobre tabaco de pipa. Confirma que eres mayor de edad para entrar.</p>
 <div class="acts" id="gate-acts"><button class="yes" id="gate-yes" type="button">Tengo 18 años o más</button><button id="gate-no" type="button">Salir</button></div></div></div>
@@ -314,7 +314,8 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website", 
 <meta property="og:url" content="{e(url)}">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#3E5A2B">
-<link rel="icon" href="../img/logo.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="../img/icono-192.png">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
