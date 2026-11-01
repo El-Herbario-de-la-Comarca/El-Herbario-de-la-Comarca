@@ -46,6 +46,21 @@ h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
 ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
 footer{margin-top:36px;color:var(--muted);font-size:.88rem}
+.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.migas li+li::before{content:"›";margin-right:4px}
+.migas a{color:inherit}
+dd a{color:inherit}
+.texto p{margin:0 0 12px}
+.resumen{color:var(--muted);margin:0 0 18px}
+h1+.resumen{margin-top:-8px}
+.grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a:hover{border-color:var(--accent)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+.mas-link{margin:12px 0 0}
 .gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
 .gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
@@ -53,6 +68,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.88rem}
 .gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
 .gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Monk", "item": "https://elherbariodelacomarca.es/marca/monk.html"}, {"@type": "ListItem", "position": 3, "name": "Film Noir"}]}</script>
 </head><body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
@@ -66,17 +82,19 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="wrap">
 <a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
 <svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/monk.html">Monk</a></li><li aria-current="page">Film Noir</li></ol></nav>
 <main class="ficha">
-<p class="marca">Monk</p>
+<p class="marca"><a href="../marca/monk.html" style="color:inherit;text-decoration:none">Monk</a></p>
 <h1>Film Noir</h1>
-<img class="foto" src="https://yqargaygohhktbhmpcqk.supabase.co/storage/v1/object/public/fotos/fichas/n881855667fad4f59b5805c4252661253-1793195403853.jpg" alt="Film Noir · Monk" loading="lazy"><dl><div><dt>Mezcla</dt><dd>Inglesa</dd></div><div><dt>Corte</dt><dd>Ready Rubbed</dd></div><div><dt>País</dt><dd>Argentina</dd></div><div><dt>Hojas</dt><dd>Virginia, Burley, Cavendish</dd></div><div><dt>Notas de sabor</dt><dd>Citrico, Nuez, Terroso</dd></div></dl>
+<img class="foto" src="https://yqargaygohhktbhmpcqk.supabase.co/storage/v1/object/public/fotos/fichas/n881855667fad4f59b5805c4252661253-1793195403853.jpg" alt="Film Noir · Monk" loading="lazy"><dl><div><dt>Mezcla</dt><dd><a href="../mezcla/inglesa.html">Inglesa</a></dd></div><div><dt>Corte</dt><dd>Ready Rubbed</dd></div><div><dt>País</dt><dd>Argentina</dd></div><div><dt>Hojas</dt><dd>Virginia, Burley, Cavendish</dd></div><div><dt>Notas de sabor</dt><dd>Citrico, Nuez, Terroso</dd></div></dl>
 <p class="desc">Film Noir vintage/edition es un homenaje a la edad de oro de la industria del tabaco en los EEUU. La época de los años 20, 30, 40 y 50, dónde el tabaco para pipa era fumado por todos sin distinción y se producían grandes latas de los llamados tabacos OTC (Over The Counter) o de venta al mostrador que se podían encontrar tanto en una farmacia como en una gasolinera. Latas legendarias, de 14 onzas, de tabacos que olían a sí mismos y mucho de los cuales, no solo,  han llegado hasta nuestros días sino que aún siguen siendo los de mayor venta a nivel mundial.
 
 Film Noir es un verdadero &quot;codger&quot;, una mezcla de bright virginia, burley blanco y cavendish que nos trae reminiscencias a los tabacos ingleses de la zona de los lagos en el límite con Escocia. Una mezcla aterciopelada con un bouquet intraductible logrado a base de anís, licor, azúcar, vainilla, tonquin, nuez y madera, pero que cuando se enciende es su propia singularidad lo que</p>
 <a class="abrir" href="../index.html#/ficha/n881855667fad4f59b5805c4252661253">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
-<h2>Más de Monk</h2><ul class="otras"><li><a href="n0c2d61b0a9134cac855d3e8c1a74387b.html">221B</a></li><li><a href="n6c3aa1a0d6c84e1faffa0a7869ecf8d3.html">Aromaticos</a></li><li><a href="n80c33293f8f245a593f91de3b8413d46.html">Barbershop</a></li><li><a href="nba53494837904008bf92b69f76eb9753.html">Bauhaus</a></li><li><a href="n5032a1b970a44dac8b49124bf178d444.html">Beirut</a></li><li><a href="n6120cfd63643476487348feadb1138b3.html">BlueGrass</a></li><li><a href="nf7a62c6f99cd40458311ec2c3e7a75a3.html">Canterbuy</a></li><li><a href="n28bb41109ac64897a4546e31ead46001.html">Castle Bay</a></li><li><a href="n3f0854703093401a9842f620d353b27a.html">Hemingway</a></li><li><a href="n8cf852b72802480fb63e428043beb297.html">irish Cream</a></li><li><a href="n24677fb39a48416fbb71ea7f7722521c.html">Mediterraneo</a></li><li><a href="n02f1e25fd0ab400a991c36abfbb88b1b.html">Natural</a></li><li><a href="n8236436af0ad4b64832106dd3098e2aa.html">Navy Rope</a></li><li><a href="n89b01bff5c5d451c84b12e33c08bc2d4.html">Orange</a></li><li><a href="nfeabc971047940fb89cd106cc8203073.html">Plebaian Club</a></li><li><a href="na3cb8807f6184c88b3eb41c39061aea3.html">Romani</a></li><li><a href="n661be27c84c84920b6ae53a5eb04233d.html">Rum &amp; Maple</a></li><li><a href="n4ed3f539deae40509a6306c7a7de08cc.html">Single Barrel</a></li><li><a href="nff3ec67c86664e7087acdf4bbec903f0.html">Velazquez</a></li></ul>
+<h2>Más de Monk</h2><ul class="otras"><li><a href="n0c2d61b0a9134cac855d3e8c1a74387b.html">221B</a></li><li><a href="n6c3aa1a0d6c84e1faffa0a7869ecf8d3.html">Aromaticos</a></li><li><a href="n80c33293f8f245a593f91de3b8413d46.html">Barbershop</a></li><li><a href="nba53494837904008bf92b69f76eb9753.html">Bauhaus</a></li><li><a href="n5032a1b970a44dac8b49124bf178d444.html">Beirut</a></li><li><a href="n6120cfd63643476487348feadb1138b3.html">BlueGrass</a></li><li><a href="nf7a62c6f99cd40458311ec2c3e7a75a3.html">Canterbuy</a></li><li><a href="n28bb41109ac64897a4546e31ead46001.html">Castle Bay</a></li><li><a href="n3f0854703093401a9842f620d353b27a.html">Hemingway</a></li><li><a href="n8cf852b72802480fb63e428043beb297.html">irish Cream</a></li><li><a href="n24677fb39a48416fbb71ea7f7722521c.html">Mediterraneo</a></li><li><a href="n02f1e25fd0ab400a991c36abfbb88b1b.html">Natural</a></li><li><a href="n8236436af0ad4b64832106dd3098e2aa.html">Navy Rope</a></li><li><a href="n89b01bff5c5d451c84b12e33c08bc2d4.html">Orange</a></li><li><a href="nfeabc971047940fb89cd106cc8203073.html">Plebaian Club</a></li><li><a href="na3cb8807f6184c88b3eb41c39061aea3.html">Romani</a></li><li><a href="n661be27c84c84920b6ae53a5eb04233d.html">Rum &amp; Maple</a></li><li><a href="n4ed3f539deae40509a6306c7a7de08cc.html">Single Barrel</a></li><li><a href="nff3ec67c86664e7087acdf4bbec903f0.html">Velazquez</a></li></ul><p class="mas-link"><a href="../marca/monk.html">Todo sobre Monk</a></p>
 <footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
+<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
 <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
 </div>
 </body></html>

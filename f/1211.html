@@ -46,6 +46,21 @@ h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
 ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
 footer{margin-top:36px;color:var(--muted);font-size:.88rem}
+.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.migas li+li::before{content:"›";margin-right:4px}
+.migas a{color:inherit}
+dd a{color:inherit}
+.texto p{margin:0 0 12px}
+.resumen{color:var(--muted);margin:0 0 18px}
+h1+.resumen{margin-top:-8px}
+.grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a:hover{border-color:var(--accent)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+.mas-link{margin:12px 0 0}
 .gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
 .gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
@@ -53,6 +68,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.88rem}
 .gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
 .gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Watch City", "item": "https://elherbariodelacomarca.es/marca/watch-city.html"}, {"@type": "ListItem", "position": 3, "name": "#7"}]}</script>
 </head><body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
@@ -66,15 +82,17 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="wrap">
 <a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
 <svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/watch-city.html">Watch City</a></li><li aria-current="page">#7</li></ol></nav>
 <main class="ficha">
-<p class="marca">Watch City</p>
+<p class="marca"><a href="../marca/watch-city.html" style="color:inherit;text-decoration:none">Watch City</a></p>
 <h1>#7</h1>
-<img class="foto" src="https://yqargaygohhktbhmpcqk.supabase.co/storage/v1/object/public/fotos/propuestas/6fc47382-502c-4d0f-a398-0248d7b79567/1211-1792861956842.jpg" alt="#7 · Watch City" loading="lazy"><dl><div><dt>Mezcla</dt><dd>Aromática</dd></div><div><dt>País</dt><dd>Estados Unidos</dd></div><div><dt>Formato</dt><dd>A granel</dd></div><div><dt>Hojas</dt><dd>Virginia, Burley, Cavendish</dd></div></dl>
+<img class="foto" src="https://yqargaygohhktbhmpcqk.supabase.co/storage/v1/object/public/fotos/propuestas/6fc47382-502c-4d0f-a398-0248d7b79567/1211-1792861956842.jpg" alt="#7 · Watch City" loading="lazy"><dl><div><dt>Mezcla</dt><dd><a href="../mezcla/aromatica.html">Aromática</a></dd></div><div><dt>País</dt><dd>Estados Unidos</dd></div><div><dt>Formato</dt><dd>A granel</dd></div><div><dt>Hojas</dt><dd>Virginia, Burley, Cavendish</dd></div></dl>
 <p class="desc">#7 es una mezcla aromática de Watch City. Es una mezcla de la casa de la tienda Watch City Cigar &amp; Pipe (Massachusetts). Lleva cavendish, burley y Virginia. Formato: a granel.</p>
 <a class="abrir" href="../index.html#/ficha/1211">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
-<h2>Más de Watch City</h2><ul class="otras"><li><a href="1212.html">4-Q</a></li><li><a href="1213.html">Bada-Bing!</a></li><li><a href="1214.html">Beacon Blend</a></li><li><a href="1215.html">Blue Ridge Special</a></li><li><a href="1216.html">Bostonian Rhapsody</a></li><li><a href="1217.html">Deluxe Crumb Cut</a></li><li><a href="1218.html">English Ernie-ental</a></li><li><a href="1219.html">Eureka</a></li><li><a href="1220.html">F.U.S.T.G! (Fired Up &amp; Set To Go!)</a></li><li><a href="1221.html">None of Your Business</a></li><li><a href="1222.html">Spiked Spumoni</a></li></ul>
+<h2>Más de Watch City</h2><ul class="otras"><li><a href="1212.html">4-Q</a></li><li><a href="1213.html">Bada-Bing!</a></li><li><a href="1214.html">Beacon Blend</a></li><li><a href="1215.html">Blue Ridge Special</a></li><li><a href="1216.html">Bostonian Rhapsody</a></li><li><a href="1217.html">Deluxe Crumb Cut</a></li><li><a href="1218.html">English Ernie-ental</a></li><li><a href="1219.html">Eureka</a></li><li><a href="1220.html">F.U.S.T.G! (Fired Up &amp; Set To Go!)</a></li><li><a href="1221.html">None of Your Business</a></li><li><a href="1222.html">Spiked Spumoni</a></li></ul><p class="mas-link"><a href="../marca/watch-city.html">Todo sobre Watch City</a></p>
 <footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
+<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
 <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
 </div>
 </body></html>

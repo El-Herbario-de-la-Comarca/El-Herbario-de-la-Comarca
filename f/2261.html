@@ -46,6 +46,21 @@ h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
 ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
 footer{margin-top:36px;color:var(--muted);font-size:.88rem}
+.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.migas li+li::before{content:"›";margin-right:4px}
+.migas a{color:inherit}
+dd a{color:inherit}
+.texto p{margin:0 0 12px}
+.resumen{color:var(--muted);margin:0 0 18px}
+h1+.resumen{margin-top:-8px}
+.grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a:hover{border-color:var(--accent)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+.mas-link{margin:12px 0 0}
 .gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
 .gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
@@ -53,6 +68,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.88rem}
 .gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
 .gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Fribourg & Treyer", "item": "https://elherbariodelacomarca.es/marca/fribourg-treyer.html"}, {"@type": "ListItem", "position": 3, "name": "Special Brown Flake"}]}</script>
 </head><body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
@@ -66,15 +82,17 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="wrap">
 <a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
 <svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/fribourg-treyer.html">Fribourg &amp; Treyer</a></li><li aria-current="page">Special Brown Flake</li></ol></nav>
 <main class="ficha">
-<p class="marca">Fribourg &amp; Treyer</p>
+<p class="marca"><a href="../marca/fribourg-treyer.html" style="color:inherit;text-decoration:none">Fribourg &amp; Treyer</a></p>
 <h1>Special Brown Flake <span class="es" role="img" aria-label="España" title="España">E</span></h1>
-<dl><div><dt>Mezcla</dt><dd>Virginia</dd></div><div><dt>Corte</dt><dd>Flake</dd></div><div><dt>Formato</dt><dd>Lata de 50 g</dd></div><div><dt>Hojas</dt><dd>Virginia</dd></div></dl>
+<dl><div><dt>Mezcla</dt><dd><a href="../mezcla/virginia.html">Virginia</a></dd></div><div><dt>Corte</dt><dd>Flake</dd></div><div><dt>Formato</dt><dd>Lata de 50 g</dd></div><div><dt>Hojas</dt><dd>Virginia</dd></div></dl>
 <p class="desc">Special Brown Flake es una mezcla de la familia Virginia de Fribourg &amp; Treyer, prensado y cortado en láminas (flake). Lleva virginia. Navy flake con un ligero toque de ron. Formato: lata de 50 g.</p>
 <a class="abrir" href="../index.html#/ficha/2261">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
-<h2>Más de Fribourg &amp; Treyer</h2><ul class="otras"><li><a href="2260.html">34th Mixture</a></li><li><a href="2264.html">Cut Virginia Plug</a></li><li><a href="2265.html">Vintage Flake</a></li><li><a href="2263.html">Waterloo No. 2 Mixture</a></li><li><a href="2262.html">Wingate Mixture</a></li></ul>
+<h2>Más de Fribourg &amp; Treyer</h2><ul class="otras"><li><a href="2260.html">34th Mixture</a></li><li><a href="2264.html">Cut Virginia Plug</a></li><li><a href="2265.html">Vintage Flake</a></li><li><a href="2263.html">Waterloo No. 2 Mixture</a></li><li><a href="2262.html">Wingate Mixture</a></li></ul><p class="mas-link"><a href="../marca/fribourg-treyer.html">Todo sobre Fribourg &amp; Treyer</a></p>
 <footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
+<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
 <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
 </div>
 </body></html>

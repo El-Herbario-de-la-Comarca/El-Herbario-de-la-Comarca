@@ -46,6 +46,21 @@ h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
 ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
 footer{margin-top:36px;color:var(--muted);font-size:.88rem}
+.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.migas li+li::before{content:"›";margin-right:4px}
+.migas a{color:inherit}
+dd a{color:inherit}
+.texto p{margin:0 0 12px}
+.resumen{color:var(--muted);margin:0 0 18px}
+h1+.resumen{margin-top:-8px}
+.grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a:hover{border-color:var(--accent)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+.mas-link{margin:12px 0 0}
 .gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
 .gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
@@ -53,6 +68,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.88rem}
 .gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
 .gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "G. L. Pease", "item": "https://elherbariodelacomarca.es/marca/g-l-pease.html"}, {"@type": "ListItem", "position": 3, "name": "Piccadilly"}]}</script>
 </head><body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
@@ -66,15 +82,17 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="wrap">
 <a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
 <svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/g-l-pease.html">G. L. Pease</a></li><li aria-current="page">Piccadilly</li></ol></nav>
 <main class="ficha">
-<p class="marca">G. L. Pease</p>
+<p class="marca"><a href="../marca/g-l-pease.html" style="color:inherit;text-decoration:none">G. L. Pease</a></p>
 <h1>Piccadilly</h1>
-<dl><div><dt>Mezcla</dt><dd>Inglesa</dd></div><div><dt>País</dt><dd>Estados Unidos</dd></div><div><dt>Formato</dt><dd>57 g · 227 g</dd></div><div><dt>Hojas</dt><dd>Virginia, Latakia, Perique</dd></div></dl>
+<dl><div><dt>Mezcla</dt><dd><a href="../mezcla/inglesa.html">Inglesa</a></dd></div><div><dt>País</dt><dd>Estados Unidos</dd></div><div><dt>Formato</dt><dd>57 g · 227 g</dd></div><div><dt>Hojas</dt><dd>Virginia, Latakia, Perique</dd></div></dl>
 <p class="desc">Piccadilly es una mezcla de G. L. Pease. Formatos: 57 g y 227 g. Todavía no tenemos datos fiables de familia, corte ni composición.</p>
 <a class="abrir" href="../index.html#/ficha/255">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
-<h2>Más de G. L. Pease</h2><ul class="otras"><li><a href="224.html">Abingdon</a></li><li><a href="225.html">Ashbury</a></li><li><a href="226.html">Bankside</a></li><li><a href="227.html">Barbary Coast</a></li><li><a href="228.html">Blackpoint</a></li><li><a href="229.html">Cairo</a></li><li><a href="230.html">Caravan</a></li><li><a href="231.html">Charing Cross</a></li><li><a href="232.html">Chelsea Morning</a></li><li><a href="233.html">Cumberland</a></li><li><a href="234.html">Ellipsis Flake</a></li><li><a href="235.html">Embarcadero</a></li><li><a href="236.html">Fillmore</a></li><li><a href="237.html">Gaslight</a></li><li><a href="238.html">Géométrie</a></li><li><a href="239.html">Haddo&#x27;s Delight</a></li><li><a href="240.html">Horizons Flake</a></li><li><a href="241.html">JackKnife Plug</a></li><li><a href="242.html">JackKnife Ready Rubbed</a></li><li><a href="243.html">Kensington</a></li><li><a href="244.html">Key Largo</a></li><li><a href="245.html">Lagonda</a></li><li><a href="246.html">Laurel Heights</a></li><li><a href="247.html">Lombard</a></li><li><a href="248.html">Maltese Falcon</a></li><li><a href="249.html">Meridian</a></li><li><a href="250.html">Metropolis</a></li><li><a href="251.html">Montgomery</a></li><li><a href="252.html">Navigator</a></li><li><a href="253.html">Odyssey</a></li><li><a href="254.html">Penny Farthing</a></li><li><a href="256.html">Quiet Nights</a></li><li><a href="257.html">Regents Flake</a></li><li><a href="258.html">Robusto</a></li><li><a href="259.html">Samarra</a></li><li><a href="260.html">Sextant</a></li><li><a href="261.html">Sixpence</a></li><li><a href="262.html">Spark Plug</a></li><li><a href="263.html">Stratford</a></li><li><a href="264.html">Telegraph Hill</a></li><li><a href="265.html">Temple Bar</a></li><li><a href="266.html">The Virginia Cream</a></li><li><a href="267.html">Triple Play</a></li><li><a href="268.html">Union Square</a></li><li><a href="269.html">Westminster</a></li><li><a href="270.html">Windjammer</a></li></ul>
+<h2>Más de G. L. Pease</h2><ul class="otras"><li><a href="224.html">Abingdon</a></li><li><a href="225.html">Ashbury</a></li><li><a href="226.html">Bankside</a></li><li><a href="227.html">Barbary Coast</a></li><li><a href="228.html">Blackpoint</a></li><li><a href="229.html">Cairo</a></li><li><a href="230.html">Caravan</a></li><li><a href="231.html">Charing Cross</a></li><li><a href="232.html">Chelsea Morning</a></li><li><a href="233.html">Cumberland</a></li><li><a href="234.html">Ellipsis Flake</a></li><li><a href="235.html">Embarcadero</a></li><li><a href="236.html">Fillmore</a></li><li><a href="237.html">Gaslight</a></li><li><a href="238.html">Géométrie</a></li><li><a href="239.html">Haddo&#x27;s Delight</a></li><li><a href="240.html">Horizons Flake</a></li><li><a href="241.html">JackKnife Plug</a></li><li><a href="242.html">JackKnife Ready Rubbed</a></li><li><a href="243.html">Kensington</a></li><li><a href="244.html">Key Largo</a></li><li><a href="245.html">Lagonda</a></li><li><a href="246.html">Laurel Heights</a></li><li><a href="247.html">Lombard</a></li><li><a href="248.html">Maltese Falcon</a></li><li><a href="249.html">Meridian</a></li><li><a href="250.html">Metropolis</a></li><li><a href="251.html">Montgomery</a></li><li><a href="252.html">Navigator</a></li><li><a href="253.html">Odyssey</a></li><li><a href="254.html">Penny Farthing</a></li><li><a href="256.html">Quiet Nights</a></li><li><a href="257.html">Regents Flake</a></li><li><a href="258.html">Robusto</a></li><li><a href="259.html">Samarra</a></li><li><a href="260.html">Sextant</a></li><li><a href="261.html">Sixpence</a></li><li><a href="262.html">Spark Plug</a></li><li><a href="263.html">Stratford</a></li><li><a href="264.html">Telegraph Hill</a></li><li><a href="265.html">Temple Bar</a></li><li><a href="266.html">The Virginia Cream</a></li><li><a href="267.html">Triple Play</a></li><li><a href="268.html">Union Square</a></li><li><a href="269.html">Westminster</a></li><li><a href="270.html">Windjammer</a></li></ul><p class="mas-link"><a href="../marca/g-l-pease.html">Todo sobre G. L. Pease</a></p>
 <footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
+<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
 <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
 </div>
 </body></html>

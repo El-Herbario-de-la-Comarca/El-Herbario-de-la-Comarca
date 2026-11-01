@@ -46,6 +46,21 @@ h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
 ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
 footer{margin-top:36px;color:var(--muted);font-size:.88rem}
+.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.migas li+li::before{content:"›";margin-right:4px}
+.migas a{color:inherit}
+dd a{color:inherit}
+.texto p{margin:0 0 12px}
+.resumen{color:var(--muted);margin:0 0 18px}
+h1+.resumen{margin-top:-8px}
+.grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a:hover{border-color:var(--accent)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+.mas-link{margin:12px 0 0}
 .gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
 .gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
@@ -53,6 +68,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.88rem}
 .gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
 .gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Malevo", "item": "https://elherbariodelacomarca.es/marca/malevo.html"}, {"@type": "ListItem", "position": 3, "name": "Aurum"}]}</script>
 </head><body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
@@ -66,17 +82,19 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="wrap">
 <a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
 <svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/malevo.html">Malevo</a></li><li aria-current="page">Aurum</li></ol></nav>
 <main class="ficha">
-<p class="marca">Malevo</p>
+<p class="marca"><a href="../marca/malevo.html" style="color:inherit;text-decoration:none">Malevo</a></p>
 <h1>Aurum</h1>
-<dl><div><dt>Mezcla</dt><dd>Virginia</dd></div><div><dt>Corte</dt><dd>Ribbon</dd></div><div><dt>País</dt><dd>Argentina</dd></div><div><dt>Hojas</dt><dd>Virginia</dd></div><div><dt>Notas de sabor</dt><dd>Miel .Higos, Floral</dd></div></dl>
+<dl><div><dt>Mezcla</dt><dd><a href="../mezcla/virginia.html">Virginia</a></dd></div><div><dt>Corte</dt><dd>Ribbon</dd></div><div><dt>País</dt><dd>Argentina</dd></div><div><dt>Hojas</dt><dd>Virginia</dd></div><div><dt>Notas de sabor</dt><dd>Miel .Higos, Floral</dd></div></dl>
 <p class="desc">Compuesto por: Virginias Bright y Yellow.
 El Virginia Yellow es sometido a una reacción de Maillard cuidadosamente controlada, potenciando la caramelización natural de sus azúcares y desarrollando una mayor riqueza aromática.
 En boca ofrece una fumada suave y naturalmente dulce, con un delicado toque especiado propio del Virginia y un retrogusto largo y agradable. Un blend ideal para disfrutar durante todo el día.</p>
 <a class="abrir" href="../index.html#/ficha/nf96144a0bcdd4f15a802bf6b9e9d64d1">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
-<h2>Más de Malevo</h2><ul class="otras"><li><a href="nfe7d6f4835f845e78ec506ce16afd7dc.html">Atanor</a></li><li><a href="nd7d8c6d227e241f9bb94ff0bebd794f3.html">Bohemia</a></li><li><a href="nc3a9ec478ce14f3abf0d31408c0a003e.html">Champaqui</a></li><li><a href="n4717012abb124ee0bc24f2369332a8df.html">Ful Virginia</a></li><li><a href="n26a3f595d0a14e74805ef0b4f9cb7e98.html">HAVANENSIS</a></li><li><a href="n812299c3a1244ebd82d84d3e451260a5.html">Hemi</a></li><li><a href="n61c73dc9c10c487fac5272c4d13441f6.html">Orientalis</a></li><li><a href="ndccc74e0ac074dfd9e5e5c187b327dbc.html">ROSA VENTORUM</a></li><li><a href="ne2fdf75adc80431fb9d8fc0d901186c3.html">San Jeronimo</a></li><li><a href="n2715607e647d40b78e8b52868b58999c.html">Tabaco del Artesano</a></li></ul>
+<h2>Más de Malevo</h2><ul class="otras"><li><a href="nfe7d6f4835f845e78ec506ce16afd7dc.html">Atanor</a></li><li><a href="nd7d8c6d227e241f9bb94ff0bebd794f3.html">Bohemia</a></li><li><a href="nc3a9ec478ce14f3abf0d31408c0a003e.html">Champaqui</a></li><li><a href="n4717012abb124ee0bc24f2369332a8df.html">Ful Virginia</a></li><li><a href="n26a3f595d0a14e74805ef0b4f9cb7e98.html">HAVANENSIS</a></li><li><a href="n812299c3a1244ebd82d84d3e451260a5.html">Hemi</a></li><li><a href="n61c73dc9c10c487fac5272c4d13441f6.html">Orientalis</a></li><li><a href="ndccc74e0ac074dfd9e5e5c187b327dbc.html">ROSA VENTORUM</a></li><li><a href="ne2fdf75adc80431fb9d8fc0d901186c3.html">San Jeronimo</a></li><li><a href="n2715607e647d40b78e8b52868b58999c.html">Tabaco del Artesano</a></li></ul><p class="mas-link"><a href="../marca/malevo.html">Todo sobre Malevo</a></p>
 <footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
+<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
 <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
 </div>
 </body></html>

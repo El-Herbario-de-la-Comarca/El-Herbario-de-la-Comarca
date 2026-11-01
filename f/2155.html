@@ -46,6 +46,21 @@ h2{font:400 1.25rem/1.2 var(--display);margin:32px 0 10px}
 ul.otras{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
 ul.otras a{display:block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;text-decoration:none;background:var(--surface)}
 footer{margin-top:36px;color:var(--muted);font-size:.88rem}
+.migas{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.migas ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.migas li+li::before{content:"›";margin-right:4px}
+.migas a{color:inherit}
+dd a{color:inherit}
+.texto p{margin:0 0 12px}
+.resumen{color:var(--muted);margin:0 0 18px}
+h1+.resumen{margin-top:-8px}
+.grupo h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.grupo h2 small{font:400 .85rem/1.2 var(--body);color:var(--muted)}
+ul.tabacos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+ul.tabacos a{display:block;height:100%;border:1px solid var(--line);border-radius:6px;padding:8px 12px;text-decoration:none;background:var(--surface);color:var(--fg)}
+ul.tabacos a:hover{border-color:var(--accent)}
+ul.tabacos small{display:block;color:var(--muted);font-size:.82rem}
+.mas-link{margin:12px 0 0}
 .gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate .box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;max-width:440px;display:grid;gap:14px}
 .gate h2{margin:0;font-size:1.6rem}.gate p{margin:0;color:var(--muted)}
@@ -53,6 +68,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.88rem}
 .gate button{font:inherit;font-weight:500;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
 .gate button.yes{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Pfeifendepot", "item": "https://elherbariodelacomarca.es/marca/pfeifendepot.html"}, {"@type": "ListItem", "position": 3, "name": "No. 101 – Copenhagen Dannebrog"}]}</script>
 </head><body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
 <div class="box"><h2 id="gate-title">Solo para mayores de 18</h2>
@@ -66,15 +82,17 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="wrap">
 <a class="top" href="../index.html"><img src="../img/logo.png" alt="" width="64" height="64"><span><b>El herbario de la Comarca</b><small>Pipa Club Fumadas Hobbit · Catálogo de hierba de pipa</small></span></a>
 <svg class="hills" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="M0 30 C200 10 380 6 600 22 C820 38 1000 8 1200 18 V60 H0Z"/><path class="b" d="M0 46 C240 28 420 40 640 36 C860 32 1020 22 1200 38 V60 H0Z"/></svg>
+<nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/pfeifendepot.html">Pfeifendepot</a></li><li aria-current="page">No. 101 – Copenhagen Dannebrog</li></ol></nav>
 <main class="ficha">
-<p class="marca">Pfeifendepot</p>
+<p class="marca"><a href="../marca/pfeifendepot.html" style="color:inherit;text-decoration:none">Pfeifendepot</a></p>
 <h1>No. 101 – Copenhagen Dannebrog</h1>
-<dl><div><dt>Mezcla</dt><dd>Aromática</dd></div><div><dt>Corte</dt><dd>Ready Rubbed</dd></div><div><dt>País</dt><dd>Alemania</dd></div><div><dt>Formato</dt><dd>Lata de 100 g</dd></div><div><dt>Hojas</dt><dd>Virginia, Oriental, Cavendish</dd></div></dl>
+<dl><div><dt>Mezcla</dt><dd><a href="../mezcla/aromatica.html">Aromática</a></dd></div><div><dt>Corte</dt><dd>Ready Rubbed</dd></div><div><dt>País</dt><dd>Alemania</dd></div><div><dt>Formato</dt><dd>Lata de 100 g</dd></div><div><dt>Hojas</dt><dd>Virginia, Oriental, Cavendish</dd></div></dl>
 <p class="desc">No. 101 – Copenhagen Dannebrog es una mezcla aromática de Pfeifendepot, desmenuzado y listo para cargar (ready rubbed). Lleva virginia, orientales y cavendish. Mezcla de la casa de la tienda Gerd Jansens Pfeifendepot. Forma parte de la Copenhagen Line. Aroma de ron. Formato: lata de 100 g.</p>
 <a class="abrir" href="../index.html#/ficha/2155">Abrir en el catálogo: reseñas y Mi bodega</a>
 </main>
-<h2>Más de Pfeifendepot</h2><ul class="otras"><li><a href="2134.html">No. 032 – Extra White</a></li><li><a href="2135.html">No. 034</a></li><li><a href="2136.html">No. 037 – Copenhagen Curlies</a></li><li><a href="2137.html">No. 038 – Copenhagen B</a></li><li><a href="2138.html">No. 041 – Fiesta</a></li><li><a href="2139.html">No. 045 – Copenhagen Ø</a></li><li><a href="2140.html">No. 047</a></li><li><a href="2141.html">No. 056 – Cremon</a></li><li><a href="2142.html">No. 057 – V-Cubes</a></li><li><a href="2143.html">No. 064 – Rosemoor</a></li><li><a href="2144.html">No. 066 – Fredensborg White</a></li><li><a href="2145.html">No. 070 – Flake Cut</a></li><li><a href="2146.html">No. 079 – Gerd Jansens Scottish</a></li><li><a href="2147.html">No. 080 – Gerd Jansens English</a></li><li><a href="2148.html">No. 081 – Golden Balkan</a></li><li><a href="2149.html">No. 088 – DSK Flake</a></li><li><a href="2151.html">No. 089 – DSK Ready Rubbed</a></li><li><a href="2152.html">No. 090 – Merlin Cut Plug</a></li><li><a href="2153.html">No. 091 – Camelot Broken</a></li><li><a href="2154.html">No. 098 – Copenhagen 1970</a></li><li><a href="2156.html">No. 125 – 125 Years Jubilee</a></li><li><a href="2157.html">No. 200 – Bengals</a></li><li><a href="2158.html">No. 202 – Crown „A“</a></li><li><a href="2150.html">No. 209 – White Balkan</a></li><li><a href="2159.html">No. 411 – Masterblend</a></li><li><a href="2160.html">No. 422 – Masterblend</a></li><li><a href="2161.html">No. 433 – Masterblend</a></li><li><a href="2162.html">No. 444 – Masterblend</a></li><li><a href="2163.html">No. 455 – Masterblend</a></li><li><a href="2164.html">No. 466 – Masterblend</a></li><li><a href="2165.html">No. 477 – Masterblend</a></li><li><a href="2166.html">No. 499 – Masterblend</a></li><li><a href="2167.html">No. 500 – Kori-Flake</a></li><li><a href="2168.html">No. 501 – The Good</a></li><li><a href="2169.html">No. 502 – The Bad</a></li><li><a href="2170.html">No. 503 – The Ugly</a></li><li><a href="2171.html">No. 999 – Curly Cut</a></li><li><a href="2172.html">VAPERizer (Plug)</a></li></ul>
+<h2>Más de Pfeifendepot</h2><ul class="otras"><li><a href="2134.html">No. 032 – Extra White</a></li><li><a href="2135.html">No. 034</a></li><li><a href="2136.html">No. 037 – Copenhagen Curlies</a></li><li><a href="2137.html">No. 038 – Copenhagen B</a></li><li><a href="2138.html">No. 041 – Fiesta</a></li><li><a href="2139.html">No. 045 – Copenhagen Ø</a></li><li><a href="2140.html">No. 047</a></li><li><a href="2141.html">No. 056 – Cremon</a></li><li><a href="2142.html">No. 057 – V-Cubes</a></li><li><a href="2143.html">No. 064 – Rosemoor</a></li><li><a href="2144.html">No. 066 – Fredensborg White</a></li><li><a href="2145.html">No. 070 – Flake Cut</a></li><li><a href="2146.html">No. 079 – Gerd Jansens Scottish</a></li><li><a href="2147.html">No. 080 – Gerd Jansens English</a></li><li><a href="2148.html">No. 081 – Golden Balkan</a></li><li><a href="2149.html">No. 088 – DSK Flake</a></li><li><a href="2151.html">No. 089 – DSK Ready Rubbed</a></li><li><a href="2152.html">No. 090 – Merlin Cut Plug</a></li><li><a href="2153.html">No. 091 – Camelot Broken</a></li><li><a href="2154.html">No. 098 – Copenhagen 1970</a></li><li><a href="2156.html">No. 125 – 125 Years Jubilee</a></li><li><a href="2157.html">No. 200 – Bengals</a></li><li><a href="2158.html">No. 202 – Crown „A“</a></li><li><a href="2150.html">No. 209 – White Balkan</a></li><li><a href="2159.html">No. 411 – Masterblend</a></li><li><a href="2160.html">No. 422 – Masterblend</a></li><li><a href="2161.html">No. 433 – Masterblend</a></li><li><a href="2162.html">No. 444 – Masterblend</a></li><li><a href="2163.html">No. 455 – Masterblend</a></li><li><a href="2164.html">No. 466 – Masterblend</a></li><li><a href="2165.html">No. 477 – Masterblend</a></li><li><a href="2166.html">No. 499 – Masterblend</a></li><li><a href="2167.html">No. 500 – Kori-Flake</a></li><li><a href="2168.html">No. 501 – The Good</a></li><li><a href="2169.html">No. 502 – The Bad</a></li><li><a href="2170.html">No. 503 – The Ugly</a></li><li><a href="2171.html">No. 999 – Curly Cut</a></li><li><a href="2172.html">VAPERizer (Plug)</a></li></ul><p class="mas-link"><a href="../marca/pfeifendepot.html">Todo sobre Pfeifendepot</a></p>
 <footer>El herbario de la Comarca · catálogo informativo de tabaco de pipa, solo para mayores de 18 años. ·
+<a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> ·
 <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Privacidad</a></footer>
 </div>
 </body></html>
