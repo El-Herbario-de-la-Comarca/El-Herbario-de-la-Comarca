@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@400;500&family=Uncial+Antiqua&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script src="../temporada.js?v=202610292355"></script>
-<link rel="stylesheet" href="../estilos.css?v=202611010410">
+<link rel="stylesheet" href="../estilos.css?v=202611010500">
 <link rel="stylesheet" href="../tema-comarca.css?v=202610292355">
 <style>
 .hero .sitio{margin:0;font-family:"Uncial Antiqua",var(--display);font-weight:400;letter-spacing:.01em;line-height:1.08;text-wrap:balance;color:var(--fg);font-size:clamp(1.9rem,6.6vw,3.4rem)}
@@ -62,6 +62,11 @@ ul.tabacos svg.mini{border-radius:0}
 ul.tabacos a>span{min-width:0;overflow-wrap:anywhere}
 ul.tabacos small{display:block;color:var(--muted);font-size:.88rem}
 .mas-link{margin:12px 0 0}
+.cab-marca{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.logo-cab{flex:none;max-width:min(140px,30vw);max-height:90px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}
+ul.tabacos .lmarca{display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+ul.tabacos .lmarca img{max-width:48px;max-height:48px;object-fit:contain}
+ul.tabacos .lmarca.sin{background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-color:transparent;font:400 1.5rem/1 var(--display);color:var(--accent)}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://elherbariodelacomarca.es/"}, {"@type": "ListItem", "position": 2, "name": "Marcas", "item": "https://elherbariodelacomarca.es/marca/"}, {"@type": "ListItem", "position": 3, "name": "Samuel Gawith"}]}</script>
 </head><body>
@@ -125,8 +130,8 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
 <div class="pag">
 <nav class="migas" aria-label="Estás en"><ol><li><a href="../">Inicio</a></li><li><a href="../marca/">Marcas</a></li><li aria-current="page">Samuel Gawith</li></ol></nav>
 <main class="ficha">
-<p class="marca">Marca</p>
-<h1>Samuel Gawith</h1>
+<div class="cab-marca"><div><p class="marca">Marca</p>
+<h1>Samuel Gawith</h1></div></div>
 <p class="resumen">44 mezclas en el catálogo · Reino Unido · sobre todo mezclas inglesas, de Virginia y de Virginia y Perique · 15 se encuentran en España</p>
 <div class="texto"><p>Samuel Gawith es, junto con Gawith Hoggarth, una de las dos casas tabaqueras de Kendal nacidas de la misma familia. Tras una escisión del negocio familiar en 1878, Samuel Gawith II se quedó con la rama dedicada al rapé y el tabaco, que mantuvo su propio nombre y su propia fábrica durante más de un siglo. En 2015 pasó a manos de Gawith Hoggarth &amp; Co., que compró sus marcas, su fondo de comercio y su producción, aunque las dos siguen vendiéndose como marcas distintas.</p><p>Es la casa de referencia de los Lakeland más intensos y de las Virginia flake clásicas, con mezclas que llevan décadas en catálogo como Full Virginia Flake, Squadron Leader o 1792 Flake. En los últimos años ha tenido problemas de suministro que han dejado agotadas varias de sus mezclas en algunas tiendas. En España se encuentran, entre otras, Commonwealth Mixture, Navy Flake, Perfection Mixture, Sam&#x27;s Flake, Squadron Leader, Full Virginia Flake, Golden Glow, Bothy Flake, 1792 Flake y Balkan Flake.</p></div>
 <a class="abrir" href="../index.html">Ver el catálogo completo</a>
