@@ -530,7 +530,6 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .panel.ficha .d-title { justify-items: center; }
   .d-rate { justify-content: center; }
   .d-datos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .d-dato .ico { display: none; }
   .panel.ficha dl.d-chips { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .panel.ficha dl.d-chips dd + dt { margin-top: 8px; }
   #d-bodega { order: 3; padding: 18px 20px 0; }
