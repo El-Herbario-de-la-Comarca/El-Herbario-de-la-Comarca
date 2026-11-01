@@ -84,7 +84,8 @@ def leer_textos():
 
 def slug(s):
     """Igual que slug() de app.js: sin acentos, minusculas y guiones."""
-    s = unicodedata.normalize("NFD", str(s or ""))
+    s = str(s or "").replace("ø", "o").replace("Ø", "O").replace("æ", "ae").replace("Æ", "AE").replace("ß", "ss")
+    s = unicodedata.normalize("NFD", s)
     s = "".join(c for c in s if not unicodedata.combining(c)).lower()
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 

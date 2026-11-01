@@ -531,7 +531,7 @@ function abrirPanel(html, clase) {
    Va tras la almohadilla para que GitHub Pages sirva siempre index.html. El id es lo que cuenta;
    el nombre solo hace el enlace legible. */
 const TITULO = document.title;
-const slug = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+const slug = (s) => String(s || "").replace(/ø/g, "o").replace(/Ø/g, "O").replace(/æ/g, "ae").replace(/Æ/g, "AE").replace(/ß/g, "ss").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
   .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 const hashFicha = (d) => `#/ficha/${encodeURIComponent(d.id)}/${slug(d.nombre)}`;
 function idDeHash() {
