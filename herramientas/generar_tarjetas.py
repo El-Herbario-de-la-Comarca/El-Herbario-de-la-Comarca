@@ -44,7 +44,7 @@ def desde_supabase():
     filas, desde = [], 0
     while True:
         req = urllib.request.Request(
-            f"{url}/rest/v1/tabacos?select=id,nombre,marca,tipo,corte,pais,formato,descripcion,notas,hojas,en_espana,foto&order=id",
+            f"{url}/rest/v1/tabacos?select=*&order=id",
             headers={"apikey": key, "Authorization": f"Bearer {key}", "Range": f"{desde}-{desde + 999}"})
         with urllib.request.urlopen(req, timeout=30) as r:
             lote = json.loads(r.read().decode("utf-8"))
@@ -52,6 +52,50 @@ def desde_supabase():
         if len(lote) < 1000:
             return filas
         desde += 1000
+
+
+def _get(ruta, metodo="GET"):
+    url, key = config()
+    if not url or not key:
+        raise RuntimeError("config.js sin Supabase")
+    datos = b"{}" if metodo == "POST" else None
+    req = urllib.request.Request(f"{url}{ruta}", data=datos, method=metodo, headers={
+        "apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def resenas_supabase():
+    """Resenas publicas (tabla opiniones), fotos de perfil y socios, como las carga app.js.
+    Si algo falla, la ficha sale igual pero sin resenas."""
+    opiniones, fotos, socios = {}, {}, set()
+    try:
+        desde = 0
+        while True:
+            url, key = config()
+            req = urllib.request.Request(f"{url}/rest/v1/opiniones?select=*&order=creado.desc", headers={
+                "apikey": key, "Authorization": f"Bearer {key}", "Range": f"{desde}-{desde + 999}"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                lote = json.loads(r.read().decode("utf-8"))
+            for x in lote:
+                opiniones.setdefault(str(x.get("tabaco_id")), []).append(map_opinion(x))
+            if len(lote) < 1000:
+                break
+            desde += 1000
+    except Exception as ex:
+        print(f"Resenas no disponibles ({ex})", file=sys.stderr)
+        return {}, {}, set()
+    try:
+        for x in _get("/rest/v1/rpc/fotos_resenas", "POST") or []:
+            if re.match(r"^(https://|img/)", str(x.get("avatar") or "")):
+                fotos[str(x.get("autor"))] = x["avatar"]
+    except Exception:
+        pass
+    try:
+        socios = {str(x.get("autor")) for x in (_get("/rest/v1/rpc/socios_resenas", "POST") or [])}
+    except Exception:
+        pass
+    return opiniones, fotos, socios
 
 
 def textos_supabase():
@@ -246,7 +290,7 @@ def parrafos(texto):
                    for p in re.split(r"\n\s*\n", str(texto or "")) if p.strip())
 
 
-def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website"):
+def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website", ficha=False):
     """Pagina completa. ruta: direccion relativa a BASE (f/1.html, marca/, ...). migas: [(nombre, ruta o None)]."""
     url = BASE + ruta
     nav = "".join(f'<li><a href="../{e(r)}">{e(n)}</a></li>' if r is not None else f'<li aria-current="page">{e(n)}</li>'
@@ -278,56 +322,362 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website"):
 <script src="../temporada.js?v={PORTADA["temporada"]}"></script>
 <link rel="stylesheet" href="../estilos.css?v={PORTADA["estilos"]}">
 <link rel="stylesheet" href="../tema-comarca.css?v={PORTADA["tema"]}">
-<style>{ESTILO}</style>
+<style>{ESTILO_FICHA if ficha else ESTILO}</style>
 <script type="application/ld+json">{ld}</script>
 </head><body>
 {AVISO}
-<div class="wrap">
+{f'<div class="overlay estatica">{cuerpo}</div><div class="estatica">{PIE}</div>' if ficha else f"""<div class="wrap">
 {PORTADA["hero"]}
 <div class="pag">
 <nav class="migas" aria-label="Estás en"><ol>{nav}</ol></nav>
 {cuerpo}
 </div>
 {PIE}
-</div>
+</div>"""}
 </body></html>
 """
+
+
+# ---------- Ficha: la misma que se abre en el catalogo (openDetail de app.js) ----------
+# Se pinta con las mismas clases de estilos.css (panel ficha, franja, nicho, casillas, chips...),
+# asi que cualquier cambio de diseno de la ficha en estilos.css se ve tambien aqui.
+# Lo que depende de quien mira (Mi bodega, escribir resena, me gusta) se hace en el catalogo:
+# los botones llevan a index.html#/ficha/<id>.
+
+CARACT = [
+    ("fuerza", "fuerza", "Fuerza", ["", "Muy suave", "Suave", "Suave a media", "Media", "Media a fuerte", "Fuerte", "Muy fuerte"]),
+    ("sabor", "sabor", "Intensidad de sabor", ["", "Muy suave", "Suave", "Suave a media", "Media", "Media a intensa", "Intensa", "Muy intensa"]),
+    ("aroma", "aromatizante", "Aromatizante", ["", "Ninguno", "Muy ligero", "Ligero", "Medio", "Fuerte", "Muy fuerte"]),
+    ("hab", "nota_hab", "Nota de habitación", ["", "Imperceptible", "Desagradable", "Tolerable", "Agradable", "Muy agradable"]),
+]
+VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"]
+RANGOS = [("Mediano de la Comarca", 1), ("Caminante", 5), ("Montaraz", 15), ("Guardián del Herbario", 30), ("Sabio de la Pipa", 60)]
+MIN_MEDIAS = 3
+ORDEN_MEDIAS = ["fuerza", "sabor", "hab", "aroma"]
+MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"]
+HOJAS = ["Virginia", "Burley", "Oriental", "Latakia", "Perique", "Kentucky", "Cavendish", "Cigarro"]
+HOJA_CLASE = {h: h.lower() for h in HOJAS}
+BODEGA = [("tengo", "Lo tengo"), ("probado", "Lo he probado"), ("quiero", "Quiero probarlo")]
+ICO = {
+    "mezcla": '<path d="M12 3c3 3 5 6 5 9a5 5 0 0 1-10 0c0-3 2-6 5-9z"/><path d="M12 9v9"/>',
+    "corte": '<path d="M4 7h16M4 11h16M4 15h16M4 19h16"/>',
+    "origen": '<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/>',
+    "formato": '<ellipse cx="12" cy="7" rx="7" ry="2.5"/><path d="M5 7v10c0 1.4 3 2.5 7 2.5s7-1.1 7-2.5V7"/>',
+    "compartir": '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
+    "tengo": '<rect x="6" y="7" width="12" height="13" rx="2"/><path d="M8 7V5h8v2"/><path d="M9.5 13.5l2 2 3.5-4"/>',
+    "probado": '<path d="M3 14h9a3 3 0 0 0 3-3V8h4v3a7 7 0 0 1-7 7H6a3 3 0 0 1-3-3z"/><path d="M17 5c0-1 1-1.5 1-2.5"/>',
+    "quiero": '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    "hoja": '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
+    "gusta": '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
+}
+ico = lambda k: f'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">{ICO[k]}</svg>'
+FRANJA = """<svg viewBox="0 0 1040 120" preserveAspectRatio="xMinYMax slice" aria-hidden="true" focusable="false">
+  <path class="fr-a" d="M0 78C120 40 240 36 360 62c110 24 200-8 330-18 130-10 240 16 350 8v68H0z"/>
+  <path class="fr-b" d="M0 98c140-28 300-32 430-14 130 18 270-10 410-12 90-1 150 10 200 14v34H0z"/>
+  <path class="fr-m" d="M720 74c40-44 150-48 200 0z"/>
+  <circle class="fr-ring" cx="820" cy="84" r="22"/><circle class="fr-door" cx="820" cy="84" r="18"/><circle class="fr-knob" cx="828" cy="86" r="2.4"/>
+  <circle class="fr-ring" cx="775" cy="80" r="7"/><circle class="fr-glass" cx="775" cy="80" r="5"/>
+  <circle class="fr-ring" cx="865" cy="80" r="7"/><circle class="fr-glass" cx="865" cy="80" r="5"/>
+  <g class="fr-f1"><circle cx="520" cy="104" r="2.6"/><circle cx="660" cy="96" r="2.6"/><circle cx="975" cy="98" r="2.6"/></g>
+  <g class="fr-f2"><circle cx="534" cy="107" r="2.2"/><circle cx="675" cy="100" r="2.2"/><circle cx="960" cy="102" r="2.2"/></g>
+</svg>"""
+SELLO_SOCIO = ('<img class="sello-socio" src="../img/logo.png" alt="Socio del Pipa Club Fumadas Hobbit" '
+               'title="Socio del Pipa Club Fumadas Hobbit" width="18" height="18">')
+
+# Ajustes para que el panel se vea como en el catalogo, pero como pagina (no ventana flotante)
+ESTILO_FICHA = """
+.overlay.estatica{position:static;inset:auto;z-index:auto;min-height:100dvh;overflow:visible}
+.d-ruta a{color:var(--muted);text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
+.d-ruta a:hover{color:var(--accent);text-decoration:underline}
+a.x-close{text-decoration:none}
+a.link{color:var(--accent);text-decoration:underline}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+.d-lado .bodega a.btn{display:flex}
+body{padding:0;margin:0}
+.estatica footer{max-width:1040px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 40px}
+.panel.ficha h1.d-h{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,4.6vw,3.3rem);line-height:1.02;margin:0;overflow-wrap:anywhere;color:var(--fg)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+"""
+
+def map_opinion(r):
+    p = r.get("puntuacion")
+    o = {"id": r.get("id"), "autor": str(r.get("autor") or ""), "firma": str(r.get("firma") or "")[:40],
+         "score": p if isinstance(p, int) and 1 <= p <= 5 else 0, "texto": str(r.get("texto") or "")[:5000],
+         "creado": r.get("creado") or "", "actualizado": r.get("actualizado") or "",
+         "likes": r["likes"] if isinstance(r.get("likes"), int) and r["likes"] > 0 else 0}
+    for k, col, _, ops in CARACT:
+        v = r.get(col)
+        o[k] = v if isinstance(v, int) and 0 < v < len(ops) else 0
+    return o
+
+
+RESENAS = {"op": {}, "fotos": {}, "socios": set(), "cuenta": Counter()}
+
+
+def fecha_es(t):
+    m = re.match(r"(\d{4})-(\d{2})-(\d{2})", str(t or ""))
+    return f"{int(m[3])} {MESES[int(m[2]) - 1]} {m[1]}" if m else ""
+
+
+def fmt_media(x):
+    return f"{x:.1f}".replace(".", ",")
+
+
+def pips(n):
+    return '<span class="pips" aria-hidden="true">' + "".join(
+        f'<i class="{"on" if i <= n else ""}"></i>' for i in range(1, 6)) + "</span>"
+
+
+def art(d, grande, prefijo="../"):
+    """Lo mismo que art() de app.js: la foto o, si no hay, la lata dibujada del color de su mezcla."""
+    foto = str(d.get("foto") or "")
+    nombre = str(d.get("nombre") or "")
+    if foto.startswith(("https://", "img/")):
+        src = foto if foto.startswith("https://") else prefijo + foto
+        mini = "" if grande else (re.sub(r"\.(jpe?g|png|webp)$", "-m.jpg", src, flags=re.I)
+                                  if re.search(r"/storage/v1/object/public/fotos/.+-\d+\.(jpe?g|png|webp)$", src, re.I) else "")
+        alterna = f' onerror="this.onerror=null;this.src=\'{e(src)}\'"' if mini else ""
+        return (f'<img class="photo" src="{e(mini or src)}"{alterna} alt="Lata de {e(nombre)}" '
+                f'loading="{"eager" if grande else "lazy"}" decoding="async">')
+    c = COLORES.get(d.get("tipo") or "", "#5A5548")
+    m = e(nombre.strip()[:1].upper())
+    return f"""<svg viewBox="0 0 200 170" role="img" aria-label="Lata de {e(nombre)}">
+    <ellipse cx="100" cy="152" rx="76" ry="10" fill="#000" opacity=".16"/>
+    <rect x="28" y="52" width="144" height="92" fill="{c}"/>
+    <ellipse cx="100" cy="144" rx="72" ry="14" fill="{c}"/>
+    <rect x="28" y="52" width="144" height="92" fill="#000" opacity=".12"/>
+    <rect x="42" y="54" width="10" height="88" fill="#fff" opacity=".14"/>
+    <rect x="28" y="82" width="144" height="40" fill="#15130F" opacity=".88"/>
+    <rect x="28" y="86" width="144" height="1.5" fill="#D9B45A"/>
+    <rect x="28" y="116.5" width="144" height="1.5" fill="#D9B45A"/>
+    <text x="100" y="112" text-anchor="middle" font-family="Young Serif, Georgia, serif" font-size="32" fill="#F2E9D0">{m}</text>
+    <ellipse cx="100" cy="52" rx="72" ry="14" fill="{c}"/>
+    <ellipse cx="100" cy="52" rx="72" ry="14" fill="#fff" opacity=".28"/>
+    <ellipse cx="100" cy="52" rx="62" ry="10" fill="none" stroke="#000" stroke-opacity=".18"/>
+  </svg>"""
+
+
+def nota_grande(ops):
+    l = [o for o in ops if o["score"]]
+    if not l:
+        return ""
+    n, media = len(l), sum(o["score"] for o in l) / len(l)
+    r = "reseña" if n == 1 else "reseñas"
+    return f"""<div class="nota" aria-label="Media de las reseñas: {fmt_media(media)} de 5, {n} {r}">
+      <span class="nota-n" aria-hidden="true">{fmt_media(media)}<small>/5</small></span>
+      {pips(round(media))}
+      <span class="nota-l" aria-hidden="true">{n} {r}</span>
+    </div>"""
+
+
+def resumen_caract(ops):
+    filas = ""
+    for k, _, label, opciones in CARACT:
+        votos = [o[k] for o in ops if o[k]]
+        if not votos:
+            continue
+        cuenta = [votos.count(i) for i in range(len(opciones))]
+        top = cuenta.index(max(cuenta))
+        barras = "".join(
+            f'<li><span class="op">{e(op)}</span><span class="barra"><i style="width:{round(cuenta[i] / len(votos) * 100)}%"></i></span>'
+            f'<span class="n">{cuenta[i]}</span></li>' for i, op in enumerate(opciones) if i and cuenta[i])
+        filas += (f'<div class="car"><div class="car-h"><span class="car-l">{e(label)}</span><strong>{e(opciones[top])}</strong></div>'
+                  f'<ul>{barras}</ul></div>')
+    return f'<div class="caract"><h3>Según las reseñas</h3>{filas}</div>' if filas else ""
+
+
+def medias_html(todas):
+    con = [o for o in todas if 1 <= o["score"] <= 5]
+    if not todas:
+        return ""
+    if len(con) < MIN_MEDIAS:
+        return f'<p class="muted">Todavía hay pocas reseñas para sacar medias (hacen falta {MIN_MEDIAS}).</p>'
+    n, media = len(con), sum(o["score"] for o in con) / len(con)
+    cuenta = [0] * 6
+    for o in con:
+        cuenta[o["score"]] += 1
+    mx = max(cuenta)
+    estrellas = "".join(f'<i class="{"on" if media >= i - .25 else "half" if media >= i - .75 else ""}"></i>' for i in range(1, 6))
+    reparto = "".join(f'<div class="md-br"><span>{i}</span><span class="md-bb"><span style="width:{round(cuenta[i] / mx * 100) if mx else 0}%"></span></span>'
+                      f'<span>{cuenta[i]}</span></div>' for i in (5, 4, 3, 2, 1))
+    escalas = ""
+    for k in ORDEN_MEDIAS:
+        _, _, label, ops = next(c for c in CARACT if c[0] == k)
+        tope = len(ops) - 1
+        vals = [o[k] for o in todas if 1 <= o[k] <= tope]
+        if len(vals) < MIN_MEDIAS:
+            continue
+        m = sum(vals) / len(vals)
+        pos = round((m - 1) / (tope - 1) * 100)
+        v = ops[int(m + .5)]
+        escalas += (f'<div class="md-fila"><span class="md-lab">{e(label)}</span>'
+                    f'<span class="md-esc" role="img" aria-label="{e(label)}: {e(v)}"><span style="left:{pos}%"></span></span>'
+                    f'<span class="md-val">{e(v)}</span><span class="md-ext"><span>{e(ops[1])}</span><span>{e(ops[tope])}</span></span></div>')
+    return f"""<div class="medias">
+    <div class="md-top">
+      <div class="md-nota"><strong>{fmt_media(media)}</strong><span class="md-est" aria-hidden="true">{estrellas}</span>
+        <span class="muted">{n} {"reseña" if n == 1 else "reseñas"}</span></div>
+      <div class="md-reparto" aria-label="Reparto de puntuaciones">{reparto}</div>
+    </div>
+    {f'<div class="md-escalas"><h4>Según los fumadores</h4>{escalas}</div>' if escalas else ""}
+  </div>"""
+
+
+def rev_html(o):
+    foto = RESENAS["fotos"].get(o["autor"])
+    avatar = (f'<img class="avatar" src="{e(foto if foto.startswith("https://") else "../" + foto)}" alt="" loading="lazy">' if foto
+              else f'<span class="avatar" aria-hidden="true">{e((o["firma"] or "?").strip()[:1].upper())}</span>')
+    n, rango = RESENAS["cuenta"][o["autor"]], ""
+    for i, (nom, umbral) in enumerate(RANGOS):
+        if n >= umbral:
+            rango = f'<span class="rango r{i + 1}">{e(nom)}</span>'
+    socio = SELLO_SOCIO if o["autor"] in RESENAS["socios"] else ""
+    editado = o["actualizado"][:16] > o["creado"][:16] if o["actualizado"] and o["creado"] else False
+    car = "".join(f'<dt>{e(label)}</dt><dd>{e(ops[o[k]])}</dd>' for k, _, label, ops in CARACT if o[k])
+    gusta = (f'<span class="gusta-ct" title="A {o["likes"]} {"persona le" if o["likes"] == 1 else "personas les"} gusta">'
+             f'{ico("gusta")}<span>{o["likes"]}</span></span>') if o["likes"] else ""
+    return (f'<div class="head"><span class="who">{avatar}{e(o["firma"])}{socio}{rango}</span>'
+            f'<span class="str">{pips(o["score"])}<span>{VALORACION[o["score"]]}</span></span>'
+            f'<span class="when">{fecha_es(o["creado"])}{" · editada" if editado else ""}</span></div>'
+            + (f'<dl class="rev-car">{car}</dl>' if car else "")
+            + (f'<p>{e(o["texto"])}</p>' if o["texto"] else "")
+            + (f'<div class="rev-pie">{gusta}</div>' if gusta else ""))
+
+
+def mas_de_la_marca(d, otras):
+    """Como masDeLaMarca de app.js: primero las de la misma serie (primera palabra), como mucho 4."""
+    pal = lambda n: re.split(r"[\s.,·\-–]+", slug_texto(n))[0]
+    serie = pal(d.get("nombre", ""))
+    de_serie = [x for x in otras if pal(x["nombre"]) == serie] if len(serie) > 2 else []
+    lista_ = (de_serie or otras)[:4]
+    titulo = f'Más de la serie {d["nombre"].split()[0]}' if de_serie else f'Más de {d.get("marca", "")}'
+    return titulo, lista_
+
+
+def slug_texto(s):
+    return unicodedata.normalize("NFD", str(s or "")).encode("ascii", "ignore").decode().lower().strip()
 
 
 def pagina(d, otras):
     ident = str(d["id"])
     marca, tipo = d.get("marca", ""), d.get("tipo") or ""
-    titulo = f'{d.get("nombre", "")} · {marca}'.strip(" ·")
+    nombre = d.get("nombre", "")
+    titulo = f'{nombre} · {marca}'.strip(" ·")
     partes = [p for p in (tipo, d.get("corte"), d.get("pais")) if p]
     texto = str(d.get("descripcion") or d.get("desc") or "")
     desc = recorta(" · ".join(partes) + (". " if partes else "") + texto, 200)
-    destino = f"../index.html#/ficha/{ident}"
-    foto = str(d.get("foto") or "")
-    hojas, notas = lista(d.get("hojas")), lista(d.get("notas"))
+    catalogo = f"../index.html#/ficha/{ident}"
+    hojas = [h for h in HOJAS if h in lista(d.get("hojas"))]
+    notas = lista(d.get("notas"))
+    todas = RESENAS["op"].get(ident, [])
+    video = str(d.get("video_id") or "")
+    video = video if re.fullmatch(r"[A-Za-z0-9_-]{11}", video) else ""
 
-    mezcla = f'<a href="../{e(url_mezcla(tipo))}">{e(tipo)}</a>' if tipo in MEZCLAS else e(tipo)
-    casillas = [("Mezcla", mezcla), ("Corte", e(d.get("corte") or "")), ("País", e(d.get("pais") or "")),
-                ("Formato", e(d.get("formato") or "")), ("Hojas", e(", ".join(hojas))), ("Notas de sabor", e(", ".join(notas)))]
-    dl = "".join(f"<div><dt>{e(k)}</dt><dd>{v}</dd></div>" for k, v in casillas if v)
-    img = (f'<img class="foto" src="{e(imagen(foto))}" alt="{e(titulo)}" loading="lazy">'
-           if foto.startswith(("https://", "img/")) else "")
-    es = ' <span class="es" role="img" aria-label="España" title="España">E</span>' if d.get("en_espana") is True else ""
-    parrafo = f'<p class="desc">{e(texto)}</p>' if texto else ""
-    mas = ""
+    # Cabecera de datos (metaHTML de app.js)
+    casilla = lambda k, t, v, url="": (f'<div class="d-dato">{ico(k)}<span class="d-dato-l">{t}</span><span class="d-dato-v">'
+                                        + (f'<a class="d-enlace" href="{e(url)}" title="Qué es: {e(v)}">{e(v)}</a>' if url else e(v))
+                                        + '</span></div>') if v else ""
+    datos = (casilla("mezcla", "Mezcla", tipo, f"../{url_mezcla(tipo)}" if tipo in MEZCLAS else "")
+             + casilla("corte", "Corte", d.get("corte") or "") + casilla("origen", "Origen", d.get("pais") or "")
+             + casilla("formato", "Formato", d.get("formato") or ""))
+    sin_resenas = "" if any(o["score"] for o in todas) else (
+        '<p class="d-rate"><span class="d-pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>'
+        f'Sin reseñas todavía · <a class="link" href="{e(catalogo)}">escribe la primera</a></p>')
+    es = ' <span class="es-badge" role="img" aria-label="España">E</span>' if d.get("en_espana") is True else ""
+    chips = ""
+    if hojas or notas:
+        ch_hojas = "".join('<span class="chip hoja h-%s">%s</span>' % (HOJA_CLASE[h], e(h)) for h in hojas)
+        ch_notas = "".join('<span class="chip sabor">%s</span>' % e(n) for n in notas)
+        chips = ('<dl class="d-chips">' + (f"<dt>Hojas</dt><dd>{ch_hojas}</dd>" if hojas else "")
+                 + (f"<dt>Notas de sabor</dt><dd>{ch_notas}</dd>" if notas else "") + "</dl>")
+    marca_html = f'<a class="d-enlace" href="../{e(url_marca(marca))}" title="Todo sobre {e(marca)}">{e(marca)}</a>' if marca else ""
+    meta = f"""
+      <div class="d-head">
+        <div class="d-title">
+          <span class="brandname">{marca_html}{f" · {e(d.get('pais'))}" if d.get("pais") else ""}</span>
+          <h1 id="d-name" class="d-h">{e(nombre)}{es}</h1>
+          {sin_resenas}
+        </div>
+        {nota_grande(todas)}
+      </div>
+      {f'<div class="d-datos">{datos}</div>' if datos else ""}
+      {chips}
+      {f'<hr class="d-sep"><p class="d-desc">{e(texto)}</p>' if texto else ""}
+      {resumen_caract(todas)}"""
+
+    # Resenas (paintResenas de app.js, en modo lectura)
+    accion = (f'<p class="muted"><a class="link" href="{e(catalogo)}">Abre la ficha en el catálogo</a> '
+              'para escribir tu reseña o apuntarla en Mi bodega.</p>')
+    if not todas:
+        lista_rv = f"""<div class="rv-vacio">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M12 46h26a8 8 0 0 0 8-8v-8h14v10a20 20 0 0 1-20 20H20a8 8 0 0 1-8-8z"/><path d="M60 30h8"/><path class="humo" d="M50 20c0-4 4-5 4-9M56 22c0-4 4-5 4-9"/></svg>
+        <div class="rv-vacio-t"><p>Nadie ha reseñado todavía {e(nombre)}.</p>
+        <p class="muted">Cuéntanos a qué sabe, cómo arde y qué tal huele en la habitación.</p>
+        <div><a class="btn primary" href="{e(catalogo)}">Escribir la primera reseña</a></div></div>
+      </div>"""
+        mine, resto_html = "", ""
+    else:
+        lista_rv = f'<div class="rev rev-ultima"><span class="rev-etq">Última reseña</span>{rev_html(todas[0])}</div>'
+        mine = accion
+        mas_res = todas[1:]
+        resto_html = (f'<section class="sec sec-resto" id="d-resto" aria-labelledby="rr-h"><h3 id="rr-h">Más reseñas <small>{len(mas_res)}</small></h3>'
+                      f'<div class="reviews rev-rejilla">{"".join("<div class=%s>%s</div>" % (chr(34) + "rev" + chr(34), rev_html(o)) for o in mas_res)}</div></section>'
+                      ) if mas_res else ""
+    video_html = (f"""<section class="sec" id="d-video" aria-labelledby="vd-h"><h3 id="vd-h">Vídeo</h3>
+    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/{video}?rel=0"
+      title="Vídeo de {e(nombre)}" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <a class="yt-link" href="https://www.youtube.com/watch?v={video}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a></section>"""
+                  if video else "")
+    mas_html = ""
     if otras:
-        enlaces = "".join(f'<li><a href="{e(o["id"])}.html">{e(o["nombre"])}</a></li>' for o in otras)
-        mas = (f'<h2>Más de {e(marca)}</h2><ul class="otras">{enlaces}</ul>'
-               f'<p class="mas-link"><a href="../{e(url_marca(marca))}">Todo sobre {e(marca)}</a></p>')
-    cuerpo = f"""<main class="ficha">
-<p class="marca"><a href="../{e(url_marca(marca))}">{e(marca)}</a></p>
-<h1>{e(d.get("nombre", ""))}{es}</h1>
-{img}<dl>{dl}</dl>
-{parrafo}
-<a class="abrir" href="{e(destino)}">Abrir en el catálogo: reseñas y Mi bodega</a>
-</main>
-{mas}"""
-    migas = [("Inicio", "")] + ([(marca, url_marca(marca))] if marca else []) + [(d.get("nombre", ""), None)]
-    return marco(titulo, desc, f"f/{ident}.html", cuerpo, migas, imagen(foto), "article")
+        tit, items = mas_de_la_marca(d, otras)
+        mas_html = (f'<section class="sec sec-mas" aria-labelledby="mas-h"><h3 id="mas-h">{e(tit)}</h3><div class="mas-lista">'
+                    + "".join(f'<a class="mas-item" href="{e(x["id"])}.html"><span class="mas-art">{art(x, False)}</span>'
+                              f'<span class="mas-nom">{e(x["nombre"])}</span></a>' for x in items)
+                    + "</div></section>")
+    # Mi bodega: solo se ve si quien mira ha entrado con su cuenta en la web (como en el catalogo)
+    bodega = (f"""<div id="d-bodega" hidden><div class="bodega-h"><p class="bodega-t">Mi bodega</p></div>
+      <div class="btns bodega" role="group" aria-label="Mi bodega">"""
+              + "".join(f'<a class="btn" href="{e(catalogo)}">{ico(k)}<span>{t}</span></a>' for k, t in BODEGA)
+              + "</div></div>")
+    ruta = (f'<nav class="d-ruta" aria-label="Ruta"><a href="../">Catálogo</a><span aria-hidden="true">›</span>'
+            + (f'<a href="../{e(url_marca(marca))}">{e(marca)}</a><span aria-hidden="true">›</span>' if marca else "")
+            + f'<span class="d-r-yo">{e(nombre)}</span></nav>')
+    cuerpo = f"""<main class="panel ficha">
+    <div class="d-franja">{FRANJA}</div>
+    {ruta}
+    <a class="x-close" href="../" aria-label="Volver al catálogo" title="Volver al catálogo"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></a>
+    <div class="d-lado">
+      <div class="nicho"><div class="art" id="d-art">{art(d, True)}</div><div class="balda" aria-hidden="true"></div></div>
+      {bodega}
+      <div class="compartir"><button class="btn" id="d-share" type="button">{ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
+    </div>
+    <div class="info">
+      <div id="d-meta">{meta}</div>
+    </div>
+    <div class="d-orn" aria-hidden="true"><span></span>{ico("hoja")}<span></span></div>
+    <div class="sections">
+      {video_html}
+      <section class="sec sec-resenas" id="d-resenas" aria-labelledby="rv-h">
+        <h3 id="rv-h">Reseñas</h3>
+        <div id="rv-medias">{medias_html(todas)}</div>
+        <div id="rv-mine">{mine}</div>
+        <div class="reviews" id="rv-list">{lista_rv}</div>
+      </section>
+      {resto_html}
+      {mas_html}
+    </div>
+  </main>"""
+    script = """<script>(function(){
+var t=document.title.replace(/ · El herbario de la Comarca$/,""),u=location.href.split("#")[0],m=document.getElementById("d-share-msg");
+document.getElementById("d-share").addEventListener("click",function(){
+ if(navigator.share){navigator.share({title:t,text:t+" en El herbario de la Comarca",url:u}).catch(function(){});return}
+ if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){m.textContent="Enlace copiado. Pégalo en WhatsApp o Telegram."},function(){m.textContent=u})}else m.textContent=u});
+try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sb-.*-auth-token$/.test(k)&&localStorage.getItem(k)){document.getElementById("d-bodega").hidden=false;break}}}catch(e){}
+})();</script>"""
+    migas = [("Inicio", "")] + ([(marca, url_marca(marca))] if marca else []) + [(nombre, None)]
+    return marco(titulo, desc, f"f/{ident}.html", cuerpo + script, migas, imagen(str(d.get("foto") or "")), "article", ficha=True)
 
 
 def colores_tipo():
@@ -520,6 +870,11 @@ def main():
         if d.get("tipo") in MEZCLAS:
             por_tipo.setdefault(d["tipo"], []).append(d)
     por_marca.pop("", None)
+    if origen == "Supabase":
+        RESENAS["op"], RESENAS["fotos"], RESENAS["socios"] = resenas_supabase()
+        for l in RESENAS["op"].values():
+            for o in l:
+                RESENAS["cuenta"][o["autor"]] += 1
     textos = leer_textos()
     LOGOS.update(leer_logos())
 
