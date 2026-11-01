@@ -496,6 +496,7 @@ const ICO = {
   quiero: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
   hoja: '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
   gusta: '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
+  rrss: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1" fill="currentColor"/>',
   etiqueta: '<path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1.5 1.5 0 0 1 0 2.1l-6.9 6.9a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8.5" cy="8.5" r="1.6"/>',
 };
 const ico = (k) => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
@@ -639,6 +640,7 @@ function openDetail(id, desdeUrl) {
       <div id="d-bodega"></div>
       <div class="compartir"><button class="btn" id="d-share" type="button">${ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
       <div class="compartir" id="d-etq" hidden></div>
+      <div class="compartir" id="d-rrss" hidden></div>
     </div>
     <div class="info">
       <div id="d-meta"></div>
@@ -1979,8 +1981,39 @@ function paintEtiquetas() {
   box.innerHTML = `<button class="btn" id="d-etq-btn" type="button">${ico("etiqueta")}Descargar etiquetas</button>`;
   $("d-etq-btn").addEventListener("click", () => window.Etiquetas.abrir(datosEtiqueta(d)));
 }
+/* Imagen para redes sociales (historia de Instagram, 9:16): solo administrador y editores (rrss.js) */
+const CARACT_CORTO = { fuerza: "Fuerza", sabor: "Sabor", aroma: "Aromatizante", hab: "Habitación" };
+function datosRrss(d) {
+  const st = statsDe(d.id), l = opinionesDe(d.id);
+  const caract = CARACT.map((c) => {
+    const votos = l.map((o) => o[c.k]).filter(Boolean);
+    if (!votos.length) return null;
+    const cuenta = c.ops.map((_, i) => votos.filter((v) => v === i).length);
+    return [CARACT_CORTO[c.k] || c.label, c.ops[cuenta.indexOf(Math.max(...cuenta))]];
+  }).filter(Boolean);
+  return { nombre: d.nombre, marca: d.marca, pais: d.pais, tipo: d.tipo, corte: d.corte, formato: d.formato,
+    hojas: d.hojas, notas: d.notas, desc: d.desc, espana: d.espana, foto: fotoSegura(d.foto), tin: tin(d),
+    media: st.media, n: st.n, caract, archivo: slug(d.nombre) || "ficha" };
+}
+function paintRrss() {
+  const box = $("d-rrss"); if (!box || openId == null) return;
+  const d = findItem(openId);
+  const ver = !!(d && esEditor() && window.RRSS);
+  box.hidden = !ver;
+  if (!ver) { box.innerHTML = ""; return; }
+  box.innerHTML = `<button class="btn" id="d-rrss-btn" type="button">${ico("rrss")}Compartir en RRSS</button><span class="muted" id="d-rrss-msg" role="status"></span>`;
+  $("d-rrss-btn").addEventListener("click", async () => {
+    const b = $("d-rrss-btn"), msg = $("d-rrss-msg");
+    b.disabled = true; msg.textContent = "Preparando la imagen…";
+    try {
+      const r = await window.RRSS.descargar(datosRrss(d));
+      msg.textContent = r === "descargada" ? "Imagen descargada (historia 1080 × 1920)." : "";
+    } catch (e) { console.error(e); msg.textContent = "No se pudo crear la imagen."; }
+    b.disabled = false;
+  });
+}
 function paintBodega() {
-  const box = $("d-bodega"); paintEtiquetas();
+  const box = $("d-bodega"); paintEtiquetas(); paintRrss();
   if (!box || openId == null) return;
   if (!ctx.online || !ctx.session || !ctx.bodega) { box.innerHTML = ""; return; }
   const m = bodega[String(openId)] || {};
