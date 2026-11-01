@@ -20,9 +20,13 @@
   const CLAVE_LUGAR = "herbario-etiqueta-lugar";
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  // Fecha completa (AAAA-MM-DD), solo mes (AAAA-MM, de un tarro de Mi bodega) o solo año
   function fechaTxt(v, corta) {
-    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || "");
-    return m ? `${m[3]}/${m[2]}/${corta ? m[1].slice(2) : m[1]}` : "";
+    v = String(v || "").trim();
+    const a = (y) => (corta ? y.slice(2) : y);
+    let m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); if (m) return `${m[3]}/${m[2]}/${a(m[1])}`;
+    m = /^(\d{4})-(\d{2})$/.exec(v); if (m) return `${m[2]}/${m[1]}`;
+    return /^\d{4}$/.test(v) ? v : "";
   }
   function precioTxt(v) {
     v = String(v || "").trim();
@@ -202,7 +206,8 @@
   }
 
   /* ---------- Cuadro para rellenar ---------- */
-  function abrir(d) {
+  function abrir(d, inicial) {
+    inicial = inicial || {};
     d = Object.assign({ nombre: "", marca: "", tipo: "", corte: "", pais: "", color: "#5A5548", archivo: "etiquetas" }, d);
     let lugar = ""; try { lugar = localStorage.getItem(CLAVE_LUGAR) || ""; } catch (e) {}
     const dlg = document.createElement("div");
@@ -226,6 +231,13 @@
     document.body.appendChild(dlg);
     const $ = (id) => dlg.querySelector("#" + id);
     const quien = document.activeElement;
+    // Fechas que llegan de Mi bodega: con mes y año, el campo pasa a ser de mes; con solo el año, de texto
+    [["et-emb", inicial.embotado], ["et-com", inicial.compra]].forEach(([id, f]) => {
+      if (!f) return;
+      const inp = $(id);
+      if (/^\d{4}-\d{2}$/.test(f)) inp.type = "month"; else if (/^\d{4}$/.test(f)) { inp.type = "text"; inp.inputMode = "numeric"; }
+      inp.value = f;
+    });
     const valores = () => ({ embotado: $("et-emb").value, compra: $("et-com").value, lugar: $("et-lug").value.trim(), precio: $("et-pre").value.trim() });
     const cerrar = () => { document.removeEventListener("keydown", tecla, true); dlg.remove(); if (quien && quien.focus) quien.focus(); };
     const tecla = (e) => { if (e.key === "Escape") { e.stopPropagation(); cerrar(); } };

@@ -356,12 +356,13 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .tarro-form select, .tarro-form input[type=text] { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); width: 100%; }
 .confirm .box.tarro-form { width: min(100%, 480px); max-height: calc(100vh - 32px); overflow: auto; }
 /* Etiquetas para el tarro (etiquetas.js) */
-.etq-form input[type=date] { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); width: 100%; min-height: 40px; }
+.etq-form input[type=date], .etq-form input[type=month] { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); width: 100%; min-height: 40px; }
 .etq-prev { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; padding: 12px; border-radius: 8px; background: color-mix(in srgb, var(--line) 35%, transparent); }
 .etq-prev canvas { max-width: 100%; height: auto; }
 .etq-prev canvas[hidden] { display: none; }
 .etq-nota { font-size: 0.85rem; }
 #d-etq[hidden] { display: none; }
+.bd-md-acc { display: flex; gap: 14px; align-items: center; }
 @media (max-width: 520px) {
   .tr-item { grid-template-columns: 36px minmax(0, 1fr); }
   .tr-der { grid-column: 2; }
@@ -691,7 +692,8 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .bd-md { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 6px 12px; padding: 12px 14px; }
   .bd-md-f { grid-column: 2 / -1; }
   .bd-md-e { grid-column: 1 / -1; }
-  .bd-md > button { grid-column: 3; grid-row: 1; }
+  .bd-md > button, .bd-md > .bd-md-acc { grid-column: 3; grid-row: 1; }
+  .bd-md-acc { flex-direction: column; align-items: flex-end; gap: 6px; }
 }
 .bd-prueba { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 12px 16px;
   border: 1.5px dashed var(--gold, var(--accent)); border-radius: 12px; background: color-mix(in srgb, var(--gold-soft, var(--line)) 55%, var(--surface)); color: var(--oro-tinta); }

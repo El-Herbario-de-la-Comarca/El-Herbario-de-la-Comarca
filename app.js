@@ -1840,7 +1840,7 @@ function tarrosHTML(id) {
       <span class="tr-txt"><span>${esc(tituloTarro(t))}</span>
         ${lineaTarro(t) ? `<span class="muted">${esc(lineaTarro(t))}</span>` : ""}</span>
       <span class="tr-der">${t.fecha_anio ? `<span class="tr-edad">${esc(antiguedad(t))}</span>` : ""}
-        <button class="link" type="button" data-tarro="${t.id}">Editar</button></span></li>`).join("");
+        <button class="link" type="button" data-tarro="${t.id}">Editar</button>${botonEtiqueta(id, t.id)}</span></li>`).join("");
   return `<details class="tarros" id="tr-box"${abierto ? " open" : ""}>
       <summary><span class="tr-chev" aria-hidden="true">›</span><span class="tr-ic sm">${ICONO_TARRO}</span>${resumen}</summary>
       <div class="tr-cuerpo">
@@ -1853,6 +1853,7 @@ function conectarTarros(id) {
   const box = $("tr-box"); if (!box) return;
   box.addEventListener("toggle", () => { try { localStorage.setItem("herbario-tarros-abiertos", box.open ? "1" : "0"); } catch (e) {} });
   $("tr-add").addEventListener("click", () => formTarro(id, null));
+  conectarEtiquetas(box);
   box.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(id, (tarros[String(id)] || []).find((t) => String(t.id) === b.dataset.tarro))));
 }
@@ -1942,6 +1943,22 @@ function formTarro(id, t) {
 const gramosTxt = (g) => (g ? `${g.toLocaleString("es-ES")} g` : "");
 let bodegaAyudaAbierta = false;   // la explicación (?) del recuadro de la ficha sigue abierta al repintar
 /* Etiquetas para el tarro (etiquetas.js): solo para quien ha entrado con su cuenta */
+const datosEtiqueta = (d) => ({ nombre: d.nombre, marca: d.marca, tipo: d.tipo, corte: d.corte, pais: d.pais,
+  color: TIPOS[d.tipo] || "#5A5548", archivo: slug(d.nombre) || d.id });
+// Desde un tarro de Mi bodega: su fecha (de embotado o de compra) sale ya puesta en la etiqueta
+function etiquetaDeTarro(idTabaco, idTarro) {
+  const d = findItem(idTabaco); if (!d || !window.Etiquetas) return;
+  const t = (tarros[String(idTabaco)] || []).find((x) => String(x.id) === String(idTarro)) || {};
+  const f = t.fecha_anio ? (t.fecha_mes ? `${t.fecha_anio}-${String(t.fecha_mes).padStart(2, "0")}` : String(t.fecha_anio)) : "";
+  const ini = {};
+  if (f && t.tipo_fecha === "compra") ini.compra = f; else if (f && t.tipo_fecha !== "lata") ini.embotado = f;
+  window.Etiquetas.abrir(datosEtiqueta(d), ini);
+}
+const botonEtiqueta = (idTabaco, idTarro) => ctx.session && window.Etiquetas
+  ? `<button class="link" type="button" data-etq-tarro="${esc(idTarro)}" data-etq-tabaco="${esc(idTabaco)}">Etiqueta</button>` : "";
+function conectarEtiquetas(caja) {
+  caja.querySelectorAll("[data-etq-tarro]").forEach((b) => b.addEventListener("click", () => etiquetaDeTarro(b.dataset.etqTabaco, b.dataset.etqTarro)));
+}
 function paintEtiquetas() {
   const box = $("d-etq"); if (!box || openId == null) return;
   const d = findItem(openId);
@@ -1949,8 +1966,7 @@ function paintEtiquetas() {
   box.hidden = !ver;
   if (!ver) { box.innerHTML = ""; return; }
   box.innerHTML = `<button class="btn" id="d-etq-btn" type="button">${ico("etiqueta")}Descargar etiquetas</button>`;
-  $("d-etq-btn").addEventListener("click", () => window.Etiquetas.abrir({ nombre: d.nombre, marca: d.marca, tipo: d.tipo, corte: d.corte,
-    pais: d.pais, color: TIPOS[d.tipo] || "#5A5548", archivo: slug(d.nombre) || d.id }));
+  $("d-etq-btn").addEventListener("click", () => window.Etiquetas.abrir(datosEtiqueta(d)));
 }
 function paintBodega() {
   const box = $("d-bodega"); paintEtiquetas();
@@ -2204,7 +2220,7 @@ function abrirBodega(fuente) {
           <span class="bd-md-q"><strong>${esc(d.nombre)}</strong><span class="muted">${esc(tituloTarro(t))}</span></span>
           <span class="bd-md-f muted">${esc(lineaTarro(t))}</span>
           <span class="bd-md-e"><span class="bd-md-b"><span style="width:${ancho}%"></span></span><span class="muted">${esc(antiguedad(t))}</span></span>
-          ${prueba ? "" : `<button class="link" type="button" data-tarro="${esc(t.id)}" data-tabaco="${esc(d.id)}">Editar</button>`}
+          ${prueba ? "" : `<span class="bd-md-acc"><button class="link" type="button" data-tarro="${esc(t.id)}" data-tabaco="${esc(d.id)}">Editar</button>${botonEtiqueta(d.id, t.id)}</span>`}
         </li>`;
     }).join("");
     madurando = `<div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
@@ -2273,6 +2289,7 @@ function abrirBodega(fuente) {
   }
   panel.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(b.dataset.tabaco, (tarros[b.dataset.tabaco] || []).find((t) => String(t.id) === b.dataset.tarro))));
+  conectarEtiquetas(panel);
 }
 
 /* Bodega de prueba de «Saruman Blanco» (solo admin, desde Mi cuenta). Se inventa en el navegador:
