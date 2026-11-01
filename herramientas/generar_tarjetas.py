@@ -64,6 +64,33 @@ def textos_supabase():
         return json.loads(r.read().decode("utf-8"))
 
 
+def leer_logos():
+    """{clave de la marca: URL del logo} desde la tabla marcas_logo (43_logos_marcas.sql)."""
+    url, key = config()
+    if not url or not key:
+        return {}
+    try:
+        req = urllib.request.Request(f"{url}/rest/v1/marcas_logo?select=clave,logo",
+                                     headers={"apikey": key, "Authorization": f"Bearer {key}"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return {f["clave"]: f["logo"] for f in json.loads(r.read().decode("utf-8"))
+                    if str(f.get("logo") or "").startswith("https://")}
+    except Exception as ex:   # la tabla aun no existe (falta el SQL 43) o no hay conexion
+        print(f"Sin logos de marca ({ex})", file=sys.stderr)
+        return {}
+
+
+LOGOS = {}
+
+
+def logo_marca(marca, clase="lmarca"):
+    """Logo de la marca o, si no tiene, su inicial en un circulo."""
+    url = LOGOS.get(slug(marca))
+    if url:
+        return f'<span class="{clase}"><img src="{e(url)}" alt="" loading="lazy" decoding="async"></span>'
+    return f'<span class="{clase} sin" aria-hidden="true">{e(marca.strip()[:1].upper())}</span>'
+
+
 def leer_textos():
     """{"marca": {clave: texto}, "mezcla": {...}}: primero secciones/textos.json y encima lo de Supabase."""
     textos = {"marca": {}, "mezcla": {}}
@@ -158,6 +185,11 @@ ul.tabacos svg.mini{border-radius:0}
 ul.tabacos a>span{min-width:0;overflow-wrap:anywhere}
 ul.tabacos small{display:block;color:var(--muted);font-size:.88rem}
 .mas-link{margin:12px 0 0}
+.cab-marca{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.logo-cab{flex:none;max-width:min(140px,30vw);max-height:90px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}
+ul.tabacos .lmarca{display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+ul.tabacos .lmarca img{max-width:48px;max-height:48px;object-fit:contain}
+ul.tabacos .lmarca.sin{background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-color:transparent;font:400 1.5rem/1 var(--display);color:var(--accent)}
 """
 
 AVISO = """<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
@@ -375,16 +407,18 @@ def pagina_marca(marca, fichas, texto):
     nombres = ", ".join(d["nombre"] for d in sorted(fichas, key=lambda d: d["nombre"].lower())[:6])
     desc = recorta(texto, 200) if texto.strip() else recorta(
         f"Tabaco de pipa de {marca}: {resumen}. Entre ellas, {nombres}.", 200)
+    logo = LOGOS.get(slug(marca))
+    cab_logo = f'<img class="logo-cab" src="{e(logo)}" alt="Logo de {e(marca)}">' if logo else ""
     cuerpo = f"""<main class="ficha">
-<p class="marca">Marca</p>
-<h1>{e(marca)}</h1>
+<div class="cab-marca"><div><p class="marca">Marca</p>
+<h1>{e(marca)}</h1></div>{cab_logo}</div>
 <p class="resumen">{e(resumen)}</p>
 <div class="texto">{parrafos(texto)}</div>
 <a class="abrir" href="../index.html">Ver el catálogo completo</a>
 </main>
 {grupos}"""
     return marco(f"{marca} · tabaco de pipa", desc, url_marca(marca), cuerpo,
-                 [("Inicio", ""), ("Marcas", "marca/"), (marca, None)])
+                 [("Inicio", ""), ("Marcas", "marca/"), (marca, None)], logo)
 
 
 def pagina_mezcla(tipo, fichas, texto):
@@ -415,9 +449,9 @@ def pagina_mezcla(tipo, fichas, texto):
 
 def indice_marcas(por_marca):
     filas = "".join(
-        f'<li><a href="{e(slug(m))}.html">{e(m)}<small>{cuenta(len(fs), "mezcla", "mezclas")}'
+        f'<li><a href="{e(slug(m))}.html">{logo_marca(m, "mini lmarca")}<span>{e(m)}<small>{cuenta(len(fs), "mezcla", "mezclas")}'
         + (f' · {e(Counter(d.get("pais") for d in fs if d.get("pais")).most_common(1)[0][0])}'
-           if any(d.get("pais") for d in fs) else "") + "</small></a></li>"
+           if any(d.get("pais") for d in fs) else "") + "</small></span></a></li>"
         for m, fs in sorted(por_marca.items(), key=lambda kv: kv[0].lower()))
     total = sum(len(fs) for fs in por_marca.values())
     cuerpo = f"""<main class="ficha">
@@ -487,6 +521,7 @@ def main():
             por_tipo.setdefault(d["tipo"], []).append(d)
     por_marca.pop("", None)
     textos = leer_textos()
+    LOGOS.update(leer_logos())
 
     # Fichas
     paginas, ids = {}, []

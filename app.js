@@ -62,6 +62,7 @@ let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado,
 let misLikes = new Set();   // ids de reseñas que el usuario ha marcado con «me gusta» (strings)
 let fotosAutores = {};
 let sociosAutores = new Set(); // autores que son socios del club (23_socios_del_club.sql)
+let logosMarca = {};   // clave de la marca (samuel-gawith) -> URL de su logo (43_logos_marcas.sql)
 const SELLO_SOCIO = '<img class="sello-socio" src="img/logo.png" alt="Socio del Pipa Club Fumadas Hobbit" title="Socio del Pipa Club Fumadas Hobbit" width="18" height="18">'; // autor -> URL de su foto de perfil (14_fotos_en_resenas.sql)
 let bodega = {};      // tabaco_id -> { tengo, probado, quiero } (solo la del usuario que ha entrado)
 let openId = null, lastFocus = null;
@@ -133,7 +134,7 @@ async function cargarTabacos() {
 }
 // Después, todo lo demás a la vez: reseñas, fotos y socios de las reseñas, y Mi bodega.
 async function cargarExtras() {
-  await Promise.all([cargarOpiniones(), cargarFotosAutores(), cargarSocios(), cargarBodega(), cargarMisLikes()]);
+  await Promise.all([cargarOpiniones(), cargarFotosAutores(), cargarSocios(), cargarBodega(), cargarMisLikes(), cargarLogos()]);
 }
 async function cargarMisLikes() {
   misLikes = new Set(); ctx.likesOk = false;
@@ -172,6 +173,14 @@ async function cargarFotosAutores() {
       if (error) throw error;
       (data || []).forEach((x) => { const u = fotoSegura(x.avatar); if (u) fotosAutores[String(x.autor)] = u; });
     } catch (e) { console.warn("Fotos de las reseñas no disponibles", e); }
+}
+async function cargarLogos() {
+  logosMarca = {}; ctx.logosOk = false;
+  if (!sb) return;
+  const { data, error } = await sb.from("marcas_logo").select("clave,logo");
+  if (error) return;   // falta 43_logos_marcas.sql
+  (data || []).forEach((f) => { logosMarca[f.clave] = f.logo; });
+  ctx.logosOk = true;
 }
 async function cargarSocios() {
     sociosAutores = new Set();
@@ -695,8 +704,10 @@ function paintTools() {
         ${admin ? '<button class="btn danger" id="fi-del" type="button">Eliminar ficha</button>' : ""}
       </div>
       <input id="ph-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
-      <p class="msg" id="ph-msg" role="alert"></p>`;
+      <p class="msg" id="ph-msg" role="alert"></p>
+      ${ctx.logosOk && d.marca ? logoMarcaHTML(d) : ""}`;
     $("ed-open").addEventListener("click", () => openEditor(openId));
+    if ($("lm-pick")) prepararLogoMarca(d);
     if (admin) $("fi-del").addEventListener("click", () => askDelete(openId));
     const del = $("ph-del");
     if (del) del.addEventListener("click", async () => {
@@ -769,6 +780,70 @@ async function subirFoto(file) {
     console.error(e);
     msg.style.color = ""; msg.textContent = "No se ha podido subir la foto. Usa una imagen JPG, PNG o WebP de menos de 5 MB.";
   }
+}
+
+/* ---------- Logo de la marca (editores y administrador) ----------
+   Se pone desde la ficha de cualquier tabaco de la marca. Sale en la página de la marca y en el
+   listado de marcas, que se regeneran cada noche. */
+function logoMarcaHTML(d) {
+  const url = logosMarca[slug(d.marca)];
+  return `<div class="logo-marca">
+      <span class="lm-img">${url ? `<img src="${esc(url)}" alt="Logo de ${esc(d.marca)}">` : `<span aria-hidden="true">${esc(d.marca.trim().charAt(0).toUpperCase())}</span>`}</span>
+      <div class="lm-txt"><b>Logo de ${esc(d.marca)}</b>
+        <span class="muted">${url ? "Sale en la página de la marca y en el listado de marcas." : "Esta marca aún no tiene logo."}</span>
+        <div class="btns"><button class="btn" id="lm-pick" type="button">${url ? "Cambiar logo" : "Subir logo"}</button>
+          ${url ? '<button class="btn danger" id="lm-del" type="button">Quitar logo</button>' : ""}</div>
+        <p class="msg" id="lm-msg" role="alert"></p></div>
+      <input id="lm-file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+    </div>`;
+}
+// Reduce el logo a 600 px como máximo, en WebP o PNG para conservar el fondo transparente.
+async function encogerLogo(file) {
+  const bmp = await createImageBitmap(file);
+  const k = Math.min(1, 600 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  const webp = await new Promise((r) => c.toBlob(r, "image/webp", 0.9));
+  if (webp && webp.type === "image/webp") return webp;
+  return await new Promise((r) => c.toBlob(r, "image/png"));
+}
+function prepararLogoMarca(d) {
+  const clave = slug(d.marca), msg = $("lm-msg");
+  const anterior = logosMarca[clave] || "";
+  $("lm-pick").addEventListener("click", () => $("lm-file").click());
+  $("lm-file").addEventListener("change", async (e) => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    if (file.size > 20 * 1024 * 1024) { msg.textContent = "La imagen pesa demasiado (máximo 20 MB)."; return; }
+    msg.style.color = "var(--muted)"; msg.textContent = "Subiendo logo…";
+    try {
+      const blob = await encogerLogo(file);
+      if (!blob || blob.size > 5 * 1024 * 1024) throw new Error("grande");
+      const ext = blob.type === "image/png" ? "png" : "webp";
+      const ruta = `marcas/${clave}-${Date.now()}.${ext}`;
+      const up = await sb.storage.from("fotos").upload(ruta, blob, { contentType: blob.type, upsert: false, cacheControl: "31536000" });
+      if (up.error) throw up.error;
+      const url = sb.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
+      const { error } = await sb.from("marcas_logo").upsert({ clave, marca: d.marca, logo: url });
+      if (error) throw error;
+      if (esAdmin() && anterior) await borrarFotoDeAlmacen(anterior);   // el editor no borra archivos
+      logosMarca[clave] = url;
+      paintTools();
+      const m = $("lm-msg"); if (m) { m.style.color = "var(--accent)"; m.textContent = "Logo guardado. Se verá en la página de la marca tras la regeneración de esta noche."; }
+    } catch (err) {
+      console.error(err);
+      msg.style.color = ""; msg.textContent = "No se ha podido subir el logo. Usa una imagen PNG, JPG o WebP.";
+    }
+  });
+  const del = $("lm-del");
+  if (del) del.addEventListener("click", async () => {
+    if (!del.dataset.sure) { del.dataset.sure = "1"; del.textContent = "Pulsa otra vez para quitarlo"; return; }
+    const { error } = await sb.from("marcas_logo").delete().eq("clave", clave);
+    if (error) { msg.textContent = "No se ha podido quitar el logo."; return; }
+    if (esAdmin()) await borrarFotoDeAlmacen(anterior);
+    delete logosMarca[clave];
+    paintTools();
+  });
 }
 
 /* Miniaturas de las fotos subidas antes de que existieran (solo admin, desde Mi cuenta).

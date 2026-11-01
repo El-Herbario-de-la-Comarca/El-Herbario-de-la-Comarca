@@ -1008,3 +1008,13 @@ a.btn { text-decoration: none; }
   .row:not(.abierta) .field.extra { display: none; }
   .row.abierta .mas-filtros { order: 10; }
 }
+
+/* Logo de la marca en la ficha (solo editores) */
+.logo-marca { display: flex; gap: 14px; align-items: flex-start; margin-top: 14px; padding: 12px; border: 1px dashed var(--line); border-radius: 10px; }
+.logo-marca .lm-img { flex: none; width: 64px; height: 64px; border-radius: 10px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+.logo-marca .lm-img img { max-width: 56px; max-height: 56px; object-fit: contain; }
+.logo-marca .lm-img span { font-family: var(--display); font-size: 1.6rem; color: var(--muted); }
+.logo-marca .lm-txt { display: grid; gap: 4px; min-width: 0; }
+.logo-marca .lm-txt .muted { font-size: 0.9rem; }
+.logo-marca .btns { margin: 4px 0 0; }
+.logo-marca .msg:empty { display: none; }
