@@ -1051,3 +1051,13 @@ a.btn { text-decoration: none; }
 .bd-pdf .btn { display: inline-flex; align-items: center; gap: 8px; }
 .bd-pdf .btn[disabled] { opacity: .6; cursor: progress; }
 .bd-pdf .muted { font-size: 0.95rem; }
+
+/* ---------- Modo prueba: franja fija mientras el admin ve la web como lector de prueba ---------- */
+.aviso-prueba { position: fixed; inset: auto 0 0; z-index: 35; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px;
+  flex-wrap: wrap; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); border-top: 1.5px dashed var(--gold, var(--accent));
+  background: color-mix(in srgb, var(--gold-soft, var(--line)) 70%, var(--surface)); color: var(--oro-tinta, var(--ink)); font-size: .95rem; }
+.aviso-prueba .btns { gap: 8px; flex-wrap: wrap; }
+.aviso-prueba .btn { min-height: 36px; padding-block: 6px; }
+body.en-prueba { padding-bottom: 90px; }
+body.en-prueba .overlay { padding-bottom: 110px; }
+@media (max-width: 600px) { .aviso-prueba { font-size: .88rem; } .aviso-prueba .btns { width: 100%; } }

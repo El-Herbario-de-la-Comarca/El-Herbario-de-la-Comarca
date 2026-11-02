@@ -56,6 +56,173 @@ const ctx = { online: false, session: null, email: "", uid: "", rol: "anonimo", 
 const esAdmin = () => ctx.online && ctx.rol === "admin";
 const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor");
 
+/* ---------- Modo prueba: lector de prueba (solo admin, desde Mi cuenta) ----------
+   El administrador ve la web como un lector inventado, «Saruman Blanco», con bodega, tarros y reseñas
+   inventados. Todo vive en el navegador: lo que se marca, publica o borra en este modo se guarda en
+   memoria y desaparece al salir o al recargar la página. Las fichas y las reseñas reales se siguen
+   leyendo de Supabase, pero nada se escribe allí. */
+const PRUEBA_UID = "prueba-saruman", PRUEBA_EMAIL = "saruman.blanco (cuenta de prueba)";
+let modoPrueba = null;   // { uidReal, perfil, bodega, tarros, likes, resenas, sig }
+const respuesta = (data) => Promise.resolve({ data, error: null });
+const NO_EN_PRUEBA = { message: "En el modo prueba no se guarda nada en la base de datos." };
+// Tablas que en modo prueba se leen de los datos inventados (las demás se leen de Supabase).
+const LEE_DE_PRUEBA = new Set(["bodega", "tarros", "me_gusta", "perfiles"]);
+class ConsultaPrueba {
+  constructor(tabla) { this.t = tabla; this.op = "select"; this.f = []; this.fila = null; this.uno = false; }
+  select() { return this; }
+  insert(f) { this.op = "insert"; this.fila = f; return this; }
+  update(f) { this.op = "update"; this.fila = f; return this; }
+  upsert(f) { this.op = "upsert"; this.fila = f; return this; }
+  delete() { this.op = "delete"; return this; }
+  eq(c, v) { this.f.push([c, v]); return this; }
+  gt() { return this; } order() { return this; } range() { return this; } limit() { return this; }
+  maybeSingle() { this.uno = true; return this; } single() { this.uno = true; return this; }
+  then(ok, ko) {
+    let r;
+    try { r = ejecutarPrueba(this); } catch (e) { r = { data: null, error: { message: String(e && e.message || e) } }; }
+    if (this.uno && r && Array.isArray(r.data)) r = { data: r.data[0] || null, error: r.error };
+    return Promise.resolve(r).then(ok, ko);
+  }
+}
+// Lo que en Supabase recalculan los disparadores: «Lo tengo» y los gramos a partir de los tarros.
+function recalcularPrueba(k) {
+  const P = modoPrueba, lista = P.tarros[k] || [];
+  const m = P.bodega[k] || { tengo: false, probado: false, quiero: false, gramos: null };
+  if (lista.length) {
+    const g = lista.reduce((s, t) => s + (t.gramos || 0) * (Number.isInteger(t.unidades) && t.unidades > 0 ? t.unidades : 1), 0);
+    P.bodega[k] = { ...m, tengo: true, gramos: lista.some((t) => t.gramos) ? g : null };
+  } else if (!P.tarros[k]) return;
+  else { delete P.tarros[k]; const n = { ...m, tengo: false, gramos: null }; if (n.probado || n.quiero) P.bodega[k] = n; else delete P.bodega[k]; }
+}
+function ejecutarPrueba(q) {
+  const P = modoPrueba, ahora = new Date().toISOString();
+  const coincide = (x) => q.f.every(([c, v]) => String(x[c]) === String(v));
+  if (!P) return { data: null, error: NO_EN_PRUEBA };
+  if (q.t === "bodega") {
+    const filas = Object.entries(P.bodega).map(([k, m]) => ({ tabaco_id: k, usuario: PRUEBA_UID, ...m }));
+    if (q.op === "select") return { data: filas, error: null };
+    if (q.op === "upsert") {
+      const f = q.fila;
+      P.bodega[String(f.tabaco_id)] = { tengo: !!f.tengo, probado: !!f.probado, quiero: !!f.quiero, gramos: f.gramos || null };
+      return { data: null, error: null };
+    }
+    if (q.op === "delete") { filas.filter(coincide).forEach((x) => delete P.bodega[x.tabaco_id]); return { data: null, error: null }; }
+  }
+  if (q.t === "tarros") {
+    const todos = Object.values(P.tarros).flat();
+    if (q.op === "select") return { data: todos.slice().sort((a, b) => String(a.creado).localeCompare(String(b.creado))), error: null };
+    if (q.op === "insert") {
+      const k = String(q.fila.tabaco_id);
+      (P.tarros[k] = P.tarros[k] || []).push({ ...q.fila, id: "p" + P.sig++, tabaco_id: k, usuario: PRUEBA_UID, creado: ahora });
+      recalcularPrueba(k); return { data: null, error: null };
+    }
+    const tocados = todos.filter(coincide);
+    if (q.op === "update") { tocados.forEach((t) => Object.assign(t, q.fila)); tocados.forEach((t) => recalcularPrueba(String(t.tabaco_id))); return { data: null, error: null }; }
+    if (q.op === "delete") {
+      tocados.forEach((t) => { const k = String(t.tabaco_id); P.tarros[k] = (P.tarros[k] || []).filter((x) => x !== t); recalcularPrueba(k); });
+      return { data: null, error: null };
+    }
+  }
+  if (q.t === "me_gusta") {
+    if (q.op === "select") return { data: [...P.likes].map((id) => ({ opinion_id: id })), error: null };
+    if (q.op === "insert") { P.likes.add(String(q.fila.opinion_id)); return { data: null, error: null }; }
+    if (q.op === "delete") { [...P.likes].filter((id) => coincide({ opinion_id: id })).forEach((id) => P.likes.delete(id)); return { data: null, error: null }; }
+  }
+  if (q.t === "perfiles" && q.op === "select") {
+    return { data: [{ id: PRUEBA_UID, nombre: P.perfil.nombre, avatar: "", socio: false, socio_desde: null, rol: "lector" }], error: null };
+  }
+  if (q.t === "opiniones") {
+    if (q.op === "insert") {
+      if (P.resenas.some((x) => String(x.tabaco_id) === String(q.fila.tabaco_id))) return { data: null, error: { message: "duplicate key value violates unique constraint" } };
+      P.resenas.push({ ...q.fila, id: -(P.sig++), autor: PRUEBA_UID, creado: ahora, actualizado: ahora, likes: 0 });
+      return { data: null, error: null };
+    }
+    const mias = P.resenas.filter(coincide);
+    if (q.op === "update") { mias.forEach((x) => Object.assign(x, q.fila, { actualizado: ahora })); return { data: null, error: null }; }
+    if (q.op === "delete") { P.resenas = P.resenas.filter((x) => !mias.includes(x)); return { data: null, error: null }; }
+  }
+  return { data: null, error: NO_EN_PRUEBA };
+}
+// El cliente de Supabase pasa por aquí: fuera del modo prueba todo va directo a Supabase, como siempre.
+if (sb) {
+  const fromReal = sb.from.bind(sb), rpcReal = sb.rpc.bind(sb);
+  sb.from = (tabla) => {
+    if (!modoPrueba) return fromReal(tabla);
+    const q = () => new ConsultaPrueba(tabla);
+    if (LEE_DE_PRUEBA.has(tabla)) return q();
+    return { select: (...a) => fromReal(tabla).select(...a), insert: (f) => q().insert(f), update: (f) => q().update(f),
+      upsert: (f) => q().upsert(f), delete: () => q().delete() };
+  };
+  sb.rpc = (fn, args, opts) => {
+    if (!modoPrueba) return rpcReal(fn, args, opts);
+    if (fn === "mi_rol") return respuesta("lector");
+    if (fn === "marcar_visita") return respuesta(null);
+    if (fn === "actualizar_mi_perfil") { modoPrueba.perfil.nombre = String((args && args.p_nombre) || "").trim().slice(0, 40); return respuesta(null); }
+    if (["fotos_resenas", "socios_resenas", "registrar_visita"].includes(fn)) return rpcReal(fn, args, opts);   // solo leen
+    return Promise.resolve({ data: null, error: NO_EN_PRUEBA });
+  };
+}
+const RESENAS_PRUEBA = [
+  "Abre suave y dulce; a mitad de cazoleta gana cuerpo. Buena para la tarde.",
+  "Corte cómodo de cargar. Arde fresco y deja poca humedad.",
+  "Más intensa de lo que esperaba. Pide calma y una pipa grande.",
+  "Aroma agradable en la habitación; en boca se queda algo plana.",
+  "La he fumado varias veces y mejora con unos meses en tarro.",
+  "Correcta, sin más. No la volvería a comprar, pero se deja fumar.",
+  "Muy equilibrada. Una de mis favoritas para el día a día.",
+  "",
+];
+function crearDatosPrueba(uidReal) {
+  const base = bodegaDePrueba(), ahora = Date.now(), dia = 86400000;
+  const tarros = {};
+  let sig = 1;
+  Object.entries(base.tarros).forEach(([k, lista]) => {
+    if (lista.length) tarros[k] = lista.map((t) => ({ ...t, id: "p" + sig++, tabaco_id: k, usuario: PRUEBA_UID,
+      creado: new Date(ahora - Math.floor(Math.random() * 400) * dia).toISOString() }));
+  });
+  // Unas reseñas de tabacos que ha probado (las suficientes para el rango «Caminante»).
+  const probados = Object.keys(base.bodega).filter((k) => base.bodega[k].probado).sort(() => Math.random() - 0.5).slice(0, 7);
+  const resenas = probados.map((k, i) => {
+    const creado = new Date(ahora - (10 + i * 23) * dia).toISOString();
+    const r = { id: -(sig++), tabaco_id: Number(k) || k, autor: PRUEBA_UID, firma: "Saruman Blanco", puntuacion: 2 + Math.floor(Math.random() * 4),
+      texto: RESENAS_PRUEBA[i % RESENAS_PRUEBA.length], creado, actualizado: creado, likes: 0 };
+    CARACT.forEach((c) => { r[c.col] = Math.random() < 0.8 ? 1 + Math.floor(Math.random() * (c.ops.length - 1)) : 0; });
+    return r;
+  });
+  return { uidReal, perfil: { nombre: "Saruman Blanco" }, bodega: base.bodega, tarros, likes: new Set(), resenas, sig };
+}
+async function entrarModoPrueba() {
+  if (!esAdmin() || !ctx.session) return;
+  modoPrueba = crearDatosPrueba(ctx.uid);
+  closeDetail();
+  await leerSesion(ctx.session);
+  await refrescar();
+  
+}
+async function salirModoPrueba() {
+  if (!modoPrueba) return;
+  modoPrueba = null;
+  closeDetail();
+  await leerSesion(ctx.session);
+  await refrescar();
+}
+// Franja fija abajo mientras dura el modo prueba (la pinta paintTop).
+function paintAvisoPrueba() {
+  let av = $("aviso-prueba");
+  if (!modoPrueba) { if (av) av.remove(); document.body.classList.remove("en-prueba"); return; }
+  if (!av) { av = document.createElement("div"); av.id = "aviso-prueba"; av.className = "aviso-prueba"; av.setAttribute("role", "status"); document.body.prepend(av); }
+  document.body.classList.add("en-prueba");
+  av.innerHTML = `<span><strong>Modo prueba.</strong> Estás viendo el herbario como <strong>${esc(modoPrueba.perfil.nombre || "Saruman Blanco")}</strong>, un lector con datos inventados. No se guarda nada.</span>
+    <span class="btns"><button class="btn" type="button" id="ap-barajar">Inventar otros datos</button><button class="btn primary" type="button" id="ap-salir">Volver a mi cuenta</button></span>`;
+  $("ap-salir").addEventListener("click", salirModoPrueba);
+  $("ap-barajar").addEventListener("click", async () => {
+    if (!modoPrueba) return;
+    const nombre = modoPrueba.perfil.nombre;
+    modoPrueba = crearDatosPrueba(modoPrueba.uidReal); modoPrueba.perfil.nombre = nombre;
+    closeDetail(); await refrescar();
+  });
+}
+
 /* ---------- Estado ---------- */
 let current = [];   // fichas
 let opiniones = {};   // tabaco_id -> [{ id, autor, firma, score, texto, creado, actualizado, likes }]
@@ -161,6 +328,10 @@ async function cargarOpiniones() {
         if (error) throw error;
         data.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).push(mapOpinion(x)); });
         if (data.length < 1000) break;
+      }
+      if (modoPrueba) {   // las reseñas inventadas del lector de prueba y sus «me gusta»
+        modoPrueba.resenas.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).unshift(mapOpinion(x)); });
+        Object.values(opiniones).forEach((l) => l.forEach((o) => { if (modoPrueba.likes.has(String(o.id))) o.likes++; }));
       }
       ctx.opiniones = true;
     } catch (e) { console.warn("Reseñas no disponibles", e); ctx.opiniones = false; }
@@ -320,7 +491,7 @@ function setupFilters() {
     e.preventDefault();
     if (!$("overlay").hidden && !idDeHash()) closeDetail();
     quitarFiltros();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    
   });
 }
 function render() {
@@ -1044,6 +1215,7 @@ function paintVideo() {
    Cualquier persona registrada deja una reseña por tabaco (puntuación y texto). Se publica al momento;
    cada cual edita o borra la suya y el administrador puede borrar cualquiera. */
 function firmaGuardada() {
+  if (modoPrueba) return ctx.perfil.nombre || "";
   try { return localStorage.getItem("herbario-firma") || ctx.perfil.nombre || ""; } catch (e) { return ctx.perfil.nombre || ""; }
 }
 function paintResenas() {
@@ -1233,7 +1405,7 @@ async function guardarResena(ev, o) {
       : "No se ha podido guardar la reseña. Comprueba la conexión e inténtalo de nuevo.";
     return;
   }
-  try { localStorage.setItem("herbario-firma", firma); } catch (e) {}
+  if (!modoPrueba) try { localStorage.setItem("herbario-firma", firma); } catch (e) {}
   await refrescar();
 }
 
@@ -2495,7 +2667,8 @@ function abrirCuenta() {
           <span class="cu-chip rol">${esc(ROL_TXT[ctx.rol] || ctx.rol)}</span>
           ${ctx.opiniones && r.i >= 0 ? `<span class="cu-chip rango">${esc(r.nombre)}</span>` : ""}</p>
       </div>
-      ${ctx.perfilOk ? `<div class="cu-foto btns">
+      ${modoPrueba ? '<p class="muted cu-foto">La foto de perfil no se puede probar en el modo prueba.</p>' : ""}
+      ${ctx.perfilOk && !modoPrueba ? `<div class="cu-foto btns">
         <button class="btn" id="av-pick" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>${p.avatar ? "Cambiar foto" : "Subir foto"}</button>
         ${p.avatar ? '<button class="btn danger" id="av-del" type="button">Quitar foto</button>' : ""}
         <input id="av-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
@@ -2517,7 +2690,8 @@ function abrirCuenta() {
         ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
         ${esAdmin() ? Object.entries(FALTAS).map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
           return `<button class="bd-casilla cu-ir cu-pend" type="button" data-falta="${k}"><span class="l">${txt}</span><span class="n">${n}</span><span class="s">${n === 1 ? "ficha" : "fichas"} · ${n ? "Verlas en el catálogo ›" : "¡Todo completo!"}</span></button>`; }).join("") : ""}
-        ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>
+        ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn primary" id="cu-prueba" type="button">Entrar como lector de prueba</button>
+          <button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>
           <button class="btn" id="cu-minis" type="button">Crear las miniaturas que faltan</button><p class="muted" id="cu-minis-msg" role="status"></p></div>` : ""}
       </div>
       <div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
@@ -2531,16 +2705,17 @@ function abrirCuenta() {
           </form>` : '<p class="muted">El nombre visible y la foto de perfil estarán disponibles pronto.</p>'}
           <p class="msg" id="cu-msg" role="alert"></p>
           <div class="btns">
-            <button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>
-            <button class="btn danger" id="cu-out" type="button">Salir</button>
+            ${modoPrueba ? "" : '<button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>'}
+            <button class="btn danger" id="cu-out" type="button">${modoPrueba ? "Salir del modo prueba" : "Salir"}</button>
           </div>
         </section>
         ${instalacionHTML()}
       </div>
     </div>`, "cuenta-p");
   $("d-close").addEventListener("click", () => closeDetail());
-  $("cu-out").addEventListener("click", async () => { closeDetail(); await sb.auth.signOut(); });
-  $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
+  $("cu-out").addEventListener("click", async () => { if (modoPrueba) { salirModoPrueba(); return; } closeDetail(); await sb.auth.signOut(); });
+  if ($("cu-pass")) $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
+  if ($("cu-prueba")) $("cu-prueba").addEventListener("click", entrarModoPrueba);
   if ($("cu-bodega")) $("cu-bodega").addEventListener("click", () => abrirBodega());
   if ($("cu-saruman")) $("cu-saruman").addEventListener("click", () => { if (esAdmin()) abrirBodega(bodegaDePrueba()); });
   if ($("cu-minis")) $("cu-minis").addEventListener("click", crearMiniaturasQueFaltan);
@@ -2550,8 +2725,8 @@ function abrirCuenta() {
     avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; abrirCuenta();
   });
   if (!ctx.perfilOk) return;
-  $("av-pick").addEventListener("click", () => $("av-file").click());
-  $("av-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirAvatar(f); });
+  if ($("av-pick")) $("av-pick").addEventListener("click", () => $("av-file").click());
+  if ($("av-file")) $("av-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirAvatar(f); });
   if ($("av-del")) $("av-del").addEventListener("click", () => guardarPerfil(ctx.perfil.nombre, "", "Foto quitada."));
   $("nm-form").addEventListener("submit", (e) => { e.preventDefault(); guardarPerfil($("nm-in").value, ctx.perfil.avatar, "Nombre guardado."); });
 }
@@ -2601,7 +2776,7 @@ async function guardarPerfil(nombre, avatar, ok) {
   const { error } = await sb.rpc("actualizar_mi_perfil", { p_nombre: nombre, p_avatar: avatar });
   if (error) { msg.style.color = ""; msg.textContent = "No se ha podido guardar."; return; }
   ctx.perfil = { nombre: String(nombre || "").trim(), avatar };
-  if (anterior && anterior !== avatar) {
+  if (anterior && anterior !== avatar && !modoPrueba) {
     const r = rutaAvatar(anterior);
     if (r.startsWith(ctx.uid + "/")) { try { await sb.storage.from("avatares").remove([r]); } catch (e) {} }
   }
@@ -2695,6 +2870,9 @@ async function leerSesion(session) {
   ctx.session = session || null;
   ctx.email = session ? session.user.email || "" : "";
   ctx.uid = session ? session.user.id : "";
+  // Modo prueba: sigue la sesión del administrador, pero con la identidad del lector inventado.
+  if (modoPrueba && ctx.uid !== modoPrueba.uidReal) modoPrueba = null;
+  if (modoPrueba) { ctx.uid = PRUEBA_UID; ctx.email = PRUEBA_EMAIL; }
   ctx.rol = "anonimo";
   const rol = async () => {
     if (!session || !sb) return;
@@ -2801,6 +2979,7 @@ async function abrirTextos() {
 }
 const AYUDA_BTN = '<a class="btn cuenta-btn ayuda-top" href="ayuda.html" title="Cómo funciona el herbario"><span class="avatar" aria-hidden="true">?</span><span class="ayuda-txt tb-txt">Ayuda</span></a>';
 function paintTop() {
+  paintAvisoPrueba();
   const bar = $("admin-bar");
   if (esAdmin()) {
     bar.innerHTML = `<button class="btn" id="rv-open" type="button">Revisar${ctx.pendientes ? ` (${ctx.pendientes})` : ""}</button>
