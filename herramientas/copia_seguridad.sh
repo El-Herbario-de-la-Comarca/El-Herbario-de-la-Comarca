@@ -11,6 +11,14 @@ set -euo pipefail
 : "${SUPABASE_DB_URL:?Falta el secreto SUPABASE_DB_URL (ver COPIA-DE-SEGURIDAD.md)}"
 : "${CLAVE_COPIA:?Falta el secreto CLAVE_COPIA (ver COPIA-DE-SEGURIDAD.md)}"
 
+# Si Supabase no responde en 20 segundos, se corta en lugar de quedarse esperando.
+export PGCONNECT_TIMEOUT=20
+case "$SUPABASE_DB_URL" in
+  *:6543/*) echo "::error::La cadena usa el puerto 6543 (Transaction pooler). Copia la de «Session pooler», con el puerto 5432."; exit 1 ;;
+  *@db.*.supabase.co*) echo "::error::La cadena es la «Direct connection», que no funciona desde GitHub. Copia la de «Session pooler»."; exit 1 ;;
+  *YOUR-PASSWORD*) echo "::error::En la cadena falta poner la contraseña en lugar de [YOUR-PASSWORD]."; exit 1 ;;
+esac
+
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 URL="${SUPABASE_URL:-$(grep -oP 'supabaseUrl:\s*"\K[^"]+' "$RAIZ/config.js")}"
 FECHA="$(date -u +%Y-%m-%d)"
@@ -38,7 +46,7 @@ while IFS= read -r ruta; do
   [ -z "$ruta" ] && continue
   mkdir -p "$DIR/fotos/$(dirname "$ruta")"
   enc="$(python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.argv[1]))' "$ruta")"
-  curl -sSf --retry 3 -o "$DIR/fotos/$ruta" "$URL/storage/v1/object/public/$enc" || { fallos=$((fallos+1)); echo "  sin descargar: $ruta"; }
+  curl -sSf --retry 3 --max-time 60 -o "$DIR/fotos/$ruta" "$URL/storage/v1/object/public/$enc" || { fallos=$((fallos+1)); echo "  sin descargar: $ruta"; }
 done < "$DIR/fotos/lista.txt"
 echo "  $(grep -c . "$DIR/fotos/lista.txt" || true) fotos en la lista, $fallos sin descargar"
 [ "$fallos" -gt 0 ] && echo "::warning::$fallos fotos no se pudieron descargar."

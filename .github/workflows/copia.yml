@@ -13,6 +13,7 @@ permissions:
 jobs:
   copia:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - name: Instalar cliente de PostgreSQL 17
@@ -23,6 +24,7 @@ jobs:
           sudo apt-get install -y -qq postgresql-client-17
           echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
       - name: Hacer la copia
+        timeout-minutes: 20
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           CLAVE_COPIA: ${{ secrets.CLAVE_COPIA }}
