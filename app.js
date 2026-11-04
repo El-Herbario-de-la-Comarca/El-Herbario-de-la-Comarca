@@ -282,10 +282,20 @@ async function cargarTodo() { if (await cargarTabacos()) await cargarExtras(); }
 async function cargarTabacos() {
   if (!sb) { usarRespaldo(); return false; }
   try {
+    // Por páginas de 1000. Se ordena también por id: con solo el nombre, las fichas que se llaman igual
+    // podían cambiar de página entre una petición y la siguiente, y alguna se perdía o salía repetida.
+    // Si una página falla (red móvil, Supabase despertando), se reintenta una vez antes de rendirse.
+    const pagina = async (desde) => {
+      for (let intento = 0; ; intento++) {
+        const { data, error } = await sb.from("tabacos").select("*").order("nombre").order("id").range(desde, desde + 999);
+        if (!error) return data;
+        if (intento >= 1) throw error;
+        await new Promise((r) => setTimeout(r, 1500));
+      }
+    };
     const filas = [];
     for (let desde = 0; ; desde += 1000) {
-      const { data, error } = await sb.from("tabacos").select("*").order("nombre").range(desde, desde + 999);
-      if (error) throw error;
+      const data = await pagina(desde);
       filas.push(...data);
       if (data.length < 1000) break;
     }
@@ -324,7 +334,7 @@ async function cargarOpiniones() {
     opiniones = {};
     try {
       for (let desde = 0; ; desde += 1000) {
-        const { data, error } = await sb.from("opiniones").select("*").order("creado", { ascending: false }).range(desde, desde + 999);
+        const { data, error } = await sb.from("opiniones").select("*").order("creado", { ascending: false }).order("id", { ascending: false }).range(desde, desde + 999);
         if (error) throw error;
         data.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).push(mapOpinion(x)); });
         if (data.length < 1000) break;
