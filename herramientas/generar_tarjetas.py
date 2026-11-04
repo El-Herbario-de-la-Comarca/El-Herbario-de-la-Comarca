@@ -573,7 +573,8 @@ def pagina(d, otras):
     titulo = f'{nombre} · {marca}'.strip(" ·")
     partes = [p for p in (tipo, d.get("corte"), d.get("pais")) if p]
     texto = str(d.get("descripcion") or d.get("desc") or "")
-    desc = recorta(" · ".join(partes) + (". " if partes else "") + texto, 200)
+    # Descripción para Google (no se ve en la página): empieza por «tabaco de pipa» para las búsquedas.
+    desc = recorta(f"{nombre}, tabaco de pipa de {marca}. " + " · ".join(partes) + (". " if partes else "") + texto, 200)
     catalogo = f"../index.html#/ficha/{ident}"
     hojas = [h for h in HOJAS if h in lista(d.get("hojas"))]
     notas = lista(d.get("notas"))
@@ -767,7 +768,7 @@ def pagina_marca(marca, fichas, texto):
                    f'<ul class="tabacos">{"".join(item_tabaco(d) for d in del_tipo)}</ul></section>\n')
 
     nombres = ", ".join(d["nombre"] for d in sorted(fichas, key=lambda d: d["nombre"].lower())[:6])
-    desc = recorta(texto, 200) if texto.strip() else recorta(
+    desc = recorta(f"Tabaco de pipa de {marca}. " + texto, 200) if texto.strip() else recorta(
         f"Tabaco de pipa de {marca}: {resumen}. Entre ellas, {nombres}.", 200)
     logo = LOGOS.get(slug(marca))
     cab_logo = f'<img class="logo-cab" src="{e(logo)}" alt="Logo de {e(marca)}">' if logo else ""
@@ -796,7 +797,7 @@ def pagina_mezcla(tipo, fichas, texto):
         grupos += (f'<section class="grupo"><h2><a href="../{e(url_marca(marca))}">{e(marca)}</a>'
                    f'<small>{cuenta(len(de_marca), "mezcla", "mezclas")}</small></h2>'
                    f'<ul class="tabacos">{"".join(item_tabaco(d) for d in de_marca)}</ul></section>\n')
-    desc = recorta(texto, 200) if texto.strip() else recorta(f"{titulo} de tabaco de pipa: {resumen}.", 200)
+    desc = recorta(f"Tabaco de pipa: {titulo[0].lower() + titulo[1:]}. " + texto, 200) if texto.strip() else recorta(f"{titulo} de tabaco de pipa: {resumen}.", 200)
     cuerpo = f"""<main class="ficha">
 <p class="marca">Tipo de mezcla</p>
 <h1>{e(titulo)}</h1>
