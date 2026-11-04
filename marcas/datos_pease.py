@@ -55,4 +55,7 @@ DATOS = {
 
 # Cambios de mezcla y hojas (solo si la ficha sigue con el valor anterior)
 HOJAS = {238: ["Virginia", "Oriental"]}   # Géométrie: no tenía hojas; según glpease.com, Virginia + Basma y Esmirna
-TIPO = {238: ("Virginia", "Inglesa")}     # regla acordada: Virginia con orientales = Inglesa
+TIPO = {238: ("Virginia", "Inglesa"),     # regla acordada: Virginia con orientales = Inglesa
+        224: ("Inglesa", "Balcánica"),    # Abingdon, Charing Cross y Kensington: el fabricante las llama balcánicas;
+        231: ("Inglesa", "Balcánica"),    # aprobado por el usuario el 4/11/2026
+        243: ("Inglesa", "Balcánica")}

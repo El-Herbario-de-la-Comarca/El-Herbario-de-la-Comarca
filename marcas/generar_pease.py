@@ -1,5 +1,5 @@
 """Aplica marcas/datos_pease.py a datos-iniciales.js y genera supabase/45_gl_pease_fichas.sql.
-Uso: python3 marcas/generar_pease.py"""
+Uso: python3 marcas/generar_pease.py  (ya aplicado el 4/11/2026: si se vuelve a ejecutar, el SQL saldría sin las descripciones; no hace falta)"""
 import json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from datos_pease import DATOS, HOJAS, TIPO
@@ -34,7 +34,7 @@ for i, (corte, texto, ns) in sorted(DATOS.items()):
         desc.append((i, vieja, nueva))
     x['descripcion'] = x['desc'] = nueva
     if corte:
-        assert not x['corte'], (i, x['corte'])
+        assert x['corte'] in ('', corte), (i, x['corte'])
         cortes.append((i, corte))
         x['corte'] = corte
     if ns:

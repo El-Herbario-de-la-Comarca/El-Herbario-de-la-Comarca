@@ -110,6 +110,10 @@ where t.id = v.id and cardinality(t.notas) = 0;
 
 update public.tabacos set hojas = array['Virginia', 'Oriental']::text[] where id = '238' and cardinality(hojas) = 0;
 update public.tabacos set tipo = 'Inglesa' where id = '238' and tipo = 'Virginia';
+-- Abingdon, Charing Cross y Kensington: el fabricante las describe como balcánicas
+update public.tabacos set tipo = 'Balcánica' where id = '224' and tipo = 'Inglesa';
+update public.tabacos set tipo = 'Balcánica' where id = '231' and tipo = 'Inglesa';
+update public.tabacos set tipo = 'Balcánica' where id = '243' and tipo = 'Inglesa';
 
 -- Comprobación: debería devolver 47, 0 y 11
 select count(*) filter (where descripcion not like '%es una mezcla%de G. L. Pease%') as con_descripcion_nueva,
