@@ -1,0 +1,40 @@
+# Copia de seguridad nocturna de Supabase (datos, cuentas y fotos), cifrada.
+# Se guarda como archivo descargable de la propia tarea (Actions → «Copia de seguridad» → la ejecución → Artifacts):
+# las de cada día se guardan 30 días y la del día 1 de cada mes, 90 días.
+# Necesita los secretos SUPABASE_DB_URL y CLAVE_COPIA. Cómo configurarlo y cómo recuperar una copia: COPIA-DE-SEGURIDAD.md.
+# Si falla, GitHub avisa por correo. También se puede lanzar a mano: Actions → «Copia de seguridad» → Run workflow.
+name: Copia de seguridad
+on:
+  schedule:
+    - cron: "43 2 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  copia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Instalar cliente de PostgreSQL 17
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -qq postgresql-client-17
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+      - name: Hacer la copia
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          CLAVE_COPIA: ${{ secrets.CLAVE_COPIA }}
+        run: bash herramientas/copia_seguridad.sh
+      - name: Cuánto tiempo se guarda
+        id: dias
+        run: echo "n=$([ "$(date -u +%d)" = "01" ] && echo 90 || echo 30)" >> "$GITHUB_OUTPUT"
+      - name: Guardar la copia
+        uses: actions/upload-artifact@v4
+        with:
+          name: copia-${{ github.run_id }}
+          path: copia-*.tar.gz.gpg
+          retention-days: ${{ steps.dias.outputs.n }}
+          if-no-files-found: error
+          compression-level: 0
