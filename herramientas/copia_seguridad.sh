@@ -41,9 +41,13 @@ echo "3/4 · Fotos (carpetas fotos y avatares)"
 psql "$SUPABASE_DB_URL" -At -c \
   "select bucket_id || '/' || name from storage.objects where bucket_id in ('fotos','avatares') order by 1" \
   > "$DIR/fotos/lista.txt"
-fallos=0
+fallos=0; hechas=0
+total="$(grep -c . "$DIR/fotos/lista.txt" || true)"
+echo "  $total fotos que descargar"
 while IFS= read -r ruta; do
   [ -z "$ruta" ] && continue
+  hechas=$((hechas+1))
+  [ $((hechas % 50)) -eq 0 ] && echo "  … $hechas de $total"
   mkdir -p "$DIR/fotos/$(dirname "$ruta")"
   enc="$(python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.argv[1]))' "$ruta")"
   curl -sSf --retry 3 --max-time 60 -o "$DIR/fotos/$ruta" "$URL/storage/v1/object/public/$enc" || { fallos=$((fallos+1)); echo "  sin descargar: $ruta"; }
