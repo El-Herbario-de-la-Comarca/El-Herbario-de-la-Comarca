@@ -1,69 +1,6 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 266
+# Fichas no aromáticas sin notas pendientes de revisar: 198
 
-## Cornell & Diehl (60)
-121 | Exhausted Rooster | Virginia-Perique
-123 | Five O'Clock Shadow | Virginia-Perique
-144 | Lunchtime Blues | Burley
-145 | Mad Fiddler Flake | Inglesa
-147 | Midnight Drive | Inglesa
-149 | Mississippi Mud | Inglesa
-151 | Montford Point Marine | Inglesa
-152 | Morley's Best | Burley
-153 | Morning Drive | Inglesa
-155 | Mountain Camp | Inglesa
-156 | Night Train | Burley
-158 | Oak Alley | Burley
-159 | Odessa | Burley
-163 | Old Joe Krantz Blue Label | Burley
-166 | Opening Night | Virginia
-167 | Oriental Silk | Inglesa
-168 | Orient Express | Inglesa
-169 | Pegasus | Burley
-171 | Pirate Kake | Balcánica
-172 | Plantation Evening | Inglesa
-173 | Privateer | Inglesa
-175 | Purple Cow | Inglesa
-176 | Rajah's Court | Inglesa
-178 | Red Carpet | Virginia-Perique
-180 | Red Virginia Ribbon | Sin mezclar
-182 | Reverie | Balcánica
-183 | Riverboat Gambler | Burley
-184 | Sam's Blend | Inglesa
-185 | Sea Dog | Inglesa
-188 | Super Balkan | Balcánica
-191 | Tuskegee Airman | Inglesa
-193 | Vieux Carré | Inglesa
-195 | Virginia Gentleman | Inglesa
-198 | Yale Mixture | Inglesa
-199 | Yorktown | Virginia
-201 | Carolina Red Flake | Virginia
-202 | Carolina Red Flake with Perique | Virginia-Perique
-203 | Eight State Burley | Burley
-204 | Firebird Flake | Inglesa
-205 | Fires on the Levee | Virginia-Perique
-206 | Folklore | Virginia-Perique
-207 | From Beyond | Inglesa
-209 | Gray Ghost | Virginia
-210 | Haunted Bookshop Cake | Burley
-212 | Miskatonic Mixture | Inglesa
-213 | Palmetto Balkan | Balcánica
-214 | Sansepolcro | Virginia
-215 | Star of the East Flake | Inglesa
-216 | Steamworks | Inglesa
-217 | Sun Bear Black Locust | Inglesa
-218 | Sun Bear Navy Cask | Inglesa
-219 | Sun Bear Tupelo | Inglesa
-220 | The Beast | Burley
-365 | Atlas Balkan | Balcánica
-367 | Shandygaff | Burley
-369 | Smooth English | Inglesa
-371 | Stanhope | Inglesa
-372 | White Burley | Sin mezclar
-373 | Winchester | Virginia
-375 | Good Morning | Inglesa
-
-## Dan Tobacco (31)
-1150 | Bizzy Lizzy | sin mezcla
+## Dan Tobacco (29)
 1157 | London Blend No. 1000 | Inglesa
 1158 | Midnight Ride | Inglesa
 1163 | Skipper's Flake | Virginia
@@ -80,7 +17,6 @@
 2311 | Holly's Discovery Extraordinary | Inglesa
 2313 | Tumblin' Dice | Virginia-Perique
 2314 | Ascanian No. 2 Castle Blend | Inglesa
-2316 | Swatte Deern | sin mezcla
 2320 | Kriswill Classical Navy Cut | Virginia-Perique
 2321 | Kriswill Golden Navy Cut | Virginia
 2324 | Mountain Village Evening Standard | Inglesa
@@ -100,7 +36,7 @@
 1026 | Code: Relax | Lakeland
 1028 | Fancy Selection No. 1 | sin mezcla
 1030 | Latakia Flake | Inglesa
-1033 | Old London Pebble Cut | sin mezcla
+1033 | Old London Pebble Cut | Virginia-Perique
 1035 | Pure Black Cavendish | Sin mezclar
 1036 | Pure Brasil | Sin mezclar
 1037 | Pure Burley | Sin mezclar
@@ -191,16 +127,6 @@
 1114 | 4 Seasons Autumn Mixture | Virginia-Perique
 1115 | 4 Seasons Winter Mixture | Virginia
 
-## Germain's (8)
-1171 | Bridge: Old Brown Flake | Virginia
-1172 | Brown Flake | Virginia
-1174 | Club Mixture | Virginia
-1178 | Mixture No. 7 | sin mezcla
-1180 | Royal Jersey: Cavendish and Virginia | Inglesa
-1181 | Royal Jersey: Dark Cavendish | Virginia
-1182 | Royal Jersey: Original Latakia Mixture | Inglesa
-1184 | Special Latakia Flake | Inglesa
-
 ## Doctor Pipe (7)
 2391 | Pure Gold Virginia | Virginia
 2396 | Virginia Blend | Virginia
@@ -210,14 +136,22 @@
 2403 | English Blend | Inglesa
 2404 | Latakia Blend | Inglesa
 
-## Watch City (7)
+## Germain's (7)
+1171 | Bridge: Old Brown Flake | Virginia
+1172 | Brown Flake | Virginia
+1174 | Club Mixture | Virginia
+1180 | Royal Jersey: Cavendish and Virginia | Inglesa
+1181 | Royal Jersey: Dark Cavendish | Virginia
+1182 | Royal Jersey: Original Latakia Mixture | Inglesa
+1184 | Special Latakia Flake | Inglesa
+
+## Watch City (6)
 1214 | Beacon Blend | Burley
 1215 | Blue Ridge Special | Inglesa
 1216 | Bostonian Rhapsody | Virginia
 1217 | Deluxe Crumb Cut | Burley
 1218 | English Ernie-ental | Inglesa
 1220 | F.U.S.T.G! (Fired Up & Set To Go!) | Burley
-1222 | Spiked Spumoni | sin mezcla
 
 ## Fribourg & Treyer (5)
 2260 | 34th Mixture | Inglesa
@@ -226,26 +160,12 @@
 2264 | Cut Virginia Plug | Virginia
 2265 | Vintage Flake | Virginia
 
-## Kopp (5)
-2108 | Cremon Mixture | Inglesa
-2121 | Meistermischung Nr. 66 | sin mezcla
-2122 | Meistermischung Nr. 77 Englisch sanft | Inglesa
-2123 | Meistermischung Nr. 88 Virginia Flake | Virginia
-2124 | Meistermischung Nr. 99 Englisch | Inglesa
-
 ## Seattle Pipe Club (5)
 1204 | Hogshead | Virginia
 1205 | Mississippi River | Inglesa
 1207 | Mississippi River Special Reserve | Inglesa
 1208 | Plum Pudding | Inglesa
 1210 | Plum Pudding Special Reserve | Inglesa
-
-## Solani (5)
-2043 | Aged Burley Flake 656 | Burley
-2046 | Gold 779 | Inglesa
-2049 | Silver Flake 660 | Virginia
-2050 | Virginia Flake 633 | Virginia-Perique
-2051 | White & Black 763 | Inglesa
 
 ## Davidoff (4)
 1083 | English Mixture | Inglesa
@@ -259,6 +179,12 @@
 2175 | No. 6 | Oriental
 2179 | No. 33 | Virginia
 
+## Kopp (4)
+2108 | Cremon Mixture | Inglesa
+2122 | Meistermischung Nr. 77 Englisch sanft | Inglesa
+2123 | Meistermischung Nr. 88 Virginia Flake | Virginia
+2124 | Meistermischung Nr. 99 Englisch | Inglesa
+
 ## MyRott (4)
 2362 | Virginia Mellow | Virginia
 2372 | Widow's Sons Mixture | Virginia
@@ -270,6 +196,12 @@
 2079 | Orcilla Mixture | Inglesa
 2080 | Tree Mixture | Inglesa
 2081 | Wingfield Mixture | Inglesa
+
+## Solani (4)
+2046 | Gold 779 | Inglesa
+2049 | Silver Flake 660 | Virginia
+2050 | Virginia Flake 633 | Virginia-Perique
+2051 | White & Black 763 | Inglesa
 
 ## Wessex (4)
 2266 | Brown Virginia Flake | Virginia
@@ -287,10 +219,6 @@
 2095 | King's Watch | Virginia
 2096 | Port Guardian | Virginia
 
-## Ermuri (2)
-2084 | No Name No. 1 | Inglesa
-2086 | No Name No. 3 | sin mezcla
-
 ## Gawith Hoggarth (2)
 312 | Brown Twist | Virginia
 344 | Black Irish X | Virginia
@@ -303,8 +231,8 @@
 2276 | The Balkans | Balcánica
 2277 | English Mixture | Inglesa
 
-## Erinmore (1)
-349 | Erinmore Flake | Virginia
+## Ermuri (1)
+2084 | No Name No. 1 | Inglesa
 
 ## Escudo (1)
 1123 | Navy Deluxe | Virginia-Perique
