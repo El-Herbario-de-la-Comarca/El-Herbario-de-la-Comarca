@@ -436,7 +436,10 @@ function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i 
 const POR_PAGINA = 20;
 const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" };
 // Fichas incompletas (solo admin, desde Mi cuenta): «foto» o «notas».
-const FALTAS = { foto: ["Sin foto", (d) => !fotoSegura(d.foto)], notas: ["Sin notas de sabor", (d) => !d.notas.length] };
+// Datos que faltan en las fichas: casillas de «Mi cuenta» (foto y notas) y panel de Tareas (todos)
+const FALTAS = { foto: ["Sin foto", (d) => !fotoSegura(d.foto)], notas: ["Sin notas de sabor", (d) => !d.notas.length],
+  tipo: ["Sin mezcla", (d) => !d.tipo], hojas: ["Sin hojas", (d) => !d.hojas.length], corte: ["Sin corte", (d) => !d.corte],
+  pais: ["Sin país", (d) => !d.pais], formato: ["Sin formato", (d) => !d.formato] };
 const FILTERS = [["f-marca", "marca", "Todas"], ["f-corte", "corte", "Todos"], ["f-pais", "pais", "Todos"]];
 function fillSelect(id, label, values) {
   $(id).innerHTML = `<option value="">${label}</option>` + values.map((v) => `<option value="${esc(v.value)}">${esc(v.text)}</option>`).join("");
@@ -1502,40 +1505,52 @@ function celdaHist(k, v) {
   if (k === "foto") { const src = fotoSegura(v || ""); return src ? `<img class="prop-foto" src="${esc(src)}" alt="" loading="lazy" decoding="async">` : "sin foto"; }
   return esc(fmtHist(k, v));
 }
+/* Historial: lo ven los editores y el admin (47_historial_editores.sql); solo el admin deshace.
+   Se puede filtrar por persona y por marca, y cargar los cambios de 100 en 100. */
+const HIST_POR_PAGINA = 100;
 async function abrirHistorial() {
-  if (!esAdmin()) return;
+  if (!esEditor()) return;
+  const admin = esAdmin();
+  const marcas = [...new Set(current.map((d) => d.marca).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   abrirPanel(`<div class="info adm"><h2 id="d-name">Historial de cambios</h2>
-    <p class="muted">Los últimos 100 cambios en las fichas. Si algo no está bien, pulsa «Deshacer» y la ficha vuelve a como estaba antes de ese cambio.</p>
+    <p class="muted">Lo que se ha cambiado en las fichas, de lo más nuevo a lo más antiguo.${admin ? " Si algo no está bien, pulsa «Deshacer» y la ficha vuelve a como estaba antes de ese cambio." : " Si ves algo que no está bien, avisa al administrador: él puede deshacerlo."}</p>
+    <div class="hi-filtros">
+      <label>Persona <select id="hi-persona"><option value="">Todas</option></select></label>
+      <label>Marca <select id="hi-marca"><option value="">Todas</option>${marcas.map((m) => `<option value="${esc(m)}">${esc(m)}</option>`).join("")}</select></label>
+    </div>
     <div id="hi-list"><p class="muted">Cargando…</p></div>
+    <div class="btns hi-mas"><button class="btn" id="hi-mas" type="button" hidden>Cargar más cambios</button></div>
     <button class="close" id="d-close" type="button">Cerrar</button></div>`);
   $("d-close").addEventListener("click", () => closeDetail());
-  const box = $("hi-list");
-  const { data, error } = await sb.from("historial_fichas").select("*").order("cuando", { ascending: false }).limit(100);
-  if (!box) return;
-  if (error) { box.innerHTML = '<p class="msg">No se ha podido cargar el historial. Si no lo has hecho, ejecuta 33_editores_editan.sql en Supabase.</p>'; return; }
-  if (!data.length) { box.innerHTML = '<p class="muted">Todavía no hay cambios registrados.</p>'; return; }
-  const ids = [...new Set(data.map((h) => h.autor).filter(Boolean))];
-  const correos = {};
-  if (ids.length) {
-    const { data: ps } = await sb.from("perfiles").select("id,email,nombre").in("id", ids);
-    (ps || []).forEach((p) => (correos[p.id] = p.nombre || p.email || "usuario"));
+  const box = $("hi-list"), mas = $("hi-mas");
+  // Nombres de quienes han cambiado algo (sin correos para los editores)
+  const nombres = {};
+  const { data: ns, error: en } = await sb.rpc("nombres_historial");
+  if (!en) (ns || []).forEach((p) => (nombres[p.autor] = p.nombre || "usuario"));
+  else if (admin) {
+    const { data: ps } = await sb.from("perfiles").select("id,email,nombre");
+    (ps || []).forEach((p) => (nombres[p.id] = p.nombre || p.email || "usuario"));
   }
-  box.innerHTML = data.map((h) => {
+  if (!$("hi-list")) return;
+  const selP = $("hi-persona");
+  selP.innerHTML = '<option value="">Todas</option>' + Object.entries(nombres).sort((a, b) => a[1].localeCompare(b[1], "es"))
+    .map(([id, n]) => `<option value="${esc(id)}">${esc(n)}</option>`).join("") + '<option value="sistema">Sistema (cambios hechos con SQL)</option>';
+  let filas = [], desde = 0;
+  const pintarFila = (h) => {
     const a = h.antes || {}, b = h.despues || {};
     const nombre = `${a.nombre || ""} · ${a.marca || ""}`;
-    const quien = esc(correos[h.autor] || (h.autor ? "usuario" : "sistema"));
+    const quien = esc(nombres[h.autor] || (h.autor ? "usuario" : "sistema"));
     if (h.accion === "alta") {
-      const n = h.despues || {};
-      return `<article class="prop" data-id="${h.id}"><h3>Ficha nueva: ${esc(`${n.nombre || ""} · ${n.marca || ""}`)}</h3>
+      return `<article class="prop" data-id="${h.id}"><h3>Ficha nueva: ${esc(`${b.nombre || ""} · ${b.marca || ""}`)}</h3>
         <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
         <div class="btns"><button class="btn" data-act="ver" type="button">Abrir ficha</button>
-          <button class="btn danger" data-act="quitar" type="button">Deshacer (borrar la ficha)</button></div>
+          ${admin ? '<button class="btn danger" data-act="quitar" type="button">Deshacer (borrar la ficha)</button>' : ""}</div>
         <p class="msg" role="alert"></p></article>`;
     }
     if (h.accion === "borrado") {
       return `<article class="prop" data-id="${h.id}"><h3>Ficha eliminada: ${esc(nombre)}</h3>
         <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
-        <div class="btns"><button class="btn" data-act="restaurar" type="button">Restaurar ficha</button></div>
+        ${admin ? '<div class="btns"><button class="btn" data-act="restaurar" type="button">Restaurar ficha</button></div>' : ""}
         <p class="msg" role="alert"></p></article>`;
     }
     const cambios = CAMPOS_HIST.filter(([k]) => JSON.stringify(a[k]) !== JSON.stringify(b[k]));
@@ -1543,14 +1558,40 @@ async function abrirHistorial() {
     return `<article class="prop" data-id="${h.id}"><h3>${esc(nombre)}</h3>
       <p class="muted">${quien} · ${fechaHora(h.cuando)}</p>
       <dl class="diff">${cambios.map(([k, l]) => `<dt>${l}</dt><dd><span class="antes">${celdaHist(k, a[k])}</span> → <strong>${celdaHist(k, b[k])}</strong></dd>`).join("")}</dl>
-      <div class="btns"><button class="btn" data-act="deshacer" type="button">Deshacer</button>
+      <div class="btns">${admin ? '<button class="btn" data-act="deshacer" type="button">Deshacer</button>' : ""}
         <button class="btn" data-act="ver" type="button">Abrir ficha</button></div>
       <p class="msg" role="alert"></p></article>`;
-  }).join("") || '<p class="muted">Todavía no hay cambios registrados.</p>';
+  };
+  async function cargar(desdeCero) {
+    if (desdeCero) { filas = []; desde = 0; box.innerHTML = '<p class="muted">Cargando…</p>'; }
+    mas.hidden = true;
+    let q = sb.from("historial_fichas").select("*").order("cuando", { ascending: false }).order("id", { ascending: false });
+    const persona = selP.value, marca = $("hi-marca").value;
+    if (persona === "sistema") q = q.is("autor", null); else if (persona) q = q.eq("autor", persona);
+    if (marca) {
+      const ids = current.filter((d) => d.marca === marca).map((d) => d.id);
+      q = q.in("tabaco_id", ids.length ? ids : ["-"]);
+    }
+    const { data, error } = await q.range(desde, desde + HIST_POR_PAGINA - 1);
+    if (!$("hi-list")) return;
+    if (error) {
+      box.innerHTML = `<p class="msg">No se ha podido cargar el historial. ${admin ? "Si no lo has hecho, ejecuta 33_editores_editan.sql en Supabase." : "Puede que el administrador todavía no lo haya abierto a los editores."}</p>`;
+      return;
+    }
+    filas.push(...data); desde += data.length;
+    box.innerHTML = filas.map(pintarFila).join("") ||
+      `<p class="muted">${persona || marca ? "No hay cambios con estos filtros." : "Todavía no hay cambios registrados."}</p>`;
+    mas.hidden = data.length < HIST_POR_PAGINA;
+  }
+  selP.addEventListener("change", () => cargar(true));
+  $("hi-marca").addEventListener("change", () => cargar(true));
+  mas.addEventListener("click", () => cargar(false));
+  await cargar(true);
   box.addEventListener("click", async (e) => {
     const btn = e.target.closest("button[data-act]"); if (!btn) return;
-    const art = btn.closest(".prop"), h = data.find((x) => x.id === Number(art.dataset.id)); if (!h) return;
+    const art = btn.closest(".prop"), h = filas.find((x) => x.id === Number(art.dataset.id)); if (!h) return;
     if (btn.dataset.act === "ver") { if (findItem(h.tabaco_id)) openDetail(h.tabaco_id); return; }
+    if (!esAdmin()) return;
     const msg = art.querySelector(".msg");
     art.querySelectorAll("button").forEach((x) => (x.disabled = true));
     let r;
@@ -1569,6 +1610,39 @@ async function abrirHistorial() {
     msg.style.color = "var(--accent)"; msg.textContent = btn.dataset.act === "restaurar" ? "Ficha restaurada." : btn.dataset.act === "quitar" ? "Ficha borrada." : "Cambio deshecho.";
     await refrescar();
   });
+}
+
+/* ---------- Tareas pendientes (editores y admin) ----------
+   Cuántas fichas no tienen cada dato, en total y por marca. Al pulsar, el catálogo enseña solo esas fichas. */
+let tareaElegida = "foto";
+function abrirTareas() {
+  if (!esEditor()) return;
+  const total = current.length;
+  const completas = current.filter((d) => Object.values(FALTAS).every(([, falta]) => !falta(d))).length;
+  const pct = total ? Math.round((completas / total) * 100) : 0;
+  abrirPanel(`<div class="info adm"><h2 id="d-name">Tareas pendientes</h2>
+    <p class="muted">Fichas a las que les falta algún dato. Elige qué quieres completar y en qué marca: el catálogo te enseñará solo esas fichas. Recuerda poner solo datos contrastados (web del fabricante o tiendas).</p>
+    <div class="ta-progreso"><div class="ta-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="Fichas completas"><span style="width:${pct}%"></span></div>
+      <p><strong>${completas}</strong> de ${total} fichas tienen todos los datos (${pct} %).</p></div>
+    <div class="bd-tabs ta-tabs" role="tablist" aria-label="Qué falta" id="ta-tabs"></div>
+    <div id="ta-marcas" class="ta-marcas"></div>
+    <button class="close" id="d-close" type="button">Cerrar</button></div>`, "tareas-p");
+  $("d-close").addEventListener("click", () => closeDetail());
+  const pintar = () => {
+    $("ta-tabs").innerHTML = Object.entries(FALTAS).map(([k, [txt, falta]]) =>
+      `<button role="tab" type="button" data-tarea="${k}" aria-selected="${k === tareaElegida}">${esc(txt)} <span>${current.filter(falta).length}</span></button>`).join("");
+    const falta = FALTAS[tareaElegida][1];
+    const porMarca = {};
+    current.filter(falta).forEach((d) => (porMarca[d.marca] = (porMarca[d.marca] || 0) + 1));
+    const filas = Object.entries(porMarca).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "es"));
+    const n = filas.reduce((s, [, c]) => s + c, 0);
+    $("ta-marcas").innerHTML = n ? `<button class="ta-marca todas" type="button" data-marca=""><span>Todas las marcas</span><span class="n">${n}</span></button>` +
+      filas.map(([m, c]) => `<button class="ta-marca" type="button" data-marca="${esc(m)}"><span>${esc(m)}</span><span class="n">${c}</span></button>`).join("")
+      : '<p class="muted">¡Todo completo! Ninguna ficha tiene pendiente esta tarea.</p>';
+  };
+  pintar();
+  $("ta-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tarea]"); if (!b) return; tareaElegida = b.dataset.tarea; pintar(); });
+  $("ta-marcas").addEventListener("click", (e) => { const b = e.target.closest("[data-marca]"); if (!b) return; verFichasSin(tareaElegida, b.dataset.marca); });
 }
 /* ---------- Usuarios (solo admin) ----------
    Con 36_panel_usuarios.sql: nombre, foto, última conexión, reseñas, bodega y borrar cuentas.
@@ -2712,7 +2786,7 @@ function abrirCuenta() {
       <div class="cu-casillas">
         ${ctx.opiniones ? `<div class="bd-casilla"><span class="l">Reseñas publicadas</span><span class="n">${nRes}</span><span class="s">Firmadas como «${esc(nombre)}»</span></div>` : ""}
         ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
-        ${esAdmin() ? Object.entries(FALTAS).map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
+        ${esAdmin() ? Object.entries(FALTAS).filter(([k]) => k === "foto" || k === "notas").map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
           return `<button class="bd-casilla cu-ir cu-pend" type="button" data-falta="${k}"><span class="l">${txt}</span><span class="n">${n}</span><span class="s">${n === 1 ? "ficha" : "fichas"} · ${n ? "Verlas en el catálogo ›" : "¡Todo completo!"}</span></button>`; }).join("") : ""}
         ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn primary" id="cu-prueba" type="button">Entrar como lector de prueba</button>
           <button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>
@@ -2754,12 +2828,12 @@ function abrirCuenta() {
   if ($("av-del")) $("av-del").addEventListener("click", () => guardarPerfil(ctx.perfil.nombre, "", "Foto quitada."));
   $("nm-form").addEventListener("submit", (e) => { e.preventDefault(); guardarPerfil($("nm-in").value, ctx.perfil.avatar, "Nombre guardado."); });
 }
-// Abre el catálogo solo con las fichas a las que les falta la foto o las notas de sabor.
-function verFichasSin(k) {
-  if (!esAdmin() || !FALTAS[k]) return;
+// Abre el catálogo solo con las fichas a las que les falta un dato (y, si se indica, solo de una marca).
+function verFichasSin(k, marca = "") {
+  if (!esEditor() || !FALTAS[k]) return;
   closeDetail();
-  Object.assign(state, { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "marca", page: 1, falta: k });
-  $("q").value = ""; ["f-marca", "f-tipo", "f-hoja", "f-corte", "f-pais"].forEach((id) => ($(id).value = "")); $("sort").value = "marca";
+  Object.assign(state, { q: "", marca, tipo: "", hoja: "", corte: "", pais: "", sort: "marca", page: 1, falta: k });
+  $("q").value = ""; ["f-tipo", "f-hoja", "f-corte", "f-pais"].forEach((id) => ($(id).value = "")); $("f-marca").value = marca; $("sort").value = "marca";
   render();
   $("count").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -3007,17 +3081,23 @@ function paintTop() {
   const bar = $("admin-bar");
   if (esAdmin()) {
     bar.innerHTML = `<button class="btn" id="rv-open" type="button">Revisar${ctx.pendientes ? ` (${ctx.pendientes})` : ""}</button>
+      <button class="btn" id="ta-open" type="button">Tareas</button>
       <button class="btn" id="hi-open" type="button">Historial</button>
       <button class="btn" id="tx-open" type="button">Textos de marcas</button>
       <button class="btn primary" id="add-open" type="button">Añadir tabaco</button>`;
     $("rv-open").addEventListener("click", abrirRevision);
     $("hi-open").addEventListener("click", abrirHistorial);
+    $("ta-open").addEventListener("click", abrirTareas);
     $("tx-open").addEventListener("click", abrirTextos);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else if (esEditor()) {
     bar.innerHTML = `${ctx.misPendientes ? `<button class="btn" id="mp-open" type="button">Mis propuestas (${ctx.misPendientes} pendientes)</button>` : ""}
+      <button class="btn" id="ta-open" type="button">Tareas</button>
+      <button class="btn" id="hi-open" type="button">Historial</button>
       <button class="btn primary" id="add-open" type="button">Añadir tabaco</button>`;
     if ($("mp-open")) $("mp-open").addEventListener("click", abrirMisPropuestas);
+    $("ta-open").addEventListener("click", abrirTareas);
+    $("hi-open").addEventListener("click", abrirHistorial);
     $("add-open").addEventListener("click", () => openEditor(null));
   } else bar.innerHTML = "";
 
