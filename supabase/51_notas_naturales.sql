@@ -180,3 +180,31 @@ update public.tabacos set notas = array['caramelo', 'chocolate', 'frutas tropica
 update public.tabacos set notas = array['ahumado']::text[] where id = '2056' and cardinality(notas) = 0;
 -- 2107 · Navy Cut (Flake) · Richmond · TR 3341 (Flavoring: Plum)
 update public.tabacos set notas = array['ciruela']::text[] where id = '2107' and cardinality(notas) = 0;
+-- 1035 · Pure Black Cavendish · Robert McConnell · lista del usuario (Robert McConnell): caramelo oscuro, vainilla suave, notas tostadas
+update public.tabacos set notas = array['caramelo', 'vainilla']::text[] where id = '1035' and cardinality(notas) = 0;
+-- 1037 · Pure Burley · Robert McConnell · lista del usuario (Robert McConnell): nueces tostadas, cacao crudo, madera seca
+update public.tabacos set notas = array['nuez', 'chocolate', 'madera']::text[] where id = '1037' and cardinality(notas) = 0;
+-- 1044 · Pure Virginia · Robert McConnell · lista del usuario (Robert McConnell): cítricos frescos, heno de prado, miel, floral suave
+update public.tabacos set notas = array['cítricos', 'heno', 'miel', 'floral']::text[] where id = '1044' and cardinality(notas) = 0;
+-- 1048 · Scottish Cake · Robert McConnell · lista del usuario (Robert McConnell): fruta madura, pasas, pan recién horneado, toques especiados
+update public.tabacos set notas = array['pasas', 'pan tostado', 'especias dulces']::text[] where id = '1048' and cardinality(notas) = 0;
+-- 1049 · Scottish Flake · Robert McConnell · lista del usuario (Robert McConnell): ahumado ligero, frutos secos, tierra, madera
+update public.tabacos set notas = array['ahumado', 'frutos secos', 'terroso', 'madera']::text[] where id = '1049' and cardinality(notas) = 0;
+-- 1050 · Sovereign Mixture · Robert McConnell · lista del usuario (Robert McConnell): cuero, madera quemada
+update public.tabacos set notas = array['cuero', 'madera']::text[] where id = '1050' and cardinality(notas) = 0;
+-- 1053 · 5 Year Matured Virginia · Robert McConnell · lista del usuario (Robert McConnell): toque de madera fina
+update public.tabacos set notas = array['madera']::text[] where id = '1053' and cardinality(notas) = 0;
+-- 1056 · Boutique Blend · Robert McConnell · lista del usuario (Robert McConnell): ahumado meloso, notas de tierra, toffee suave
+update public.tabacos set notas = array['ahumado', 'terroso', 'caramelo']::text[] where id = '1056' and cardinality(notas) = 0;
+-- 1057 · Covent Garden · Robert McConnell · lista del usuario (Robert McConnell): pimienta negra, cuero, notas de turba
+update public.tabacos set notas = array['ahumado', 'pimienta', 'cuero', 'terroso']::text[] where id = '1057' and cardinality(notas) = 0;
+-- 1060 · Highgate · Robert McConnell · lista del usuario (Robert McConnell): toques de cacao, madera tostada
+update public.tabacos set notas = array['chocolate', 'madera']::text[] where id = '1060' and cardinality(notas) = 0;
+-- 1063 · Notting Hill · Robert McConnell · lista del usuario (Robert McConnell): madera ahumada
+update public.tabacos set notas = array['madera', 'ahumado']::text[] where id = '1063' and cardinality(notas) = 0;
+-- 1065 · Oxford Street · Robert McConnell · lista del usuario (Robert McConnell): ahumado ligero, hierbas secas, matices cítricos
+update public.tabacos set notas = array['ahumado', 'hierbas aromáticas', 'cítricos']::text[] where id = '1065' and cardinality(notas) = 0;
+-- 1067 · Piccadilly Circus · Robert McConnell · lista del usuario (Robert McConnell): dulzor cítrico, ahumados ligeros, incienso
+update public.tabacos set notas = array['cítricos', 'ahumado', 'incienso']::text[] where id = '1067' and cardinality(notas) = 0;
+-- 1069 · Regent Street · Robert McConnell · lista del usuario (Robert McConnell): vainilla cremosa, albaricoque, fondo de frutos secos
+update public.tabacos set notas = array['vainilla', 'albaricoque', 'frutos secos']::text[] where id = '1069' and cardinality(notas) = 0;
