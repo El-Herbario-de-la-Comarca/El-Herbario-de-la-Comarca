@@ -1,13 +1,8 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 321
+# Fichas no aromáticas sin notas pendientes de revisar: 304
 
-## Cornell & Diehl (65)
-90 | Burley Flake #2 | Burley
-92 | Burley Flake #4 | Burley
-101 | Consolation | Inglesa
-110 | Daylight: Or L'yom | Inglesa
+## Cornell & Diehl (60)
 121 | Exhausted Rooster | Virginia-Perique
 123 | Five O'Clock Shadow | Virginia-Perique
-142 | Light of the Universe: Or Olam | Inglesa
 144 | Lunchtime Blues | Burley
 145 | Mad Fiddler Flake | Inglesa
 147 | Midnight Drive | Inglesa
@@ -193,22 +188,6 @@
 1184 | Special Latakia Flake | Inglesa
 1185 | Uncle Tom's | Virginia
 
-## Gawith Hoggarth (14)
-290 | Best Brown #2 Flake | Virginia
-297 | #12 Mixture | Inglesa
-307 | Broken Scotch Cake | Lakeland
-312 | Brown Twist | Virginia
-313 | Burley and Bright | Burley
-316 | Curly Cut Deluxe | Virginia
-321 | Dark Plug | Virginia
-325 | Glengarry Flake | Lakeland
-338 | Louisiana Flake | Lakeland
-340 | Scotch Mixture | Inglesa
-344 | Black Irish X | Virginia
-380 | Black Cavendish | Sin mezclar
-381 | Bright CR Flake | Virginia
-385 | Grasmere Flake | Lakeland
-
 ## TAK (14)
 2199 | M74 | Virginia-Perique
 2200 | 16/5 Der Neue | Virginia-Perique
@@ -349,6 +328,10 @@
 ## Ermuri (2)
 2084 | No Name No. 1 | Inglesa
 2086 | No Name No. 3 | sin mezcla
+
+## Gawith Hoggarth (2)
+312 | Brown Twist | Virginia
+344 | Black Irish X | Virginia
 
 ## Ilsted (2)
 2067 | Golden Flake | Virginia

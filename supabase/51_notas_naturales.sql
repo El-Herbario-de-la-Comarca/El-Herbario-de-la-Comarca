@@ -104,3 +104,15 @@ update public.tabacos set notas = array['terroso']::text[] where id = '319' and 
 update public.tabacos set notas = array['floral']::text[] where id = '315' and cardinality(notas) = 0;
 -- 322 · Ennerdale Mixture · Gawith Hoggarth · Smokingpipes 551346 (descripción: floral essences, almond, rum, citrus, vanilla)
 update public.tabacos set notas = array['floral', 'almendra', 'ron', 'cítricos', 'vainilla']::text[] where id = '322' and cardinality(notas) = 0;
+-- 313 · Burley and Bright · Gawith Hoggarth · Smokingpipes 3991 (descripción: subtle chocolate casing)
+update public.tabacos set notas = array['chocolate']::text[] where id = '313' and cardinality(notas) = 0;
+-- 325 · Glengarry Flake · Gawith Hoggarth · TR 565 (descripción: light top flavour of honey dew)
+update public.tabacos set notas = array['miel']::text[] where id = '325' and cardinality(notas) = 0;
+-- 338 · Louisiana Flake · Gawith Hoggarth · TR 2203 (descripción: chocolaty topping, figgy taste, nutty sweetness)
+update public.tabacos set notas = array['chocolate', 'higo', 'frutos secos']::text[] where id = '338' and cardinality(notas) = 0;
+-- 142 · Light of the Universe: Or Olam · Cornell & Diehl · TR 2896 (descripción: spicy Perique)
+update public.tabacos set notas = array['pimienta']::text[] where id = '142' and cardinality(notas) = 0;
+-- 321 · Dark Plug · Gawith Hoggarth · TR 563 (descripción: smokey flavour del Malawi dark fired)
+update public.tabacos set notas = array['ahumado']::text[] where id = '321' and cardinality(notas) = 0;
+-- 385 · Grasmere Flake · Gawith Hoggarth · TR 2801 (descripción: top-note flavour of English rose and geranium)
+update public.tabacos set notas = array['floral']::text[] where id = '385' and cardinality(notas) = 0;
