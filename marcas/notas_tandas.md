@@ -4,7 +4,7 @@ Método (5/11/2026): solo notas que la fuente dice expresamente. Tobacco Reviews
 
 Truco para ahorrar búsquedas: la página de marca de TR (p. ej. /brand/48/rattray/) da las URL de cada mezcla y se pueden abrir con WebFetch.
 
-## Hechas (SQL 50, 110 fichas)
+## Hechas (SQL 50, 112 fichas)
 ```
 7|whisky,ahumado|TR 9263 (Flavoring: Whisky; descripción: whisky de malta, fondo ahumado)
 9|pimienta|Smokingpipes 652407 (perique especiado)
@@ -116,6 +116,8 @@ Truco para ahorrar búsquedas: la página de marca de TR (p. ej. /brand/48/rattr
 2070|pasas|pfeifen-shop-online.de (descripción: aroma de pasas)
 2356|frutas tropicales|pfeifen-shop-online.de (aroma: Tropical Fruits; descripción: sandía)
 1164|vainilla,miel|pfeifen-shop-online.de (aroma: Vanilla, Honey; S.V.H. = Sweet Vanilla Honeydew)
+124|granada|TR 4325 (Flavoring: Pomegranate)
+161|granada|TR 9740 (Flavoring: Pomegranate)
 ```
 
 ## Revisadas sin nota en la fuente
@@ -142,7 +144,6 @@ Truco para ahorrar búsquedas: la página de marca de TR (p. ej. /brand/48/rattr
 370 C&D Snug Harbor (TR 2765: «licor» genérico, sin nombre)
 148 C&D Milk & Honey (TR 2549: Other/Misc)
 1156 Dan Liberty (TR 1519: solo «especiado»)
-124 C&D Founding Fathers y 161 Old Grove: granada (TR 4325 y 9740). «Granada» no está en la lista: pendiente de que el administrador decida si se añade.
 422 Mixture Modern (TR 2204: Other/Misc)
 1052 McConnell The Fragrant Blend (TR 11: solo «fruta» genérico)
 2236 7 Seas Royal Blend y 2238 7 Seas Blue Blend (TR 3677: Other/Misc)

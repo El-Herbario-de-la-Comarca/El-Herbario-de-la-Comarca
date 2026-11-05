@@ -225,3 +225,7 @@ update public.tabacos set notas = array['pasas']::text[] where id = '2070' and c
 update public.tabacos set notas = array['frutas tropicales']::text[] where id = '2356' and cardinality(notas) = 0;
 -- 1164 · S.V.H. · Dan Tobacco · pfeifen-shop-online.de (aroma: Vanilla, Honey; S.V.H. = Sweet Vanilla Honeydew)
 update public.tabacos set notas = array['vainilla', 'miel']::text[] where id = '1164' and cardinality(notas) = 0;
+-- 124 · Founding Fathers · Cornell & Diehl · TR 4325 (Flavoring: Pomegranate)
+update public.tabacos set notas = array['granada']::text[] where id = '124' and cardinality(notas) = 0;
+-- 161 · Old Grove · Cornell & Diehl · TR 9740 (Flavoring: Pomegranate)
+update public.tabacos set notas = array['granada']::text[] where id = '161' and cardinality(notas) = 0;

@@ -27,6 +27,7 @@ NOTAS = [
     ("ciruela mirabel", [r"ciruelas? mirabel"]),
     ("ciruela", [r"ciruelas?(?! mirabel)", r"fruta de hueso oscura"]),
     ("frutos rojos", [r"frutos? rojos", r"frutos del bosque", r"bayas"]),
+    ("granada", [r"\bgranadas?\b", r"pomegranate"]),
     ("frutos secos", [r"frutos secos"]),
     ("fruta pasa", [r"frutas? secas?", r"\bpasas\b"]),
     ("cereza", [r"cerezas?", r"\bcherry\b"]),

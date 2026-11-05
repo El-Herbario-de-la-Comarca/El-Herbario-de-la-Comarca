@@ -37,7 +37,7 @@
     ["cafe", "coffee", "kaffee", "espresso", "mocha", "moka"], ["regaliz", "licorice", "liquorice", "lakritz"],
     ["anis", "anise", "aniseed"], ["canela", "cinnamon", "zimt"], ["menta", "mint", "minze"],
     ["fresa", "strawberry", "erdbeere"], ["frambuesa", "raspberry", "himbeere"], ["arandano", "blueberry", "heidelbeere"],
-    ["frutos rojos", "berries", "berry", "beeren", "frutas del bosque"], ["arce", "maple"],
+    ["frutos rojos", "berries", "berry", "beeren", "frutas del bosque"], ["arce", "maple"], ["granada", "pomegranate", "granatapfel"],
     ["vino", "wine", "wein"], ["jerez", "sherry"], ["licor", "liqueur", "liquor", "likor"],
     ["ahumado", "smoky", "smoked", "smoke", "humo"], ["especias", "especiado", "spice", "spicy", "spiced"],
     ["madera", "wood", "woody", "holz"], ["cuero", "leather"], ["tostado", "toasted", "toast"],
