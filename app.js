@@ -38,7 +38,8 @@ const CARACT = [
 ];
 const VALORACION = ["", "1 · Malo", "2 · Flojo", "3 · Correcto", "4 · Muy bueno", "5 · Excelente"];
 const CAMPOS = [["nombre", "Nombre"], ["marca", "Marca"], ["tipo", "Mezcla"], ["hojas", "Hojas"], ["corte", "Corte"],
-  ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"], ["en_espana", "Distintivo España (E)"]];
+  ["pais", "País"], ["formato", "Formato"], ["notas", "Notas"], ["descripcion", "Descripción"], ["en_espana", "Distintivo España (E)"],
+  ["otros_nombres", "Otros nombres"]];
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -243,6 +244,8 @@ function mapItem(r) {
     pais: str(r.pais, 60), formato: str(r.formato, 80), desc: str(r.descripcion, 2000),
     fuerza: Number.isInteger(f) && f >= 1 && f <= 5 ? f : 0, notas, hojas, foto: str(r.foto, 500),
     espana: r.en_espana === true,
+    // Nombres en otros países o antiguos: solo para el buscador, no se enseñan (46_otros_nombres.sql)
+    otros: Array.isArray(r.otros_nombres) ? r.otros_nombres.filter((n) => typeof n === "string" && n.trim()).map((n) => n.trim().slice(0, 120)).slice(0, 10) : [],
     video: typeof r.video_id === "string" && /^[A-Za-z0-9_-]{11}$/.test(r.video_id) ? r.video_id : ""
   };
 }
@@ -301,6 +304,7 @@ async function cargarTabacos() {
     }
     current = filas.map(mapItem).filter((d) => d.nombre);
     ctx.espanaOk = filas.length > 0 && "en_espana" in filas[0];   // 16_se_vende_en_espana.sql
+    ctx.otrosOk = filas.length > 0 && "otros_nombres" in filas[0];   // 46_otros_nombres.sql
     ctx.online = true;
     return true;
   } catch (e) {
@@ -504,11 +508,15 @@ function setupFilters() {
     
   });
 }
+const camposBusqueda = (d) => ({ principal: [d.nombre, d.marca, ...(d.otros || [])],
+  resto: [d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc] });
 function render() {
   const q = norm(state.q.trim());
   const byName = (a, b) => a.nombre.localeCompare(b.nombre, "es");
   const score = (d) => statsDe(d.id).media;
   const falta = FALTAS[state.falta];
+  // Buscador tolerante (buscador.js): erratas, plurales, sinónimos y otros nombres. Si no ha cargado, búsqueda simple.
+  const res = q && window.Buscador ? window.Buscador.buscar(current, state.q, camposBusqueda) : null;
   const list = current.filter((d) => {
     if (falta && !falta[1](d)) return false;
     if (state.marca && d.marca !== state.marca) return false;
@@ -516,22 +524,25 @@ function render() {
     if (state.hoja && !d.hojas.includes(state.hoja)) return false;
     if (state.corte && d.corte !== state.corte) return false;
     if (state.pais && d.pais !== state.pais) return false;
+    if (res) return res.niveles.has(d);
     if (q) {
-      const hay = norm([d.nombre, d.marca, d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc].join(" "));
+      const hay = norm([d.nombre, d.marca, (d.otros || []).join(" "), d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc].join(" "));
       return q.split(/\s+/).every((w) => hay.includes(w));
     }
     return true;
   });
-  list.sort((a, b) =>
-    state.sort === "marca" ? a.marca.localeCompare(b.marca, "es") || byName(a, b)
+  // Con búsqueda, primero lo que coincide en el nombre o la marca, luego el resto y al final lo aproximado
+  list.sort((a, b) => (res ? res.niveles.get(a) - res.niveles.get(b) : 0) ||
+    (state.sort === "marca" ? a.marca.localeCompare(b.marca, "es") || byName(a, b)
     : state.sort === "puntuacion" ? score(b) - score(a) || byName(a, b)
-    : byName(a, b));
+    : byName(a, b)));
   const paginas = Math.max(1, Math.ceil(list.length / POR_PAGINA));
   state.page = Math.min(Math.max(1, state.page), paginas);
   const desde = (state.page - 1) * POR_PAGINA;
   const visibles = list.slice(desde, desde + POR_PAGINA);
   $("count").textContent = (falta ? `${falta[0]} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
-    (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "");
+    (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "") +
+    (res && res.corregidas.length ? ` · buscando «${res.corregidas.join(" ")}»` : "");
   pintarPaginador(paginas);
   pintarUltimas(!falta && !q && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
   $("grid").innerHTML = list.length ? visibles.map((d) => {
@@ -1101,7 +1112,7 @@ function openEditor(id) {
   if (id && !d) return;
   const admin = esAdmin();
   openId = id || null;
-  const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "", video: "" };
+  const v = d || { nombre: "", marca: "", tipo: "", hojas: [], corte: "", fuerza: 0, pais: "", formato: "", notas: [], desc: "", video: "", otros: [] };
   const uniq = (k) => [...new Set(current.map((x) => x[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   const dl = (name, vals) => `<datalist id="${name}">${vals.map((x) => `<option value="${esc(x)}">`).join("")}</datalist>`;
   const estilos = v.tipo && !ESTILOS.includes(v.tipo) ? [...ESTILOS, v.tipo] : ESTILOS;
@@ -1128,6 +1139,8 @@ function openEditor(id) {
         ${HOJAS.map((h, i) => `<label class="check"><input type="checkbox" name="ed-hoja" value="${esc(h)}"${v.hojas.includes(h) ? " checked" : ""}> ${esc(h)}</label>`).join("")}
       </fieldset>
       ${ctx.espanaOk ? `<label class="check es-check"><input type="checkbox" id="ed-es"${v.espana ? " checked" : ""}> Mostrar el distintivo de España <span class="es-badge" aria-hidden="true">E</span></label>` : ""}
+      ${ctx.otrosOk ? `<div class="field"><label for="ed-otros">Otros nombres (solo para el buscador)</label><input id="ed-otros" type="text" value="${esc((v.otros || []).join(", "))}" placeholder="Separados por comas: Cherry Cavendish, Bourbon Whiskey" autocomplete="off">
+        <p class="muted ed-ayuda">Nombres con los que se vende en otros países o que tuvo antes. No se enseñan en la ficha: solo sirven para que el buscador la encuentre.</p></div>` : ""}
       <div class="field"><label for="ed-video">Vídeo de YouTube (opcional)</label><input id="ed-video" type="url" value="${esc(v.video ? "https://www.youtube.com/watch?v=" + v.video : "")}" placeholder="https://www.youtube.com/watch?v=..."></div>
       <div class="field"><label for="ed-desc">Descripción</label><textarea id="ed-desc" maxlength="2000">${esc(v.desc)}</textarea></div>
       ${dl("dl-marca", uniq("marca"))}${dl("dl-corte", uniq("corte"))}${dl("dl-pais", uniq("pais"))}
@@ -1151,10 +1164,11 @@ function leerFormulario() {
     formato: $("ed-formato").value.trim().slice(0, 80),
     notas: $("ed-notas").value.split(",").map((n) => n.trim().slice(0, 40)).filter(Boolean).slice(0, 12),
     descripcion: $("ed-desc").value.trim().slice(0, 2000),
-    ...($("ed-es") ? { en_espana: $("ed-es").checked } : {})
+    ...($("ed-es") ? { en_espana: $("ed-es").checked } : {}),
+    ...($("ed-otros") ? { otros_nombres: [...new Set($("ed-otros").value.split(",").map((n) => n.trim().slice(0, 120)).filter(Boolean))].slice(0, 10) } : {})
   };
 }
-function valorDe(d, k) { return k === "descripcion" ? d.desc : k === "en_espana" ? !!d.espana : d[k]; }
+function valorDe(d, k) { return k === "descripcion" ? d.desc : k === "en_espana" ? !!d.espana : k === "otros_nombres" ? (d.otros || []) : d[k]; }
 function igual(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
 async function saveEditor(ev, d) {
   ev.preventDefault();

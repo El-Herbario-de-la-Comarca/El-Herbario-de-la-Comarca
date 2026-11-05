@@ -114,6 +114,7 @@ dd { margin: 0; min-width: 0; }
 .sec h3 { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; font-weight: 500; }
 .sec h3 small { color: var(--muted); font-size: inherit; letter-spacing: 0.04em; text-transform: none; }
 .muted { color: var(--muted); font-size: 0.93rem; margin: 0; }
+.editor .ed-ayuda { font-size: 0.82rem; margin-top: 0.3rem; }
 .ofc { display: grid; gap: 12px; min-width: 0; }
 .ofc h4 { font-family: var(--display); font-weight: 400; font-size: 1.45rem; line-height: 1.2; margin: 0; text-wrap: balance; overflow-wrap: anywhere; }
 .ofc .text { display: grid; gap: 10px; max-width: 68ch; overflow-wrap: anywhere; }

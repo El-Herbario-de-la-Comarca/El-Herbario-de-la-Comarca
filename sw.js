@@ -1,8 +1,8 @@
 // Service worker del herbario: guarda la web en el móvil para que abra rápido y funcione sin conexión.
 // Siempre intenta la red primero (para tener lo último) y usa la copia guardada si falla.
 // Las peticiones a Supabase y a otros sitios no se tocan.
-const CACHE = "herbario-v2";
-const BASICOS = ["./", "./index.html", "./estilos.css", "./tema-comarca.css", "./app.js", "./config.js",
+const CACHE = "herbario-v3";
+const BASICOS = ["./", "./index.html", "./estilos.css", "./tema-comarca.css", "./app.js", "./buscador.js", "./config.js",
   "./datos-iniciales.js", "./temporada.js", "./zonas.js", "./img/logo.png", "./img/icono-192.png", "./manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
