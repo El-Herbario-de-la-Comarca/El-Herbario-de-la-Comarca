@@ -1,2 +1,3 @@
 copia-*/
 copia-*.tar.gz.gpg
+__pycache__/
