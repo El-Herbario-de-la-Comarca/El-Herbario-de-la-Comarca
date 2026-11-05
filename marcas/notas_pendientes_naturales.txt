@@ -1,44 +1,12 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 508
+# Fichas no aromáticas sin notas pendientes de revisar: 476
 
-## Cornell & Diehl (97)
-68 | Barrister | Inglesa
-69 | Bayou Morning | Virginia-Perique
-71 | Bayou Night | Inglesa
-74 | Big 'n' Burley | Balcánica
-76 | Billy Budd | Inglesa
-77 | Billy Budd Blonde | Virginia-Perique
-78 | Black Duck | Balcánica
-83 | Blue Ridge | Inglesa
-85 | Bow-Legged Bear | Inglesa
-86 | Briar Fox | Virginia
+## Cornell & Diehl (65)
 90 | Burley Flake #2 | Burley
-91 | Burley Flake #3 | Burley
 92 | Burley Flake #4 | Burley
-95 | Byzantium | Balcánica
-97 | Chenet's Cake | Virginia-Perique
-100 | Comfort | Virginia-Perique
 101 | Consolation | Inglesa
-102 | Crooked Lane | Inglesa
-105 | Cube Cut Burley | Sin mezclar
-106 | Dark Burley | Sin mezclar
-109 | Da Vinci | Inglesa
 110 | Daylight: Or L'yom | Inglesa
-111 | Derringer | Virginia
-113 | Easy Times | Burley
-117 | Engine #99 | Inglesa
-118 | Epiphany | Inglesa
-119 | Evening Rise | Burley
 121 | Exhausted Rooster | Virginia-Perique
-122 | First Responders | Virginia-Perique
 123 | Five O'Clock Shadow | Virginia-Perique
-128 | Habana Daydream | Inglesa
-130 | Haunted Bookshop | Burley
-132 | Innsmouth | Inglesa
-134 | Izmir Turkish | Sin mezclar
-136 | Joie de Vivre | Inglesa
-137 | Junkyard Dawg | Inglesa
-139 | Kelly's Coin | Burley
-141 | Latakia | Sin mezclar
 142 | Light of the Universe: Or Olam | Inglesa
 144 | Lunchtime Blues | Burley
 145 | Mad Fiddler Flake | Inglesa
