@@ -1,0 +1,356 @@
+# Notas por hojas (herramientas/notas_por_hojas.py). id|notas|motivo
+365|ahumado, pimienta, nuez, cuero|Atlas Balkan · Cornell & Diehl · Balcánica · Burley/Latakia/Perique · mucha latakia o balcánica; perique con burley: pimienta
+68|ahumado, heno, nuez, cuero|Barrister · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia · virginia
+69|frutos rojos, pimienta, pan tostado, higo|Bayou Morning · Cornell & Diehl · Virginia-Perique · Virginia/Perique · virginia roja; mucha perique
+71|ahumado, hierbas aromáticas, heno, pimienta|Bayou Night · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Latakia/Perique · virginia; perique con burley: pimienta
+74|hierbas aromáticas, ahumado, pimienta, nuez|Big 'n' Burley · Cornell & Diehl · Balcánica · Burley/Oriental/Latakia/Perique · mucha latakia o balcánica; poca perique; muchos orientales
+77|heno, pimienta, nuez, terroso|Billy Budd Blonde · Cornell & Diehl · Virginia-Perique · Virginia/Burley/Perique/Cavendish/Cigarro · virginia clara; poca perique
+76|ahumado, heno, nuez, terroso|Billy Budd · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia/Cigarro · virginia clara
+83|hierbas aromáticas, higo, ciruela, floral|Blue Ridge · Cornell & Diehl · Inglesa · Virginia/Oriental/Perique/Cavendish · virginia oscura o estufada; perique con hojas dulces: ciruela
+85|ahumado, hierbas aromáticas, heno, pimienta|Bow-Legged Bear · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Latakia/Perique · virginia prensada; perique con burley: pimienta
+86|heno, nuez, miel, terroso|Briar Fox · Cornell & Diehl · Virginia · Virginia/Burley · virginia prensada
+90|nuez, ahumado, frutos rojos, terroso|Burley Flake #2 · Cornell & Diehl · Burley · Virginia/Burley/Kentucky · virginia roja
+91|nuez, ahumado, heno, pimienta|Burley Flake #3 · Cornell & Diehl · Burley · Virginia/Burley/Perique/Kentucky · virginia prensada; poca perique
+92|nuez, ahumado, frutos rojos, terroso|Burley Flake #4 · Cornell & Diehl · Burley · Virginia/Burley/Latakia/Kentucky · virginia roja
+95|hierbas aromáticas, ahumado, pimienta, floral|Byzantium · Cornell & Diehl · Balcánica · Oriental/Latakia/Perique · mucha latakia o balcánica; muchos orientales
+97|heno, pimienta, miel, higo|Chenet's Cake · Cornell & Diehl · Virginia-Perique · Virginia/Perique · virginia prensada
+100|heno, ciruela, nuez, cítricos|Comfort · Cornell & Diehl · Virginia-Perique · Virginia/Burley/Perique/Cavendish · virginia clara; perique con hojas dulces: ciruela
+101|ahumado, hierbas aromáticas, heno, nuez|Consolation · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Latakia/Cavendish · virginia clara
+102|ahumado, hierbas aromáticas, heno, pimienta|Crooked Lane · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia/Perique/Cavendish · virginia; poca perique
+105|nuez, terroso|Cube Cut Burley · Cornell & Diehl · Sin mezclar · Burley
+109|ahumado, heno, nuez, cuero|Da Vinci · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia · virginia clara; mucha latakia o balcánica
+106|nuez, terroso, cuero|Dark Burley · Cornell & Diehl · Sin mezclar · Burley · burley oscuro
+110|hierbas aromáticas, frutos rojos, pimienta, nuez|Daylight: Or L'yom · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Perique/Cavendish · virginia roja; perique con burley: pimienta; burley tostado
+111|heno, miel|Derringer · Cornell & Diehl · Virginia · Virginia · virginia prensada
+112|hierbas aromáticas, heno, pimienta, ahumado|Dreams of Kadath · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Perique/Kentucky/Cavendish · virginia prensada; perique con burley: pimienta
+113|nuez, ahumado, frutos rojos, terroso|Easy Times · Cornell & Diehl · Burley · Virginia/Burley/Latakia/Kentucky · virginia roja; poca latakia
+117|ahumado, hierbas aromáticas, heno, pimienta|Engine #99 · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia/Perique · virginia; mucha latakia o balcánica
+118|ahumado, heno, pimienta, nuez|Epiphany · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia/Perique · virginia; perique con burley: pimienta
+119|nuez, heno, hierbas aromáticas, ahumado|Evening Rise · Cornell & Diehl · Burley · Virginia/Burley/Oriental/Latakia · virginia
+121|higo, pimienta, nuez, pasas|Exhausted Rooster · Cornell & Diehl · Virginia-Perique · Virginia/Burley/Perique · virginia oscura o estufada; poca perique; burley oscuro
+122|heno, pimienta, frutos rojos|First Responders · Cornell & Diehl · Virginia-Perique · Virginia/Perique/Cavendish · virginias claras y rojas; poca perique
+123|frutos rojos, pimienta, nuez, pan tostado|Five O'Clock Shadow · Cornell & Diehl · Virginia-Perique · Virginia/Burley/Perique · virginia roja
+375|ahumado, hierbas aromáticas, heno, cuero|Good Morning · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia · virginia
+209|heno, terroso, cítricos, café|Gray Ghost · Cornell & Diehl · Virginia · Virginia/Cavendish/Cigarro · virginia
+128|ahumado, heno, ciruela, terroso|Habana Daydream · Cornell & Diehl · Inglesa · Virginia/Latakia/Perique/Cavendish/Cigarro · virginia; poca latakia; perique con hojas dulces: ciruela
+130|nuez, heno, pimienta, terroso|Haunted Bookshop · Cornell & Diehl · Burley · Virginia/Burley/Perique · virginia; poca perique
+132|hierbas aromáticas, heno, ciruela, floral|Innsmouth · Cornell & Diehl · Inglesa · Virginia/Oriental/Perique/Cavendish · virginia; perique con hojas dulces: ciruela
+134|hierbas aromáticas, floral|Izmir Turkish · Cornell & Diehl · Sin mezclar · Oriental
+136|ahumado, hierbas aromáticas, frutos rojos, ciruela|Joie de Vivre · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia/Perique/Cavendish · virginia roja; perique con hojas dulces: ciruela
+137|ahumado, heno, nuez, cuero|Junkyard Dawg · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia · virginia clara
+139|nuez, heno, terroso, cítricos|Kelly's Coin · Cornell & Diehl · Burley · Virginia/Burley/Cavendish · virginia
+141|ahumado, cuero|Latakia · Cornell & Diehl · Sin mezclar · Latakia
+144|nuez, heno, hierbas aromáticas, terroso|Lunchtime Blues · Cornell & Diehl · Burley · Virginia/Burley/Oriental · virginia
+145|hierbas aromáticas, heno, ciruela, terroso|Mad Fiddler Flake · Cornell & Diehl · Inglesa · Virginia/Oriental/Perique/Cavendish/Cigarro · virginia prensada; perique con hojas dulces: ciruela
+147|ahumado, hierbas aromáticas, heno, pimienta|Midnight Drive · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Latakia/Perique/Cavendish · virginia clara; poca latakia; perique con burley: pimienta
+212|hierbas aromáticas, heno, ciruela, floral|Miskatonic Mixture · Cornell & Diehl · Inglesa · Virginia/Oriental/Perique/Cavendish · virginia; perique con hojas dulces: ciruela
+149|ahumado, ciruela, cuero, higo|Mississippi Mud · Cornell & Diehl · Inglesa · Latakia/Perique/Cavendish · perique con hojas dulces: ciruela
+151|ahumado, pimienta, nuez, cuero|Montford Point Marine · Cornell & Diehl · Inglesa · Burley/Latakia/Perique · perique con burley: pimienta
+152|nuez, heno, ahumado, terroso|Morley's Best · Cornell & Diehl · Burley · Virginia/Burley/Latakia · virginia
+153|ahumado, frutos rojos, pimienta, nuez|Morning Drive · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia/Perique · virginia roja; perique con burley: pimienta
+155|ahumado, hierbas aromáticas, heno, pimienta|Mountain Camp · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Latakia/Perique · virginia; perique con burley: pimienta
+158|nuez, frutos rojos, pimienta, hierbas aromáticas|Oak Alley · Cornell & Diehl · Burley · Virginia/Burley/Oriental/Perique · virginia roja; perique con burley: pimienta
+159|nuez, pimienta, hierbas aromáticas, ahumado|Odessa · Cornell & Diehl · Burley · Burley/Oriental/Latakia/Perique · perique con burley: pimienta
+163|nuez, heno, terroso, cítricos|Old Joe Krantz Blue Label · Cornell & Diehl · Burley · Virginia/Burley · virginia
+162|nuez, frutos rojos, pimienta, terroso|Old Joe Krantz · Cornell & Diehl · Burley · Virginia/Burley/Perique · virginia roja; perique con burley: pimienta; burley oscuro
+166|frutos rojos, pan tostado|Opening Night · Cornell & Diehl · Virginia · Virginia · virginia roja
+168|ahumado, hierbas aromáticas, heno, ciruela|Orient Express · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia/Perique/Cavendish · virginia; perique con hojas dulces: ciruela
+167|hierbas aromáticas, heno, pimienta, floral|Oriental Silk · Cornell & Diehl · Inglesa · Virginia/Oriental/Perique · virginia clara
+169|nuez, heno, terroso, cítricos|Pegasus · Cornell & Diehl · Burley · Virginia/Burley/Cavendish · virginia
+171|hierbas aromáticas, ahumado, nuez, floral|Pirate Kake · Cornell & Diehl · Balcánica · Burley/Oriental/Latakia · mucha latakia o balcánica; muchos orientales
+172|ahumado, hierbas aromáticas, heno, pimienta|Plantation Evening · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia/Perique · virginia
+173|ahumado, heno, nuez, cuero|Privateer · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia/Cavendish · virginia clara; burley oscuro
+175|ahumado, heno, nuez, terroso|Purple Cow · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia/Cigarro · virginia clara
+176|ahumado, hierbas aromáticas, frutos rojos, cuero|Rajah's Court · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia · virginia roja
+178|frutos rojos, pimienta, pan tostado, higo|Red Carpet · Cornell & Diehl · Virginia-Perique · Virginia/Perique · virginia roja
+180|frutos rojos, pan tostado|Red Virginia Ribbon · Cornell & Diehl · Sin mezclar · Virginia · virginia roja
+182|hierbas aromáticas, ahumado, pimienta, nuez|Reverie · Cornell & Diehl · Balcánica · Burley/Oriental/Latakia/Perique/Cavendish · mucha latakia o balcánica; poca perique; muchos orientales
+183|nuez, heno, pimienta, hierbas aromáticas|Riverboat Gambler · Cornell & Diehl · Burley · Virginia/Burley/Oriental/Perique · virginia; perique con burley: pimienta
+184|ahumado, ciruela, cuero, higo|Sam's Blend · Cornell & Diehl · Inglesa · Latakia/Perique/Cavendish · perique con hojas dulces: ciruela
+185|ahumado, hierbas aromáticas, heno, nuez|Sea Dog · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental/Latakia/Cavendish · virginia clara; burley oscuro
+369|ahumado, nuez, cuero, terroso|Smooth English · Cornell & Diehl · Inglesa · Burley/Latakia/Cavendish
+371|ahumado, heno, pimienta, nuez|Stanhope · Cornell & Diehl · Inglesa · Virginia/Burley/Latakia/Perique · virginia; perique con burley: pimienta
+215|ahumado, hierbas aromáticas, heno, cuero|Star of the East Flake · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia · virginia prensada
+223|ahumado, hierbas aromáticas, higo, cuero|Star of the East · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia · virginia oscura o estufada; mucha latakia o balcánica
+216|hierbas aromáticas, heno, pimienta, floral|Steamworks · Cornell & Diehl · Inglesa · Virginia/Oriental/Perique · virginia prensada
+188|hierbas aromáticas, ahumado, heno, pimienta|Super Balkan · Cornell & Diehl · Balcánica · Virginia/Burley/Oriental/Latakia/Perique · virginia; mucha latakia o balcánica; perique con burley: pimienta; muchos orientales
+191|ahumado, hierbas aromáticas, heno, pimienta|Tuskegee Airman · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia/Perique · virginia prensada
+193|ahumado, hierbas aromáticas, heno, cuero|Vieux Carré · Cornell & Diehl · Inglesa · Virginia/Oriental/Latakia · virginia prensada
+195|hierbas aromáticas, heno, nuez, floral|Virginia Gentleman · Cornell & Diehl · Inglesa · Virginia/Burley/Oriental · virginia
+372|nuez, terroso|White Burley · Cornell & Diehl · Sin mezclar · Burley
+373|frutos rojos, pan tostado|Winchester · Cornell & Diehl · Virginia · Virginia/Cavendish · virginia roja
+198|ahumado, heno, cítricos|Yale Mixture · Cornell & Diehl · Inglesa · Virginia/Latakia · virginia; poca latakia
+199|heno, frutos rojos|Yorktown · Cornell & Diehl · Virginia · Virginia · virginias claras y rojas
+2228|hierbas aromáticas, heno, pimienta, floral|Ascanian No. 1 Riverside Blend · Dan Tobacco · Inglesa · Virginia/Oriental/Perique · virginia
+2314|hierbas aromáticas, heno, pimienta, floral|Ascanian No. 2 Castle Blend · Dan Tobacco · Inglesa · Virginia/Oriental/Perique · virginia
+1148|hierbas aromáticas, ahumado, heno, pimienta|Bill Bailey's Balkan Blend · Dan Tobacco · Balcánica · Virginia/Oriental/Latakia/Perique/Kentucky · virginia; mucha latakia o balcánica; perique con burley: pimienta; muchos orientales
+2306|nuez, heno, terroso, miel|Dark Moon · Dan Tobacco · Burley · Virginia/Burley · virginia prensada
+1154|ahumado, hierbas aromáticas, heno, cuero|Gordon Pym · Dan Tobacco · Inglesa · Virginia/Oriental/Latakia · virginia
+1155|heno, miel|Hamborger Veermaster · Dan Tobacco · Virginia · Virginia · virginia prensada
+2310|ahumado, heno, cuero, cítricos|Hamburger Pfeifenrunde · Dan Tobacco · Inglesa · Virginia/Latakia · virginia
+2311|ahumado, heno, cuero, cítricos|Holly's Discovery Extraordinary · Dan Tobacco · Inglesa · Virginia/Latakia · virginia
+2320|heno, pimienta, miel, higo|Kriswill Classical Navy Cut · Dan Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+1157|ahumado, hierbas aromáticas, heno, cuero|London Blend No. 1000 · Dan Tobacco · Inglesa · Virginia/Oriental/Latakia · virginia
+1158|ahumado, hierbas aromáticas, heno, pimienta|Midnight Ride · Dan Tobacco · Inglesa · Virginia/Oriental/Latakia/Perique · virginia
+2324|ahumado, heno, cuero, cítricos|Mountain Village Evening Standard · Dan Tobacco · Inglesa · Virginia/Latakia · virginia
+2325|heno, cítricos|No Name No. 1 · Dan Tobacco · Virginia · Virginia · virginia
+1160|ahumado, hierbas aromáticas, heno, nuez|Old Ironsides · Dan Tobacco · Inglesa · Virginia/Burley/Oriental/Latakia · virginia prensada
+1161|heno, miel|Patriot Flake · Dan Tobacco · Virginia · Virginia · virginia prensada
+2230|heno, ciruela, miel, higo|Roper's Roundels · Dan Tobacco · Virginia-Perique · Virginia/Perique/Cavendish · virginia prensada; perique con hojas dulces: ciruela
+1163|heno, miel|Skipper's Flake · Dan Tobacco · Virginia · Virginia · virginia prensada
+2332|heno, pimienta, miel, higo|St. Bernard Flake · Dan Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+2335|heno, pimienta, miel, higo|The Mallard Flake plus Perique · Dan Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+1165|heno, cítricos|The Mallard · Dan Tobacco · Virginia · Virginia · virginia
+2234|nuez, terroso|Torben Dansk Burley · Dan Tobacco · Sin mezclar · Burley
+2410|ahumado, terroso|Torben Dansk Kentucky U.S.A. · Dan Tobacco · Sin mezclar · Kentucky
+2411|hierbas aromáticas, floral|Torben Dansk Orient · Dan Tobacco · Sin mezclar · Oriental
+2233|heno, cítricos|Torben Dansk Virginia 1,6 Zaire · Dan Tobacco · Sin mezclar · Virginia · virginia
+1167|heno, pimienta, miel, higo|Tordenskjold Virginia Slices · Dan Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+1169|heno, pimienta, miel, higo|Treasures of Ireland: Limerick · Dan Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+2313|heno, pimienta, miel, higo|Tumblin' Dice · Dan Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+1083|ahumado, heno, pimienta, nuez|English Mixture · Davidoff · Inglesa · Virginia/Burley/Latakia/Perique · virginia; perique con burley: pimienta
+1084|ahumado, hierbas aromáticas, heno, cuero|Royalty Mixture · Davidoff · Inglesa · Virginia/Oriental/Latakia · virginia
+2402|ahumado, hierbas aromáticas, heno, floral|Classic · Doctor Pipe · Inglesa · Virginia/Oriental/Latakia · virginia; poca latakia
+2403|ahumado, hierbas aromáticas, heno, cuero|English Blend · Doctor Pipe · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+2399|ahumado, hierbas aromáticas, heno, cuero|Good Morning · Doctor Pipe · Inglesa · Virginia/Oriental/Latakia · virginia
+2396|heno, cítricos|Virginia Blend · Doctor Pipe · Virginia · Virginia · virginia
+1114|heno, pimienta, ahumado, miel|4 Seasons Autumn Mixture · Erik Stokkebye · Virginia-Perique · Virginia/Perique/Kentucky · virginia prensada
+1113|ahumado, hierbas aromáticas, heno, cuero|4 Seasons Summer Mixture · Erik Stokkebye · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1115|heno, miel|4 Seasons Winter Mixture · Erik Stokkebye · Virginia · Virginia · virginia prensada
+1104|heno, cítricos|4th Generation 1855 · Erik Stokkebye · Virginia · Virginia · virginia
+1105|ahumado, hierbas aromáticas, heno, nuez|4th Generation 1882 Founder's Blend · Erik Stokkebye · Inglesa · Virginia/Burley/Oriental/Latakia · virginia
+1107|nuez, heno, terroso, miel|4th Generation 1931 Flake · Erik Stokkebye · Burley · Virginia/Burley/Cavendish · virginia prensada
+1110|heno, miel|4th Generation 2012 Anniversary Blend · Erik Stokkebye · Virginia · Virginia · virginia prensada
+1111|heno, miel|4th Generation Max Erik 1989 · Erik Stokkebye · Virginia · Virginia · virginia prensada
+2084|ahumado, heno, nuez, cuero|No Name No. 1 · Ermuri · Inglesa · Virginia/Burley/Latakia · virginia
+1123|heno, pimienta, miel, higo|Navy Deluxe · Escudo · Virginia-Perique · Virginia/Perique · virginia prensada
+1186|ahumado, hierbas aromáticas, heno, cuero|And So To Bed · Esoterica · Inglesa · Virginia/Oriental/Latakia · virginia
+1189|heno, cítricos|Cardiff · Esoterica · Virginia · Virginia · virginia
+1190|heno, pimienta, cítricos, higo|Dorchester · Esoterica · Virginia-Perique · Virginia/Perique · virginia
+1191|heno, pimienta, cítricos, higo|Dunbar · Esoterica · Virginia-Perique · Virginia/Perique · virginia
+1194|ahumado, hierbas aromáticas, heno, cuero|Margate · Esoterica · Inglesa · Virginia/Oriental/Latakia · virginia
+1195|heno, miel|Peacehaven · Esoterica · Virginia · Virginia · virginia prensada
+1196|ahumado, hierbas aromáticas, heno, cuero|Pembroke · Esoterica · Inglesa · Virginia/Oriental/Latakia · virginia
+1197|ahumado, hierbas aromáticas, heno, cuero|Penzance · Esoterica · Inglesa · Virginia/Oriental/Latakia · virginia prensada
+1199|heno, cítricos|Scarborough · Esoterica · Virginia · Virginia · virginia
+1201|nuez, heno, terroso, miel|Stonehaven · Esoterica · Burley · Virginia/Burley · virginia prensada
+1202|nuez, heno, terroso, cítricos|Tilbury · Esoterica · Burley · Virginia/Burley · virginia
+2260|ahumado, heno, cuero, cítricos|34th Mixture · Fribourg & Treyer · Inglesa · Virginia/Latakia/Cavendish · virginia; mucha latakia o balcánica
+2264|heno, miel|Cut Virginia Plug · Fribourg & Treyer · Virginia · Virginia · virginia prensada
+2265|heno, miel|Vintage Flake · Fribourg & Treyer · Virginia · Virginia · virginia prensada
+2263|ahumado, heno, cuero, cítricos|Waterloo No. 2 Mixture · Fribourg & Treyer · Inglesa · Virginia/Latakia · virginia
+2262|ahumado, heno, pimienta, cuero|Wingate Mixture · Fribourg & Treyer · Inglesa · Virginia/Latakia/Perique · virginia
+224|hierbas aromáticas, ahumado, heno, floral|Abingdon · G. L. Pease · Balcánica · Virginia/Oriental/Latakia · virginia; mucha latakia o balcánica; muchos orientales
+232|ahumado, hierbas aromáticas, heno, pimienta|Chelsea Morning · G. L. Pease · Inglesa · Virginia/Oriental/Latakia/Perique · virginia clara; poca latakia; poca perique
+233|heno, pimienta, ahumado, cítricos|Cumberland · G. L. Pease · Virginia-Perique · Virginia/Perique/Kentucky · virginia; poca perique
+235|hierbas aromáticas, frutos rojos, floral, pan tostado|Embarcadero · G. L. Pease · Inglesa · Virginia/Oriental · virginia roja
+236|frutos rojos, pimienta, pan tostado, higo|Fillmore · G. L. Pease · Virginia-Perique · Virginia/Perique · virginia roja
+237|ahumado, hierbas aromáticas, frutos rojos, cuero|Gaslight · G. L. Pease · Inglesa · Virginia/Oriental/Latakia · virginia roja
+243|hierbas aromáticas, ahumado, heno, floral|Kensington · G. L. Pease · Balcánica · Virginia/Oriental/Latakia · virginia; mucha latakia o balcánica; muchos orientales
+245|ahumado, hierbas aromáticas, frutos rojos, cuero|Lagonda · G. L. Pease · Inglesa · Virginia/Oriental/Latakia · virginia roja; mucha latakia o balcánica
+248|ahumado, hierbas aromáticas, heno, cuero|Maltese Falcon · G. L. Pease · Inglesa · Virginia/Oriental/Latakia · virginia
+249|ahumado, hierbas aromáticas, heno, cuero|Meridian · G. L. Pease · Inglesa · Virginia/Oriental/Latakia · virginia
+251|heno, ahumado, cítricos|Montgomery · G. L. Pease · Virginia · Virginia/Kentucky · virginia
+253|ahumado, hierbas aromáticas, heno, cuero|Odyssey · G. L. Pease · Inglesa · Virginia/Oriental/Latakia · virginia
+258|ahumado, hierbas aromáticas, heno, terroso|Robusto · G. L. Pease · Inglesa · Virginia/Oriental/Latakia/Cigarro · virginia
+261|frutos rojos, pimienta, ahumado, pan tostado|Sixpence · G. L. Pease · Virginia-Perique · Virginia/Perique/Kentucky · virginia roja
+263|heno, pimienta, cítricos, higo|Stratford · G. L. Pease · Virginia-Perique · Virginia/Perique · virginia
+264|heno, pimienta, cítricos, higo|Telegraph Hill · G. L. Pease · Virginia-Perique · Virginia/Perique · virginia
+265|hierbas aromáticas, heno, pimienta, floral|Temple Bar · G. L. Pease · Inglesa · Virginia/Oriental/Perique · virginia prensada
+269|ahumado, hierbas aromáticas, frutos rojos, cuero|Westminster · G. L. Pease · Inglesa · Virginia/Oriental/Latakia · virginia roja
+297|ahumado, heno, cuero, cítricos|#12 Mixture · Gawith Hoggarth · Inglesa · Virginia/Latakia · virginia clara
+284|ahumado, heno, cuero, cítricos|Balkan Mixture · Gawith Hoggarth · Balcánica · Virginia/Latakia · virginia; mucha latakia o balcánica
+290|heno, nuez, miel, terroso|Best Brown #2 Flake · Gawith Hoggarth · Virginia · Virginia/Burley · virginia prensada
+302|heno, miel|Black Bogie Twist · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+344|heno, miel|Black Irish X · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+303|heno, miel|Black Irish XXX Twist · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+304|heno, cítricos|Black Twist Sliced · Gawith Hoggarth · Virginia · Virginia · virginia
+382|heno, miel|Bright CR Flake Burnt Ends · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+381|heno, miel|Bright CR Flake · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+307|floral, heno, nuez, miel|Broken Scotch Cake · Gawith Hoggarth · Lakeland · Virginia/Burley · virginia prensada; Lakeland: aroma floral
+308|heno, miel|Brown Bogie · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+309|floral, heno, nuez, miel|Brown Flake Aromatic · Gawith Hoggarth · Lakeland · Virginia/Burley · virginia prensada; Lakeland: aroma floral
+310|heno, nuez, miel, terroso|Brown Flake Unscented · Gawith Hoggarth · Lakeland · Virginia/Burley · virginia prensada
+311|heno, miel|Brown Irish X Aromatic Twist · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+383|heno, miel|Brown Irish X · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+312|heno, miel|Brown Twist · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+316|heno, miel|Curly Cut Deluxe · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+318|floral, heno, ahumado, cítricos|Dark Bird's Eye Vintage Cut · Gawith Hoggarth · Lakeland · Virginia/Kentucky · virginia; Lakeland: aroma floral
+317|floral, heno, ahumado, cítricos|Dark Bird's Eye · Gawith Hoggarth · Lakeland · Virginia/Kentucky · virginia; Lakeland: aroma floral
+320|ahumado, nuez, terroso|Dark Flake Unscented · Gawith Hoggarth · Lakeland · Burley/Kentucky
+323|ahumado, heno, cuero, cítricos|Exmoor Mixture · Gawith Hoggarth · Inglesa · Virginia/Latakia · virginia
+324|heno, miel|Extra Sweet Brown Bogie Twist · Gawith Hoggarth · Virginia · Virginia · virginia prensada
+326|floral, heno, ahumado, nuez|Kendal #6 · Gawith Hoggarth · Lakeland · Virginia/Burley/Kentucky · virginia; Lakeland: aroma floral
+327|floral, heno, cítricos|Kendal Dark Vintage Cut · Gawith Hoggarth · Lakeland · Virginia · virginia; Lakeland: aroma floral
+386|floral, heno, cítricos|Kendal Dark · Gawith Hoggarth · Lakeland · Virginia · virginia; Lakeland: aroma floral
+334|floral, heno, cítricos|Kendal Gold Vintage Cut · Gawith Hoggarth · Lakeland · Virginia · virginia; Lakeland: aroma floral
+333|floral, heno, cítricos|Kendal Gold · Gawith Hoggarth · Lakeland · Virginia · virginia; Lakeland: aroma floral
+336|floral, heno, nuez, cítricos|Kendal Mixed · Gawith Hoggarth · Lakeland · Virginia/Burley · virginia; Lakeland: aroma floral
+387|floral, heno, nuez, pimienta|Louisiana Flake Burnt Ends · Gawith Hoggarth · Lakeland · Virginia/Burley/Perique · virginia prensada; Lakeland: aroma floral
+286|hierbas aromáticas, heno, ahumado, nuez|Rodeo · Gawith Hoggarth · Inglesa · Virginia/Burley/Oriental/Kentucky · virginia
+340|ahumado, heno, nuez, cuero|Scotch Mixture · Gawith Hoggarth · Inglesa · Virginia/Burley/Latakia/Cavendish · virginia
+390|heno, ahumado, miel, terroso|Westmorland Slices · Gawith Hoggarth · Virginia · Virginia/Kentucky · virginia prensada
+1171|heno, miel|Bridge: Old Brown Flake · Germain's · Virginia · Virginia · virginia prensada
+1172|heno, nuez, miel, terroso|Brown Flake · Germain's · Virginia · Virginia/Burley · virginia prensada
+1174|heno, cítricos|Club Mixture · Germain's · Virginia · Virginia/Cavendish · virginia
+1175|ahumado, hierbas aromáticas, heno, cuero|Eighteen Twenty · Germain's · Inglesa · Virginia/Oriental/Latakia · virginia
+1176|ahumado, hierbas aromáticas, heno, cuero|King Charles Mixture · Germain's · Inglesa · Virginia/Oriental/Latakia · virginia
+1177|heno, miel|Medium Flake · Germain's · Virginia · Virginia · virginia prensada
+1183|heno, pimienta, cítricos, higo|Royal Jersey: Perique Mixture · Germain's · Virginia-Perique · Virginia/Perique · virginia
+1184|ahumado, hierbas aromáticas, heno, cuero|Special Latakia Flake · Germain's · Inglesa · Virginia/Oriental/Latakia · virginia prensada
+1185|heno, nuez, cítricos, terroso|Uncle Tom's · Germain's · Virginia · Virginia/Burley/Cavendish · virginia
+2000|hierbas aromáticas, heno, ahumado, pimienta|Asmara · HU Tobacco · Oriental · Virginia/Oriental/Latakia/Perique · virginia clara; muchos orientales
+2032|ahumado, hierbas aromáticas, heno, ciruela|Brullende Leeuw · HU Tobacco · Inglesa · Virginia/Oriental/Latakia/Perique/Cavendish · virginia clara; perique con hojas dulces: ciruela
+2039|nuez, pimienta, ahumado, madera|Dark Moor · HU Tobacco · Virginia-Perique · Virginia/Perique/Kentucky · virginia marrón
+2013|heno, pimienta, nuez, ahumado|Director's Cut · HU Tobacco · Virginia-Perique · Virginia/Burley/Perique/Kentucky · virginia prensada
+2014|frutos rojos, ciruela, hierbas aromáticas, nuez|Edward G. · HU Tobacco · Virginia-Perique · Virginia/Burley/Oriental/Perique/Kentucky/Cavendish · virginia roja; perique con hojas dulces: ciruela
+2015|ahumado, hierbas aromáticas, heno, cuero|English Breakfast · HU Tobacco · Inglesa · Virginia/Oriental/Latakia · virginia
+2002|ahumado, heno, cuero, miel|Fayyum Special Kake · HU Tobacco · Inglesa · Virginia/Latakia/Kentucky/Cavendish · virginia prensada
+2001|ahumado, heno, cuero, cítricos|Fayyum · HU Tobacco · Inglesa · Virginia/Latakia/Kentucky/Cavendish · virginia
+2028|heno, miel|Haymaker Flake · HU Tobacco · Virginia · Virginia · virginia prensada
+2003|heno, nuez, miel, terroso|Indaba · HU Tobacco · Virginia · Virginia/Burley · virginia prensada
+2034|heno, pimienta, miel, higo|Janneman Flake · HU Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+2004|ahumado, heno, pimienta, terroso|Khartoum · HU Tobacco · Inglesa · Virginia/Latakia/Perique/Kentucky/Cavendish/Cigarro · virginia; perique con burley: pimienta
+2017|heno, pimienta, ahumado, cítricos|Louisiana Broken · HU Tobacco · Virginia-Perique · Virginia/Perique/Kentucky · virginia
+2036|heno, cítricos|My Red Fox · HU Tobacco · Virginia · Virginia · virginia
+2041|heno, pimienta, nuez, cítricos|Nebari · HU Tobacco · Oriental · Virginia/Burley/Perique · virginia
+2008|nuez, heno, pimienta, terroso|Nyala · HU Tobacco · Burley · Virginia/Burley/Perique/Cigarro · virginia prensada; perique con burley: pimienta
+2037|heno, pimienta, miel, higo|Old Fredder's Broken Flake · HU Tobacco · Virginia-Perique · Virginia/Perique · virginia prensada
+2019|ahumado, hierbas aromáticas, heno, cuero|Port Latakia · HU Tobacco · Inglesa · Virginia/Oriental/Latakia · virginia
+2031|heno, miel|Sunset Flake · HU Tobacco · Virginia · Virginia · virginia prensada
+2009|ahumado, hierbas aromáticas, heno, nuez|Tigray · HU Tobacco · Inglesa · Virginia/Burley/Oriental/Latakia · virginia
+2010|ahumado, hierbas aromáticas, heno, pimienta|Tuarekh · HU Tobacco · Inglesa · Virginia/Oriental/Latakia/Perique · virginia
+2020|heno, pimienta, ahumado, terroso|White Horses · HU Tobacco · Virginia-Perique · Virginia/Perique/Kentucky/Cigarro · virginia
+2011|hierbas aromáticas, ahumado, pimienta, nuez|Zulu Mixture · HU Tobacco · Balcánica · Burley/Oriental/Latakia/Perique/Kentucky · mucha latakia o balcánica; perique con burley: pimienta; muchos orientales
+2173|frutos rojos, pan tostado|No. 3 · Kontor-Tabak · Virginia · Virginia · virginia roja
+2174|ahumado, heno, ciruela, cuero|No. 5 · Kontor-Tabak · Inglesa · Virginia/Latakia/Perique/Cavendish · virginia; perique con hojas dulces: ciruela
+2123|heno, miel|Meistermischung Nr. 88 Virginia Flake · Kopp · Virginia · Virginia · virginia prensada
+2126|heno, cítricos|Bright Virginia · Käpt'n Barsdorfs Bester · Virginia · Virginia · virginia clara
+1127|nuez, terroso|BL/WB · Lane Limited · Burley · Burley
+2384|frutos rojos, pimienta, nuez, pan tostado|Malvinas Plug · MyRott · Virginia-Perique · Virginia/Burley/Perique · virginia roja
+2378|heno, nuez, cítricos, terroso|Sunshine Mixture · MyRott · Virginia · Virginia/Burley · virginia clara
+2362|heno, nuez, cítricos, terroso|Virginia Mellow · MyRott · Virginia · Virginia/Burley · virginia
+2372|frutos rojos, nuez, pan tostado, terroso|Widow's Sons Mixture · MyRott · Virginia · Virginia/Burley · virginia roja
+38|heno, pimienta, miel, higo|De Luxe Navy Rolls · Peterson · Virginia-Perique · Virginia/Perique · virginia prensada
+41|heno, miel|Flake · Peterson · Virginia · Virginia · virginia prensada
+43|nuez, ahumado, heno, terroso|Irish Flake · Peterson · Burley · Virginia/Burley/Kentucky · virginia prensada
+48|heno, cítricos|Royal Yacht · Peterson · Virginia · Virginia · virginia
+2137|heno, cítricos|No. 038 – Copenhagen B · Pfeifendepot · Virginia · Virginia · virginia
+2139|ahumado, pimienta, cuero, terroso|No. 045 – Copenhagen Ø · Pfeifendepot · Inglesa · Latakia/Perique/Kentucky/Cavendish · mucha latakia o balcánica; perique con burley: pimienta
+2146|hierbas aromáticas, heno, floral, cítricos|No. 079 – Gerd Jansens Scottish · Pfeifendepot · Inglesa · Virginia/Oriental · virginia
+2147|ahumado, hierbas aromáticas, heno, cuero|No. 080 – Gerd Jansens English · Pfeifendepot · Inglesa · Virginia/Oriental/Latakia · virginia
+2149|heno, ahumado, miel, terroso|No. 088 – DSK Flake · Pfeifendepot · Virginia · Virginia/Kentucky · virginia prensada
+2151|heno, ahumado, cítricos, terroso|No. 089 – DSK Ready Rubbed · Pfeifendepot · Virginia · Virginia/Kentucky · virginia
+2153|heno, pimienta, ahumado, miel|No. 091 – Camelot Broken · Pfeifendepot · Virginia-Perique · Virginia/Perique/Kentucky · virginia prensada
+2158|hierbas aromáticas, ahumado, heno, floral|No. 202 – Crown „A“ · Pfeifendepot · Balcánica · Virginia/Oriental/Latakia/Kentucky · virginia; mucha latakia o balcánica; muchos orientales
+2172|heno, pimienta, miel, higo|VAPERizer (Plug) · Pfeifendepot · Virginia-Perique · Virginia/Perique · virginia prensada
+1000|ahumado, hierbas aromáticas, heno, cuero|3 Noggins · Rattray's · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1002|ahumado, heno, cuero, cítricos|Accountant's Mixture · Rattray's · Inglesa · Virginia/Latakia/Cavendish · virginia
+1004|ahumado, hierbas aromáticas, heno, cuero|Black Mallory · Rattray's · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1006|heno, pimienta, nuez, miel|Brown Clunee · Rattray's · Virginia-Perique · Virginia/Burley/Perique · virginia prensada
+1008|heno, ciruela, cítricos, higo|Dark Fragrant · Rattray's · Virginia-Perique · Virginia/Perique/Cavendish · virginia; perique con hojas dulces: ciruela
+1010|heno, pimienta, nuez, miel|Hal O' The Wynd · Rattray's · Virginia-Perique · Virginia/Burley/Perique · virginia prensada
+1011|ahumado, hierbas aromáticas, heno, cuero|Highland Targe · Rattray's · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1012|ahumado, heno, cuero, cítricos|Jocks Mixture · Rattray's · Inglesa · Virginia/Latakia/Cavendish · virginia
+1013|heno, nuez, cítricos, terroso|Macbeth · Rattray's · Virginia · Virginia/Burley · virginia
+1014|heno, ciruela, miel, higo|Marlin Flake · Rattray's · Virginia-Perique · Virginia/Perique/Cavendish · virginia prensada; perique con hojas dulces: ciruela
+1015|ahumado, hierbas aromáticas, heno, cuero|No. 7 Reserve · Rattray's · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1016|heno, pimienta, nuez, miel|Old Gowrie · Rattray's · Virginia-Perique · Virginia/Burley/Perique · virginia prensada
+1017|ahumado, hierbas aromáticas, heno, cuero|Professional Mixture · Rattray's · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1019|ahumado, hierbas aromáticas, heno, cuero|Red Rapparee · Rattray's · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1021|nuez, heno, terroso, miel|Stirling Flake · Rattray's · Burley · Virginia/Burley · virginia prensada
+2078|ahumado, hierbas aromáticas, heno, cuero|123 Mixture · Robert Lewis · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+2079|ahumado, hierbas aromáticas, heno, pimienta|Orcilla Mixture · Robert Lewis · Inglesa · Virginia/Oriental/Latakia/Perique · virginia
+2081|ahumado, heno, cuero, cítricos|Wingfield Mixture · Robert Lewis · Inglesa · Virginia/Latakia/Cavendish · virginia
+1053|hierbas aromáticas, heno, floral, cítricos|5 Year Matured Virginia · Robert McConnell · Inglesa · Virginia/Oriental · virginia
+1054|heno, cítricos|Barking Road · Robert McConnell · Virginia · Virginia · virginia
+1055|heno, pimienta, miel, higo|Black Flake · Robert McConnell · Virginia-Perique · Virginia/Perique · virginia prensada
+1025|heno, pimienta, cítricos, higo|Black Parrot Special Cut · Robert McConnell · Virginia-Perique · Virginia/Perique · virginia
+1056|ahumado, hierbas aromáticas, heno, cuero|Boutique Blend · Robert McConnell · Inglesa · Virginia/Oriental/Latakia · virginia
+1057|ahumado, hierbas aromáticas, heno, pimienta|Covent Garden · Robert McConnell · Inglesa · Virginia/Oriental/Latakia/Perique · virginia
+1058|heno, miel|Flake · Robert McConnell · Virginia · Virginia · virginia prensada
+1059|heno, pimienta, ahumado, miel|Folded Flake · Robert McConnell · Virginia-Perique · Virginia/Perique/Kentucky · virginia prensada
+1060|heno, pimienta, miel, higo|Highgate · Robert McConnell · Virginia-Perique · Virginia/Perique · virginia prensada
+1061|ahumado, heno, cuero, cítricos|Latakia Mixture 1848 · Robert McConnell · Inglesa · Virginia/Latakia · virginia
+1062|ahumado, hierbas aromáticas, heno, cuero|Marylebone · Robert McConnell · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1063|ahumado, hierbas aromáticas, heno, cuero|Notting Hill · Robert McConnell · Inglesa · Virginia/Oriental/Latakia · virginia
+1033|heno, ciruela, miel, higo|Old London Pebble Cut · Robert McConnell · Virginia-Perique · Virginia/Perique/Cavendish · virginia prensada; perique con hojas dulces: ciruela
+1034|ahumado, hierbas aromáticas, heno, cuero|Oriental · Robert McConnell · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1065|ahumado, hierbas aromáticas, heno, cuero|Oxford Street · Robert McConnell · Inglesa · Virginia/Oriental/Latakia · virginia
+1066|heno, cítricos|Paddington · Robert McConnell · Virginia · Virginia · virginia
+1067|ahumado, hierbas aromáticas, heno, cuero|Piccadilly Circus · Robert McConnell · Inglesa · Virginia/Oriental/Latakia · virginia
+1036|terroso, café|Pure Brasil · Robert McConnell · Sin mezclar · Cigarro
+1037|nuez, terroso|Pure Burley · Robert McConnell · Sin mezclar · Burley
+1038|terroso, café|Pure Caribe · Robert McConnell · Sin mezclar · Cigarro
+1039|terroso, café|Pure Cuba · Robert McConnell · Sin mezclar · Cigarro
+1040|ahumado, terroso|Pure Kentucky · Robert McConnell · Sin mezclar · Kentucky
+1042|hierbas aromáticas, floral|Pure Orient · Robert McConnell · Sin mezclar · Oriental
+1043|pimienta, higo|Pure Perique · Robert McConnell · Sin mezclar · Perique
+1044|heno, cítricos|Pure Virginia · Robert McConnell · Sin mezclar · Virginia · virginia
+1046|frutos rojos, pimienta, pan tostado, higo|Red Virginia · Robert McConnell · Virginia-Perique · Virginia/Perique · virginia roja
+1069|heno, pimienta, cítricos, higo|Regent Street · Robert McConnell · Virginia-Perique · Virginia/Perique · virginia
+1070|higo, pasas|Rich Dark Virginia · Robert McConnell · Virginia · Virginia · virginia oscura o estufada
+1072|heno, pimienta, miel, higo|River Thames · Robert McConnell · Virginia-Perique · Virginia/Perique · virginia prensada
+1047|ahumado, hierbas aromáticas, heno, ciruela|Scottish Blend · Robert McConnell · Inglesa · Virginia/Oriental/Latakia/Perique/Cavendish · virginia; perique con hojas dulces: ciruela
+1048|heno, pimienta, nuez, miel|Scottish Cake · Robert McConnell · Virginia-Perique · Virginia/Burley/Perique · virginia prensada
+1049|heno, pimienta, nuez, miel|Scottish Flake · Robert McConnell · Virginia-Perique · Virginia/Burley/Perique · virginia prensada
+1073|heno, cítricos|Shakespeare · Robert McConnell · Virginia · Virginia · virginia
+1050|ahumado, hierbas aromáticas, heno, cuero|Sovereign Mixture · Robert McConnell · Inglesa · Virginia/Oriental/Latakia/Cavendish · virginia
+1051|heno, cítricos|Special London Fine Cut · Robert McConnell · Virginia · Virginia · virginia
+2223|heno, miel|HH Pure Virginia Flake · STG · Virginia · Virginia · virginia prensada
+428|ahumado, heno, cuero, miel|Latakia Blend · STG · Inglesa · Virginia/Latakia/Cavendish · virginia prensada
+282|heno, miel|Virginia Flake · STG · Virginia · Virginia · virginia prensada
+29|floral, heno, ahumado, miel|1792 Mini Plug · Samuel Gawith · Lakeland · Virginia/Kentucky · virginia prensada; Lakeland: aroma floral
+4|heno, miel|Best Brown Flake · Samuel Gawith · Virginia · Virginia · virginia prensada
+6|heno, miel|Black XX Rope · Samuel Gawith · Virginia · Virginia · virginia prensada
+8|heno, ahumado, terroso, miel|Brown No. 4 Rope · Samuel Gawith · Virginia · Virginia/Kentucky/Cigarro · virginia prensada
+10|heno, pimienta, miel, higo|Cabbie's Rope · Samuel Gawith · Virginia-Perique · Virginia/Perique · virginia prensada
+14|floral, heno, ahumado, miel|Cob Plug · Samuel Gawith · Lakeland · Virginia/Kentucky · virginia prensada; Lakeland: aroma floral
+15|ahumado, heno, cuero, cítricos|Commonwealth Mixture · Samuel Gawith · Inglesa · Virginia/Latakia · virginia
+30|heno, miel|Full Virginia Flake · Samuel Gawith · Virginia · Virginia · virginia prensada
+32|heno, miel|Full Virginia Mini Plug · Samuel Gawith · Virginia · Virginia · virginia prensada
+33|heno, cítricos|Full Virginia Mixture · Samuel Gawith · Virginia · Virginia · virginia
+34|heno, miel|Full Virginia Plug · Samuel Gawith · Virginia · Virginia · virginia prensada
+19|heno, miel|Golden Glow Broken Flake · Samuel Gawith · Virginia · Virginia · virginia prensada
+21|floral, heno, miel|Grousemoor Plug · Samuel Gawith · Lakeland · Virginia · virginia prensada; Lakeland: aroma floral
+20|floral, heno, cítricos|Grousemoor · Samuel Gawith · Lakeland · Virginia · virginia; Lakeland: aroma floral
+22|floral, heno, nuez, miel|Kendal Cream Flake · Samuel Gawith · Lakeland · Virginia/Burley · virginia prensada; Lakeland: aroma floral
+24|hierbas aromáticas, floral|RC Turkish · Samuel Gawith · Sin mezclar · Oriental
+359|hierbas aromáticas, heno, floral, miel|Sam's Flake Burnt Ends · Samuel Gawith · Inglesa · Virginia/Oriental · virginia prensada
+358|hierbas aromáticas, heno, floral, miel|Sam's Flake · Samuel Gawith · Inglesa · Virginia/Oriental · virginia prensada
+25|ahumado, hierbas aromáticas, heno, cuero|Skiff Mixture · Samuel Gawith · Inglesa · Virginia/Oriental/Latakia · virginia
+26|ahumado, hierbas aromáticas, heno, cuero|Squadron Leader · Samuel Gawith · Inglesa · Virginia/Oriental/Latakia · virginia
+361|heno, pimienta, miel, higo|St. James Flake Burnt Ends · Samuel Gawith · Virginia-Perique · Virginia/Perique · virginia prensada
+360|heno, pimienta, miel, higo|St. James Flake · Samuel Gawith · Virginia-Perique · Virginia/Perique · virginia prensada
+362|heno, pimienta, miel, higo|St. James Mini Plug · Samuel Gawith · Virginia-Perique · Virginia/Perique · virginia prensada
+363|heno, pimienta, miel, higo|St. James Plug · Samuel Gawith · Virginia-Perique · Virginia/Perique · virginia prensada
+2276|hierbas aromáticas, ahumado, heno, floral|The Balkans · Savinelli · Balcánica · Virginia/Oriental/Latakia/Cavendish · virginia; mucha latakia o balcánica; muchos orientales
+1204|heno, miel|Hogshead · Seattle Pipe Club · Virginia · Virginia · virginia prensada
+1207|ahumado, hierbas aromáticas, heno, pimienta|Mississippi River Special Reserve · Seattle Pipe Club · Inglesa · Virginia/Oriental/Latakia/Perique · virginia prensada
+1205|ahumado, hierbas aromáticas, heno, pimienta|Mississippi River · Seattle Pipe Club · Inglesa · Virginia/Oriental/Latakia/Perique · virginia prensada
+2046|ahumado, hierbas aromáticas, heno, cuero|Gold 779 · Solani · Inglesa · Virginia/Oriental/Latakia · virginia
+2049|heno, ahumado, miel, terroso|Silver Flake 660 · Solani · Virginia · Virginia/Kentucky · virginia prensada
+2050|heno, pimienta, miel, higo|Virginia Flake 633 · Solani · Virginia-Perique · Virginia/Perique · virginia prensada
+2212|ahumado, hierbas aromáticas, heno, pimienta|Amorelli's best Selection · TAK · Inglesa · Virginia/Oriental/Latakia/Perique · virginia; mucha latakia o balcánica
+2207|hierbas aromáticas, ahumado, floral, cuero|Evening Latakia · TAK · Balcánica · Oriental/Latakia · mucha latakia o balcánica; muchos orientales
+2206|ahumado, hierbas aromáticas, heno, cuero|Herbst 84 · TAK · Inglesa · Virginia/Oriental/Latakia · virginia
+2209|ahumado, hierbas aromáticas, heno, cuero|Italy Style · TAK · Inglesa · Virginia/Oriental/Latakia/Kentucky · virginia
+2210|hierbas aromáticas, ahumado, pimienta, floral|Kieler Foerde 2.0 · TAK · Balcánica · Oriental/Latakia/Perique · mucha latakia o balcánica; muchos orientales
+2199|heno, pimienta, cítricos|M74 · TAK · Virginia-Perique · Virginia/Perique/Cavendish · virginia; poca perique
+2205|hierbas aromáticas, heno, pimienta, floral|Orient Esprex · TAK · Oriental · Virginia/Oriental/Perique · virginia; muchos orientales
+2203|heno, miel|Salvo's 2.0 · TAK · Virginia · Virginia · virginia prensada
+2202|heno, miel|Virginia Crumble Cake · TAK · Virginia · Virginia · virginia prensada
+395|heno, ahumado, nuez, miel|Three Nuns · Three Nuns · Virginia · Virginia/Burley/Kentucky · virginia prensada
+1216|heno, pimienta, cítricos, higo|Bostonian Rhapsody · Watch City · Virginia · Virginia/Perique · virginia
+2266|nuez, madera|Brown Virginia Flake · Wessex · Virginia · Virginia · virginia marrón
+2268|frutos rojos, pan tostado|Red Virginia Flake · Wessex · Virginia · Virginia · virginia roja
+2270|ahumado, hierbas aromáticas, heno, cuero|Tradition · Wessex · Inglesa · Virginia/Oriental/Latakia · virginia
+
+# Sin nota (no hay hojas que den nota): 7
+# 2409 Torben Dansk Black Cavendish English Style · Dan Tobacco · Sin mezclar · Cavendish
+# 380 Black Cavendish · Gawith Hoggarth · Sin mezclar · Cavendish
+# 1181 Royal Jersey: Dark Cavendish · Germain's · Virginia · sin hojas
+# 1141 Shamrock Isle · Mc Lintock ·  · sin hojas
+# 1005 Black Virginia · Rattray's · Virginia · Cavendish
+# 1028 Fancy Selection No. 1 · Robert McConnell ·  · sin hojas
+# 1035 Pure Black Cavendish · Robert McConnell · Sin mezclar · Cavendish
