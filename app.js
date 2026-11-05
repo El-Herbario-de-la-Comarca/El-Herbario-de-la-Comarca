@@ -687,7 +687,7 @@ const ICO = {
   formato: '<ellipse cx="12" cy="7" rx="7" ry="2.5"/><path d="M5 7v10c0 1.4 3 2.5 7 2.5s7-1.1 7-2.5V7"/>',
   compartir: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
   tengo: '<rect x="6" y="7" width="12" height="13" rx="2"/><path d="M8 7V5h8v2"/><path d="M9.5 13.5l2 2 3.5-4"/>',
-  probado: '<path d="M3 14h9a3 3 0 0 0 3-3V8h4v3a7 7 0 0 1-7 7H6a3 3 0 0 1-3-3z"/><path d="M17 5c0-1 1-1.5 1-2.5"/>',
+  probado: '<ellipse cx="17" cy="7" rx="3.8" ry="1.15"/><path d="M13.2 7c0 4.3.8 8.6 3.8 8.6s3.8-4.3 3.8-8.6"/><path d="M13.7 12.4C9.6 13.2 6.2 12.3 3.8 8.9"/><path d="M14.6 14.9C9 16.2 4.6 14.6 2.4 10"/><path d="M3.8 8.9 2.4 10"/><path d="M16.4 4.5c0-1 1.1-1.3 1.1-2.4"/>',
   quiero: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
   hoja: '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
   gusta: '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
@@ -1306,7 +1306,7 @@ function paintResenas() {
   if (!todas.length) {
     const d = findItem(openId);
     list.innerHTML = `<div class="rv-vacio">
-        <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M12 46h26a8 8 0 0 0 8-8v-8h14v10a20 20 0 0 1-20 20H20a8 8 0 0 1-8-8z"/><path d="M60 30h8"/><path class="humo" d="M50 20c0-4 4-5 4-9M56 22c0-4 4-5 4-9"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="17" cy="7" rx="3.8" ry="1.15"/><path d="M13.2 7c0 4.3.8 8.6 3.8 8.6s3.8-4.3 3.8-8.6"/><path d="M13.7 12.4C9.6 13.2 6.2 12.3 3.8 8.9"/><path d="M14.6 14.9C9 16.2 4.6 14.6 2.4 10"/><path d="M3.8 8.9 2.4 10"/><path class="humo" d="M15.8 4.6c0-1 1.1-1.3 1.1-2.4M18.2 4.6c0-1 1.1-1.3 1.1-2.4"/></svg>
         <div class="rv-vacio-t"><p>Nadie ha reseñado todavía ${esc(d ? d.nombre : "este tabaco")}.</p>
         <p class="muted">Cuéntanos a qué sabe, cómo arde y qué tal huele en la habitación.</p><div id="rv-vacio-acc"></div></div>
       </div>`;

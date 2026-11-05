@@ -500,7 +500,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .panel.ficha #d-video { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }
 .panel.ficha .sec h3 { font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: 0; text-transform: none; color: var(--accent); }
 .rv-vacio { display: flex; gap: 22px; align-items: center; padding: 24px 26px; border: 1.5px dashed color-mix(in srgb, var(--line) 50%, var(--muted)); border-radius: 14px; background: var(--casilla); }
-.rv-vacio svg { width: 78px; height: 78px; flex: none; fill: none; stroke: var(--door-ring); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rv-vacio svg { width: 78px; height: 78px; flex: none; fill: none; stroke: var(--door-ring); stroke-width: 0.65; stroke-linecap: round; stroke-linejoin: round; }
 .rv-vacio svg .humo { stroke: var(--gold, var(--muted)); }
 .rv-vacio-t { display: grid; gap: 10px; }
 .rv-vacio-t > p:first-child { font-size: 1.12rem; }
