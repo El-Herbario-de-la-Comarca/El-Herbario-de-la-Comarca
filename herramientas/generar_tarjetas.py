@@ -284,6 +284,7 @@ e = lambda s: html.escape(str(s), quote=True)
 PIE = """<footer>
 <span><strong>El herbario de la Comarca no vende tabaco</strong> ni incluye enlaces a tiendas. Es un sitio informativo.</span>
 <span>Fumar perjudica gravemente la salud. Prohibida la venta a menores de 18 años.</span>
+<span class="copyright">© 2026 Pipa Club Fumadas Hobbit · Textos, diseño y catálogo del herbario. Las fotografías son de uso libre y pertenecen a sus autores. Las marcas citadas son de sus titulares.</span>
 <span class="legal-links"><a href="../marca/">Marcas</a> · <a href="../mezcla/">Tipos de mezcla</a> · <a href="../aviso-legal.html">Aviso legal</a> · <a href="../privacidad.html">Política de privacidad</a></span>
 </footer>"""
 
