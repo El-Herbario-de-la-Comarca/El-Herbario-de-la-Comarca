@@ -1,4 +1,4 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 354
+# Fichas no aromáticas sin notas pendientes de revisar: 334
 
 ## Cornell & Diehl (65)
 90 | Burley Flake #2 | Burley
@@ -66,55 +66,6 @@
 372 | White Burley | Sin mezclar
 373 | Winchester | Virginia
 375 | Good Morning | Inglesa
-
-## Gawith Hoggarth (47)
-284 | Balkan Mixture | Balcánica
-286 | Rodeo | Inglesa
-290 | Best Brown #2 Flake | Virginia
-292 | Ennerdale Flake | Lakeland
-295 | North Star | Virginia
-297 | #12 Mixture | Inglesa
-301 | Aniseed Twist | Virginia
-302 | Black Bogie Twist | Virginia
-303 | Black Irish XXX Twist | Virginia
-304 | Black Twist Sliced | Virginia
-305 | Bosun Cut Plug | Lakeland
-306 | Bosun Plug | Lakeland
-307 | Broken Scotch Cake | Lakeland
-308 | Brown Bogie | Virginia
-309 | Brown Flake Aromatic | Lakeland
-310 | Brown Flake Unscented | Lakeland
-311 | Brown Irish X Aromatic Twist | Virginia
-312 | Brown Twist | Virginia
-313 | Burley and Bright | Burley
-315 | Coniston Cut Plug | Lakeland
-316 | Curly Cut Deluxe | Virginia
-317 | Dark Bird's Eye | Lakeland
-318 | Dark Bird's Eye Vintage Cut | Lakeland
-319 | Dark Flake Aromatic | Lakeland
-320 | Dark Flake Unscented | Lakeland
-321 | Dark Plug | Virginia
-322 | Ennerdale Mixture | Lakeland
-323 | Exmoor Mixture | Inglesa
-324 | Extra Sweet Brown Bogie Twist | Virginia
-325 | Glengarry Flake | Lakeland
-326 | Kendal #6 | Lakeland
-327 | Kendal Dark Vintage Cut | Lakeland
-333 | Kendal Gold | Lakeland
-334 | Kendal Gold Vintage Cut | Lakeland
-336 | Kendal Mixed | Lakeland
-338 | Louisiana Flake | Lakeland
-340 | Scotch Mixture | Inglesa
-344 | Black Irish X | Virginia
-380 | Black Cavendish | Sin mezclar
-381 | Bright CR Flake | Virginia
-382 | Bright CR Flake Burnt Ends | Virginia
-383 | Brown Irish X | Virginia
-384 | Ennerdale Flake Burnt Ends | Lakeland
-385 | Grasmere Flake | Lakeland
-386 | Kendal Dark | Lakeland
-387 | Louisiana Flake Burnt Ends | Lakeland
-390 | Westmorland Slices | Virginia
 
 ## Robert McConnell (46)
 1025 | Black Parrot Special Cut | Virginia-Perique
@@ -205,6 +156,35 @@
 2413 | Torben Dansk Virginia 1,6 Mysore | Sin mezclar
 2414 | Torben Dansk Virginia 4,0 Mysore | Sin mezclar
 2415 | Torben Dansk Virginia Mysore Ready Rubbed Flake | Sin mezclar
+
+## Gawith Hoggarth (27)
+290 | Best Brown #2 Flake | Virginia
+297 | #12 Mixture | Inglesa
+302 | Black Bogie Twist | Virginia
+307 | Broken Scotch Cake | Lakeland
+308 | Brown Bogie | Virginia
+312 | Brown Twist | Virginia
+313 | Burley and Bright | Burley
+315 | Coniston Cut Plug | Lakeland
+316 | Curly Cut Deluxe | Virginia
+317 | Dark Bird's Eye | Lakeland
+318 | Dark Bird's Eye Vintage Cut | Lakeland
+321 | Dark Plug | Virginia
+322 | Ennerdale Mixture | Lakeland
+325 | Glengarry Flake | Lakeland
+327 | Kendal Dark Vintage Cut | Lakeland
+336 | Kendal Mixed | Lakeland
+338 | Louisiana Flake | Lakeland
+340 | Scotch Mixture | Inglesa
+344 | Black Irish X | Virginia
+380 | Black Cavendish | Sin mezclar
+381 | Bright CR Flake | Virginia
+382 | Bright CR Flake Burnt Ends | Virginia
+383 | Brown Irish X | Virginia
+385 | Grasmere Flake | Lakeland
+386 | Kendal Dark | Lakeland
+387 | Louisiana Flake Burnt Ends | Lakeland
+390 | Westmorland Slices | Virginia
 
 ## Pfeifendepot (17)
 2137 | No. 038 – Copenhagen B | Virginia

@@ -86,3 +86,17 @@ update public.tabacos set notas = array['ron']::text[] where id = '356' and card
 update public.tabacos set notas = array['vainilla', 'ahumado']::text[] where id = '357' and cardinality(notas) = 0;
 -- 31 · Full Virginia Flake Burnt Ends · Samuel Gawith · Smokingpipes 585703 (descripción: fermented dark fruit, earth, oak, hay)
 update public.tabacos set notas = array['ciruela', 'fermentado', 'terroso', 'madera', 'heno']::text[] where id = '31' and cardinality(notas) = 0;
+-- 292 · Ennerdale Flake · Gawith Hoggarth · Smokingpipes 6047 (descripción: floral, almond, rum, citrus, vanilla)
+update public.tabacos set notas = array['floral', 'almendra', 'ron', 'cítricos', 'vainilla']::text[] where id = '292' and cardinality(notas) = 0;
+-- 384 · Ennerdale Flake Burnt Ends · Gawith Hoggarth · Smokingpipes 6047 (descripción de Ennerdale Flake; misma mezcla en Burnt Ends)
+update public.tabacos set notas = array['floral', 'almendra', 'ron', 'cítricos', 'vainilla']::text[] where id = '384' and cardinality(notas) = 0;
+-- 295 · North Star · Gawith Hoggarth · Smokingpipes 652470 (descripción: licorice flavoring)
+update public.tabacos set notas = array['regaliz']::text[] where id = '295' and cardinality(notas) = 0;
+-- 301 · Aniseed Twist · Gawith Hoggarth · Smokingpipes 643118 (descripción: flavored with aniseed)
+update public.tabacos set notas = array['anís']::text[] where id = '301' and cardinality(notas) = 0;
+-- 306 · Bosun Plug · Gawith Hoggarth · Smokingpipes 406962 (descripción: floral, cloves, rose)
+update public.tabacos set notas = array['floral', 'especias dulces']::text[] where id = '306' and cardinality(notas) = 0;
+-- 305 · Bosun Cut Plug · Gawith Hoggarth · Smokingpipes 4009 (descripción: floral, clove, rose)
+update public.tabacos set notas = array['floral', 'especias dulces']::text[] where id = '305' and cardinality(notas) = 0;
+-- 319 · Dark Flake Aromatic · Gawith Hoggarth · Smokingpipes 4003 (descripción: deep, earthy notes)
+update public.tabacos set notas = array['terroso']::text[] where id = '319' and cardinality(notas) = 0;
