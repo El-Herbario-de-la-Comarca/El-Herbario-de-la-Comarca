@@ -6,22 +6,12 @@
 
 -- 78 · Black Duck · Cornell & Diehl · TR 245 (descripción: earthy, woodsy)
 update public.tabacos set notas = array['terroso', 'madera']::text[] where id = '78' and cardinality(notas) = 0;
--- 39 · Early Morning Pipe · Peterson · Smokingpipes 346525 (descripción: earthy)
-update public.tabacos set notas = array['terroso']::text[] where id = '39' and cardinality(notas) = 0;
 -- 40 · Elizabethan Mixture · Peterson · Smokingpipes 346529 (descripción: peppery spice)
 update public.tabacos set notas = array['pimienta']::text[] where id = '40' and cardinality(notas) = 0;
--- 45 · My Mixture 965 · Peterson · Smokingpipes 346524 (descripción: smoky)
-update public.tabacos set notas = array['ahumado']::text[] where id = '45' and cardinality(notas) = 0;
--- 46 · Nightcap · Peterson · Smokingpipes 346526 (descripción: smoky)
-update public.tabacos set notas = array['ahumado']::text[] where id = '46' and cardinality(notas) = 0;
--- 47 · Old Dublin · Peterson · Smokingpipes 369 (descripción: smoky Latakia)
-update public.tabacos set notas = array['ahumado']::text[] where id = '47' and cardinality(notas) = 0;
 -- 351 · Balkan Mixture · Peterson · Smokingpipes 133055 (descripción: peppery spice)
 update public.tabacos set notas = array['pimienta']::text[] where id = '351' and cardinality(notas) = 0;
 -- 352 · Hyde Park · Peterson · Smokingpipes 111264 (descripción: rum, maple sugar)
 update public.tabacos set notas = array['ron', 'arce']::text[] where id = '352' and cardinality(notas) = 0;
--- 355 · University Flake · Peterson · Smokingpipes 371 (descripción: plum)
-update public.tabacos set notas = array['ciruela']::text[] where id = '355' and cardinality(notas) = 0;
 -- 225 · Ashbury · G. L. Pease · Smokingpipes 16474 (descripción: leather, campfire)
 update public.tabacos set notas = array['cuero', 'hoguera']::text[] where id = '225' and cardinality(notas) = 0;
 -- 226 · Bankside · G. L. Pease · Smokingpipes 509016 (descripción: smoky, citrusy)

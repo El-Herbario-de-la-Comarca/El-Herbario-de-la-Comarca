@@ -112,9 +112,11 @@ def sql():
          "-- Solo sabores que la descripción del fabricante o de la tienda dice expresamente.",
          "-- Solo rellena fichas sin ninguna nota. Se puede ejecutar varias veces.",
          "-- =====================================================================", ""]
+    # Fichas que ya rellena el SQL 50: no se repiten aquí.
+    s50 = set(re.findall(r"where id = '(\d+)'", (R / "supabase/50_notas_de_sabor.sql").read_text(encoding="utf-8")))
     n = 0
     for i, notas, src in filas:
-        if v[i]["notas"]:
+        if v[i]["notas"] or i in s50:
             continue
         ns = [x.strip() for x in notas.split(",") if x.strip()]
         arr = "array[" + ", ".join(q(x) for x in ns) + "]::text[]"
