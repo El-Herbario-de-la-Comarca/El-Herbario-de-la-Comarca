@@ -116,3 +116,19 @@ update public.tabacos set notas = array['pimienta']::text[] where id = '142' and
 update public.tabacos set notas = array['ahumado']::text[] where id = '321' and cardinality(notas) = 0;
 -- 385 · Grasmere Flake · Gawith Hoggarth · TR 2801 (descripción: top-note flavour of English rose and geranium)
 update public.tabacos set notas = array['floral']::text[] where id = '385' and cardinality(notas) = 0;
+-- 1032 · Mature · Robert McConnell · Smokingpipes 153995 (descripción: cocoa, anise)
+update public.tabacos set notas = array['chocolate', 'anís']::text[] where id = '1032' and cardinality(notas) = 0;
+-- 1041 · Pure Latakia · Robert McConnell · Smokingpipes 3403 (descripción: distinctly smoky flavor profile)
+update public.tabacos set notas = array['ahumado']::text[] where id = '1041' and cardinality(notas) = 0;
+-- 1074 · St. James Park · Robert McConnell · Smokingpipes 340059 (descripción: smoky Latakia)
+update public.tabacos set notas = array['ahumado']::text[] where id = '1074' and cardinality(notas) = 0;
+-- 1031 · Maduro · Robert McConnell · Smokingpipes 3406 (descripción: topped with rum)
+update public.tabacos set notas = array['ron']::text[] where id = '1031' and cardinality(notas) = 0;
+-- 1071 · Ripe Honeydew · Robert McConnell · Smokingpipes 300 (descripción: honey)
+update public.tabacos set notas = array['miel']::text[] where id = '1071' and cardinality(notas) = 0;
+-- 1162 · Salty Dogs · Dan Tobacco · Smokingpipes 181211 (descripción: flavored with rum)
+update public.tabacos set notas = array['ron']::text[] where id = '1162' and cardinality(notas) = 0;
+-- 1179 · Plum Cake · Germain's · Smokingpipes 2416 (descripción: honey-sweet)
+update public.tabacos set notas = array['miel']::text[] where id = '1179' and cardinality(notas) = 0;
+-- 1170 · B.K. Flake · Germain's · Smokingpipes 215753 (descripción: tangy stone fruits)
+update public.tabacos set notas = array['ciruela']::text[] where id = '1170' and cardinality(notas) = 0;

@@ -65,4 +65,4 @@ Si aparece un sabor concreto que no encaja en nada (p. ej. «sandía»), no lo i
 El usuario ejecuta `supabase/51_notas_naturales.sql` en Supabase → SQL Editor (solo rellena fichas sin notas; se puede repetir). Las páginas `f/` se actualizan solas por la noche.
 
 ## Estado
-5/11/2026: tandas 1-3 hechas (Cornell & Diehl, Peterson, G. L. Pease, HU Tobacco, Rattray's, Samuel Gawith y Gawith Hoggarth). Con nota: 63. Revisadas sin nota: 158. Reintentos hechos; solo quedan sin revisar 312 Brown Twist y 344 Black Irish X (Gawith Hoggarth, sin ficha clara en Smokingpipes ni TR). Siguiente marca de la lista: Robert McConnell y resto.
+5/11/2026: tandas 1-3 hechas (Cornell & Diehl parte 1, Peterson, G. L. Pease, HU Tobacco, Rattray's, Samuel Gawith, Gawith Hoggarth). Tanda 4 a medias: Robert McConnell, Dan Tobacco y Germain's revisadas en parte (las que Smokingpipes abrió); Pfeifendepot y TAK sin empezar. Con nota: 71. Revisadas sin nota: 188. Quedan pendientes en C&D unas 60 fichas, y el resto de las marcas que no figuran en los dos archivos (usar el comando pendientes). Smokingpipes falla con muchas fichas de McConnell; probar Tobacco Reviews para ellas.

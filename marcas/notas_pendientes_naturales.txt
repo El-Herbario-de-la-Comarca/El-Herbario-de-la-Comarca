@@ -1,4 +1,4 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 304
+# Fichas no aromáticas sin notas pendientes de revisar: 266
 
 ## Cornell & Diehl (60)
 121 | Exhausted Rooster | Virginia-Perique
@@ -62,67 +62,11 @@
 373 | Winchester | Virginia
 375 | Good Morning | Inglesa
 
-## Robert McConnell (46)
-1025 | Black Parrot Special Cut | Virginia-Perique
-1026 | Code: Relax | Lakeland
-1028 | Fancy Selection No. 1 | sin mezcla
-1030 | Latakia Flake | Inglesa
-1031 | Maduro | Virginia-Perique
-1032 | Mature | Inglesa
-1033 | Old London Pebble Cut | sin mezcla
-1034 | Oriental | Inglesa
-1035 | Pure Black Cavendish | Sin mezclar
-1036 | Pure Brasil | Sin mezclar
-1037 | Pure Burley | Sin mezclar
-1038 | Pure Caribe | Sin mezclar
-1039 | Pure Cuba | Sin mezclar
-1040 | Pure Kentucky | Sin mezclar
-1041 | Pure Latakia | Sin mezclar
-1042 | Pure Orient | Sin mezclar
-1043 | Pure Perique | Sin mezclar
-1044 | Pure Virginia | Sin mezclar
-1046 | Red Virginia | Virginia-Perique
-1047 | Scottish Blend | Inglesa
-1048 | Scottish Cake | Virginia-Perique
-1049 | Scottish Flake | Virginia-Perique
-1050 | Sovereign Mixture | Inglesa
-1051 | Special London Fine Cut | Virginia
-1053 | 5 Year Matured Virginia | Inglesa
-1054 | Barking Road | Virginia
-1055 | Black Flake | Virginia-Perique
-1056 | Boutique Blend | Inglesa
-1057 | Covent Garden | Inglesa
-1058 | Flake | Virginia
-1059 | Folded Flake | Virginia-Perique
-1060 | Highgate | Virginia-Perique
-1061 | Latakia Mixture 1848 | Inglesa
-1062 | Marylebone | Inglesa
-1063 | Notting Hill | Inglesa
-1064 | Oriental Square | Balcánica
-1065 | Oxford Street | Inglesa
-1066 | Paddington | Virginia
-1067 | Piccadilly Circus | Inglesa
-1068 | Ready Rubbed | Inglesa
-1069 | Regent Street | Virginia-Perique
-1070 | Rich Dark Virginia | Virginia
-1071 | Ripe Honeydew | Virginia
-1072 | River Thames | Virginia-Perique
-1073 | Shakespeare | Virginia
-1074 | St. James Park | Inglesa
-
-## Dan Tobacco (40)
-1148 | Bill Bailey's Balkan Blend | Balcánica
+## Dan Tobacco (31)
 1150 | Bizzy Lizzy | sin mezcla
-1154 | Gordon Pym | Inglesa
-1155 | Hamborger Veermaster | Virginia
 1157 | London Blend No. 1000 | Inglesa
 1158 | Midnight Ride | Inglesa
-1160 | Old Ironsides | Inglesa
-1161 | Patriot Flake | Virginia
-1162 | Salty Dogs | Virginia-Perique
 1163 | Skipper's Flake | Virginia
-1165 | The Mallard | Virginia
-1167 | Tordenskjold Virginia Slices | Virginia-Perique
 1169 | Treasures of Ireland: Limerick | Virginia-Perique
 2228 | Ascanian No. 1 Riverside Blend | Inglesa
 2230 | Roper's Roundels | Virginia-Perique
@@ -142,7 +86,6 @@
 2324 | Mountain Village Evening Standard | Inglesa
 2325 | No Name No. 1 | Virginia
 2332 | St. Bernard Flake | Virginia-Perique
-2335 | The Mallard Flake plus Perique | Virginia-Perique
 2408 | Torben Dansk Black Cavendish Danish Style | Sin mezclar
 2409 | Torben Dansk Black Cavendish English Style | Sin mezclar
 2410 | Torben Dansk Kentucky U.S.A. | Sin mezclar
@@ -151,6 +94,32 @@
 2413 | Torben Dansk Virginia 1,6 Mysore | Sin mezclar
 2414 | Torben Dansk Virginia 4,0 Mysore | Sin mezclar
 2415 | Torben Dansk Virginia Mysore Ready Rubbed Flake | Sin mezclar
+
+## Robert McConnell (24)
+1025 | Black Parrot Special Cut | Virginia-Perique
+1026 | Code: Relax | Lakeland
+1028 | Fancy Selection No. 1 | sin mezcla
+1030 | Latakia Flake | Inglesa
+1033 | Old London Pebble Cut | sin mezcla
+1035 | Pure Black Cavendish | Sin mezclar
+1036 | Pure Brasil | Sin mezclar
+1037 | Pure Burley | Sin mezclar
+1039 | Pure Cuba | Sin mezclar
+1040 | Pure Kentucky | Sin mezclar
+1042 | Pure Orient | Sin mezclar
+1043 | Pure Perique | Sin mezclar
+1044 | Pure Virginia | Sin mezclar
+1050 | Sovereign Mixture | Inglesa
+1055 | Black Flake | Virginia-Perique
+1058 | Flake | Virginia
+1061 | Latakia Mixture 1848 | Inglesa
+1062 | Marylebone | Inglesa
+1064 | Oriental Square | Balcánica
+1065 | Oxford Street | Inglesa
+1068 | Ready Rubbed | Inglesa
+1069 | Regent Street | Virginia-Perique
+1070 | Rich Dark Virginia | Virginia
+1072 | River Thames | Virginia-Perique
 
 ## Pfeifendepot (17)
 2137 | No. 038 – Copenhagen B | Virginia
@@ -170,23 +139,6 @@
 2168 | No. 501 – The Good | Oriental
 2169 | No. 502 – The Bad | Virginia-Perique
 2172 | VAPERizer (Plug) | Virginia-Perique
-
-## Germain's (15)
-1170 | B.K. Flake | Virginia
-1171 | Bridge: Old Brown Flake | Virginia
-1172 | Brown Flake | Virginia
-1174 | Club Mixture | Virginia
-1175 | Eighteen Twenty | Inglesa
-1176 | King Charles Mixture | Inglesa
-1177 | Medium Flake | Virginia
-1178 | Mixture No. 7 | sin mezcla
-1179 | Plum Cake | Virginia
-1180 | Royal Jersey: Cavendish and Virginia | Inglesa
-1181 | Royal Jersey: Dark Cavendish | Virginia
-1182 | Royal Jersey: Original Latakia Mixture | Inglesa
-1183 | Royal Jersey: Perique Mixture | Virginia-Perique
-1184 | Special Latakia Flake | Inglesa
-1185 | Uncle Tom's | Virginia
 
 ## TAK (14)
 2199 | M74 | Virginia-Perique
@@ -238,6 +190,16 @@
 1113 | 4 Seasons Summer Mixture | Inglesa
 1114 | 4 Seasons Autumn Mixture | Virginia-Perique
 1115 | 4 Seasons Winter Mixture | Virginia
+
+## Germain's (8)
+1171 | Bridge: Old Brown Flake | Virginia
+1172 | Brown Flake | Virginia
+1174 | Club Mixture | Virginia
+1178 | Mixture No. 7 | sin mezcla
+1180 | Royal Jersey: Cavendish and Virginia | Inglesa
+1181 | Royal Jersey: Dark Cavendish | Virginia
+1182 | Royal Jersey: Original Latakia Mixture | Inglesa
+1184 | Special Latakia Flake | Inglesa
 
 ## Doctor Pipe (7)
 2391 | Pure Gold Virginia | Virginia
