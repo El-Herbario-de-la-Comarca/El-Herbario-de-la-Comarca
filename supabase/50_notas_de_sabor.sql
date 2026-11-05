@@ -1,5 +1,5 @@
 -- =====================================================================
--- 50 · Notas de sabor que faltaban (primera tanda, 5/11/2026)
+-- 50 · Notas de sabor que faltaban (5/11/2026): fichas vendidas en España y aromáticas
 -- Solo notas que la fuente dice expresamente: el campo Flavoring de Tobacco Reviews (aroma añadido)
 -- o palabras de sabor de la descripción del fabricante (TR o Smokingpipes). Nada deducido de las hojas.
 -- Solo rellena fichas que no tienen ninguna nota. Se puede ejecutar varias veces.
@@ -45,3 +45,85 @@ update public.tabacos set notas = array['nuez', 'pimienta']::text[] where id = '
 update public.tabacos set notas = array['cítricos', 'terroso', 'especias dulces']::text[] where id = '214' and cardinality(notas) = 0;
 -- 1003 · Bagpiper's Dream · Rattray's · TR 2838 (Flavoring: Cognac)
 update public.tabacos set notas = array['licor']::text[] where id = '1003' and cardinality(notas) = 0;
+-- 2187 · Gold Blend · Peterson · TR 1898 (Flavoring: Cinnamon, Vanilla; descripción: nuez de nogal, vainilla, canela)
+update public.tabacos set notas = array['nuez', 'vainilla', 'especias dulces']::text[] where id = '2187' and cardinality(notas) = 0;
+-- 1095 · Caribbean Blue Seegar · Kopp · TR 13249 (Flavoring: Caramel, Fruit/Citrus, Rum, Tonquin Bean)
+update public.tabacos set notas = array['tonka', 'cítricos', 'ron', 'caramelo']::text[] where id = '1095' and cardinality(notas) = 0;
+-- 1096 · Caribbean Blue Wynne · Kopp · TR 13227 (Flavoring: Fruit/Citrus, Honey, Rum, Vanilla; descripción: bayas de goji)
+update public.tabacos set notas = array['ron', 'miel', 'vainilla', 'frutos rojos']::text[] where id = '1096' and cardinality(notas) = 0;
+-- 1093 · Caribbean Blue Graham · Kopp · TR 13251 (Flavoring: Blackberry, Nuts; descripción: coco, mora, frutos secos)
+update public.tabacos set notas = array['frutos rojos', 'frutas tropicales', 'frutos secos']::text[] where id = '1093' and cardinality(notas) = 0;
+-- 1092 · Caribbean Blue Drake · Kopp · TR 13252 (Flavoring: Pineapple, Vanilla; descripción: piña, plátano)
+update public.tabacos set notas = array['frutas tropicales', 'vainilla']::text[] where id = '1092' and cardinality(notas) = 0;
+-- 1091 · Caribbean Blue Bellamy · Kopp · TR 13245 (Flavoring: Orange, Vanilla; descripción: melón, plátano, naranja)
+update public.tabacos set notas = array['frutas tropicales', 'cítricos', 'vainilla']::text[] where id = '1091' and cardinality(notas) = 0;
+-- 1094 · Caribbean Blue Rackham · Kopp · TR 13253 (Flavoring: Cherry, Mango, Plum; descripción: mango, maracuyá, fresa, mirabel, cereza)
+update public.tabacos set notas = array['frutas tropicales', 'ciruela mirabel', 'cereza', 'frutos rojos']::text[] where id = '1094' and cardinality(notas) = 0;
+-- 1124 · 1-Q · Lane Limited · TR 630 (Flavoring: Vanilla)
+update public.tabacos set notas = array['vainilla']::text[] where id = '1124' and cardinality(notas) = 0;
+-- 289 · American Delite · Gawith Hoggarth · TR 1702 (Flavoring: Caramel, Cocoa/Chocolate, Vanilla)
+update public.tabacos set notas = array['chocolate', 'vainilla', 'caramelo']::text[] where id = '289' and cardinality(notas) = 0;
+-- 1007 · Buckingham · Rattray's · TR 9409 (Flavoring: Cinnamon, Nuts, Vanilla; descripción: nuez de nogal, vainilla bourbon, canela)
+update public.tabacos set notas = array['nuez', 'vainilla', 'especias dulces']::text[] where id = '1007' and cardinality(notas) = 0;
+-- 1009 · Exotic Passion · Rattray's · TR 10652 (Flavoring: Floral, Mango, Maple, Orange)
+update public.tabacos set notas = array['cítricos', 'frutas tropicales', 'arce', 'floral']::text[] where id = '1009' and cardinality(notas) = 0;
+-- 1125 · BCA · Lane Limited · TR 635 (Flavoring: Alcohol/Liquor, Cocoa/Chocolate, Vanilla, Whisky)
+update public.tabacos set notas = array['licor', 'chocolate', 'vainilla', 'whisky']::text[] where id = '1125' and cardinality(notas) = 0;
+-- 1129 · Hazelnut · Lane Limited · TR 665 (Flavoring: Nuts; descripción: avellanas tostadas)
+update public.tabacos set notas = array['avellana']::text[] where id = '1129' and cardinality(notas) = 0;
+-- 1126 · Black Raspberry · Lane Limited · TR 640 (Flavoring: Raspberry)
+update public.tabacos set notas = array['frutos rojos']::text[] where id = '1126' and cardinality(notas) = 0;
+-- 1134 · MV-1000 · Lane Limited · TR 676 (Flavoring: Vanilla)
+update public.tabacos set notas = array['vainilla']::text[] where id = '1134' and cardinality(notas) = 0;
+-- 1133 · LL-7 · Lane Limited · TR 673 (Flavoring: Caramel, Vanilla)
+update public.tabacos set notas = array['caramelo', 'vainilla']::text[] where id = '1133' and cardinality(notas) = 0;
+-- 1135 · RLP-6 · Lane Limited · TR 682 (Flavoring: Cream, Honey, Molasses, Nougat, Vanilla)
+update public.tabacos set notas = array['vainilla', 'miel', 'azúcar moreno', 'turrón']::text[] where id = '1135' and cardinality(notas) = 0;
+-- 1136 · TK-6 · Lane Limited · TR 688 (Flavoring: Cherry)
+update public.tabacos set notas = array['cereza']::text[] where id = '1136' and cardinality(notas) = 0;
+-- 1130 · HG-2000 · Lane Limited · TR 666 (Flavoring: Vanilla; descripción: sabor terroso)
+update public.tabacos set notas = array['vainilla', 'terroso']::text[] where id = '1130' and cardinality(notas) = 0;
+-- 1122 · Sungold · Stanwell · TR 2715 (Flavoring: Plum, Vanilla)
+update public.tabacos set notas = array['vainilla', 'ciruela']::text[] where id = '1122' and cardinality(notas) = 0;
+-- 1121 · Melange · Stanwell · TR 2978 (Flavoring: Apricot, Vanilla)
+update public.tabacos set notas = array['albaricoque', 'vainilla']::text[] where id = '1121' and cardinality(notas) = 0;
+-- 1082 · Danish Mixture · Davidoff · TR 434 (Flavoring: Figs, Honey, Maple, Walnut)
+update public.tabacos set notas = array['higo', 'miel', 'arce', 'nuez']::text[] where id = '1082' and cardinality(notas) = 0;
+-- 1086 · Red Mixture · Davidoff · TR 3717 (Flavoring: Caramel, Vanilla)
+update public.tabacos set notas = array['caramelo', 'vainilla']::text[] where id = '1086' and cardinality(notas) = 0;
+-- 287 · Sweet Peach · Gawith Hoggarth · TR 1062 (Flavoring: Peach)
+update public.tabacos set notas = array['melocotón']::text[] where id = '287' and cardinality(notas) = 0;
+-- 329 · Kendal Gold #18 - Peach · Gawith Hoggarth · TR 10466 (Flavoring: Peach)
+update public.tabacos set notas = array['melocotón']::text[] where id = '329' and cardinality(notas) = 0;
+-- 332 · Kendal Gold #9 - Coconut · Gawith Hoggarth · TR 10464 (descripción: cubierta de coco)
+update public.tabacos set notas = array['frutas tropicales']::text[] where id = '332' and cardinality(notas) = 0;
+-- 337 · Kentucky Nougat · Gawith Hoggarth · TR 3716 (descripción: toffee cremoso y cacao)
+update public.tabacos set notas = array['caramelo', 'chocolate']::text[] where id = '337' and cardinality(notas) = 0;
+-- 342 · Ultimum · Gawith Hoggarth · TR 6840 (Flavoring: Caramel, Cherry)
+update public.tabacos set notas = array['cereza', 'caramelo']::text[] where id = '342' and cardinality(notas) = 0;
+-- 1153 · Devil's Holiday · Dan Tobacco · TR 1796 (Flavoring: Blackcurrant; descripción: frutos del bosque)
+update public.tabacos set notas = array['frutos rojos']::text[] where id = '1153' and cardinality(notas) = 0;
+-- 1152 · Da Vinci · Dan Tobacco · TR 404 (descripción: vino tinto toscano)
+update public.tabacos set notas = array['vino']::text[] where id = '1152' and cardinality(notas) = 0;
+-- 1151 · Blue Note · Dan Tobacco · TR 403 (descripción: frutas exóticas, vainilla bourbon)
+update public.tabacos set notas = array['frutas tropicales', 'vainilla']::text[] where id = '1151' and cardinality(notas) = 0;
+-- 1187 · Blackpool · Esoterica · TR 487 (Flavoring: Licorice)
+update public.tabacos set notas = array['regaliz']::text[] where id = '1187' and cardinality(notas) = 0;
+-- 1198 · Ramsgate · Esoterica · TR 499 (Flavoring: Licorice)
+update public.tabacos set notas = array['regaliz']::text[] where id = '1198' and cardinality(notas) = 0;
+-- 1106 · 4th Generation 1897 · Erik Stokkebye · TR 5365 (Flavoring: Honey, Vanilla)
+update public.tabacos set notas = array['vainilla', 'miel']::text[] where id = '1106' and cardinality(notas) = 0;
+-- 1108 · 4th Generation 1957 · Erik Stokkebye · TR 5724 (Flavoring: Vanilla)
+update public.tabacos set notas = array['vainilla']::text[] where id = '1108' and cardinality(notas) = 0;
+-- 1109 · 4th Generation 1982 · Erik Stokkebye · TR 9072 (Flavoring: Blackberry, Vanilla)
+update public.tabacos set notas = array['frutos rojos', 'vainilla']::text[] where id = '1109' and cardinality(notas) = 0;
+-- 140 · King Cake · Cornell & Diehl · TR 10911 (Flavoring: Nuts, Plum, Rum)
+update public.tabacos set notas = array['frutos secos', 'ciruela', 'ron']::text[] where id = '140' and cardinality(notas) = 0;
+-- 1146 · Z50 Black Cordial · Sutliff · TR 5355 (Flavoring: Cherry, Vanilla)
+update public.tabacos set notas = array['cereza', 'vainilla']::text[] where id = '1146' and cardinality(notas) = 0;
+-- 1144 · Creme Brulee · Sutliff · TR 3085 (Flavoring: Caramel, Honey, Vanilla)
+update public.tabacos set notas = array['vainilla', 'caramelo', 'miel']::text[] where id = '1144' and cardinality(notas) = 0;
+-- 1159 · Milonga · Dan Tobacco · TR 2711 (Flavoring: Caramel, Vanilla)
+update public.tabacos set notas = array['caramelo', 'vainilla']::text[] where id = '1159' and cardinality(notas) = 0;
+-- 1168 · Treasures of Ireland: Galway · Dan Tobacco · TR 2710 (Flavoring: Blackberry, Vanilla)
+update public.tabacos set notas = array['frutos rojos', 'vainilla']::text[] where id = '1168' and cardinality(notas) = 0;
