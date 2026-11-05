@@ -96,6 +96,7 @@ def main():
     base = [d for d in datos if int(d["id"]) < PRIMER_ID]
     espana = {str(d["id"]) for d in datos if d.get("en_espana")}   # se conserva la marca de España (SQL 16-17)
     notas_previas = {str(d["id"]): d.get("notas") or [] for d in datos}   # se conservan las notas de sabor (SQL 44)
+    fotos_previas = {str(d["id"]): d["foto"] for d in datos if d.get("foto")}   # se conservan las fotos (SQL 46)
     claves = {(d["nombre"].lower(), d["marca"].lower()) for d in base}
     nombres_base = Counter(d["nombre"].lower() for d in base)
 
@@ -123,6 +124,8 @@ def main():
                 "formato": formato, "desc": desc, "fuerza": 0, "notas": notas_previas.get(str(siguiente), []), "id": siguiente,
                 "descripcion": desc, "hojas": hojas, "en_espana": str(siguiente) in espana,
             })
+            if str(siguiente) in fotos_previas:
+                nuevas[-1]["foto"] = fotos_previas[str(siguiente)]
             siguiente += 1
 
     ruta_js.write_text(pre + "window.DATOS_INICIALES = " + json.dumps(base + nuevas, ensure_ascii=False) + ";\n",
