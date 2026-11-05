@@ -1,0 +1,20 @@
+# Pasa las fuentes de Google Fonts a la propia web (ver herramientas/fuentes_locales.py).
+# Se lanza a mano: pestaña Actions → «Fuentes en la propia web» → Run workflow. Basta con hacerlo una vez.
+name: Fuentes en la propia web
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fuentes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Descargar las fuentes y cambiar las páginas
+        run: python3 herramientas/fuentes_locales.py
+      - name: Guardar cambios
+        run: |
+          git config user.name "Herbario (automático)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fuentes/web index.html ayuda.html aviso-legal.html privacidad.html
+          if git diff --cached --quiet; then echo "Sin cambios"; else git commit -m "Fuentes alojadas en la propia web" && (git push || (git pull --rebase && git push)); fi

@@ -19,7 +19,7 @@ se puede lanzar a mano:
     python3 herramientas/generar_tarjetas.py
 La direccion publica de la web se toma de SITE_URL o, si no, de BASE por defecto.
 """
-import html, json, os, re, sys, unicodedata, urllib.request
+import datetime, hashlib, html, json, os, re, sys, unicodedata, urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -28,6 +28,8 @@ BASE = os.environ.get("SITE_URL", "https://elherbariodelacomarca.es/").rstrip("/
 SALIDA = RAIZ / "f"
 CARPETA_MARCA = RAIZ / "marca"
 CARPETA_MEZCLA = RAIZ / "mezcla"
+# Fecha en que cambió por última vez el contenido de cada página (para <lastmod> del sitemap)
+FECHAS = RAIZ / "herramientas" / "fechas_paginas.json"
 
 
 
@@ -256,7 +258,7 @@ def de_portada():
     """Saca de index.html las fuentes, las versiones de los estilos y el encabezado de las colinas,
     para que las paginas generadas se vean igual que la web y cambien solas si cambia la portada."""
     txt = (RAIZ / "index.html").read_text(encoding="utf-8")
-    fuentes = re.search(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com/[^"]*">', txt)
+    fuentes = re.search(r'<link rel="stylesheet" href="(?:https://fonts\.googleapis\.com/|/fuentes/web/)[^"]*">', txt)
     ver = lambda nombre: (re.search(re.escape(nombre) + r'\?v=(\w+)', txt) or [None, "1"])[1]
     hero = re.search(r'<header class="hero">.*?</header>', txt, re.S).group(0)
     hero = hero.replace('href="./"', 'href="../"').replace('src="img/', 'src="../img/')
@@ -267,6 +269,9 @@ def de_portada():
 
 
 PORTADA = de_portada()
+# Solo hace falta conectar antes con Google si las fuentes se siguen sirviendo desde Google Fonts
+PRECONEXION = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+               '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n') if "googleapis" in PORTADA["fuentes"] else ""
 
 
 def lista(v):
@@ -323,9 +328,7 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website", 
 <link rel="icon" type="image/png" sizes="192x192" href="../img/icono-192.png">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-{PORTADA["fuentes"]}
+{PRECONEXION}{PORTADA["fuentes"]}
 <script src="../temporada.js?v={PORTADA["temporada"]}"></script>
 <link rel="stylesheet" href="../estilos.css?v={PORTADA["estilos"]}">
 <link rel="stylesheet" href="../tema-comarca.css?v={PORTADA["tema"]}">
@@ -846,8 +849,46 @@ def indice_mezclas(por_tipo, textos):
                  "mezcla/", cuerpo, [("Inicio", ""), ("Tipos de mezcla", None)])
 
 
-def sitemap(rutas):
-    filas = "".join(f"<url><loc>{html.escape(BASE + r)}</loc></url>\n" for r in rutas)
+def pagina_404():
+    """Página para las direcciones que no existen (GitHub Pages la sirve sola). Con <base href="/"> los enlaces
+    relativos (../) funcionan a cualquier profundidad, y con noindex Google no la guarda."""
+    cuerpo = """<main class="ficha">
+<h1>Esta página no está en el herbario</h1>
+<p class="resumen">Puede que la ficha se haya retirado del catálogo o que la dirección esté mal escrita.</p>
+</main>
+<section class="grupo"><h2><a href="../">Ir al catálogo</a></h2><p>Busca el tabaco por su nombre, su marca o sus notas de sabor.</p></section>
+<section class="grupo"><h2><a href="../marca/">Marcas</a></h2><p>Todas las marcas del herbario, con sus mezclas.</p></section>
+<section class="grupo"><h2><a href="../mezcla/">Tipos de mezcla</a></h2><p>Inglesas, balcánicas, de Virginia, aromáticas y más.</p></section>"""
+    pag = marco("Página no encontrada", "Esta dirección no existe en El herbario de la Comarca.", "404.html", cuerpo,
+                [("Inicio", ""), ("Página no encontrada", None)])
+    pag = pag.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<base href="/">\n<meta name="robots" content="noindex">', 1)
+    return re.sub(r'<link rel="canonical"[^>]*>\n|<meta property="og:url"[^>]*>\n', "", pag)
+
+
+def huella(contenido):
+    """Resumen del contenido de una página, sin las versiones de los estilos (?v=...), que cambian sin que cambie la página."""
+    return hashlib.sha1(re.sub(r"\?v=\w+", "", contenido).encode("utf-8")).hexdigest()[:16]
+
+
+def fechas_al_dia(paginas):
+    """paginas: {ruta: html}. Devuelve {ruta: AAAA-MM-DD}: la fecha guardada si la página no ha cambiado; hoy si ha cambiado o es nueva."""
+    try:
+        viejas = json.loads(FECHAS.read_text(encoding="utf-8"))
+    except Exception:
+        viejas = {}
+    hoy = datetime.date.today().isoformat()
+    nuevas = {}
+    for ruta, contenido in paginas.items():
+        h, antes = huella(contenido), viejas.get(ruta) or {}
+        nuevas[ruta] = antes if antes.get("h") == h and antes.get("f") else {"h": h, "f": hoy}
+    FECHAS.write_text(json.dumps(nuevas, ensure_ascii=False, indent=0, sort_keys=True), encoding="utf-8")
+    return {r: v["f"] for r, v in nuevas.items()}
+
+
+def sitemap(rutas, fechas=None):
+    fechas = fechas or {}
+    filas = "".join(f"<url><loc>{html.escape(BASE + r)}</loc>" + (f"<lastmod>{fechas[r]}</lastmod>" if fechas.get(r) else "") + "</url>\n"
+                    for r in rutas)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + filas + "</urlset>\n")
 
@@ -918,7 +959,15 @@ def main():
              + [f"marca/{n}" for n in sorted(marcas) if n != "index.html"]
              + [f"mezcla/{n}" for n in sorted(mezclas) if n != "index.html"]
              + [f"f/{i}.html" for i in ids])
-    (RAIZ / "sitemap.xml").write_text(sitemap(rutas), encoding="utf-8")
+    # lastmod: cuándo cambió de verdad cada página. La portada cambia cuando cambia cualquier ficha.
+    generadas = {f"f/{n}": c for n, c in paginas.items()}
+    generadas.update({("marca/" if n == "index.html" else f"marca/{n}"): c for n, c in marcas.items()})
+    generadas.update({("mezcla/" if n == "index.html" else f"mezcla/{n}"): c for n, c in mezclas.items()})
+    fechas = fechas_al_dia(generadas)
+    if fechas:
+        fechas[""] = max(fechas.values())
+    (RAIZ / "sitemap.xml").write_text(sitemap(rutas, fechas), encoding="utf-8")
+    escribir(RAIZ / "404.html", pagina_404())
     (RAIZ / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}sitemap.xml\n", encoding="utf-8")
     con_texto = sum(1 for m in por_marca if textos["marca"].get(slug(m)))
     print(f"{len(ids)} fichas, {len(marcas) - 1} marcas ({con_texto} con texto) y {len(mezclas) - 1} tipos de mezcla "
