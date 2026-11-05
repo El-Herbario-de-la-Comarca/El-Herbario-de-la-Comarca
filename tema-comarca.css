@@ -76,7 +76,7 @@
 /* Madriguera en la colina (sustituye a las colinas simples). */
 .hills.hole { display: none; }
 .comarca .hills:not(.hole) { display: none; }
-.comarca .hills.hole { display: block; height: clamp(120px, 17vw, 200px); margin-top: 6px; }
+.comarca .hills.hole { display: block; height: clamp(96px, 13.6vw, 160px); margin-top: 4px; }
 :root.comarca { --mound: #A9BC7A; --stone: #BCAE92; --glass: #F3C866; --pathc: #DCC79C; --wood: #8A6747; --smoke: rgb(255 255 255 / .7); }
 :root.comarca[data-theme="dark"] { --mound: #2E3B27; --stone: #5B5444; --glass: #E9B44C; --pathc: #4A4030; --wood: #6B4F37; --smoke: rgb(220 205 175 / .28); }
 @media (prefers-color-scheme: dark) { :root.comarca:not([data-theme="light"]) { --mound: #2E3B27; --stone: #5B5444; --glass: #E9B44C; --pathc: #4A4030; --wood: #6B4F37; --smoke: rgb(220 205 175 / .28); } }
@@ -191,12 +191,12 @@
 @media (max-width: 600px) {
   .comarca .hero { padding-top: 4px; }
   .comarca .hero-top { gap: 12px; }
-  .comarca .logo { width: 68px; }
-  .comarca .hero-text { gap: 4px; }
-  .comarca .eyebrow { font-size: 0.82rem; }
-  .comarca .hero h1 { font-size: 1.55rem; }
-  .comarca .hero .tag { font-size: 0.85rem; }
-  .comarca .hills.hole { height: 96px; margin-top: 4px; }
+  .comarca .logo { width: 58px; }
+  .comarca .hero-text { gap: 2px; }
+  .comarca .eyebrow { font-size: 0.76rem; }
+  .comarca .hero h1 { font-size: 1.4rem; }
+  .comarca .hero .tag { font-size: 0.78rem; }
+  .comarca .hills.hole { height: 74px; margin-top: 2px; }
 }
 
 /* Tarjetas compactas en móviles: lata pequeña a la izquierda y datos a la derecha. */
