@@ -65,4 +65,4 @@ Si aparece un sabor concreto que no encaja en nada (p. ej. «sandía»), no lo i
 El usuario ejecuta `supabase/51_notas_naturales.sql` en Supabase → SQL Editor (solo rellena fichas sin notas; se puede repetir). Las páginas `f/` se actualizan solas por la noche.
 
 ## Estado
-5/11/2026: preparado. 508 fichas no aromáticas pendientes; 18 ya revisadas sin nota en la tanda anterior (en `notas_naturales_sin.txt`). Con nota: 0.
+5/11/2026: preparado. 508 fichas no aromáticas pendientes; 17 ya revisadas sin nota en la tanda anterior (en `notas_naturales_sin.txt`). Con nota: 0.
