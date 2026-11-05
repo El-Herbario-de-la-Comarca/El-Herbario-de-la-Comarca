@@ -124,3 +124,17 @@ update public.tabacos set notas = array['chocolate', 'frutos secos', 'pasas', 't
 update public.tabacos set notas = array['ahumado']::text[] where id = '1208' and cardinality(notas) = 0;
 -- 1210 · Plum Pudding Special Reserve · Seattle Pipe Club · Smokingpipes 712313 (descripción: peppery spice, smoky)
 update public.tabacos set notas = array['pimienta', 'ahumado']::text[] where id = '1210' and cardinality(notas) = 0;
+-- 1089 · Discovery Brazil Virginia · Davidoff · pfeifen-shop-online.de (descripción: light citrus fruit note)
+update public.tabacos set notas = array['cítricos']::text[] where id = '1089' and cardinality(notas) = 0;
+-- 1087 · Flake Medallions · Davidoff · Smokingpipes 29702 (descripción: spicy Perique)
+update public.tabacos set notas = array['pimienta']::text[] where id = '1087' and cardinality(notas) = 0;
+-- 2108 · Cremon Mixture · Kopp · pfeifen-shop-online.de (descripción: smoky English mixture)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2108' and cardinality(notas) = 0;
+-- 2122 · Meistermischung Nr. 77 Englisch sanft · Kopp · pfeifen-shop-online.de (Aroma: Honey)
+update public.tabacos set notas = array['miel']::text[] where id = '2122' and cardinality(notas) = 0;
+-- 2124 · Meistermischung Nr. 99 Englisch · Kopp · pfeifen-shop-online.de (descripción: pleasantly smoky)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2124' and cardinality(notas) = 0;
+-- 2179 · No. 33 · Kontor-Tabak · TR 11198 (descripción: plum, apricot, honey, bread and malt)
+update public.tabacos set notas = array['ciruela', 'albaricoque', 'miel']::text[] where id = '2179' and cardinality(notas) = 0;
+-- 2175 · No. 6 · Kontor-Tabak · TR 11200 (descripción: floral, citrus-notes, nutty)
+update public.tabacos set notas = array['floral', 'cítricos', 'frutos secos']::text[] where id = '2175' and cardinality(notas) = 0;

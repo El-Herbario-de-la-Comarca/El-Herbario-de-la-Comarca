@@ -327,3 +327,6 @@
 1204 Seattle Pipe Club Hogshead (Smokingpipes 712317: sin sabores)
 1205 Seattle Pipe Club Mississippi River (Smokingpipes 712314: solo «rich», «spiced»)
 1207 Seattle Pipe Club Mississippi River Special Reserve (Smokingpipes 712316: solo «rich»)
+1083 Davidoff English Mixture (Smokingpipes 574: solo lista de hojas)
+1084 Davidoff Royalty Mixture (TR 440: solo «refined flavor»)
+2123 Kopp Meistermischung Nr. 88 (pfeifen-shop-online.de: «Aroma: Coriander» — el cilantro no está en la lista; que decida el administrador)
