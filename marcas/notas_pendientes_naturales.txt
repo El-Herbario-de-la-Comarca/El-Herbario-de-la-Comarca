@@ -1,4 +1,4 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 395
+# Fichas no aromáticas sin notas pendientes de revisar: 354
 
 ## Cornell & Diehl (65)
 90 | Burley Flake #2 | Burley
@@ -206,36 +206,6 @@
 2414 | Torben Dansk Virginia 4,0 Mysore | Sin mezclar
 2415 | Torben Dansk Virginia Mysore Ready Rubbed Flake | Sin mezclar
 
-## Samuel Gawith (28)
-2 | Balkan Flake Burnt Ends | Balcánica
-3 | Balkan Mini Plug | Balcánica
-4 | Best Brown Flake | Virginia
-6 | Black XX Rope | Virginia
-8 | Brown No. 4 Rope | Virginia
-9 | Cabbie's Roll Cut | Virginia-Perique
-10 | Cabbie's Rope | Virginia-Perique
-14 | Cob Plug | Lakeland
-19 | Golden Glow Broken Flake | Virginia
-20 | Grousemoor | Lakeland
-21 | Grousemoor Plug | Lakeland
-22 | Kendal Cream Flake | Lakeland
-23 | Navy Flake | Inglesa
-24 | RC Turkish | Sin mezclar
-25 | Skiff Mixture | Inglesa
-29 | 1792 Mini Plug | Lakeland
-31 | Full Virginia Flake Burnt Ends | Virginia
-32 | Full Virginia Mini Plug | Virginia
-33 | Full Virginia Mixture | Virginia
-34 | Full Virginia Plug | Virginia
-356 | Navy Flake Burnt Ends | Inglesa
-357 | Perfection Mixture | Inglesa
-358 | Sam's Flake | Inglesa
-359 | Sam's Flake Burnt Ends | Inglesa
-360 | St. James Flake | Virginia-Perique
-361 | St. James Flake Burnt Ends | Virginia-Perique
-362 | St. James Mini Plug | Virginia-Perique
-363 | St. James Plug | Virginia-Perique
-
 ## Pfeifendepot (17)
 2137 | No. 038 – Copenhagen B | Virginia
 2139 | No. 045 – Copenhagen Ø | Inglesa
@@ -287,21 +257,6 @@
 2211 | Dark Matter | Inglesa
 2212 | Amorelli's best Selection | Inglesa
 2217 | Ralf's Burley Cup | Burley
-
-## Rattray's (13)
-1000 | 3 Noggins | Inglesa
-1001 | 40 Virginia | Virginia
-1005 | Black Virginia | Virginia
-1008 | Dark Fragrant | Virginia-Perique
-1011 | Highland Targe | Inglesa
-1012 | Jocks Mixture | Inglesa
-1013 | Macbeth | Virginia
-1015 | No. 7 Reserve | Inglesa
-1017 | Professional Mixture | Inglesa
-1018 | Red Lion | Inglesa
-1020 | Sir William | Virginia
-1021 | Stirling Flake | Burley
-1022 | Wallace Flake | Virginia
 
 ## Esoterica (12)
 1186 | And So To Bed | Inglesa

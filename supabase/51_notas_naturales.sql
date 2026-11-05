@@ -68,3 +68,21 @@ update public.tabacos set notas = array['terroso', 'madera', 'cítricos']::text[
 update public.tabacos set notas = array['heno', 'floral', 'hierbas aromáticas']::text[] where id = '2016' and cardinality(notas) = 0;
 -- 2024 · Ju 52 · HU Tobacco · pfeifen-shop-online.de (descripción: raspberry, flowers)
 update public.tabacos set notas = array['frutos rojos', 'floral']::text[] where id = '2024' and cardinality(notas) = 0;
+-- 1001 · 40 Virginia · Rattray's · Smokingpipes 179032 (descripción: honey and grass)
+update public.tabacos set notas = array['miel', 'hierba']::text[] where id = '1001' and cardinality(notas) = 0;
+-- 1018 · Red Lion · Rattray's · Smokingpipes 156722 (descripción: smoky aroma del Latakia)
+update public.tabacos set notas = array['ahumado']::text[] where id = '1018' and cardinality(notas) = 0;
+-- 1020 · Sir William · Rattray's · Smokingpipes 156745 (descripción: whisky aroma)
+update public.tabacos set notas = array['whisky']::text[] where id = '1020' and cardinality(notas) = 0;
+-- 1022 · Wallace Flake · Rattray's · Smokingpipes 156748 (descripción: plum aroma)
+update public.tabacos set notas = array['ciruela']::text[] where id = '1022' and cardinality(notas) = 0;
+-- 2 · Balkan Flake Burnt Ends · Samuel Gawith · Smokingpipes 8275 (descripción: smoky, campfire essence of Latakia; misma mezcla que Balkan Flake)
+update public.tabacos set notas = array['ahumado', 'hoguera']::text[] where id = '2' and cardinality(notas) = 0;
+-- 3 · Balkan Mini Plug · Samuel Gawith · Smokingpipes 8275 (descripción: smoky, campfire essence of Latakia; misma mezcla que Balkan Flake)
+update public.tabacos set notas = array['ahumado', 'hoguera']::text[] where id = '3' and cardinality(notas) = 0;
+-- 356 · Navy Flake Burnt Ends · Samuel Gawith · Smokingpipes 8115 (descripción: rum; misma mezcla que Navy Flake)
+update public.tabacos set notas = array['ron']::text[] where id = '356' and cardinality(notas) = 0;
+-- 357 · Perfection Mixture · Samuel Gawith · Smokingpipes 526529 (descripción: touch of vanilla, smoky notes of Latakia)
+update public.tabacos set notas = array['vainilla', 'ahumado']::text[] where id = '357' and cardinality(notas) = 0;
+-- 31 · Full Virginia Flake Burnt Ends · Samuel Gawith · Smokingpipes 585703 (descripción: fermented dark fruit, earth, oak, hay)
+update public.tabacos set notas = array['ciruela', 'fermentado', 'terroso', 'madera', 'heno']::text[] where id = '31' and cardinality(notas) = 0;
