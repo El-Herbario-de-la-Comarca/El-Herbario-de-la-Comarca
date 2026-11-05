@@ -138,3 +138,45 @@ update public.tabacos set notas = array['ahumado']::text[] where id = '2124' and
 update public.tabacos set notas = array['ciruela', 'albaricoque', 'miel']::text[] where id = '2179' and cardinality(notas) = 0;
 -- 2175 · No. 6 · Kontor-Tabak · TR 11200 (descripción: floral, citrus-notes, nutty)
 update public.tabacos set notas = array['floral', 'cítricos', 'frutos secos']::text[] where id = '2175' and cardinality(notas) = 0;
+-- 2080 · Tree Mixture · Robert Lewis · Smokingpipes 2028 (descripción: smoky Latakia)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2080' and cardinality(notas) = 0;
+-- 2051 · White & Black 763 · Solani · smoke-king.co.uk (descripción: smooth smoky Latakia)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2051' and cardinality(notas) = 0;
+-- 2267 · Gold Virginia Flake · Wessex · Smokingpipes 1268 (descripción: freshly baked bread, citrus undertones)
+update public.tabacos set notas = array['cítricos', 'pan tostado']::text[] where id = '2267' and cardinality(notas) = 0;
+-- 2088 · Pesse Canoe Latakia Flake 20 · Gladora · Smokingpipes 680559 (descripción: wood, plums)
+update public.tabacos set notas = array['madera', 'ciruela']::text[] where id = '2088' and cardinality(notas) = 0;
+-- 2089 · Pesse Canoe Latakia Flake 40 · Gladora · Smokingpipes 680560 (descripción: wood, plums)
+update public.tabacos set notas = array['madera', 'ciruela']::text[] where id = '2089' and cardinality(notas) = 0;
+-- 2091 · Pesse Canoe Oriental Flake · Gladora · TR 13330 (Flavoring: Figs; descripción: floral)
+update public.tabacos set notas = array['higo', 'floral']::text[] where id = '2091' and cardinality(notas) = 0;
+-- 2093 · Brothers in Arms · Per G. Jensen · Smokingpipes 686081 (descripción: cocoa and smoky spice)
+update public.tabacos set notas = array['chocolate', 'ahumado']::text[] where id = '2093' and cardinality(notas) = 0;
+-- 2095 · King's Watch · Per G. Jensen · Smokingpipes 686083 (descripción: citrus notes, toasted sweetness)
+update public.tabacos set notas = array['cítricos', 'pan tostado']::text[] where id = '2095' and cardinality(notas) = 0;
+-- 2096 · Port Guardian · Per G. Jensen · Smokingpipes 686084 (descripción: dark citrus)
+update public.tabacos set notas = array['cítricos']::text[] where id = '2096' and cardinality(notas) = 0;
+-- 2067 · Golden Flake · Ilsted · pfeifen-shop-online.de (Aroma: Honey, Orange)
+update public.tabacos set notas = array['miel', 'cítricos']::text[] where id = '2067' and cardinality(notas) = 0;
+-- 2071 · Own Mixture No. 88 · Ilsted · pfeifen-shop-online.de (descripción: honey-orange flavour)
+update public.tabacos set notas = array['miel', 'cítricos']::text[] where id = '2071' and cardinality(notas) = 0;
+-- 2277 · English Mixture · Savinelli · Smokingpipes 41498 (descripción: smoky flavor profile)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2277' and cardinality(notas) = 0;
+-- 1116 · Golden Sliced · Orlik · Smokingpipes 53 (descripción: sweet citrus)
+update public.tabacos set notas = array['cítricos']::text[] where id = '1116' and cardinality(notas) = 0;
+-- 1139 · Presbyterian Mixture · Planta · pfeifen-shop-online.de (descripción: unimposing smoky note)
+update public.tabacos set notas = array['ahumado']::text[] where id = '1139' and cardinality(notas) = 0;
+-- 1225 · Prince Albert · Prince Albert · Smokingpipes 274404 (descripción: cocoa, molasses)
+update public.tabacos set notas = array['chocolate', 'azúcar moreno']::text[] where id = '1225' and cardinality(notas) = 0;
+-- 1224 · Regular · Sir Walter Raleigh · Smokingpipes 105178 (descripción: hints of anise and molasses)
+update public.tabacos set notas = array['anís', 'azúcar moreno']::text[] where id = '1224' and cardinality(notas) = 0;
+-- 396 · St. Bruno Flake · St. Bruno · Smokingpipes 198924 (descripción: smoky Dark-Fired Kentucky, floral and citrus notes)
+update public.tabacos set notas = array['ahumado', 'floral', 'cítricos']::text[] where id = '396' and cardinality(notas) = 0;
+-- 2244 · Original · Holger Danske · mac-baren.com (descripción: spicy Perique)
+update public.tabacos set notas = array['pimienta']::text[] where id = '2244' and cardinality(notas) = 0;
+-- 2106 · Regular Mixture · Prestige · pfeifen-shop-online.de (Aroma: Caramel, Chocolate, Tropical Fruits)
+update public.tabacos set notas = array['caramelo', 'chocolate', 'frutas tropicales']::text[] where id = '2106' and cardinality(notas) = 0;
+-- 2056 · Blend 51 (Rot) · Reiner · Smokingpipes 524 (descripción: distinctive smoky taste)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2056' and cardinality(notas) = 0;
+-- 2107 · Navy Cut (Flake) · Richmond · TR 3341 (Flavoring: Plum)
+update public.tabacos set notas = array['ciruela']::text[] where id = '2107' and cardinality(notas) = 0;
