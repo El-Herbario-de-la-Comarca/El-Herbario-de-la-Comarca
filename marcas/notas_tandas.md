@@ -4,7 +4,7 @@ Método (5/11/2026): solo notas que la fuente dice expresamente. Tobacco Reviews
 
 Truco para ahorrar búsquedas: la página de marca de TR (p. ej. /brand/48/rattray/) da las URL de cada mezcla y se pueden abrir con WebFetch.
 
-## Hechas (SQL 50, 61 fichas)
+## Hechas (SQL 50, 110 fichas)
 ```
 7|whisky,ahumado|TR 9263 (Flavoring: Whisky; descripción: whisky de malta, fondo ahumado)
 9|pimienta|Smokingpipes 652407 (perique especiado)
@@ -67,6 +67,55 @@ Truco para ahorrar búsquedas: la página de marca de TR (p. ej. /brand/48/rattr
 1144|vainilla,caramelo,miel|TR 3085 (Flavoring: Caramel, Honey, Vanilla)
 1159|caramelo,vainilla|TR 2711 (Flavoring: Caramel, Vanilla)
 1168|frutos rojos,vainilla|TR 2710 (Flavoring: Blackberry, Vanilla)
+376|licor,cítricos|TR 11763 (Flavoring: Ginger, Orange; descripción: licor de naranja y jengibre)
+347|cereza|TR 696 (Flavoring: Cherry; descripción: cerezas maduras)
+1088|miel|TR 10965 (Flavoring: Honey)
+1090|vainilla|TR 10967 (Flavoring: Vanilla)
+1118|ciruela,licor,café|TR 2652 (Flavoring: Brandy, Coffee, Plum)
+1119|frutos rojos,manzana|TR 11761 (Flavoring: Apple, Blackcurrant)
+1120|vainilla|TR 2224 (Flavoring: Vanilla)
+1142|cereza|TR 826 (Flavoring: Cherry)
+1149|cítricos,vainilla|TR 9466 (Flavoring: Orange, Vanilla; descripción: naranja y mandarina)
+1211|nuez|TR 2456 (descripción: sabor a nuez del burley)
+1212|vainilla|TR 12131 (Flavoring: Vanilla)
+1213|cereza,vainilla,pimienta|TR 2457 (Flavoring: Cherry; descripción: cereza, vainilla, especiada con perique)
+1219|whisky|TR 4287 (Flavoring: Whisky)
+1221|manzana,frutos rojos,melocotón|TR 5205 (Flavoring: Apple, Blackberry, Peach, Raspberry)
+2299|licor,cítricos|TR 1438 (Flavoring: Liquor, Orange; descripción: Blue Curaçao)
+2330|frutos rojos,vainilla|TR 11916 (Flavoring: Blackcurrant, Bourbon, Vanilla)
+11|floral|TR 1015 (Flavoring: Floral Essences; descripción: «honey dew»)
+16|frutos rojos,licor,vainilla|TR 1965 (Flavoring: Blackberry, Brandy, Vanilla)
+208|especias dulces,chocolate,ron|TR 9912 (descripción: jengibre, nuez moscada, pimienta de Jamaica, canela, chocolate, ron oscuro)
+222|especias dulces,vainilla|TR 9109 (Flavoring: Cinnamon, Vanilla; descripción: pimienta de Jamaica, canela, vainilla)
+389|arce,miel,floral|TR 2884 (Rich Dark Honeydew, en la UE Spring Dew; Flavoring: Floral, Honey, Maple)
+314|frutas tropicales|TR 7850 (descripción: coco tropical)
+1023|caramelo|TR 9494 (Flavoring: Caramel, Cream)
+1029|chocolate,ron|TR 972 (Flavoring: Cocoa/Chocolate, Rum)
+1085|whisky,floral|TR 441 (Flavoring: Whisky; descripción: aroma floral, whisky escocés)
+1117|caramelo,vainilla|TR 9110 (Flavoring: Caramel, Vanilla)
+1193|regaliz|TR 494 (Flavoring: Licorice)
+1200|café|TR 501 (Flavoring: Coffee, Fruit/Citrus)
+2030|especias dulces,anís,incienso,floral,miel|TR 11567 (Flavoring: Anisette, Cinnamon, Floral, Honey, Spices; descripción: pimienta, canela, anís, incienso, jazmín, miel, higos)
+2033|café,vainilla|TR 10658 (Flavoring: Coffee, Vanilla)
+2029|floral,cedro|TR 11759 (Flavoring: Floral Essences; descripción: cedro, rosa)
+2052|frutos rojos,ron,chocolate|TR 1985 (Flavoring: Blackcurrant, Cocoa/Chocolate, Rum)
+2045|ciruela|TR 4604 (descripción: un toque de ciruela)
+2068|ciruela,vainilla|TR 585 (Flavoring: Plum, Vanilla)
+2073|vainilla|TR 584 (Flavoring: Fruit/Citrus, Vanilla)
+2094|chocolate,almendra|TR 13555 (descripción: chocolate cremoso y almendras tostadas)
+2058|whisky,nuez|TR 1216 (descripción: barricas de whisky, sabor a nuez)
+1223|licor,cítricos|TR 1913 (Flavoring: Alcohol/Liquor, Orange)
+1173|ron,vino|TR 10962 (Flavoring: Liquor, Rum; descripción: ron y vino)
+2132|vino,cereza|TR 1133 (No. 6, antes Sherry & Cherry; Flavoring: Cherry, Sherry)
+1024|vainilla|TR 965 (Flavoring: Other/Misc, Vanilla)
+2074|vainilla,frutas tropicales,cítricos|TR 4191 (Flavoring: Fruit/Citrus, Vanilla; descripción: vainilla, coco, lima)
+2304|miel|TR 66 (Flavoring: Honey)
+2322|frutos rojos|pfeifen-shop-online.de (aroma: uva y grosella negra; TR no la tiene)
+2128|frutas tropicales|pfeifen-shop-online.de (aroma de mango; TR no la tiene con este nombre)
+2241|caramelo|pfeifen-shop-online.de (aroma: Karamell)
+2070|pasas|pfeifen-shop-online.de (descripción: aroma de pasas)
+2356|frutas tropicales|pfeifen-shop-online.de (aroma: Tropical Fruits; descripción: sandía)
+1164|vainilla,miel|pfeifen-shop-online.de (aroma: Vanilla, Honey; S.V.H. = Sweet Vanilla Honeydew)
 ```
 
 ## Revisadas sin nota en la fuente
@@ -94,88 +143,25 @@ Truco para ahorrar búsquedas: la página de marca de TR (p. ej. /brand/48/rattr
 148 C&D Milk & Honey (TR 2549: Other/Misc)
 1156 Dan Liberty (TR 1519: solo «especiado»)
 124 C&D Founding Fathers y 161 Old Grove: granada (TR 4325 y 9740). «Granada» no está en la lista: pendiente de que el administrador decida si se añade.
+422 Mixture Modern (TR 2204: Other/Misc)
+1052 McConnell The Fragrant Blend (TR 11: solo «fruta» genérico)
+2236 7 Seas Royal Blend y 2238 7 Seas Blue Blend (TR 3677: Other/Misc)
+2243 W.Ø. Larsen Fresh & Elegant (TR 2689: solo «fruta» genérico)
+2296 Fleetenkieker (TR 1475: Other/Misc)
+2336 Wappen von Hamburg (TR 1515: Other/Misc)
+17 Fire Dance Plug (TR solo tiene la versión flake; no se da por igual)
+398 St. Bruno Gold Block (TR 1146: solo «Sweet / Sugar»)
+2099 Thomas Radford Sundays Fantasy (TR 943: solo «fruta» genérico)
+2269 Wessex Director's Choice (TR 2164: sin Flavoring; solo «cavendish especiado»)
+2252 Skandinavik Mixture (TR 1281: Other/Misc)
+2246 Barsdorf Mixture (pfeifen-shop: solo «fruta» genérico)
+2127 Exclusiv Mixture No. 1 (pfeifen-shop: solo «fruta» genérico)
+1112 Erik Stokkebye 4 Seasons Spring (Smokingpipes: sin nota concreta)
+Sin fuente encontrada o página que no se pudo abrir (5/11): 17 Fire Dance Plug, 328 Kendal Gold #14 Dutch, 1203 Esoterica Woodbridge, 1226 Half and Half, 2130 Exclusiv No. 4, 2134 Pfeifendepot 032, 2197 TAK L48, 2201 TAK Danish Blend 2.0, 2215 TAK Happy Dad, 2239 7 Seas Bright Blend, 2309 Dan Pipe 2000, 2317 Lütte Deern, 2318 Jirsa Olda's Louny, 2328 Olaf Poulsson 77, 2333 Sunday's Best, 2334 Take your time!
 ```
 
-## Aromáticas que faltan por revisar (79)
-- 11 Cannon Plug · Samuel Gawith
-- 16 Fire Dance Flake · Samuel Gawith
-- 17 Fire Dance Plug · Samuel Gawith
-- 208 Golden Days of Yore · Cornell & Diehl
-- 222 We Three Kings · Cornell & Diehl
-- 314 Caribbean Coconut · Gawith Hoggarth
-- 328 Kendal Gold #14 - Dutch · Gawith Hoggarth
-- 347 Red Ambrosia · STG
-- 376 Jolly Old Saint Nicholas · Cornell & Diehl
-- 389 Rich Dark Spring Dew · Gawith Hoggarth
-- 398 Gold Block · St. Bruno
-- 422 Mixture Modern · STG
-- 1023 Westminster Abbey · Rattray's
-- 1024 Black and Gold Mixture · Robert McConnell
-- 1029 Glen Piper · Robert McConnell
-- 1052 The Fragrant Blend · Robert McConnell
-- 1085 Scottish Mixture · Davidoff
-- 1088 Discovery Argentina Cavendish · Davidoff
-- 1090 Discovery Malawi Dark Cavendish · Davidoff
-- 1112 4 Seasons Spring Mixture · Erik Stokkebye
-- 1117 Club Mixture · Orlik
-- 1118 Classic · Stanwell
-- 1119 Green & Indigo · Stanwell
-- 1120 Jubilee · Stanwell
-- 1142 Wild C · Mc Lintock
-- 1149 Bi Bo – Biker & Bolzer · Dan Tobacco
-- 1164 S.V.H. · Dan Tobacco
-- 1173 Century · Germain's
-- 1193 Kingsbridge · Esoterica
-- 1200 St. Ives · Esoterica
-- 1203 Woodbridge · Esoterica
-- 1211 #7 · Watch City
-- 1212 4-Q · Watch City
-- 1213 Bada-Bing! · Watch City
-- 1219 Eureka · Watch City
-- 1221 None of Your Business · Watch City
-- 1223 Aromatic · Sir Walter Raleigh
-- 1226 Half and Half · Half and Half
-- 2029 The Untouchables · HU Tobacco
-- 2030 Moroccan Bazaar · HU Tobacco
-- 2033 Geniet Moment · HU Tobacco
-- 2045 Festival 333 · Solani
-- 2052 X-Mystery 113 · Solani
-- 2058 Professional · Reiner
-- 2068 Own Mixture No. 55 · Ilsted
-- 2070 Own Mixture No. 77 · Ilsted
-- 2073 Own Mixture No. 100 · Ilsted
-- 2074 Harlekin · Winsløw
-- 2094 Harbour Dreams · Per G. Jensen
-- 2099 Sundays Fantasy · Thomas Radford
-- 2127 Mixture No. 1 · Exclusiv
-- 2128 Mixture No. 2 · Exclusiv
-- 2130 Mixture No. 4 · Exclusiv
-- 2132 Mixture No. 6 · Exclusiv
-- 2134 No. 032 – Extra White · Pfeifendepot
-- 2197 L48 · TAK
-- 2201 Typ 3/2 – Danish Blend 2.0 · TAK
-- 2215 Happy Dad · TAK
-- 2236 7 Seas Royal Blend · STG
-- 2238 7 Seas Blue Blend · STG
-- 2239 7 Seas Bright Blend · STG
-- 2241 Cube Silver · STG
-- 2243 Fresh & Elegant · W.Ø. Larsen
-- 2246 Mixture · Käpt'n Barsdorfs Bester
-- 2252 Mixture · Skandinavik
-- 2269 Director's Choice · Wessex
-- 2296 Fleetenkieker · Dan Tobacco
-- 2299 Bill Bailey's Birthday Blend · Dan Tobacco
-- 2304 Bjarne Flake de Luxe · Dan Tobacco
-- 2309 Dan Pipe 2000 · Dan Tobacco
-- 2317 Lütte Deern · Dan Tobacco
-- 2318 Jirsa Olda's Louny Blend · Dan Tobacco
-- 2322 Memories of Tuscany · Dan Tobacco
-- 2328 Olaf Poulsson No. 77 · Dan Tobacco
-- 2330 Peter Rasmussen Black Label · Dan Tobacco
-- 2333 Sunday's Best · Dan Tobacco
-- 2334 Take your time! · Dan Tobacco
-- 2336 Wappen von Hamburg · Dan Tobacco
-- 2356 Summer Blend No. 12 · Vauen
+## Aromáticas
+Revisadas todas (5/11/2026). Las que no tienen nota están arriba, en «Revisadas sin nota en la fuente». También vale el atributo «Aroma» de pfeifen-shop-online.de para mezclas alemanas y danesas.
 
 ## Después
 Las no aromáticas sin notas (unas 500): pendiente de que el usuario decida el método.
