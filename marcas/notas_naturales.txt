@@ -53,3 +53,5 @@
 306|floral,especias dulces|Smokingpipes 406962 (descripción: floral, cloves, rose)
 305|floral,especias dulces|Smokingpipes 4009 (descripción: floral, clove, rose)
 319|terroso|Smokingpipes 4003 (descripción: deep, earthy notes)
+315|floral|Smokingpipes 4025 (descripción: floral essence)
+322|floral,almendra,ron,cítricos,vainilla|Smokingpipes 551346 (descripción: floral essences, almond, rum, citrus, vanilla)

@@ -65,4 +65,4 @@ Si aparece un sabor concreto que no encaja en nada (p. ej. «sandía»), no lo i
 El usuario ejecuta `supabase/51_notas_naturales.sql` en Supabase → SQL Editor (solo rellena fichas sin notas; se puede repetir). Las páginas `f/` se actualizan solas por la noche.
 
 ## Estado
-5/11/2026: preparado. 508 fichas no aromáticas pendientes; 17 ya revisadas sin nota en la tanda anterior (en `notas_naturales_sin.txt`). Con nota: 0.
+5/11/2026: tandas 1-3 hechas (Cornell & Diehl, Peterson, G. L. Pease, HU Tobacco, Rattray's, Samuel Gawith y casi todo Gawith Hoggarth). Con nota: 57. Revisadas sin nota: 147. Pendientes de Gawith Hoggarth (reintentar, fallo de Smokingpipes o sin mirar): 290, 297, 307, 312, 313, 316, 321, 325, 338, 340, 344, 380, 381, 385. Pendientes de C&D por error de Smokingpipes: 90, 92, 101, 110, 142.

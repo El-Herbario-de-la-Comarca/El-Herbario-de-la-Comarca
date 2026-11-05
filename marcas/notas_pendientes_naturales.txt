@@ -1,4 +1,4 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 334
+# Fichas no aromáticas sin notas pendientes de revisar: 321
 
 ## Cornell & Diehl (65)
 90 | Burley Flake #2 | Burley
@@ -157,35 +157,6 @@
 2414 | Torben Dansk Virginia 4,0 Mysore | Sin mezclar
 2415 | Torben Dansk Virginia Mysore Ready Rubbed Flake | Sin mezclar
 
-## Gawith Hoggarth (27)
-290 | Best Brown #2 Flake | Virginia
-297 | #12 Mixture | Inglesa
-302 | Black Bogie Twist | Virginia
-307 | Broken Scotch Cake | Lakeland
-308 | Brown Bogie | Virginia
-312 | Brown Twist | Virginia
-313 | Burley and Bright | Burley
-315 | Coniston Cut Plug | Lakeland
-316 | Curly Cut Deluxe | Virginia
-317 | Dark Bird's Eye | Lakeland
-318 | Dark Bird's Eye Vintage Cut | Lakeland
-321 | Dark Plug | Virginia
-322 | Ennerdale Mixture | Lakeland
-325 | Glengarry Flake | Lakeland
-327 | Kendal Dark Vintage Cut | Lakeland
-336 | Kendal Mixed | Lakeland
-338 | Louisiana Flake | Lakeland
-340 | Scotch Mixture | Inglesa
-344 | Black Irish X | Virginia
-380 | Black Cavendish | Sin mezclar
-381 | Bright CR Flake | Virginia
-382 | Bright CR Flake Burnt Ends | Virginia
-383 | Brown Irish X | Virginia
-385 | Grasmere Flake | Lakeland
-386 | Kendal Dark | Lakeland
-387 | Louisiana Flake Burnt Ends | Lakeland
-390 | Westmorland Slices | Virginia
-
 ## Pfeifendepot (17)
 2137 | No. 038 – Copenhagen B | Virginia
 2139 | No. 045 – Copenhagen Ø | Inglesa
@@ -221,6 +192,22 @@
 1183 | Royal Jersey: Perique Mixture | Virginia-Perique
 1184 | Special Latakia Flake | Inglesa
 1185 | Uncle Tom's | Virginia
+
+## Gawith Hoggarth (14)
+290 | Best Brown #2 Flake | Virginia
+297 | #12 Mixture | Inglesa
+307 | Broken Scotch Cake | Lakeland
+312 | Brown Twist | Virginia
+313 | Burley and Bright | Burley
+316 | Curly Cut Deluxe | Virginia
+321 | Dark Plug | Virginia
+325 | Glengarry Flake | Lakeland
+338 | Louisiana Flake | Lakeland
+340 | Scotch Mixture | Inglesa
+344 | Black Irish X | Virginia
+380 | Black Cavendish | Sin mezclar
+381 | Bright CR Flake | Virginia
+385 | Grasmere Flake | Lakeland
 
 ## TAK (14)
 2199 | M74 | Virginia-Perique

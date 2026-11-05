@@ -100,3 +100,7 @@ update public.tabacos set notas = array['floral', 'especias dulces']::text[] whe
 update public.tabacos set notas = array['floral', 'especias dulces']::text[] where id = '305' and cardinality(notas) = 0;
 -- 319 · Dark Flake Aromatic · Gawith Hoggarth · Smokingpipes 4003 (descripción: deep, earthy notes)
 update public.tabacos set notas = array['terroso']::text[] where id = '319' and cardinality(notas) = 0;
+-- 315 · Coniston Cut Plug · Gawith Hoggarth · Smokingpipes 4025 (descripción: floral essence)
+update public.tabacos set notas = array['floral']::text[] where id = '315' and cardinality(notas) = 0;
+-- 322 · Ennerdale Mixture · Gawith Hoggarth · Smokingpipes 551346 (descripción: floral essences, almond, rum, citrus, vanilla)
+update public.tabacos set notas = array['floral', 'almendra', 'ron', 'cítricos', 'vainilla']::text[] where id = '322' and cardinality(notas) = 0;
