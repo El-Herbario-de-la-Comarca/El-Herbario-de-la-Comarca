@@ -208,3 +208,53 @@ update public.tabacos set notas = array['ahumado', 'hierbas aromáticas', 'cítr
 update public.tabacos set notas = array['cítricos', 'ahumado', 'incienso']::text[] where id = '1067' and cardinality(notas) = 0;
 -- 1069 · Regent Street · Robert McConnell · lista del usuario (Robert McConnell): vainilla cremosa, albaricoque, fondo de frutos secos
 update public.tabacos set notas = array['vainilla', 'albaricoque', 'frutos secos']::text[] where id = '1069' and cardinality(notas) = 0;
+-- 2228 · Ascanian No. 1 Riverside Blend · Dan Tobacco · lista del usuario (Dan Tobacco): manzana asada, pasas, pimienta suave
+update public.tabacos set notas = array['manzana', 'pasas', 'pimienta']::text[] where id = '2228' and cardinality(notas) = 0;
+-- 2314 · Ascanian No. 2 Castle Blend · Dan Tobacco · lista del usuario (Dan Tobacco): ciruela negra, hierbas secas orientales, tierra, pimienta pronunciada
+update public.tabacos set notas = array['ciruela', 'hierbas aromáticas', 'terroso', 'pimienta']::text[] where id = '2314' and cardinality(notas) = 0;
+-- 1148 · Bill Bailey's Balkan Blend · Dan Tobacco · lista del usuario (Dan Tobacco): humo denso, cuero, incienso, tierra húmeda, pimienta negra
+update public.tabacos set notas = array['ahumado', 'cuero', 'incienso', 'terroso', 'pimienta']::text[] where id = '1148' and cardinality(notas) = 0;
+-- 1150 · Bizzy Lizzy · Dan Tobacco · lista del usuario (Dan Tobacco): notas florales delicadas
+update public.tabacos set notas = array['floral']::text[] where id = '1150' and cardinality(notas) = 0;
+-- 2230 · Roper's Roundels · Dan Tobacco · lista del usuario (Dan Tobacco): ciruela pasa, higos secos, pimienta suave
+update public.tabacos set notas = array['pasas', 'higo', 'pimienta']::text[] where id = '2230' and cardinality(notas) = 0;
+-- 2306 · Dark Moon · Dan Tobacco · lista del usuario (Dan Tobacco): regaliz negro, anís estrellado, melaza oscura, ciruela pasa
+update public.tabacos set notas = array['regaliz', 'anís', 'azúcar moreno', 'pasas']::text[] where id = '2306' and cardinality(notas) = 0;
+-- 2296 · Fleetenkieker · Dan Tobacco · lista del usuario (Dan Tobacco): final picante de pimienta
+update public.tabacos set notas = array['pimienta']::text[] where id = '2296' and cardinality(notas) = 0;
+-- 1154 · Gordon Pym · Dan Tobacco · lista del usuario (Dan Tobacco): hierba seca, notas florales-orientales, humo medio, pan tostado
+update public.tabacos set notas = array['hierba', 'floral', 'ahumado', 'pan tostado']::text[] where id = '1154' and cardinality(notas) = 0;
+-- 1155 · Hamborger Veermaster · Dan Tobacco · lista del usuario (Dan Tobacco): heno fresco, pan recién horneado, cítricos suaves
+update public.tabacos set notas = array['heno', 'pan tostado', 'cítricos']::text[] where id = '1155' and cardinality(notas) = 0;
+-- 2311 · Holly's Discovery Extraordinary · Dan Tobacco · lista del usuario (Dan Tobacco): humo especiado, madera resinosa, caramelo natural
+update public.tabacos set notas = array['ahumado', 'madera', 'caramelo']::text[] where id = '2311' and cardinality(notas) = 0;
+-- 1156 · Liberty · Dan Tobacco · lista del usuario (Dan Tobacco): nueces tostadas, cacao, vainilla oscura, bourbon
+update public.tabacos set notas = array['nuez', 'chocolate', 'vainilla', 'whisky']::text[] where id = '1156' and cardinality(notas) = 0;
+-- 1169 · Treasures of Ireland: Limerick · Dan Tobacco · lista del usuario (Dan Tobacco): pan de masa madre, tierra, fruta madura, pimienta
+update public.tabacos set notas = array['pan tostado', 'terroso', 'pimienta']::text[] where id = '1169' and cardinality(notas) = 0;
+-- 1157 · London Blend No. 1000 · Dan Tobacco · lista del usuario (Dan Tobacco): hoguera densa, cuero
+update public.tabacos set notas = array['hoguera', 'cuero']::text[] where id = '1157' and cardinality(notas) = 0;
+-- 2317 · Lütte Deern · Dan Tobacco · lista del usuario (Dan Tobacco): bayas rojas frescas, cereza suave
+update public.tabacos set notas = array['frutos rojos', 'cereza']::text[] where id = '2317' and cardinality(notas) = 0;
+-- 1158 · Midnight Ride · Dan Tobacco · lista del usuario (Dan Tobacco): cuero, humo seco, nuez moscada, clavo, fruta fermentada
+update public.tabacos set notas = array['cuero', 'ahumado', 'especias dulces', 'fermentado']::text[] where id = '1158' and cardinality(notas) = 0;
+-- 1160 · Old Ironsides · Dan Tobacco · lista del usuario (Dan Tobacco): humo de turba denso, cuero viejo, madera quemada, espresso amargo, tierra
+update public.tabacos set notas = array['ahumado', 'cuero', 'madera', 'café', 'terroso']::text[] where id = '1160' and cardinality(notas) = 0;
+-- 1161 · Patriot Flake · Dan Tobacco · lista del usuario (Dan Tobacco): té verde, hierba fresca, flores blancas, cítricos
+update public.tabacos set notas = array['té', 'hierba', 'floral', 'cítricos']::text[] where id = '1161' and cardinality(notas) = 0;
+-- 1163 · Skipper's Flake · Dan Tobacco · lista del usuario (Dan Tobacco): pan horneado, melaza ligera, pimienta blanca
+update public.tabacos set notas = array['pan tostado', 'azúcar moreno', 'pimienta']::text[] where id = '1163' and cardinality(notas) = 0;
+-- 2332 · St. Bernard Flake · Dan Tobacco · lista del usuario (Dan Tobacco): fruta negra estofada, tierra húmeda, pimienta negra
+update public.tabacos set notas = array['ciruela', 'terroso', 'pimienta']::text[] where id = '2332' and cardinality(notas) = 0;
+-- 1165 · The Mallard · Dan Tobacco · lista del usuario (Dan Tobacco): cítricos suaves
+update public.tabacos set notas = array['cítricos']::text[] where id = '1165' and cardinality(notas) = 0;
+-- 2335 · The Mallard Flake plus Perique · Dan Tobacco · lista del usuario (Dan Tobacco): higo fermentado, pimienta pronunciada
+update public.tabacos set notas = array['higo', 'fermentado', 'pimienta']::text[] where id = '2335' and cardinality(notas) = 0;
+-- 1167 · Tordenskjold Virginia Slices · Dan Tobacco · lista del usuario (Dan Tobacco): limón, hierba fresca
+update public.tabacos set notas = array['cítricos', 'hierba']::text[] where id = '1167' and cardinality(notas) = 0;
+-- 2313 · Tumblin' Dice · Dan Tobacco · lista del usuario (Dan Tobacco): maracuyá, mango, cítricos dulces
+update public.tabacos set notas = array['frutas tropicales', 'cítricos']::text[] where id = '2313' and cardinality(notas) = 0;
+-- 2336 · Wappen von Hamburg · Dan Tobacco · lista del usuario (Dan Tobacco): vainilla, ciruela, ron ultramarino
+update public.tabacos set notas = array['vainilla', 'ciruela', 'ron']::text[] where id = '2336' and cardinality(notas) = 0;
+-- 2320 · Kriswill Classical Navy Cut · Dan Tobacco · lista del usuario (Dan Tobacco): miel oscura, toque licoroso
+update public.tabacos set notas = array['miel', 'licor']::text[] where id = '2320' and cardinality(notas) = 0;
