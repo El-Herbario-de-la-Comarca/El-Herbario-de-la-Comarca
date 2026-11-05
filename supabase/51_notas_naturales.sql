@@ -6,3 +6,75 @@
 
 -- 78 · Black Duck · Cornell & Diehl · TR 245 (descripción: earthy, woodsy)
 update public.tabacos set notas = array['terroso', 'madera']::text[] where id = '78' and cardinality(notas) = 0;
+-- 39 · Early Morning Pipe · Peterson · Smokingpipes 346525 (descripción: earthy)
+update public.tabacos set notas = array['terroso']::text[] where id = '39' and cardinality(notas) = 0;
+-- 40 · Elizabethan Mixture · Peterson · Smokingpipes 346529 (descripción: peppery spice)
+update public.tabacos set notas = array['pimienta']::text[] where id = '40' and cardinality(notas) = 0;
+-- 45 · My Mixture 965 · Peterson · Smokingpipes 346524 (descripción: smoky)
+update public.tabacos set notas = array['ahumado']::text[] where id = '45' and cardinality(notas) = 0;
+-- 46 · Nightcap · Peterson · Smokingpipes 346526 (descripción: smoky)
+update public.tabacos set notas = array['ahumado']::text[] where id = '46' and cardinality(notas) = 0;
+-- 47 · Old Dublin · Peterson · Smokingpipes 369 (descripción: smoky Latakia)
+update public.tabacos set notas = array['ahumado']::text[] where id = '47' and cardinality(notas) = 0;
+-- 351 · Balkan Mixture · Peterson · Smokingpipes 133055 (descripción: peppery spice)
+update public.tabacos set notas = array['pimienta']::text[] where id = '351' and cardinality(notas) = 0;
+-- 352 · Hyde Park · Peterson · Smokingpipes 111264 (descripción: rum, maple sugar)
+update public.tabacos set notas = array['ron', 'arce']::text[] where id = '352' and cardinality(notas) = 0;
+-- 355 · University Flake · Peterson · Smokingpipes 371 (descripción: plum)
+update public.tabacos set notas = array['ciruela']::text[] where id = '355' and cardinality(notas) = 0;
+-- 225 · Ashbury · G. L. Pease · Smokingpipes 16474 (descripción: leather, campfire)
+update public.tabacos set notas = array['cuero', 'hoguera']::text[] where id = '225' and cardinality(notas) = 0;
+-- 226 · Bankside · G. L. Pease · Smokingpipes 509016 (descripción: smoky, citrusy)
+update public.tabacos set notas = array['ahumado', 'cítricos']::text[] where id = '226' and cardinality(notas) = 0;
+-- 228 · Blackpoint · G. L. Pease · Smokingpipes 2976 (descripción: raisins, stewed figs)
+update public.tabacos set notas = array['pasas', 'higo']::text[] where id = '228' and cardinality(notas) = 0;
+-- 231 · Charing Cross · G. L. Pease · Smokingpipes 2971 (descripción: cocoa, orange zest, campfires, smoky)
+update public.tabacos set notas = array['chocolate', 'cítricos', 'hoguera', 'ahumado']::text[] where id = '231' and cardinality(notas) = 0;
+-- 234 · Ellipsis Flake · G. L. Pease · Smokingpipes 671512 (descripción: nuttiness)
+update public.tabacos set notas = array['frutos secos']::text[] where id = '234' and cardinality(notas) = 0;
+-- 238 · Géométrie · G. L. Pease · Smokingpipes 543654 (descripción: baked goods, floral)
+update public.tabacos set notas = array['bizcocho', 'floral']::text[] where id = '238' and cardinality(notas) = 0;
+-- 239 · Haddo's Delight · G. L. Pease · Smokingpipes 2283 (descripción: cocoa, figs, raisins, earthy)
+update public.tabacos set notas = array['chocolate', 'higo', 'pasas', 'terroso']::text[] where id = '239' and cardinality(notas) = 0;
+-- 240 · Horizons Flake · G. L. Pease · Smokingpipes 610251 (descripción: smokiness)
+update public.tabacos set notas = array['ahumado']::text[] where id = '240' and cardinality(notas) = 0;
+-- 241 · JackKnife Plug · G. L. Pease · Smokingpipes 74582 (descripción: earthy)
+update public.tabacos set notas = array['terroso']::text[] where id = '241' and cardinality(notas) = 0;
+-- 242 · JackKnife Ready Rubbed · G. L. Pease · Smokingpipes 90289 (descripción: earthy)
+update public.tabacos set notas = array['terroso']::text[] where id = '242' and cardinality(notas) = 0;
+-- 247 · Lombard · G. L. Pease · Smokingpipes 15297 (descripción: smokiness)
+update public.tabacos set notas = array['ahumado']::text[] where id = '247' and cardinality(notas) = 0;
+-- 250 · Metropolis · G. L. Pease · Smokingpipes 727299 (descripción: peppery, earthy)
+update public.tabacos set notas = array['pimienta', 'terroso']::text[] where id = '250' and cardinality(notas) = 0;
+-- 254 · Penny Farthing · G. L. Pease · Smokingpipes 328410 (descripción: spiced with Louisiana Perique)
+update public.tabacos set notas = array['pimienta']::text[] where id = '254' and cardinality(notas) = 0;
+-- 257 · Regents Flake · G. L. Pease · Smokingpipes 205228 (descripción: incense-like aroma)
+update public.tabacos set notas = array['incienso']::text[] where id = '257' and cardinality(notas) = 0;
+-- 259 · Samarra · G. L. Pease · Smokingpipes 706 (descripción: smoky)
+update public.tabacos set notas = array['ahumado']::text[] where id = '259' and cardinality(notas) = 0;
+-- 256 · Quiet Nights · G. L. Pease · Smokingpipes 64444 (descripción: smoky Cyprian Latakia)
+update public.tabacos set notas = array['ahumado']::text[] where id = '256' and cardinality(notas) = 0;
+-- 267 · Triple Play · G. L. Pease · Smokingpipes 80555 (descripción: smoky dark-fired Kentucky)
+update public.tabacos set notas = array['ahumado']::text[] where id = '267' and cardinality(notas) = 0;
+-- 268 · Union Square · G. L. Pease · Smokingpipes 49966 (descripción: deep, earthy reds)
+update public.tabacos set notas = array['terroso']::text[] where id = '268' and cardinality(notas) = 0;
+-- 2006 · Makhuwa · HU Tobacco · Smokingpipes 630134 (descripción: nutty)
+update public.tabacos set notas = array['frutos secos']::text[] where id = '2006' and cardinality(notas) = 0;
+-- 2005 · Khoisaan · HU Tobacco · Smokingpipes 630132 (descripción: subtle wood)
+update public.tabacos set notas = array['madera']::text[] where id = '2005' and cardinality(notas) = 0;
+-- 2042 · Night Owl · HU Tobacco · Smokingpipes 630128 (descripción: spicy Perique; «peaty» del Burley no está en la lista)
+update public.tabacos set notas = array['pimienta']::text[] where id = '2042' and cardinality(notas) = 0;
+-- 2018 · Nashville County · HU Tobacco · Smokingpipes 695094 (descripción: licorice)
+update public.tabacos set notas = array['regaliz']::text[] where id = '2018' and cardinality(notas) = 0;
+-- 2012 · Balkan Passion · HU Tobacco · Smokingpipes 630100 (descripción: smoky)
+update public.tabacos set notas = array['ahumado']::text[] where id = '2012' and cardinality(notas) = 0;
+-- 2007 · Manyara · HU Tobacco · pfeifen-shop-online.de (descripción: woodiness, leather, earth, chocolate)
+update public.tabacos set notas = array['madera', 'cuero', 'terroso', 'chocolate']::text[] where id = '2007' and cardinality(notas) = 0;
+-- 2026 · Dockworker Flake · HU Tobacco · pfeifen-shop-online.de (descripción: chocolaty, nutty)
+update public.tabacos set notas = array['chocolate', 'frutos secos']::text[] where id = '2026' and cardinality(notas) = 0;
+-- 2027 · Flanagan Flake · HU Tobacco · pfeifen-shop-online.de (descripción: earthy, wood, citrus)
+update public.tabacos set notas = array['terroso', 'madera', 'cítricos']::text[] where id = '2027' and cardinality(notas) = 0;
+-- 2016 · Izmir Oriental Cake · HU Tobacco · pfeifen-shop-online.de (descripción: hay, floral, herbal)
+update public.tabacos set notas = array['heno', 'floral', 'hierbas aromáticas']::text[] where id = '2016' and cardinality(notas) = 0;
+-- 2024 · Ju 52 · HU Tobacco · pfeifen-shop-online.de (descripción: raspberry, flowers)
+update public.tabacos set notas = array['frutos rojos', 'floral']::text[] where id = '2024' and cardinality(notas) = 0;

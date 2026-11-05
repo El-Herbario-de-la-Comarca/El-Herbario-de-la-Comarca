@@ -1,4 +1,4 @@
-# Fichas no aromáticas sin notas pendientes de revisar: 476
+# Fichas no aromáticas sin notas pendientes de revisar: 395
 
 ## Cornell & Diehl (65)
 90 | Burley Flake #2 | Burley
@@ -206,78 +206,6 @@
 2414 | Torben Dansk Virginia 4,0 Mysore | Sin mezclar
 2415 | Torben Dansk Virginia Mysore Ready Rubbed Flake | Sin mezclar
 
-## G. L. Pease (35)
-224 | Abingdon | Balcánica
-225 | Ashbury | Inglesa
-226 | Bankside | Inglesa
-228 | Blackpoint | Inglesa
-231 | Charing Cross | Balcánica
-232 | Chelsea Morning | Inglesa
-233 | Cumberland | Virginia-Perique
-234 | Ellipsis Flake | Inglesa
-235 | Embarcadero | Inglesa
-236 | Fillmore | Virginia-Perique
-237 | Gaslight | Inglesa
-238 | Géométrie | Inglesa
-239 | Haddo's Delight | Virginia-Perique
-240 | Horizons Flake | Inglesa
-241 | JackKnife Plug | Burley
-242 | JackKnife Ready Rubbed | Burley
-243 | Kensington | Balcánica
-245 | Lagonda | Inglesa
-247 | Lombard | Inglesa
-248 | Maltese Falcon | Inglesa
-249 | Meridian | Inglesa
-250 | Metropolis | Inglesa
-251 | Montgomery | Virginia
-254 | Penny Farthing | Virginia-Perique
-256 | Quiet Nights | Inglesa
-257 | Regents Flake | Inglesa
-258 | Robusto | Inglesa
-259 | Samarra | Inglesa
-261 | Sixpence | Virginia-Perique
-263 | Stratford | Virginia-Perique
-264 | Telegraph Hill | Virginia-Perique
-265 | Temple Bar | Inglesa
-267 | Triple Play | Virginia-Perique
-268 | Union Square | Virginia
-269 | Westminster | Inglesa
-
-## HU Tobacco (33)
-2000 | Asmara | Oriental
-2001 | Fayyum | Inglesa
-2002 | Fayyum Special Kake | Inglesa
-2003 | Indaba | Virginia
-2004 | Khartoum | Inglesa
-2005 | Khoisaan | Inglesa
-2006 | Makhuwa | Burley
-2007 | Manyara | Inglesa
-2008 | Nyala | Burley
-2009 | Tigray | Inglesa
-2010 | Tuarekh | Inglesa
-2011 | Zulu Mixture | Balcánica
-2012 | Balkan Passion | Balcánica
-2013 | Director's Cut | Virginia-Perique
-2014 | Edward G. | Virginia-Perique
-2015 | English Breakfast | Inglesa
-2016 | Izmir Oriental Cake | Inglesa
-2017 | Louisiana Broken | Virginia-Perique
-2018 | Nashville County | Burley
-2019 | Port Latakia | Inglesa
-2020 | White Horses | Virginia-Perique
-2024 | Ju 52 | Virginia-Perique
-2026 | Dockworker Flake | Burley
-2027 | Flanagan Flake | Inglesa
-2028 | Haymaker Flake | Virginia
-2031 | Sunset Flake | Virginia
-2032 | Brullende Leeuw | Inglesa
-2034 | Janneman Flake | Virginia-Perique
-2036 | My Red Fox | Virginia
-2037 | Old Fredder's Broken Flake | Virginia-Perique
-2039 | Dark Moor | Virginia-Perique
-2041 | Nebari | sin mezcla
-2042 | Night Owl | Burley
-
 ## Samuel Gawith (28)
 2 | Balkan Flake Burnt Ends | Balcánica
 3 | Balkan Mini Plug | Balcánica
@@ -359,21 +287,6 @@
 2211 | Dark Matter | Inglesa
 2212 | Amorelli's best Selection | Inglesa
 2217 | Ralf's Burley Cup | Burley
-
-## Peterson (13)
-35 | 3 P's Peterson's Perfect Plug | Burley
-38 | De Luxe Navy Rolls | Virginia-Perique
-39 | Early Morning Pipe | Inglesa
-40 | Elizabethan Mixture | Virginia-Perique
-41 | Flake | Virginia
-43 | Irish Flake | Burley
-45 | My Mixture 965 | Balcánica
-46 | Nightcap | Inglesa
-47 | Old Dublin | Inglesa
-48 | Royal Yacht | Virginia
-351 | Balkan Mixture | Balcánica
-352 | Hyde Park | Burley
-355 | University Flake | Virginia
 
 ## Rattray's (13)
 1000 | 3 Noggins | Inglesa
