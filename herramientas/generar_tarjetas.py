@@ -565,11 +565,52 @@ def mas_de_la_marca(d, otras):
     return titulo, lista_
 
 
+def puntos_parecido(d, x):
+    """Como puntosParecido de app.js."""
+    p = 0.0
+    if d["_tipo"] and x["_tipo"] == d["_tipo"]:
+        p += 5
+    if d["_hojas"] and x["_hojas"]:
+        p += 4 * len(d["_hojas"] & x["_hojas"]) / len(d["_hojas"] | x["_hojas"])
+        if ("Latakia" in d["_hojas"]) != ("Latakia" in x["_hojas"]):
+            p -= 2
+    if d["_corte"] and x["_corte"] == d["_corte"]:
+        p += 2
+    p += 1.5 * min(3, len(d["_notas"] & x["_notas"]))
+    if d["_pais"] and x["_pais"] == d["_pais"]:
+        p += 0.5
+    return p
+
+
+def preparar_parecido(fichas):
+    for d in fichas:
+        d["_tipo"], d["_corte"], d["_pais"] = d.get("tipo") or "", d.get("corte") or "", d.get("pais") or ""
+        d["_hojas"] = set(lista(d.get("hojas")))
+        d["_notas"] = {slug_texto(n) for n in lista(d.get("notas"))}
+
+
+def parecidas(d, todas):
+    """Como parecidas() de app.js: de otras marcas, una por marca, como mucho 4."""
+    minimo = 7 if d["_tipo"] else 5
+    cands = [(puntos_parecido(d, x), x) for x in todas if x.get("marca") != d.get("marca") and x["id"] != d["id"]]
+    cands = [c for c in cands if c[0] >= minimo]
+    cands.sort(key=lambda c: (-c[0], 0 if c[1].get("foto") else 1, c[1]["nombre"].lower(), c[1]["id"]))
+    vistas, sal = set(), []
+    for _, x in cands:
+        if x.get("marca") in vistas:
+            continue
+        vistas.add(x.get("marca"))
+        sal.append(x)
+        if len(sal) == 4:
+            break
+    return sal
+
+
 def slug_texto(s):
     return unicodedata.normalize("NFD", str(s or "")).encode("ascii", "ignore").decode().lower().strip()
 
 
-def pagina(d, otras):
+def pagina(d, otras, parecidas_=()):
     ident = str(d["id"])
     marca, tipo = d.get("marca", ""), d.get("tipo") or ""
     nombre = d.get("nombre", "")
@@ -648,6 +689,14 @@ def pagina(d, otras):
                     + "".join(f'<a class="mas-item" href="{e(x["id"])}.html"><span class="mas-art">{art(x, False)}</span>'
                               f'<span class="mas-nom">{e(x["nombre"])}</span></a>' for x in items)
                     + "</div></section>")
+    if parecidas_:
+        mas_html += ('<section class="sec sec-mas" aria-labelledby="par-h"><h3 id="par-h">Parecidas de otras marcas</h3><div class="mas-lista">'
+                     + "".join(f'<a class="mas-item" href="{e(x["id"])}.html"><span class="mas-art">{art(x, False)}</span>'
+                               f'<span class="mas-nom">{e(x["nombre"])}<small class="mas-marca">{e(x.get("marca", ""))}</small></span></a>'
+                               for x in parecidas_)
+                     + "</div></section>")
+    if mas_html:
+        mas_html = f'<div class="mas-col">{mas_html}</div>'   # las dos listas van juntas en la misma columna
     # Mi bodega: solo se ve si quien mira ha entrado con su cuenta en la web (como en el catalogo)
     bodega = (f"""<div id="d-bodega" hidden><div class="bodega-h"><p class="bodega-t">Mi bodega</p></div>
       <div class="btns bodega" role="group" aria-label="Mi bodega">"""
@@ -934,10 +983,11 @@ def main():
 
     # Fichas
     paginas, ids = {}, []
+    preparar_parecido(validas)
     for d in validas:
         grupo = sorted(por_marca.get(d.get("marca", ""), []), key=lambda o: o["nombre"].lower())
         otras = [o for o in grupo if o["id"] != d["id"]]
-        paginas[f'{d["id"]}.html'] = pagina(d, otras)
+        paginas[f'{d["id"]}.html'] = pagina(d, otras, parecidas(d, validas))
         ids.append(d["id"])
     volcar(SALIDA, paginas)
     ids.sort(key=lambda i: (len(i), i))

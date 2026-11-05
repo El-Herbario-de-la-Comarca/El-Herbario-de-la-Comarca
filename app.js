@@ -742,6 +742,37 @@ function masDeLaMarca(d) {
   const titulo = deSerie.length ? `Más de la serie ${d.nombre.split(/\s+/)[0]}` : `Más de ${d.marca}`;
   return { titulo, lista };
 }
+/* Fichas parecidas de otras marcas (igual que parecidas() de herramientas/generar_tarjetas.py).
+   Puntos: misma mezcla 5, hojas en común hasta 4 (y −2 si una lleva latakia y la otra no), mismo corte 2,
+   cada nota de sabor en común 1,5 (hasta 3 notas) y mismo país 0,5. Hace falta un mínimo para que salgan.
+   Una por marca, como mucho 4; a igualdad de puntos, primero las que tienen foto. */
+function puntosParecido(d, x) {
+  let p = 0;
+  if (d.tipo && x.tipo === d.tipo) p += 5;
+  if (d.hojas.length && x.hojas.length) {
+    const comunes = d.hojas.filter((h) => x.hojas.includes(h)).length;
+    p += 4 * comunes / new Set([...d.hojas, ...x.hojas]).size;
+    if (d.hojas.includes("Latakia") !== x.hojas.includes("Latakia")) p -= 2;
+  }
+  if (d.corte && x.corte === d.corte) p += 2;
+  const notas = new Set(d.notas.map((n) => norm(n)));
+  p += 1.5 * Math.min(3, x.notas.filter((n) => notas.has(norm(n))).length);
+  if (d.pais && x.pais === d.pais) p += 0.5;
+  return p;
+}
+function parecidas(d) {
+  const minimo = d.tipo ? 7 : 5;
+  const cands = current.filter((x) => x.marca !== d.marca && x.id !== d.id)
+    .map((x) => ({ x, p: puntosParecido(d, x) })).filter((c) => c.p >= minimo)
+    .sort((a, b) => b.p - a.p || (fotoSegura(b.x.foto) ? 1 : 0) - (fotoSegura(a.x.foto) ? 1 : 0) || a.x.nombre.localeCompare(b.x.nombre, "es") || (a.x.id < b.x.id ? -1 : 1));
+  const vistas = new Set(), lista = [];
+  for (const { x } of cands) {
+    if (vistas.has(x.marca)) continue;
+    vistas.add(x.marca); lista.push(x);
+    if (lista.length === 4) break;
+  }
+  return lista;
+}
 function abrirPanel(html, clase) {
   if ($("overlay").hidden) lastFocus = document.activeElement;
   $("overlay").hidden = false;
@@ -822,6 +853,7 @@ function openDetail(id, desdeUrl) {
   if (!desdeUrl) ponerUrlFicha(d);
   document.title = `${d.nombre} · ${TITULO}`;
   const mas = masDeLaMarca(d);
+  const par = parecidas(d);
   abrirPanel(`
     <div class="d-franja">${FRANJA}</div>
     <nav class="d-ruta" aria-label="Ruta">
@@ -851,10 +883,16 @@ function openDetail(id, desdeUrl) {
         <div class="reviews" id="rv-list"></div>
       </section>
       <section class="sec sec-resto" id="d-resto" aria-labelledby="rr-h" hidden></section>
+      ${mas || par.length ? '<div class="mas-col">' : ""}
       ${mas ? `<section class="sec sec-mas" aria-labelledby="mas-h">
         <h3 id="mas-h">${esc(mas.titulo)}</h3>
         <div class="mas-lista">${mas.lista.map((x) => `<button class="mas-item" type="button" data-ficha="${esc(x.id)}"><span class="mas-art">${art(x)}</span><span class="mas-nom">${esc(x.nombre)}</span></button>`).join("")}</div>
       </section>` : ""}
+      ${par.length ? `<section class="sec sec-mas" aria-labelledby="par-h">
+        <h3 id="par-h">Parecidas de otras marcas</h3>
+        <div class="mas-lista">${par.map((x) => `<button class="mas-item" type="button" data-ficha="${esc(x.id)}"><span class="mas-art">${art(x)}</span><span class="mas-nom">${esc(x.nombre)}<small class="mas-marca">${esc(x.marca)}</small></span></button>`).join("")}</div>
+      </section>` : ""}
+      ${mas || par.length ? "</div>" : ""}
     </div>`, "ficha");
   $("d-close").addEventListener("click", () => closeDetail());
   $("d-share").addEventListener("click", () => compartirFicha(d));
