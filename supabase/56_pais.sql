@@ -146,3 +146,13 @@ update public.tabacos set pais = 'Dinamarca' where id = '2074' and coalesce(pais
 update public.tabacos set pais = 'Dinamarca' where id = '2075' and coalesce(pais, '') = '';
 update public.tabacos set pais = 'Dinamarca' where id = '2076' and coalesce(pais, '') = '';
 update public.tabacos set pais = 'Dinamarca' where id = '2077' and coalesce(pais, '') = '';
+
+-- Amsterdamer · Dinamarca · indicado por el usuario (fabricante Mac Baren)
+update public.tabacos set pais = 'Dinamarca' where id = '415' and coalesce(pais, '') = '';
+
+-- Ermuri · Alemania · indicado por el usuario
+update public.tabacos set pais = 'Alemania' where id = '2082' and coalesce(pais, '') = '';
+update public.tabacos set pais = 'Alemania' where id = '2083' and coalesce(pais, '') = '';
+update public.tabacos set pais = 'Alemania' where id = '2084' and coalesce(pais, '') = '';
+update public.tabacos set pais = 'Alemania' where id = '2085' and coalesce(pais, '') = '';
+update public.tabacos set pais = 'Alemania' where id = '2086' and coalesce(pais, '') = '';
