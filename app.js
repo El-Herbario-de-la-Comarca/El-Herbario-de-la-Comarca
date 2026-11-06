@@ -3006,6 +3006,7 @@ async function entrar(ev) {
   let res;
   try { res = await sb.auth.signInWithPassword(captchaToken ? Object.assign(d, { options: { captchaToken } }) : d); }
   catch (e) { res = { error: e }; }
+  if (window.__diag) window.__diag("signIn: " + (res.error ? "error " + res.error.message : "ok, sesión " + !!(res.data && res.data.session) + " captcha " + !!captchaToken));
   gastarCaptcha();
   $("lg-send").disabled = false;
   $("lg-msg").style.color = "";
