@@ -45,14 +45,13 @@
 <body>
 <main>
   <h1>Identificar por foto</h1>
-  <p class="sub">Página de prueba. Haz una foto a la lata o al sobre, con la etiqueta de frente y bien iluminada. La foto no sale de tu móvil: se lee aquí mismo.</p>
+  <p class="sub">Página de prueba. Haz una foto a la lata o al sobre, con la etiqueta de frente y bien iluminada. Hace falta haber entrado con tu cuenta. La foto se envía a Google Cloud Vision solo para leer el texto y no se guarda.</p>
 
   <div class="caja">
     <input id="archivo" type="file" accept="image/*" capture="environment" hidden>
     <button id="grande" class="btn" type="button">📷 Hacer foto</button>
     <div class="fila" style="margin-top:8px">
       <button id="galeria" class="btn sec" type="button">Elegir de la galería</button>
-      <button id="girar" class="btn sec" type="button" disabled>↻ Girar y volver a leer</button>
     </div>
     <div id="barra"><i></i></div>
     <p id="estado">Cargando el catálogo…</p>
@@ -77,8 +76,8 @@
   </details>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.97.0"></script>
 <script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js" defer></script>
 <script>
 (function () {
   "use strict";
@@ -212,90 +211,63 @@
     });
   }
 
-  /* ---------- Foto: reducir, pasar a gris, subir el contraste ---------- */
-  let imagen = null, giro = 0;
-  function preparar(img, grados) {
-    const max = 1600, esc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
-    const w = Math.round(img.naturalWidth * esc), h = Math.round(img.naturalHeight * esc);
-    const rot = grados % 180 !== 0;
-    const c = document.createElement("canvas"); c.width = rot ? h : w; c.height = rot ? w : h;
-    const x = c.getContext("2d", { willReadFrequently: true });
-    x.translate(c.width / 2, c.height / 2); x.rotate(grados * Math.PI / 180); x.drawImage(img, -w / 2, -h / 2, w, h);
-    const d = x.getImageData(0, 0, c.width, c.height), px = d.data, hist = new Uint32Array(256);
-    for (let i = 0; i < px.length; i += 4) { const g = (px[i] * 299 + px[i + 1] * 587 + px[i + 2] * 114) / 1000 | 0; px[i] = g; hist[g]++; }
-    const total = px.length / 4; let acc = 0, lo = 0, hi = 255;
-    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc > total * 0.02) { lo = v; break; } }
-    acc = 0; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc > total * 0.02) { hi = v; break; } }
-    const k = 255 / Math.max(1, hi - lo);
-    for (let i = 0; i < px.length; i += 4) { const g = Math.max(0, Math.min(255, (px[i] - lo) * k)); px[i] = px[i + 1] = px[i + 2] = g; }
-    x.setTransform(1, 0, 0, 1, 0, 0); x.putImageData(d, 0, 0);
-    return c;
+  /* ---------- Foto: reducir a 1280 px y enviar a la función leer-etiqueta ---------- */
+  const cfg = window.HERBARIO_CONFIG || {};
+  const sb = (cfg.supabaseUrl && window.supabase) ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  const MENSAJES = {
+    sin_cuenta: "Tienes que entrar con tu cuenta para usar esta función.",
+    tope_usuario: "Has llegado a las 10 fotos de hoy. Mañana podrás seguir.",
+    tope_dia: "Hoy ya se han leído todas las fotos disponibles para la web. Prueba mañana o escribe el nombre a mano.",
+    tope_mes: "Este mes ya se han leído todas las fotos disponibles. Escribe el nombre a mano.",
+    imagen_grande: "La foto es demasiado grande.",
+    google: "El servicio de lectura no ha respondido. Prueba otra vez en un momento.",
+  };
+  let imagen = null;
+  function reducir(img) {
+    const max = 1280, esc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.naturalWidth * esc); c.height = Math.round(img.naturalHeight * esc);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    return c.toDataURL("image/jpeg", 0.85);
   }
 
-  let lector = null;
-  async function obtenerLector() {
-    if (lector) return lector;
-    if (!window.Tesseract) throw new Error("No se ha podido cargar el lector de texto (¿sin conexión?).");
-    const t0 = performance.now();
-    estado("Descargando el lector de texto (solo la primera vez)…");
-    lector = await Tesseract.createWorker("eng", 1, {
-      logger: (m) => {
-        if (typeof m.progress === "number") { $("barra").style.display = "block"; $("barra").firstChild.style.width = Math.round(m.progress * 100) + "%"; }
-        if (m.status === "recognizing text") estado("Leyendo la etiqueta…");
-      }
-    });
-    await lector.setParameters({ tessedit_pageseg_mode: "11" });   // texto suelto, como en una etiqueta
-    log("Lector listo en " + ((performance.now() - t0) / 1000).toFixed(1) + " s");
-    return lector;
-  }
-
-  async function leer(grados) {
-    const w = await obtenerLector();
-    const c = preparar(imagen, grados);
-    const t0 = performance.now();
-    const { data } = await w.recognize(c);
-    const txt = (data.words || []).filter((p) => p.confidence >= 35).map((p) => p.text).join(" ") || data.text || "";
-    return { txt, c, seg: (performance.now() - t0) / 1000, res: buscar(txt) };
-  }
-
-  async function procesar(soloGiro) {
-    $("girar").disabled = true; $("grande").disabled = true; $("galeria").disabled = true;
+  async function procesar() {
+    $("grande").disabled = true; $("galeria").disabled = true;
     try {
-      let r;
-      if (soloGiro) {
-        giro = (giro + 90) % 360; r = await leer(giro);
-      } else {
-        giro = 0; r = await leer(0);
-        // Si no sale nada claro, se prueba con la foto girada (letras en vertical en el lateral de la lata).
-        if (!r.res.length || r.res[0].total < 0.7) {
-          for (const g of [90, 270]) {
-            estado("No está claro; pruebo con la foto girada " + g + "°…");
-            const r2 = await leer(g);
-            log("Giro " + g + "°: " + r2.seg.toFixed(1) + " s · mejor " + (r2.res[0] ? Math.round(r2.res[0].total * 100) + "%" : "nada"));
-            if (r2.res.length && (!r.res.length || r2.res[0].total > r.res[0].total)) { r = r2; giro = g; }
-          }
-        }
+      if (!sb) throw new Error("No se ha podido conectar con la base de datos.");
+      const { data: ses } = await sb.auth.getSession();
+      if (!ses || !ses.session) { estado(MENSAJES.sin_cuenta, "aviso"); return; }
+      const foto = reducir(imagen);
+      $("vista").src = foto; $("vista").style.display = "block";
+      estado("Leyendo la etiqueta…");
+      const t0 = performance.now();
+      const { data, error } = await sb.functions.invoke("leer-etiqueta", { body: { imagen: foto } });
+      const seg = (performance.now() - t0) / 1000;
+      let codigo = data && data.error;
+      if (error) {
+        try { const j = await error.context.json(); codigo = j.error || codigo; } catch (_) { /* sin cuerpo */ }
+        codigo = codigo || "google";
       }
-      $("vista").src = r.c.toDataURL("image/jpeg", 0.7); $("vista").style.display = "block";
-      $("texto").value = r.txt;
-      pintar(r.res);
-      log("Giro " + giro + "° · lectura " + r.seg.toFixed(1) + " s · texto: " + r.txt.slice(0, 200));
-      estado(r.res.length ? "Hecho. Si no acierta, prueba a girar o a hacer la foto más cerca." : "No he encontrado ninguna ficha parecida.", r.res.length ? "" : "aviso");
+      if (codigo) { estado(MENSAJES[codigo] || ("Error: " + codigo), "aviso"); log("Error " + codigo + " (" + seg.toFixed(1) + " s)"); return; }
+      const txt = (data && data.texto) || "";
+      $("texto").value = txt;
+      const res = buscar(txt);
+      pintar(res);
+      log("Lectura " + seg.toFixed(1) + " s · " + Math.round(foto.length / 1024) + " KB · texto: " + txt.replace(/\s+/g, " ").slice(0, 250));
+      estado(res.length ? "Hecho." : (txt ? "He leído texto, pero no encaja con ninguna ficha." : "No he encontrado texto en la foto."), res.length ? "" : "aviso");
     } catch (e) {
       console.error(e); estado(e.message || "Algo ha fallado al leer la foto.", "aviso"); log("Error: " + (e.message || e));
     } finally {
-      $("barra").style.display = "none";
-      $("girar").disabled = !imagen; $("grande").disabled = false; $("galeria").disabled = false;
+      $("grande").disabled = false; $("galeria").disabled = false;
     }
   }
 
   $("grande").onclick = () => { $("archivo").setAttribute("capture", "environment"); $("archivo").click(); };
   $("galeria").onclick = () => { $("archivo").removeAttribute("capture"); $("archivo").click(); };
-  $("girar").onclick = () => procesar(true);
   $("archivo").onchange = (e) => {
     const f = e.target.files && e.target.files[0]; if (!f) return;
     const img = new Image();
-    img.onload = () => { imagen = img; procesar(false); };
+    img.onload = () => { imagen = img; procesar(); };
     img.onerror = () => estado("No se ha podido abrir la imagen.", "aviso");
     img.src = URL.createObjectURL(f);
     e.target.value = "";
