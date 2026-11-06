@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Identificar por foto · prueba</title>
+<style>
+  :root { --fondo:#f4eedf; --papel:#fffaf0; --tinta:#2e2a22; --suave:#6d6555; --verde:#3d5a2a; --verde2:#e3ead5; --borde:#d9cfb6; --aviso:#8a4b12; }
+  @media (prefers-color-scheme: dark) { :root { --fondo:#1d1b16; --papel:#27241d; --tinta:#ece5d3; --suave:#a89f8a; --verde:#9cc07a; --verde2:#2f3a25; --borde:#3d382c; --aviso:#e0a060; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--fondo); color:var(--tinta); font:16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:640px; margin:0 auto; padding:16px; }
+  h1 { font-size:1.35rem; margin:.2em 0 .1em; color:var(--verde); }
+  .sub { color:var(--suave); margin:0 0 16px; font-size:.95rem; }
+  .caja { background:var(--papel); border:1px solid var(--borde); border-radius:12px; padding:14px; margin-bottom:14px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:.4em; border:0; border-radius:10px; padding:.8em 1.1em; font:inherit; font-weight:600; cursor:pointer; background:var(--verde); color:#fff; }
+  @media (prefers-color-scheme: dark) { .btn { color:#1d1b16; } }
+  .btn.sec { background:var(--verde2); color:var(--tinta); }
+  .btn[disabled] { opacity:.5; cursor:default; }
+  .fila { display:flex; flex-wrap:wrap; gap:8px; }
+  #grande { width:100%; font-size:1.05rem; padding:1em; }
+  #estado { margin:10px 0 0; color:var(--suave); font-size:.92rem; min-height:1.3em; }
+  #barra { height:6px; background:var(--verde2); border-radius:3px; overflow:hidden; margin-top:8px; display:none; }
+  #barra i { display:block; height:100%; width:0; background:var(--verde); transition:width .2s; }
+  #vista { display:none; max-width:100%; max-height:260px; border-radius:8px; margin-top:12px; border:1px solid var(--borde); }
+  ol { list-style:none; padding:0; margin:0; }
+  li.res { display:flex; gap:10px; align-items:center; padding:10px 0; border-top:1px solid var(--borde); }
+  li.res:first-child { border-top:0; }
+  .num { flex:0 0 auto; width:2.4em; text-align:center; font-weight:700; color:var(--verde); }
+  .info { flex:1; min-width:0; }
+  .info a { color:var(--tinta); font-weight:600; text-decoration:none; }
+  .info a:hover { text-decoration:underline; }
+  .marca { color:var(--suave); font-size:.9rem; }
+  .pista { color:var(--suave); font-size:.8rem; }
+  .elegir { flex:0 0 auto; padding:.5em .8em; font-size:.9rem; }
+  label { font-weight:600; font-size:.95rem; }
+  textarea { width:100%; min-height:90px; margin-top:6px; padding:8px; border-radius:8px; border:1px solid var(--borde); background:var(--fondo); color:var(--tinta); font:14px/1.4 ui-monospace, Menlo, monospace; }
+  .nota { font-size:.85rem; color:var(--suave); }
+  .aviso { color:var(--aviso); }
+  #registro { font:12px/1.4 ui-monospace, Menlo, monospace; white-space:pre-wrap; color:var(--suave); margin:0; }
+  details summary { cursor:pointer; font-weight:600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Identificar por foto</h1>
+  <p class="sub">Página de prueba. Haz una foto a la lata o al sobre, con la etiqueta de frente y bien iluminada. La foto no sale de tu móvil: se lee aquí mismo.</p>
+
+  <div class="caja">
+    <input id="archivo" type="file" accept="image/*" capture="environment" hidden>
+    <button id="grande" class="btn" type="button">📷 Hacer foto</button>
+    <div class="fila" style="margin-top:8px">
+      <button id="galeria" class="btn sec" type="button">Elegir de la galería</button>
+      <button id="girar" class="btn sec" type="button" disabled>↻ Girar y volver a leer</button>
+    </div>
+    <div id="barra"><i></i></div>
+    <p id="estado">Cargando el catálogo…</p>
+    <img id="vista" alt="Foto tal como se ha leído">
+  </div>
+
+  <div class="caja" id="cajaRes" hidden>
+    <h2 style="font-size:1.05rem;margin:0 0 6px">¿Es alguna de estas?</h2>
+    <ol id="resultados"></ol>
+    <p id="ninguna" class="nota" hidden>No he encontrado nada parecido. Prueba con otra foto más cerca de la etiqueta, o corrige el texto de abajo.</p>
+  </div>
+
+  <div class="caja">
+    <label for="texto">Texto leído (puedes corregirlo o escribirlo a mano)</label>
+    <textarea id="texto" placeholder="Por ejemplo: Samuel Gawith Full Virginia Flake"></textarea>
+    <p class="nota">Al cambiar el texto se vuelve a buscar. Sirve para ver si falla la lectura de la foto o la búsqueda.</p>
+  </div>
+
+  <details class="caja">
+    <summary>Datos de la prueba</summary>
+    <pre id="registro"></pre>
+  </details>
+</main>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js" defer></script>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const estado = (t, cls) => { $("estado").textContent = t; $("estado").className = cls || ""; };
+  const registro = [];
+  const log = (t) => { registro.push(t); $("registro").textContent = registro.join("\n"); };
+
+  /* ---------- Normalizar (igual que buscador.js) ---------- */
+  function normalizar(s) {
+    return String(s == null ? "" : s).toLowerCase()
+      .replace(/ø/g, "o").replace(/æ/g, "ae").replace(/œ/g, "oe").replace(/ß/g, "ss")
+      .replace(/\b([a-z])\s*&\s*([a-z])\b/g, "$1$2")
+      .replace(/(^|[^a-z])(n\s*[º°]|no\.|num\.?|número|numero|#)\s*(?=\d)/g, "$1 no ")
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/['’´`]/g, "")
+      .replace(/[^a-z0-9]+/g, " ").trim();
+  }
+  const palabras = (s) => normalizar(s).split(" ").filter(Boolean);
+  // Palabras que no ayudan a distinguir (aparecen en latas de todo tipo).
+  const VACIAS = new Set(["the", "and", "de", "la", "el", "of", "y", "und", "a", "g", "gr", "gramos", "net", "wt", "oz",
+    "tobacco", "tabaco", "tabak", "pipe", "pipa", "pfeifentabak", "smoking", "co", "ltd", "inc", "est", "since"]);
+
+  // Lo que pone en la lata cuando la marca del catálogo es otra (dueño actual, nombre corto…).
+  const OTRAS_MARCAS = { "STG": ["Mac Baren", "Scandinavian Tobacco Group"], "Kopp": ["Kohlhase & Kopp", "Kohlhase Kopp"],
+    "G. L. Pease": ["GL Pease", "Pease"], "Cornell & Diehl": ["Cornell Diehl"], "W.Ø. Larsen": ["WO Larsen", "Larsen"] };
+
+  /* ---------- Catálogo ---------- */
+  let fichas = [], pesos = new Map(), fuente = "";
+  async function cargarCatalogo() {
+    const cfg = window.HERBARIO_CONFIG || {};
+    if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+      try {
+        const filas = [];
+        for (let desde = 0; ; desde += 1000) {
+          const r = await fetch(cfg.supabaseUrl + "/rest/v1/tabacos?select=*&order=id&offset=" + desde + "&limit=1000",
+            { headers: { apikey: cfg.supabaseAnonKey, Authorization: "Bearer " + cfg.supabaseAnonKey } });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const d = await r.json();
+          filas.push(...d);
+          if (d.length < 1000) break;
+        }
+        fuente = "base de datos";
+        return filas;
+      } catch (e) { log("Base de datos no disponible (" + e.message + "); uso la copia de respaldo."); }
+    }
+    await new Promise((ok, mal) => { const s = document.createElement("script"); s.src = "datos-iniciales.js"; s.onload = ok; s.onerror = mal; document.head.appendChild(s); });
+    fuente = "copia de respaldo";
+    return window.DATOS_INICIALES || [];
+  }
+  function prepararCatalogo(filas) {
+    const df = new Map();
+    fichas = filas.filter((r) => r && r.nombre).map((r) => {
+      const marcas = [r.marca || ""].concat(OTRAS_MARCAS[r.marca] || [])
+        .map((m) => [...new Set(palabras(m).filter((p) => !VACIAS.has(p)))]).filter((m) => m.length);
+      const nombres = [r.nombre].concat(Array.isArray(r.otros_nombres) ? r.otros_nombres : [])
+        .map((n) => [...new Set(palabras(n).filter((p) => !VACIAS.has(p)))]).filter((n) => n.length);
+      const f = { id: r.id, nombre: r.nombre, marca: r.marca || "", marcas, nombres };
+      new Set([...marcas.flat(), ...nombres.flat()]).forEach((p) => df.set(p, (df.get(p) || 0) + 1));
+      return f;
+    });
+    const N = fichas.length;
+    df.forEach((n, p) => pesos.set(p, Math.log(1 + N / n) * (p.length <= 2 ? 0.6 : 1)));
+  }
+
+  /* ---------- Parecido entre palabras ---------- */
+  function lev(a, b) {
+    if (a === b) return 0;
+    const m = a.length, n = b.length; let prev = new Array(n + 1), cur = new Array(n + 1);
+    for (let j = 0; j <= n; j++) prev[j] = j;
+    for (let i = 1; i <= m; i++) {
+      cur[0] = i;
+      for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      [prev, cur] = [cur, prev];
+    }
+    return prev[n];
+  }
+  function parecido(p, q) {
+    if (p === q) return 1;
+    if (p.length <= 3 || /\d/.test(p)) return 0;          // cortas y números: solo exactas
+    if (Math.abs(p.length - q.length) > 2) return 0;
+    const s = 1 - lev(p, q) / Math.max(p.length, q.length);
+    return s >= 0.75 ? s : 0;
+  }
+
+  /* ---------- Buscar fichas a partir del texto leído ---------- */
+  function buscar(texto) {
+    const t = palabras(texto).filter((p) => p.length >= 2);
+    const leidas = new Set(t);
+    for (let i = 0; i + 1 < t.length; i++) leidas.add(t[i] + t[i + 1]);   // «SAMUELGAWITH», palabras partidas
+    const lista = [...leidas];
+    const memo = new Map();
+    const mejor = (p) => {
+      if (memo.has(p)) return memo.get(p);
+      let m = 0; for (const q of lista) { const s = parecido(p, q); if (s > m) m = s; if (m === 1) break; }
+      memo.set(p, m); return m;
+    };
+    const puntua = (ps) => {
+      let tot = 0, ok = 0;
+      for (const p of ps) { const w = pesos.get(p) || 1; tot += w; ok += w * mejor(p); }
+      return tot ? { frac: ok / tot, peso: ok } : { frac: 0, peso: 0 };
+    };
+    const res = [];
+    for (const f of fichas) {
+      let m = { frac: 0, peso: 0 };
+      for (const ms of f.marcas) { const x = puntua(ms); if (x.frac > m.frac) m = x; }
+      let n = { frac: 0, peso: 0 };
+      for (const ns of f.nombres) { const x = puntua(ns); if (x.frac > n.frac || (x.frac === n.frac && x.peso > n.peso)) n = x; }
+      if (n.frac === 0) continue;                           // sin nada del nombre no vale
+      const marcaFrac = f.marcas.length ? m.frac : 0.5;
+      const total = 0.6 * n.frac + 0.4 * marcaFrac + 0.04 * Math.min(1, (n.peso + m.peso) / 12);
+      if (total >= 0.3) res.push({ f, total, n: n.frac, m: marcaFrac });
+    }
+    res.sort((a, b) => b.total - a.total);
+    return res.slice(0, 5);
+  }
+
+  function pintar(res) {
+    $("cajaRes").hidden = false;
+    const ol = $("resultados"); ol.textContent = "";
+    $("ninguna").hidden = res.length > 0;
+    res.forEach((r) => {
+      const li = document.createElement("li"); li.className = "res";
+      const pct = Math.round(Math.min(1, r.total) * 100);  // orientativo
+      li.innerHTML = '<span class="num"></span><span class="info"><a target="_blank" rel="noopener"></a><div class="marca"></div><div class="pista"></div></span>';
+      li.querySelector(".num").textContent = pct + "%";
+      const a = li.querySelector("a"); a.textContent = r.f.nombre; a.href = "f/" + encodeURIComponent(r.f.id) + ".html";
+      li.querySelector(".marca").textContent = r.f.marca;
+      li.querySelector(".pista").textContent = "nombre " + Math.round(r.n * 100) + "% · marca " + Math.round(r.m * 100) + "%";
+      ol.appendChild(li);
+    });
+  }
+
+  /* ---------- Foto: reducir, pasar a gris, subir el contraste ---------- */
+  let imagen = null, giro = 0;
+  function preparar(img, grados) {
+    const max = 1600, esc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.round(img.naturalWidth * esc), h = Math.round(img.naturalHeight * esc);
+    const rot = grados % 180 !== 0;
+    const c = document.createElement("canvas"); c.width = rot ? h : w; c.height = rot ? w : h;
+    const x = c.getContext("2d", { willReadFrequently: true });
+    x.translate(c.width / 2, c.height / 2); x.rotate(grados * Math.PI / 180); x.drawImage(img, -w / 2, -h / 2, w, h);
+    const d = x.getImageData(0, 0, c.width, c.height), px = d.data, hist = new Uint32Array(256);
+    for (let i = 0; i < px.length; i += 4) { const g = (px[i] * 299 + px[i + 1] * 587 + px[i + 2] * 114) / 1000 | 0; px[i] = g; hist[g]++; }
+    const total = px.length / 4; let acc = 0, lo = 0, hi = 255;
+    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc > total * 0.02) { lo = v; break; } }
+    acc = 0; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc > total * 0.02) { hi = v; break; } }
+    const k = 255 / Math.max(1, hi - lo);
+    for (let i = 0; i < px.length; i += 4) { const g = Math.max(0, Math.min(255, (px[i] - lo) * k)); px[i] = px[i + 1] = px[i + 2] = g; }
+    x.setTransform(1, 0, 0, 1, 0, 0); x.putImageData(d, 0, 0);
+    return c;
+  }
+
+  let lector = null;
+  async function obtenerLector() {
+    if (lector) return lector;
+    if (!window.Tesseract) throw new Error("No se ha podido cargar el lector de texto (¿sin conexión?).");
+    const t0 = performance.now();
+    estado("Descargando el lector de texto (solo la primera vez)…");
+    lector = await Tesseract.createWorker("eng", 1, {
+      logger: (m) => {
+        if (typeof m.progress === "number") { $("barra").style.display = "block"; $("barra").firstChild.style.width = Math.round(m.progress * 100) + "%"; }
+        if (m.status === "recognizing text") estado("Leyendo la etiqueta…");
+      }
+    });
+    await lector.setParameters({ tessedit_pageseg_mode: "11" });   // texto suelto, como en una etiqueta
+    log("Lector listo en " + ((performance.now() - t0) / 1000).toFixed(1) + " s");
+    return lector;
+  }
+
+  async function leer(grados) {
+    const w = await obtenerLector();
+    const c = preparar(imagen, grados);
+    const t0 = performance.now();
+    const { data } = await w.recognize(c);
+    const txt = (data.words || []).filter((p) => p.confidence >= 35).map((p) => p.text).join(" ") || data.text || "";
+    return { txt, c, seg: (performance.now() - t0) / 1000, res: buscar(txt) };
+  }
+
+  async function procesar(soloGiro) {
+    $("girar").disabled = true; $("grande").disabled = true; $("galeria").disabled = true;
+    try {
+      let r;
+      if (soloGiro) {
+        giro = (giro + 90) % 360; r = await leer(giro);
+      } else {
+        giro = 0; r = await leer(0);
+        // Si no sale nada claro, se prueba con la foto girada (letras en vertical en el lateral de la lata).
+        if (!r.res.length || r.res[0].total < 0.7) {
+          for (const g of [90, 270]) {
+            estado("No está claro; pruebo con la foto girada " + g + "°…");
+            const r2 = await leer(g);
+            log("Giro " + g + "°: " + r2.seg.toFixed(1) + " s · mejor " + (r2.res[0] ? Math.round(r2.res[0].total * 100) + "%" : "nada"));
+            if (r2.res.length && (!r.res.length || r2.res[0].total > r.res[0].total)) { r = r2; giro = g; }
+          }
+        }
+      }
+      $("vista").src = r.c.toDataURL("image/jpeg", 0.7); $("vista").style.display = "block";
+      $("texto").value = r.txt;
+      pintar(r.res);
+      log("Giro " + giro + "° · lectura " + r.seg.toFixed(1) + " s · texto: " + r.txt.slice(0, 200));
+      estado(r.res.length ? "Hecho. Si no acierta, prueba a girar o a hacer la foto más cerca." : "No he encontrado ninguna ficha parecida.", r.res.length ? "" : "aviso");
+    } catch (e) {
+      console.error(e); estado(e.message || "Algo ha fallado al leer la foto.", "aviso"); log("Error: " + (e.message || e));
+    } finally {
+      $("barra").style.display = "none";
+      $("girar").disabled = !imagen; $("grande").disabled = false; $("galeria").disabled = false;
+    }
+  }
+
+  $("grande").onclick = () => { $("archivo").setAttribute("capture", "environment"); $("archivo").click(); };
+  $("galeria").onclick = () => { $("archivo").removeAttribute("capture"); $("archivo").click(); };
+  $("girar").onclick = () => procesar(true);
+  $("archivo").onchange = (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const img = new Image();
+    img.onload = () => { imagen = img; procesar(false); };
+    img.onerror = () => estado("No se ha podido abrir la imagen.", "aviso");
+    img.src = URL.createObjectURL(f);
+    e.target.value = "";
+  };
+  let espera; $("texto").oninput = () => { clearTimeout(espera); espera = setTimeout(() => pintar(buscar($("texto").value)), 250); };
+
+  cargarCatalogo().then((filas) => {
+    prepararCatalogo(filas);
+    estado("Listo: " + fichas.length + " fichas (" + fuente + ").");
+    log("Catálogo: " + fichas.length + " fichas desde la " + fuente);
+  }).catch((e) => estado("No se ha podido cargar el catálogo.", "aviso"));
+})();
+</script>
+</body>
+</html>
