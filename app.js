@@ -2922,8 +2922,54 @@ async function guardarPerfil(nombre, avatar, ok) {
   const m = $("cu-msg"); if (m) { m.style.color = "var(--accent)"; m.textContent = ok; }
 }
 
+/* ---------- Comprobación anti-robots (Cloudflare Turnstile) ----------
+   Solo se usa si config.js tiene turnstileSiteKey. El script de Cloudflare se carga al abrir
+   la ventana de acceso (no en cada visita). Supabase comprueba el token en el registro, la
+   entrada y la recuperación de contraseña; cada token vale para una sola petición. */
+const captcha = { clave: CFG.turnstileSiteKey || "", id: null, token: "", carga: null, esperas: [] };
+function cargarTurnstile() {
+  if (window.turnstile) return Promise.resolve();
+  if (!captcha.carga) captcha.carga = new Promise((ok, mal) => {
+    const s = document.createElement("script");
+    s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    s.async = true; s.onload = () => ok(); s.onerror = () => { captcha.carga = null; mal(new Error("turnstile")); };
+    document.head.appendChild(s);
+  });
+  return captcha.carga;
+}
+function tokenCaptcha(t) { captcha.token = t || ""; if (t) { captcha.esperas.splice(0).forEach((f) => f(t)); } }
+async function prepararCaptcha() {
+  if (!captcha.clave) return;
+  try { await cargarTurnstile(); } catch (e) { return; }
+  if (captcha.id !== null) return;
+  captcha.id = window.turnstile.render("#lg-captcha", {
+    sitekey: captcha.clave, language: "es", theme: "auto", appearance: "interaction-only",
+    callback: tokenCaptcha,
+    "expired-callback": () => tokenCaptcha(""),
+    "error-callback": () => { tokenCaptcha(""); return true; }
+  });
+}
+// Devuelve el token para la petición (esperando un poco si aún se está comprobando) o null.
+async function pedirCaptcha() {
+  if (!captcha.clave) return undefined;
+  await prepararCaptcha();
+  if (!window.turnstile || captcha.id === null) { $("lg-msg").style.color = ""; $("lg-msg").textContent = "No se ha podido cargar la comprobación anti-robots. Revisa tu conexión o desactiva el bloqueador de anuncios para esta web."; return null; }
+  if (captcha.token) return captcha.token;
+  $("lg-msg").style.color = "var(--muted)"; $("lg-msg").textContent = "Comprobando que no eres un robot…";
+  const t = await new Promise((ok) => { captcha.esperas.push(ok); setTimeout(() => ok(""), 15000); });
+  $("lg-msg").style.color = ""; $("lg-msg").textContent = "";
+  if (!t) { $("lg-msg").textContent = "Completa la comprobación anti-robots y vuelve a pulsar."; return null; }
+  return t;
+}
+// Tras usar un token hay que pedir otro.
+function gastarCaptcha() {
+  captcha.token = "";
+  if (window.turnstile && captcha.id !== null) { try { window.turnstile.reset(captcha.id); } catch (e) {} }
+}
+
 /* ---------- Acceso (correo y contraseña) ---------- */
 function abrirLogin() {
+  prepararCaptcha();
   $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
   ["lg-send", "lg-new", "lg-forgot"].forEach((id) => ($(id).disabled = false));
   $("lg-form").hidden = false; $("np-form").hidden = true;
@@ -2946,6 +2992,7 @@ function errorLogin(err) {
   if (/not confirmed/i.test(m)) return "Tienes que confirmar tu correo antes de entrar. Busca el mensaje en tu bandeja de entrada.";
   if (/already registered/i.test(m)) return "Ya existe una cuenta con ese correo. Pulsa «Entrar».";
   if (/rate limit|too many/i.test(m)) return "Demasiados intentos. Espera unos minutos.";
+  if (/captcha/i.test(m)) return "No se ha superado la comprobación anti-robots. Espera un momento y vuelve a intentarlo.";
   if (/not authorized/i.test(m)) return "El servidor de correo aún no está configurado para enviar a esta dirección. Avisa al administrador.";
   return "No se ha podido completar. Inténtalo de nuevo.";
 }
@@ -2953,10 +3000,13 @@ async function entrar(ev) {
   ev.preventDefault();
   const d = datosLogin(true); if (!d) return;
   $("lg-send").disabled = true;
+  const captchaToken = await pedirCaptcha();
+  if (captchaToken === null) { $("lg-send").disabled = false; return; }
   $("lg-msg").style.color = "var(--muted)"; $("lg-msg").textContent = "Entrando…";
   let res;
-  try { res = await sb.auth.signInWithPassword(d); }
+  try { res = await sb.auth.signInWithPassword(captchaToken ? Object.assign(d, { options: { captchaToken } }) : d); }
   catch (e) { res = { error: e }; }
+  gastarCaptcha();
   $("lg-send").disabled = false;
   $("lg-msg").style.color = "";
   if (res.error) { console.error(res.error); $("lg-msg").textContent = errorLogin(res.error); }
@@ -2976,7 +3026,14 @@ async function crearCuenta() {
   if (nombre.length < 2 || nombre.length > 40) { $("lg-msg").textContent = "Escribe un nombre público de 2 a 40 caracteres."; $("lg-nombre").focus(); return; }
   const d = datosLogin(true); if (!d) return;
   $("lg-new").disabled = true;
-  const { data, error } = await sb.auth.signUp(Object.assign(d, { options: { emailRedirectTo: location.origin + location.pathname, data: { nombre } } }));
+  const captchaToken = await pedirCaptcha();
+  if (captchaToken === null) { $("lg-new").disabled = false; return; }
+  const opciones = { emailRedirectTo: location.origin + location.pathname, data: { nombre } };
+  if (captchaToken) opciones.captchaToken = captchaToken;
+  let data = {}, error = null;
+  try { ({ data, error } = await sb.auth.signUp(Object.assign(d, { options: opciones }))); }
+  catch (e) { error = e; }
+  gastarCaptcha();
   $("lg-new").disabled = false;
   if (error) { $("lg-msg").textContent = errorLogin(error); return; }
   // Si la cuenta queda abierta al momento, se guarda también el nombre en el perfil (por si falta el SQL 21).
@@ -2986,7 +3043,14 @@ async function crearCuenta() {
 async function olvido() {
   const d = datosLogin(false); if (!d) return;
   $("lg-forgot").disabled = true;
-  const { error } = await sb.auth.resetPasswordForEmail(d.email, { redirectTo: location.origin + location.pathname });
+  const captchaToken = await pedirCaptcha();
+  if (captchaToken === null) { $("lg-forgot").disabled = false; return; }
+  const opciones = { redirectTo: location.origin + location.pathname };
+  if (captchaToken) opciones.captchaToken = captchaToken;
+  let error = null;
+  try { ({ error } = await sb.auth.resetPasswordForEmail(d.email, opciones)); }
+  catch (e) { error = e; }
+  gastarCaptcha();
   $("lg-forgot").disabled = false;
   if (error) { $("lg-msg").textContent = errorLogin(error); return; }
   $("lg-msg").style.color = "var(--accent)"; $("lg-msg").textContent = "Si la cuenta existe, te llegará un correo para cambiar la contraseña.";

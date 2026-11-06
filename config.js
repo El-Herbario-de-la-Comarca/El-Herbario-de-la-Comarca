@@ -7,5 +7,8 @@
 // =====================================================================
 window.HERBARIO_CONFIG = {
   supabaseUrl: "https://yqargaygohhktbhmpcqk.supabase.co",
-  supabaseAnonKey: "sb_publishable_labR2MVyewHbOyvubMcW4A_sGrzbAUA"
+  supabaseAnonKey: "sb_publishable_labR2MVyewHbOyvubMcW4A_sGrzbAUA",
+  // Comprobación anti-robots en el registro y el acceso (Cloudflare Turnstile → Site Key, es pública).
+  // Vacía = sin comprobación. La Secret Key NO va aquí: va en Supabase (Authentication → Attack Protection).
+  turnstileSiteKey: ""
 };
