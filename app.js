@@ -2969,6 +2969,8 @@ function gastarCaptcha() {
 
 /* ---------- Acceso (correo y contraseña) ---------- */
 function abrirLogin() {
+  // Con código viejo en memoria el acceso puede fallar (p. ej. sin captcha): se recarga antes.
+  comprobarVersion(true).then((nueva) => { if (nueva && !ctx.session) location.reload(); });
   prepararCaptcha();
   $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
   ["lg-send", "lg-new", "lg-forgot"].forEach((id) => ($(id).disabled = false));
@@ -3299,7 +3301,40 @@ async function contarVisita() {
   });
 })();
 
+/* ---------- Aviso de versión nueva ----------
+   En el móvil, una pestaña o la web instalada pueden pasar días abiertas con el código viejo en
+   memoria. Al volver a la web (y cada 30 min) se compara la lista de archivos ?v= de index.html con
+   la que está cargada. Si cambió: aviso con «Actualizar», y recarga directa al abrir «Entrar». */
+const firmaVersion = (lista) => lista.filter((u) => /\?v=/.test(u)).map((u) => u.replace(/^.*\//, "")).sort().join("|");
+const versionCargada = firmaVersion([...document.querySelectorAll("script[src],link[href]")].map((e) => e.getAttribute("src") || e.getAttribute("href")));
+let versionNueva = false, ultimaComprobacion = 0;
+async function comprobarVersion(forzar) {
+  if (versionNueva) return true;
+  if (!forzar && Date.now() - ultimaComprobacion < 60000) return false;
+  ultimaComprobacion = Date.now();
+  try {
+    const r = await fetch("index.html?_=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) return false;
+    const html = await r.text();
+    const firma = firmaVersion([...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((m) => m[1]));
+    if (firma && firma !== versionCargada) { versionNueva = true; avisarVersion(); }
+  } catch (e) {}
+  return versionNueva;
+}
+function avisarVersion() {
+  if ($("aviso-version")) return;
+  const d = document.createElement("div");
+  d.id = "aviso-version"; d.className = "aviso-version"; d.setAttribute("role", "status");
+  d.innerHTML = `<span>Hay una versión nueva del herbario.</span><button class="btn primary" type="button">Actualizar</button>`;
+  d.querySelector("button").addEventListener("click", () => location.reload());
+  document.body.appendChild(d);
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") comprobarVersion(); });
+setInterval(() => { if (document.visibilityState === "visible") comprobarVersion(true); }, 30 * 60 * 1000);
+
 // Service worker: guarda la web para que abra rápido e instalable en el móvil.
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-  navigator.serviceWorker.register("sw.js").catch((e) => console.warn("Sin service worker", e));
+  navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then((reg) => {
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(() => {}); });
+  }).catch((e) => console.warn("Sin service worker", e));
 }

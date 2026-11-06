@@ -1,7 +1,7 @@
 // Service worker del herbario: guarda la web en el móvil para que abra rápido y funcione sin conexión.
 // Siempre intenta la red primero (para tener lo último) y usa la copia guardada si falla.
 // Las peticiones a Supabase y a otros sitios no se tocan.
-const CACHE = "herbario-v3";
+const CACHE = "herbario-v4";
 const BASICOS = ["./", "./index.html", "./estilos.css", "./tema-comarca.css", "./app.js", "./buscador.js", "./config.js",
   "./datos-iniciales.js", "./temporada.js", "./zonas.js", "./img/logo.png", "./img/icono-192.png", "./manifest.webmanifest"];
 
@@ -22,6 +22,11 @@ self.addEventListener("fetch", (e) => {
     fetch(req.mode === "navigate" ? req.url : req, { cache: "no-cache" }).then((res) => {
       if (res.ok) { const copia = res.clone(); caches.open(CACHE).then((c) => c.put(req, copia)); }
       return res;
-    }).catch(() => caches.match(req, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")))
+    }).catch(() => {
+      // Sin conexión. Las páginas se buscan sin «?…»; los archivos, con su versión exacta, para no mezclar
+      // un index.html nuevo con un app.js viejo (o al revés).
+      if (req.mode === "navigate") return caches.match(req, { ignoreSearch: true }).then((r) => r || caches.match("./index.html"));
+      return caches.match(req).then((r) => r || caches.match(req, { ignoreSearch: true }).then((v) => (v && !/\?v=/.test(req.url) ? v : Response.error())));
+    })
   );
 });
