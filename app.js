@@ -2559,8 +2559,10 @@ function abrirBodega(fuente) {
   });
   const lata = (d) => {
     const env = envasesDe(d), viejo = masViejo(env), g = info(d).gramos;
-    const chip = tab === "tengo" && !compacta
-      ? (env.length ? `<span class="bd-chip${viejo && mesesDesde(viejo.fecha_anio, viejo.fecha_mes) >= 12 ? " viejo" : ""}">${esc(resumenEnvases(env))}${viejo ? ` · ${esc(edadCorta(viejo))}` : ""}</span>` : '<span class="bd-chip vacio">Sin envases apuntados</span>')
+    // En modo compacto la etiqueta solo dice los envases (sin el tiempo), para que quepa
+    const chip = tab === "tengo"
+      ? (env.length ? `<span class="bd-chip${viejo && mesesDesde(viejo.fecha_anio, viejo.fecha_mes) >= 12 ? " viejo" : ""}" title="${esc(resumenEnvases(env))}">${esc(resumenEnvases(env))}${viejo && !compacta ? ` · ${esc(edadCorta(viejo))}` : ""}</span>`
+        : `<span class="bd-chip vacio">${compacta ? "Sin envases" : "Sin envases apuntados"}</span>`)
       : "";
     return `<button class="bd-lata" type="button" data-open="${esc(d.id)}" aria-label="${esc(`${d.nombre}, ${d.marca}${g && tab === "tengo" ? `, ${gramosTxt(g)}` : ""}`)}">
         ${chip}<span class="bd-art" aria-hidden="true">${art(d)}</span><span class="bd-balda" aria-hidden="true"></span>
