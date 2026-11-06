@@ -238,7 +238,7 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
     <li><strong>Sin reflejos:</strong> en las latas brillantes, inclina un poco el móvil o apártate de la lámpara.</li>
     <li><strong>De cerca:</strong> mejor la tapa o la etiqueta sola que la lata entera sobre la mesa.</li>
   </ul>
-  <p class="idf-nota">La foto se envía a Google Cloud Vision solo para leer el texto y no se guarda. Cada usuario puede hacer hasta 10 fotos al día. Más detalles en la <a href="privacidad.html">política de privacidad</a>.</p>
+  <p class="idf-nota">La foto se envía a Google Cloud Vision solo para leer el texto y no se guarda. Hay un número máximo de fotos al día por usuario. Más detalles en la <a href="privacidad.html">política de privacidad</a>.</p>
 </section>
 <details class="diag" id="diag" hidden><summary>Datos de la prueba</summary><pre id="registro"></pre></details>
 </div>
@@ -430,7 +430,7 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
   const sb = (cfg.supabaseUrl && window.supabase) ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
   const MENSAJES = {
     sin_cuenta: "Entra con tu cuenta para usar esta función.",
-    tope_usuario: "Has llegado a las 10 fotos de hoy. Mañana podrás seguir; mientras, escribe el nombre a mano.",
+    tope_usuario: "Has llegado al máximo de fotos de hoy. Mañana podrás seguir; mientras, escribe el nombre a mano.",
     tope_dia: "Hoy ya se han leído todas las fotos disponibles para la web. Prueba mañana o escribe el nombre a mano.",
     tope_mes: "Este mes ya se han leído todas las fotos disponibles. Escribe el nombre a mano.",
     imagen_grande: "La foto es demasiado grande.",
