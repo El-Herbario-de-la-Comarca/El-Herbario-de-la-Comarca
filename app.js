@@ -2826,6 +2826,7 @@ function abrirCuenta() {
       <div class="cu-casillas">
         ${ctx.opiniones ? `<div class="bd-casilla"><span class="l">Reseñas publicadas</span><span class="n">${nRes}</span><span class="s">Firmadas como «${esc(nombre)}»</span></div>` : ""}
         ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
+        ${esEditor() && !modoPrueba ? `<button class="bd-casilla cu-ir cu-idf" type="button" id="cu-identificar"><span class="l">Identificar por foto</span><span class="n"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="s">En pruebas, solo editores · Abrir ›</span></button>` : ""}
         ${esAdmin() ? Object.entries(FALTAS).filter(([k]) => k === "foto" || k === "notas").map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
           return `<button class="bd-casilla cu-ir cu-pend" type="button" data-falta="${k}"><span class="l">${txt}</span><span class="n">${n}</span><span class="s">${n === 1 ? "ficha" : "fichas"} · ${n ? "Verlas en el catálogo ›" : "¡Todo completo!"}</span></button>`; }).join("") : ""}
         ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn primary" id="cu-prueba" type="button">Entrar como lector de prueba</button>
@@ -2855,6 +2856,7 @@ function abrirCuenta() {
   if ($("cu-pass")) $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
   if ($("cu-prueba")) $("cu-prueba").addEventListener("click", entrarModoPrueba);
   if ($("cu-bodega")) $("cu-bodega").addEventListener("click", () => abrirBodega());
+  if ($("cu-identificar")) $("cu-identificar").addEventListener("click", () => { location.href = "identificar.html"; });   // página aún no enlazada en la web
   if ($("cu-saruman")) $("cu-saruman").addEventListener("click", () => { if (esAdmin()) abrirBodega(bodegaDePrueba()); });
   if ($("cu-minis")) $("cu-minis").addEventListener("click", crearMiniaturasQueFaltan);
   document.querySelectorAll("[data-falta]").forEach((b) => b.addEventListener("click", () => verFichasSin(b.dataset.falta)));

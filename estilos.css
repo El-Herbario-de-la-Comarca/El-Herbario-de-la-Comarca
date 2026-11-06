@@ -596,6 +596,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .bd-casilla .l { font-family: var(--mono); font-size: 0.95rem; color: var(--muted); }
 .bd-casilla .n { font-family: var(--display); font-size: 2.5rem; line-height: 1; overflow-wrap: anywhere; }
 .bd-casilla .n.medio { font-size: 1.6rem; line-height: 1.1; }
+.bd-casilla.cu-idf .n .ico { width: .8em; height: .8em; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; display: block; }
 .bd-casilla .s { font-size: 0.95rem; color: var(--muted); }
 .bd-casilla.principal { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
 .bd-casilla.principal .l, .bd-casilla.principal .s { color: inherit; opacity: .85; }
