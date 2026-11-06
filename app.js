@@ -2829,6 +2829,7 @@ function abrirCuenta() {
         ${esEditor() && !modoPrueba ? `<button class="bd-casilla cu-ir cu-idf" type="button" id="cu-identificar"><span class="l">Identificar por foto</span><span class="n"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="s">En pruebas, solo editores · Abrir ›</span></button>` : ""}
         ${esAdmin() ? Object.entries(FALTAS).filter(([k]) => k === "foto" || k === "notas").map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
           return `<button class="bd-casilla cu-ir cu-pend" type="button" data-falta="${k}"><span class="l">${txt}</span><span class="n">${n}</span><span class="s">${n === 1 ? "ficha" : "fichas"} · ${n ? "Verlas en el catálogo ›" : "¡Todo completo!"}</span></button>`; }).join("") : ""}
+        ${esAdmin() && !modoPrueba ? `<div class="bd-casilla" id="cu-idf-uso" hidden><span class="l">Fotos identificadas</span><span class="n">–</span><span class="s">este mes</span></div>` : ""}
         ${esAdmin() ? `<div class="bd-casilla cu-admin"><span class="l">Solo administrador</span><button class="btn primary" id="cu-prueba" type="button">Entrar como lector de prueba</button>
           <button class="btn" id="cu-saruman" type="button">Bodega de prueba: Saruman Blanco</button>
           <button class="btn" id="cu-minis" type="button">Crear las miniaturas que faltan</button><p class="muted" id="cu-minis-msg" role="status"></p></div>` : ""}
@@ -2856,6 +2857,7 @@ function abrirCuenta() {
   if ($("cu-pass")) $("cu-pass").addEventListener("click", () => { closeDetail(); pedirNuevaPass(); });
   if ($("cu-prueba")) $("cu-prueba").addEventListener("click", entrarModoPrueba);
   if ($("cu-bodega")) $("cu-bodega").addEventListener("click", () => abrirBodega());
+  if ($("cu-idf-uso")) cargarUsoFotos();
   if ($("cu-identificar")) $("cu-identificar").addEventListener("click", () => { location.href = "identificar.html"; });   // página aún no enlazada en la web
   if ($("cu-saruman")) $("cu-saruman").addEventListener("click", () => { if (esAdmin()) abrirBodega(bodegaDePrueba()); });
   if ($("cu-minis")) $("cu-minis").addEventListener("click", crearMiniaturasQueFaltan);
@@ -2869,6 +2871,20 @@ function abrirCuenta() {
   if ($("av-file")) $("av-file").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) subirAvatar(f); });
   if ($("av-del")) $("av-del").addEventListener("click", () => guardarPerfil(ctx.perfil.nombre, "", "Foto quitada."));
   $("nm-form").addEventListener("submit", (e) => { e.preventDefault(); guardarPerfil($("nm-in").value, ctx.perfil.avatar, "Nombre guardado."); });
+}
+// Casilla «Fotos identificadas» (solo admin): uso de «Identificar por foto» (60_uso_lecturas_foto.sql).
+// Si el SQL no se ha ejecutado o falla, la casilla no aparece.
+async function cargarUsoFotos() {
+  const caja = $("cu-idf-uso");
+  if (!sb || !caja) return;
+  try {
+    const { data, error } = await sb.rpc("uso_lecturas_foto");
+    if (error || !data || !$("cu-idf-uso")) return;
+    const num = (x) => Number(x || 0).toLocaleString("es-ES");
+    caja.querySelector(".n").textContent = num(data.mes);
+    caja.querySelector(".s").textContent = `este mes · ${num(data.hoy)} hoy · ${num(data.total)} en total · ${data.personas === 1 ? "1 persona" : `${num(data.personas)} personas`} este mes`;
+    caja.hidden = false;
+  } catch (_) { /* sin datos: la casilla sigue oculta */ }
 }
 // Abre el catálogo solo con las fichas a las que les falta un dato (y, si se indica, solo de una marca).
 function verFichasSin(k, marca = "") {
