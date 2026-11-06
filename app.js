@@ -2989,12 +2989,16 @@ function datosLogin(conPass) {
 }
 function errorLogin(err) {
   const m = (err && err.message) || "";
+  console.error("Acceso:", err && err.status, m);
   if (/banned/i.test(m)) return "Tu cuenta está suspendida. Si crees que es un error, habla con el administrador del herbario.";
   if (/invalid login/i.test(m)) return "Correo o contraseña incorrectos.";
   if (/not confirmed/i.test(m)) return "Tienes que confirmar tu correo antes de entrar. Busca el mensaje en tu bandeja de entrada.";
   if (/already registered/i.test(m)) return "Ya existe una cuenta con ese correo. Pulsa «Entrar».";
   if (/rate limit|too many/i.test(m)) return "Demasiados intentos. Espera unos minutos.";
   if (/captcha/i.test(m)) return "No se ha superado la comprobación anti-robots. Espera un momento y vuelve a intentarlo.";
+  if (/sending.*(email|mail)|smtp/i.test(m)) return "La cuenta no se ha podido crear porque ha fallado el envío del correo. Inténtalo más tarde o avisa al administrador.";
+  if (/signups? not allowed|disabled/i.test(m)) return "Ahora mismo no se pueden crear cuentas nuevas.";
+  if (/password/i.test(m) && /weak|short|characters/i.test(m)) return "La contraseña no es válida: usa al menos 8 caracteres.";
   if (/not authorized/i.test(m)) return "El servidor de correo aún no está configurado para enviar a esta dirección. Avisa al administrador.";
   return "No se ha podido completar. Inténtalo de nuevo.";
 }
