@@ -41,19 +41,7 @@ echo "3/4 · Fotos (carpetas fotos y avatares)"
 psql "$SUPABASE_DB_URL" -At -c \
   "select bucket_id || '/' || name from storage.objects where bucket_id in ('fotos','avatares') order by 1" \
   > "$DIR/fotos/lista.txt"
-fallos=0; hechas=0
-total="$(grep -c . "$DIR/fotos/lista.txt" || true)"
-echo "  $total fotos que descargar"
-while IFS= read -r ruta; do
-  [ -z "$ruta" ] && continue
-  hechas=$((hechas+1))
-  [ $((hechas % 50)) -eq 0 ] && echo "  … $hechas de $total"
-  mkdir -p "$DIR/fotos/$(dirname "$ruta")"
-  enc="$(python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.argv[1]))' "$ruta")"
-  curl -sSf --retry 3 --max-time 60 -o "$DIR/fotos/$ruta" "$URL/storage/v1/object/public/$enc" || { fallos=$((fallos+1)); echo "  sin descargar: $ruta"; }
-done < "$DIR/fotos/lista.txt"
-echo "  $(grep -c . "$DIR/fotos/lista.txt" || true) fotos en la lista, $fallos sin descargar"
-[ "$fallos" -gt 0 ] && echo "::warning::$fallos fotos no se pudieron descargar."
+python3 "$RAIZ/herramientas/descargar_fotos.py" "$URL" "$DIR/fotos/lista.txt" "$DIR/fotos"
 
 echo "4/4 · Comprimir y cifrar"
 tar czf - "$DIR" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 3 \
