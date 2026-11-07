@@ -19,6 +19,7 @@
           { m: "Kentucky Bird", n: "Comprada a British American Tobacco." },
           { m: "Escudo", e: true, a: 2004, n: "La Navy De Luxe que crearon los Cope en 1912. Orlik la elabora desde 2004 con la marca A&C Petersen." },
           { m: "Richmond", e: true, n: "Su Navy Cut la elabora Orlik." },
+          { m: "Ashton", e: true, n: "La elabora Orlik en Assens." },
         ] },
         { m: "Stanwell", a: 2003, n: "Comprada a British American Tobacco. Las pipas las lleva Kopp con licencia." },
         { m: "W.Ø. Larsen", n: "La casa de Copenhague pasó a Stanwell y hoy figura entre las marcas del grupo." },
@@ -91,6 +92,21 @@
           { m: "Condor", n: "La de la bolsa verde. Ya no se fabrica." },
         ] },
       ] },
+    { id: "davidoff", nombre: "Oettinger Davidoff", corto: "Oettinger Davidoff", pais: "Suiza",
+      historia: "Casa de Basilea, dueña de la marca Davidoff para puros, tabaco de pipa y accesorios. La marca Davidoff de cigarrillos es de Imperial Brands.",
+      h: [{ m: "Davidoff", a: 1972, n: "Sus tabacos de pipa salieron en 1972." }] },
+    { id: "indep", nombre: "Casas independientes", corto: "independientes", pais: "Varios países",
+      historia: "Casas que no forman parte de ningún grupo. Muchas son fabricantes de pipas con mezclas propias.",
+      h: [
+        { m: "Dan Tobacco", a: 1991, n: "Alemania. Nació como Dan Pipe en 1972, de la mano de Heiko Behrens; en 1991 abrió su fábrica de tabaco en Lauenburg." },
+        { m: "Vauen", n: "Alemania. Fabricante de pipas de Núremberg desde 1848; el nombre viene de «Vereinigte Pfeifenfabriken Nürnberg». Elabora también sus mezclas." },
+        { m: "Savinelli", n: "Italia. Casa familiar de pipas, nacida en Milán en 1876." },
+        { m: "Chacom", n: "Francia. Fabricante de pipas nacido en 1928 de la unión de los Comoy y sus primos Chapuis." },
+        { m: "Erik Stokkebye", n: "Dinamarca. Cuarta generación de una familia de tabaqueros; sus mezclas se elaboran en Dinamarca." },
+        { m: "Germain's", n: "Jersey. Casa familiar con registros desde 1820; la fundó Thomas Aubin y la siguieron los Germain.", h: [
+          { m: "Esoterica", e: true, n: "Marca creada en 1988 por Stephen Richman y hoy de Mike Butera. Sus mezclas las elabora Germain's." },
+        ] },
+      ] },
   ];
   // Fuentes de cada grupo, para quien lo revise (no salen en la web).
   // eslint-disable-next-line no-unused-vars
@@ -114,6 +130,10 @@
       "https://pipesmagazine.com/?p=6933", "https://www.badgerandblade.com/forum/threads/stg-to-stop-making-3-nuns-and-capstan.344134/",
       "https://en.wikipedia.org/wiki/John_Middleton_Co.", "https://en.wikipedia.org/wiki/Gallaher_Group",
       "https://pipesmagazine.com/forums/threads/some-bad-news-for-the-condor-lovers.103649/"],
+    tanda2: ["https://www.tobaccoreviews.com/blend/15/ashton-type-1/", "https://en.wikipedia.org/wiki/Davidoff", "https://pipedia.org/wiki/Dan_Pipe",
+      "https://www.smokingpipes.com/pipe-tobacco/vauen/", "https://en.wikipedia.org/wiki/Savinelli_Pipes", "https://www.smokingpipes.com/pipe-tobacco/chacom/",
+      "https://pipesmagazine.com/?p=6064", "https://theislandwiki.org/wiki/J_F_Germain_and_Son,_tobacco_manufacturers",
+      "https://pipesmagazine.com/forums/threads/esoterica-tobacciana.26750/"],
   };
 
   const fichasDe = (m) => current.filter((d) => d.marca === m).length;
