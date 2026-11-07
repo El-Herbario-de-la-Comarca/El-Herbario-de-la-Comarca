@@ -61,8 +61,6 @@ def descripcion(nombre, marca, tipo, corte, formato, extra):
     trozos = [frase]
     if extra:
         trozos.append(extra.strip())
-    if not tipo and not corte:
-        trozos.append("Todavía no tenemos datos fiables de familia ni de corte.")
     f = formato_texto(formato)
     if f:
         trozos.append(f)

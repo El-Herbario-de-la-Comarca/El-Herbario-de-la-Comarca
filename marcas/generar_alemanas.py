@@ -80,8 +80,6 @@ def descripcion(nombre, marca, mezcla, hojas, corte, formato, extra):
         trozos.append("Lleva " + lista_es([HOJA_TXT[h] for h in hojas]) + ".")
     if extra:
         trozos.append(extra.strip())
-    if not mezcla and not corte:
-        trozos.append("Todavía no tenemos datos fiables de mezcla ni de corte.")
     f = formato_texto(formato)
     if f:
         trozos.append(f)
