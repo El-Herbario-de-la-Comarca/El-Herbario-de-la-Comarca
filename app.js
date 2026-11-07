@@ -799,9 +799,11 @@ function ponerUrlFicha(d) {
   if (idDeHash()) history.replaceState(history.state, "", h);
   else history.pushState({ ficha: true }, "", h);
 }
+// Paneles con dirección propia (#/sabores, #/arbol): cada archivo registra aquí cómo se abre.
+const panelesHash = {};
 function quitarUrlFicha() {
-  if (location.hash === "#/sabores") {   // rueda de sabores (sabores.js)
-    if (history.state && history.state.sabores) history.back();
+  if (panelesHash[location.hash]) {   // rueda de sabores, árbol de marcas…
+    if (history.state && history.state.panel) history.back();
     else history.replaceState(null, "", location.pathname + location.search);
     return;
   }
@@ -816,7 +818,7 @@ function abrirFichaDeUrl() {
 }
 window.addEventListener("popstate", () => {
   if (idDeHash()) { abrirFichaDeUrl(); return; }
-  if (location.hash === "#/sabores" && window.Sabores) { window.Sabores.abrir(true); return; }
+  if (panelesHash[location.hash]) { panelesHash[location.hash](true); return; }
   if (!$("overlay").hidden) closeDetail(true);
   // Catálogo: se ponen los filtros de la entrada a la que se ha vuelto (ninguno si no los tenía).
   const destino = enEntradaFiltrada() ? { ...SIN_FILTROS, ...history.state.filtros } : { ...SIN_FILTROS, sort: state.sort };
@@ -3311,7 +3313,7 @@ async function contarVisita() {
   const { data } = await sb.auth.getSession();
   await leerSesion(data && data.session);
   await refrescar();
-  if (window.Sabores && window.Sabores.abierta()) window.Sabores.abrir(true);   // la rueda, con las notas de Supabase
+  if (!$("overlay").hidden && panelesHash[location.hash]) panelesHash[location.hash](true);   // rueda o árbol, con los datos de Supabase
   abrirFichaDeUrl();   // por si la ficha solo está en Supabase (no en la copia de respaldo)
   // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
   // (fallo conocido de supabase-js). Por eso el trabajo se aplaza con setTimeout.

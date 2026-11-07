@@ -1142,3 +1142,40 @@ body.en-prueba .overlay { padding-bottom: 110px; }
   .rs-dibujo { margin: 0 -8px; }
   .rs-info h3 { font-size: 1.7rem; }
 }
+
+/* ---------- Árbol de marcas (arbol.js) ---------- */
+.ab-ley { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .95rem; color: var(--muted); }
+.ab-ley i { display: inline-block; width: 26px; border-top: 2px solid var(--accent); vertical-align: .3em; margin-right: 7px; }
+.ab-ley i.e { border-top: 2px dashed var(--gold); }
+.ab-grupos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; align-items: start; }
+.ab-g { border: 1px solid var(--line); border-radius: 14px; background: var(--casilla, var(--surface)); padding: 18px 20px 14px; min-width: 0; }
+.ab-gh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.ab-gh h3 { font-family: var(--display); font-weight: 400; font-size: 1.5rem; line-height: 1.1; margin: 0; }
+.ab-gh .muted { font-family: var(--mono); font-size: .85rem; }
+.ab-hist { margin: 8px 0 10px !important; font-size: .97rem; color: var(--muted); text-wrap: pretty; }
+.ab-r { position: relative; margin-left: 8px; padding: 6px 0 6px 20px; border-left: 2px solid var(--accent); }
+.ab-r::before { content: ""; position: absolute; left: 0; top: 23px; width: 14px; border-top: 2px solid var(--accent); }
+.ab-r.ab-e { border-left: 2px dashed var(--gold); }
+.ab-r.ab-e::before { border-top: 2px dashed var(--gold); }
+.ab-r:last-child { border-left-color: transparent; }
+.ab-r:last-child::after { content: ""; position: absolute; left: -2px; top: 0; height: 25px; border-left: 2px solid var(--accent); }
+.ab-r.ab-e:last-child::after { border-left: 2px dashed var(--gold); }
+.ab-r .ab-r { margin-left: 4px; }
+.ab-l { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.ab-m { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--fg); font: inherit; font-size: 1rem; cursor: pointer; text-align: left; }
+.ab-m small { font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
+.ab-m.on, button.ab-m.on:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.ab-m.on small { color: var(--accent-fg); }
+.ab-m.ab-sin { cursor: default; border-style: dashed; color: var(--muted); }
+.ab-a { font-family: var(--mono); font-size: .85rem; color: var(--gold); }
+.ab-n { margin: 3px 0 0 !important; font-size: .92rem; color: var(--muted); text-wrap: pretty; }
+.ab-info { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 8px 0 4px;
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--accent); background: var(--surface); }
+.ab-info strong { font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin-right: 10px; }
+.ab-info .muted { display: block; font-size: .92rem; }
+.ab-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.ab-acts .btn { text-decoration: none; }
+.ab-pie { font-size: .9rem; }
+@media (max-width: 600px) { .ab-g { padding: 14px 14px 10px; } .ab-r { padding-left: 16px; } .ab-r::before { width: 11px; } }

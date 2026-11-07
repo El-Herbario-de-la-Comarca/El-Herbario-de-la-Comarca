@@ -82,9 +82,8 @@
       <text class="rs-tc" text-anchor="middle" dominant-baseline="central">Sabores</text></svg>`;
   }
 
-  let abierta = false;
   function abrir(desdeUrl) {
-    if (!desdeUrl && location.hash !== "#/sabores") history.pushState({ sabores: true }, "", "#/sabores");
+    if (!desdeUrl && location.hash !== "#/sabores") history.pushState({ panel: true }, "", "#/sabores");
     const cuentas = contar();
     const conNota = current.filter((d) => (d.notas || []).some(canon)).length;
     abrirPanel(`
@@ -98,7 +97,6 @@
         <div class="rs-dibujo">${dibujo(cuentas)}</div>
         <div class="rs-info" id="rs-info" aria-live="polite"></div>
       </div>`, "bodega-p sabores-p");
-    abierta = true;
     document.title = "Rueda de sabores · " + TITULO;
     $("d-close").addEventListener("click", () => closeDetail());
     const svg = $("rueda"); if (!svg) { $("rs-info").innerHTML = '<p class="muted">Aún no hay notas de sabor.</p>'; return; }
@@ -162,10 +160,9 @@
     if (g) window.scrollTo({ top: Math.max(0, g.getBoundingClientRect().top + window.scrollY - document.querySelector(".bar").offsetHeight - 8), behavior: "smooth" });
   }
 
+  panelesHash["#/sabores"] = abrir;
   window.Sabores = {
     canon, tieneNota, abrir, verNota,
-    abierta: () => abierta && !$("overlay").hidden && !!$("rueda"),
-    cerrada: () => { abierta = false; },
   };
 
   document.querySelectorAll('a[href="#/sabores"]').forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); abrir(); }));
