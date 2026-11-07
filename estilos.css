@@ -1118,6 +1118,10 @@ body.en-prueba .overlay { padding-bottom: 110px; }
 .rueda path:focus-visible { stroke: var(--fg); stroke-width: 2.5; }
 .rueda.foco path { opacity: .3; }
 .rueda.foco path.on { opacity: 1; }
+.rueda.foco path { opacity: .45; }
+.rueda.foco path.on { opacity: 1; }
+.rueda .rs-nota.sel { stroke: var(--fg); stroke-width: 2.2; }
+.rueda text { transition: opacity .18s; }
 .rueda text { pointer-events: none; font-family: var(--sans, inherit); }
 .rueda .rs-tf { font-size: 11px; font-weight: 600; }
 .rueda .rs-tn { font-size: 10.5px; fill: #2E2418; }
