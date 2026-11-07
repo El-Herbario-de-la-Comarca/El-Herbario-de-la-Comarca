@@ -411,7 +411,8 @@ document.getElementById("gate-text").textContent="Esta página solo está dispon
     $("res-tit").textContent = res.length === 1 ? "¿Es esta?" : "¿Es alguna de estas?";
     res.forEach((r, i) => {
       const li = document.createElement("li"), a = document.createElement("a");
-      a.href = "f/" + encodeURIComponent(r.f.id) + ".html";
+      // A la ficha del catálogo (datos en vivo de Supabase), no a f/<id>.html, que solo se regenera de noche
+      a.href = "index.html#/ficha/" + encodeURIComponent(r.f.id);
       a.appendChild(miniatura(r.f));
       const t = document.createElement("span"); t.className = "txt";
       const b = document.createElement("b"); b.textContent = r.f.nombre;
