@@ -1199,3 +1199,18 @@ button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
 .arbol-enlace svg { width: 34px; height: 34px; flex: none; fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .arbol-enlace b { display: block; font-family: var(--display); font-weight: 400; font-size: 1.3rem; color: var(--accent); }
 .arbol-enlace small { display: block; color: var(--muted); font-size: .95rem; }
+
+/* ---------- Buscar por foto (foto.js) ---------- */
+.q-caja { position: relative; min-width: 0; }
+.q-caja input[type="search"] { width: 100%; padding-right: 48px; }
+.q-foto { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); width: 40px; height: 40px; display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--accent); cursor: pointer; }
+.q-foto:hover, .q-foto:focus-visible { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.q-foto svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.q-foto.leyendo { cursor: progress; }
+.q-foto.leyendo svg { animation: q-foto-latido 1s ease-in-out infinite; }
+@keyframes q-foto-latido { 50% { opacity: .35; transform: scale(.9); } }
+@media (prefers-reduced-motion: reduce) { .q-foto.leyendo svg { animation: none; opacity: .5; } }
+.foto-msg { margin: 2px 0 0; font-size: .92rem; color: var(--muted); }
+.foto-msg[data-tipo="error"] { color: var(--danger, #A3392B); }
+.foto-msg[data-tipo="hecho"] { color: var(--accent); }

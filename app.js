@@ -463,7 +463,9 @@ function fillFilters() {
    navegador) vuelve siempre al catálogo sin filtros. */
 const SIN_FILTROS = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: "nombre", page: 1, falta: "" };
 const SELECTS_FILTRO = [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-pais", "pais"], ["sort", "sort"]];
-const hayFiltros = () => !!(state.q.trim() || state.marca || state.tipo || state.hoja || state.corte || state.pais || state.nota || state.falta);
+// Resultado de «Buscar por foto» (foto.js): id de ficha → posición. No va en la dirección; se borra al tocar otro filtro.
+let busquedaFoto = null;
+const hayFiltros = () => !!(state.q.trim() || state.marca || state.tipo || state.hoja || state.corte || state.pais || state.nota || state.falta || busquedaFoto);
 const fotoFiltros = () => Object.fromEntries(Object.keys(SIN_FILTROS).map((k) => [k, state[k]]));
 const urlSinFicha = () => location.pathname + location.search;
 const enEntradaFiltrada = () => !!(history.state && history.state.filtros);
@@ -489,6 +491,8 @@ function anotarFiltros() {
 }
 // Pone en el catálogo (y en los desplegables) los filtros indicados.
 function ponerFiltros(f) {
+  busquedaFoto = null;
+  if ($("foto-msg") && $("foto-msg").dataset.tipo !== "leyendo") $("foto-msg").hidden = true;
   Object.assign(state, SIN_FILTROS, f);
   $("q").value = state.q;
   SELECTS_FILTRO.forEach(([id, k]) => { $(id).value = state[k]; });
@@ -499,7 +503,7 @@ function quitarFiltros() { ponerFiltros({}); }
 function setupFilters() {
   // Al recargar la página se conservan los filtros de esa entrada del historial.
   if (enEntradaFiltrada()) { Object.assign(state, SIN_FILTROS, history.state.filtros); $("q").value = state.q; $("sort").value = state.sort; }
-  $("q").addEventListener("input", (e) => { state.q = e.target.value; state.page = 1; render(); });
+  $("q").addEventListener("input", (e) => { busquedaFoto = null; state.q = e.target.value; state.page = 1; render(); });
   SELECTS_FILTRO.forEach(([id, k]) => {
     $(id).addEventListener("change", (e) => { state[k] = e.target.value; state.page = 1; render(); });
   });
@@ -521,6 +525,7 @@ function render() {
   // Buscador tolerante (buscador.js): erratas, plurales, sinónimos y otros nombres. Si no ha cargado, búsqueda simple.
   const res = q && window.Buscador ? window.Buscador.buscar(current, state.q, camposBusqueda) : null;
   const list = current.filter((d) => {
+    if (busquedaFoto) return busquedaFoto.has(d.id);   // «Buscar por foto»: solo las fichas que encajan
     if (falta && !falta[1](d)) return false;
     if (state.marca && d.marca !== state.marca) return false;
     if (state.tipo && d.tipo !== state.tipo) return false;
@@ -537,7 +542,8 @@ function render() {
     return true;
   });
   // Con búsqueda, primero lo que coincide en el nombre o la marca, luego el resto y al final lo aproximado
-  list.sort((a, b) => (res ? res.niveles.get(a) - res.niveles.get(b) : 0) ||
+  list.sort((a, b) => (busquedaFoto ? busquedaFoto.get(a.id) - busquedaFoto.get(b.id) : 0) ||
+    (res ? res.niveles.get(a) - res.niveles.get(b) : 0) ||
     (state.sort === "marca" ? a.marca.localeCompare(b.marca, "es") || byName(a, b)
     : state.sort === "puntuacion" ? score(b) - score(a) || byName(a, b)
     : byName(a, b)));
@@ -545,11 +551,11 @@ function render() {
   state.page = Math.min(Math.max(1, state.page), paginas);
   const desde = (state.page - 1) * POR_PAGINA;
   const visibles = list.slice(desde, desde + POR_PAGINA);
-  $("count").textContent = (falta ? `${falta[0]} · ` : "") + (state.nota ? `Sabor: ${state.nota} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
+  $("count").textContent = (busquedaFoto ? "Tu foto · " : "") + (falta ? `${falta[0]} · ` : "") + (state.nota ? `Sabor: ${state.nota} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
     (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "") +
     (res && res.corregidas.length ? ` · buscando «${res.corregidas.join(" ")}»` : "");
   pintarPaginador(paginas);
-  pintarUltimas(!falta && !q && !state.nota && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
+  pintarUltimas(!busquedaFoto && !falta && !q && !state.nota && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
   $("grid").innerHTML = list.length ? visibles.map((d) => {
     const st = statsDe(d.id);
     const rate = st.n ? `${fmtMedia(st.media)} de 5 · ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}` : "Sin reseñas todavía";
@@ -564,7 +570,7 @@ function render() {
         <p>${esc(d.desc)}</p>
       </div>
     </a>`;
-  }).join("") : `<p class="empty">Ningún tabaco coincide con la búsqueda. Prueba con menos filtros.</p>`;
+  }).join("") : `<p class="empty">${busquedaFoto ? "La foto no encaja con ninguna ficha. Prueba con otra foto, más de cerca y con buena luz, o escribe el nombre." : "Ningún tabaco coincide con la búsqueda. Prueba con menos filtros."}</p>`;
   anotarFiltros();
 }
 
@@ -2836,7 +2842,7 @@ function abrirCuenta() {
       <div class="cu-casillas">
         ${ctx.opiniones ? `<div class="bd-casilla"><span class="l">Reseñas publicadas</span><span class="n">${nRes}</span><span class="s">Firmadas como «${esc(nombre)}»</span></div>` : ""}
         ${ctx.bodega ? `<button class="bd-casilla principal cu-ir" type="button" id="cu-bodega"><span class="l">Mi bodega</span><span class="n">${ctx.gramosOk && gramos ? gramosTxt(gramos) : tengo.length}</span><span class="s">${ctx.gramosOk && gramos ? `${tengo.length === 1 ? "1 tabaco" : `${tengo.length} tabacos`} · ` : (tengo.length === 1 ? "tabaco · " : "tabacos · ")}Abrir la estantería ›</span></button>` : ""}
-        ${esEditor() && !modoPrueba ? `<button class="bd-casilla cu-ir cu-idf" type="button" id="cu-identificar"><span class="l">Identificar por foto</span><span class="n"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="s">En pruebas, solo editores · Abrir ›</span></button>` : ""}
+        ${esEditor() && !modoPrueba ? `<button class="bd-casilla cu-ir cu-idf" type="button" id="cu-identificar"><span class="l">Identificar por foto</span><span class="n"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="s">Página de pruebas, solo editores · Abrir ›</span></button>` : ""}
         ${esAdmin() ? Object.entries(FALTAS).filter(([k]) => k === "foto" || k === "notas").map(([k, [txt, falta]]) => { const n = current.filter(falta).length;
           return `<button class="bd-casilla cu-ir cu-pend" type="button" data-falta="${k}"><span class="l">${txt}</span><span class="n">${n}</span><span class="s">${n === 1 ? "ficha" : "fichas"} · ${n ? "Verlas en el catálogo ›" : "¡Todo completo!"}</span></button>`; }).join("") : ""}
         ${esAdmin() && !modoPrueba ? `<div class="bd-casilla" id="cu-idf-uso" hidden><span class="l">Fotos identificadas</span><span class="n">–</span><span class="s">este mes</span></div>` : ""}
