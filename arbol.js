@@ -44,6 +44,7 @@
           { m: "Three Nuns", e: true, n: "La marca es de Imperial Brands. La elaboraba Mac Baren, y antes Orlik." },
           { m: "Sutliff", a: 2013, n: "Comprada por Mac Baren. Cerró su fábrica de Richmond en 2025." },
           { m: "Amsterdamer", n: "Nació en la francesa Seita y pasó por Imperial antes de ser de Mac Baren." },
+          { m: "Prestige", n: "Mezcla alemana de larga tradición, hoy en el catálogo de Mac Baren." },
           { m: "Amphora", e: true, n: "Figura en el catálogo de Mac Baren." },
         ] },
       ] },
@@ -52,6 +53,7 @@
       h: [
         { m: "Cornell & Diehl", a: 2014, n: "Se unió al grupo el 1 de enero de 2014. Sigue elaborando en Morganton (Carolina del Norte).", h: [
           { m: "G. L. Pease", e: true, n: "Cornell & Diehl elabora sus mezclas." },
+          { m: "Per G. Jensen", e: true, n: "Las mezclas del que fue maestro mezclador de Mac Baren; las elabora Cornell & Diehl con él." },
         ] },
         { m: null, t: "Peterson (pipas)", n: "La fábrica de pipas y la tienda de Dublín. El tabaco Peterson es de STG." },
       ] },
@@ -112,6 +114,14 @@
           { m: "Esoterica", e: true, n: "Marca creada en 1988 por Stephen Richman y hoy de Mike Butera. Sus mezclas las elabora Germain's." },
         ] },
         { m: "Sillem's", n: "Alemania. Nombre de una familia de comerciantes de Hamburgo; la marca es hoy de Seiffert & Sohn, de Kassel." },
+        { m: "Robert Lewis", n: "Reino Unido. Tabaquería de St James's Street, abierta en 1787: el comerciante de tabaco más antiguo de Londres." },
+        { m: "Gladora", n: "Turquía. Tabaquera de Esmirna que cultiva su propio tabaco y lo elabora en su fábrica." },
+        { m: null, t: "R. L. Will", a: 1988, n: "Alemania. Taller de pipas de Rüdiger L. Will, que compró la marca Reiner en 1987. Sus tabacos se mezclan en Dinamarca y se envasan en Alemania.", h: [
+          { m: "Reiner" }, { m: "Solani", n: "Serie de tabacos creada por Will." },
+        ] },
+        { m: null, t: "Pöschl Tabak", n: "Alemania.", h: [{ m: "Exclusiv", e: true, n: "Pöschl elabora sus mezclas." }] },
+        { m: null, t: "Von Eicken", n: "Alemania.", h: [{ m: "Käpt'n Barsdorfs Bester", e: true, n: "Von Eicken elabora sus mezclas." }] },
+        { m: "Ermuri", n: "Alemania. Cooperativa de compras de estancos, nacida en Erkrath en 1920. Sus tabacos son marcas propias hechas por encargo." },
         { m: "Astley's", n: "Reino Unido. La tabaquería de Jermyn Street (Londres), abierta en 1862 y ya cerrada. El nombre lo compró Moty Ezrati, dueño de las pipas James Upshall." },
       ] },
   ];
@@ -145,6 +155,11 @@
       "https://www.tobaccoreviews.com/blend/4183/mac-baren-amsterdamer/", "https://www.tobaccoreviews.com/blend/2979/alsbo-whisky/",
       "https://www.tobaccoreviews.com/blend/5622/comoys-of-london-cask-4-stand-fast-navy/", "https://www.tobaccoreviews.com/blend/1274/wessex-classic-virginia/",
       "https://pipedia.org/wiki/Sillem%27s", "https://pipedia.org/wiki/Astley%27s"],
+    tanda4: ["https://www.tobaccoreviews.com/blend/5395/mac-baren-amphora-prestige-regular-mixture/", "https://www.cigarworld.de/en/per-g-jensen",
+      "https://monjureinternational.com/html/lewis.htm", "https://www.tobaccoreviews.com/blend/13509/gladora-tobacco-latakia-flake-40/",
+      "https://monjureinternational.com/html/reiner_history.htm", "https://www.monjureinternational.com/html/tobacco.htm",
+      "https://www.tobaccoreviews.com/blend/1677/exclusiv-prime-mixture", "https://www.tobaccoreviews.com/blend/11593/kaptn-barsdorfs-bester-bright-virginia",
+      "https://www.cigarworld.de/en/ermuri"],
   };
 
   const fichasDe = (m) => current.filter((d) => d.marca === m).length;
