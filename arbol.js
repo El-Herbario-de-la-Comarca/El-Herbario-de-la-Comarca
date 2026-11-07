@@ -178,13 +178,16 @@
       "https://pipesmagazine.com/forums/threads/malevo-tobacco-from-argentina.107969"],
   };
 
+  // Logo subido desde la ficha de la marca (tabla marcas_logo, ver app.js → cargarLogos).
+  const logoDe = (m) => (typeof logosMarca === "object" && logosMarca[slug(m)]) || "";
   const fichasDe = (m) => current.filter((d) => d.marca === m).length;
   const fichas = (n) => (n === 1 ? "1 ficha" : `${n.toLocaleString("es-ES")} fichas`);
 
   function rama(r, grupo) {
     const n = r.m ? fichasDe(r.m) : 0;
+    const logo = r.m ? logoDe(r.m) : "";
     const boton = r.m
-      ? `<button class="ab-m" type="button" data-m="${esc(r.m)}" data-g="${esc(grupo.id)}">${esc(r.t || r.m)}${n ? `<small>${n}</small>` : ""}</button>`
+      ? `<button class="ab-m${logo ? " ab-con" : ""}" type="button" data-m="${esc(r.m)}" data-g="${esc(grupo.id)}">${logo ? `<img class="ab-logo" src="${esc(logo)}" alt="" loading="lazy">` : ""}${esc(r.t || r.m)}${n ? `<small>${n}</small>` : ""}</button>`
       : `<span class="ab-m ab-sin">${esc(r.t)}</span>`;
     return `<div class="ab-r${r.e ? " ab-e" : ""}">
       <div class="ab-l">${boton}${r.a ? `<span class="ab-a">${r.a}</span>` : ""}</div>
@@ -228,7 +231,8 @@
     const veces = todos.filter((x) => x.dataset.m === m);
     const grupos = [...new Set(veces.map((x) => GRUPOS.find((g) => g.id === x.dataset.g).corto))];
     const n = fichasDe(m), nombre = m === "STG" ? "Mac Baren (STG)" : m;
-    info.innerHTML = `<div><strong>${esc(nombre)}</strong>
+    const logo = logoDe(m);
+    info.innerHTML = `${logo ? `<span class="ab-logo-g"><img src="${esc(logo)}" alt="Logo de ${esc(nombre)}"></span>` : ""}<div class="ab-info-t"><strong>${esc(nombre)}</strong>
         <span class="muted">${n ? fichas(n) + " · " : ""}${grupos.length > 1 ? `aparece en ${grupos.join(" y ")}` : esc(grupos[0])}</span></div>
       <div class="ab-acts">
         ${n ? `<button class="btn primary" type="button" id="ab-ver">Ver sus fichas</button>` : ""}

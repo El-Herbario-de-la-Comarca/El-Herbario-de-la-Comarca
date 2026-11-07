@@ -1179,3 +1179,8 @@ button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
 .ab-acts .btn { text-decoration: none; }
 .ab-pie { font-size: .9rem; }
 @media (max-width: 600px) { .ab-g { padding: 14px 14px 10px; } .ab-r { padding-left: 16px; } .ab-r::before { width: 11px; } }
+.ab-m.ab-con { padding-left: 5px; }
+.ab-logo { width: 28px; height: 28px; flex: none; object-fit: contain; border-radius: 50%; background: #fff; padding: 3px; border: 1px solid var(--line); }
+.ab-logo-g { flex: none; width: 56px; height: 56px; border-radius: 10px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+.ab-logo-g img { max-width: 48px; max-height: 48px; object-fit: contain; }
+.ab-info .ab-info-t { flex: 1 1 160px; min-width: 0; }
