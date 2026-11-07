@@ -112,7 +112,7 @@
   }
 
   // Pinta la rueda con unos ángulos dados.
-  function pintarRueda(svg, m, ang) {
+  function pintarRueda(svg, m, ang, fin) {
     const fp = svg.querySelectorAll(".rs-fam"), ft = svg.querySelectorAll(".rs-tf");
     const np = svg.querySelectorAll(".rs-nota"), nt = svg.querySelectorAll(".rs-tn");
     const rm = (R0 + R1) / 2;
@@ -124,12 +124,77 @@
       ft[fi].style.opacity = ancho >= 8 ? 1 : 0;
       colocar(ft[fi], rm, (a0 + a1) / 2, false);
     });
-    m.notas.forEach((_, i) => {
+    const modo = fin != null ? modoGrande(svg, m, ang, fin) : null;
+    m.notas.forEach(({ n, fi }, i) => {
       const [a0, a1] = ang.notas[i];
       np[i].setAttribute("d", arco(R2, R3, a0, a1));
+      // Familia ampliada (al acabar la animación): letra grande, en negrita y siguiendo la curva.
+      if (modo && fi === fin && rotular(svg, nt[i], n, a0, a1, modo)) return;
+      if (nt[i].classList.contains("grande")) { nt[i].classList.remove("grande"); nt[i].textContent = n; }
       nt[i].style.opacity = (a1 - a0) * (R2 + 6) >= 9.5 ? 1 : 0;
       colocar(nt[i], R2 + 6, (a0 + a1) / 2, true);
     });
+  }
+
+  // Ancho de un texto con la letra grande (en unidades del dibujo), con caché.
+  const anchos = new Map();
+  function medir(svg, txt) {
+    if (anchos.has(txt)) return anchos.get(txt);
+    let t = svg.querySelector(".rs-medida");
+    if (!t) { t = document.createElementNS(NS, "text"); t.setAttribute("class", "rs-tn grande rs-medida"); svg.appendChild(t); }
+    t.textContent = txt;
+    const w = t.getComputedTextLength();
+    anchos.set(txt, w);
+    return w;
+  }
+  // Reparte un nombre en una o dos líneas que quepan en «sitio»; null si no cabe.
+  function lineasPara(svg, n, sitio) {
+    if (medir(svg, n) <= sitio) return [n];
+    const ps = n.split(" ");
+    for (let k = 1; k < ps.length; k++) {
+      const l = [ps.slice(0, k).join(" "), ps.slice(k).join(" ")];
+      if (l.every((x) => medir(svg, x) <= sitio)) return l;
+    }
+    return null;
+  }
+  // Cómo rotular la familia ampliada: a lo largo de la curva («tan») si caben todas sus notas;
+  // si no, hacia el centro pero en grande («rad»), en una o dos líneas. Todas igual, para que no quede mezclado.
+  function modoGrande(svg, m, ang, fi) {
+    const mias = m.notas.map((x, i) => [x, i]).filter(([x]) => x.fi === fi);
+    const rM = (R2 + R3) / 2, largo = R3 - R2 - 14;
+    const cabeTan = ([x, i]) => lineasPara(svg, x.n, (ang.notas[i][1] - ang.notas[i][0]) * rM * 0.86);
+    if (mias.every(cabeTan)) return "tan";
+    const cabeRad = ([x, i]) => { const l = lineasPara(svg, x.n, largo); return l && (ang.notas[i][1] - ang.notas[i][0]) * (R2 + 10) >= l.length * 17; };
+    return mias.every(cabeRad) ? "rad" : null;
+  }
+  // Pone el nombre de una nota en grande y en negrita, en una o dos líneas. Si no cabe, devuelve false.
+  function rotular(svg, t, n, a0, a1, modo) {
+    const rM = (R2 + R3) / 2, a = (a0 + a1) / 2;
+    const lineas = modo === "tan" ? lineasPara(svg, n, (a1 - a0) * rM * 0.86) : lineasPara(svg, n, R3 - R2 - 14);
+    if (!lineas) return false;
+    let deg = ((a * 180) / Math.PI) % 360; if (deg < 0) deg += 360;
+    let x, y, rot, ancla;
+    if (modo === "tan") {                       // a lo largo de la curva, centrado en la porción
+      [x, y] = pt(rM, a); ancla = "middle";
+      rot = deg > 90 && deg < 270 ? deg + 180 : deg;
+    } else {                                    // hacia el centro, empezando junto al anillo de dentro
+      const d = deg - 90 < 0 ? deg + 270 : deg - 90, vuelta = d > 90 && d < 270;
+      [x, y] = pt(R2 + 8, a); ancla = vuelta ? "end" : "start";
+      rot = vuelta ? d + 180 : d;
+    }
+    t.classList.add("grande");
+    t.setAttribute("x", x); t.setAttribute("y", y); t.setAttribute("text-anchor", ancla);
+    t.setAttribute("transform", `rotate(${rot.toFixed(1)} ${x} ${y})`);
+    t.textContent = "";
+    lineas.forEach((l, k) => {
+      const sp = document.createElementNS(NS, "tspan");
+      sp.setAttribute("x", x);
+      sp.setAttribute("dy", k === 0 ? (lineas.length === 2 ? "-0.55em" : "0") : "1.1em");
+      sp.textContent = l;
+      t.appendChild(sp);
+    });
+    t.style.opacity = 1;
+    return true;
   }
 
   function abrir(desdeUrl) {
@@ -161,12 +226,12 @@
       foco = nuevoFoco;
       const desde = ahora, hasta = angulos(m, foco);
       cancelAnimationFrame(anim);
-      if (quieto) { ahora = hasta; pintarRueda(svg, m, ahora); return; }
+      if (quieto) { ahora = hasta; pintarRueda(svg, m, ahora, foco); return; }
       const t0 = performance.now();
       const paso = (tt) => {
         const x = Math.min(1, (tt - t0) / DURACION), e = x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
         ahora = { notas: mezcla(desde.notas, hasta.notas, e), fams: mezcla(desde.fams, hasta.fams, e) };
-        pintarRueda(svg, m, ahora);
+        pintarRueda(svg, m, ahora, x < 1 ? null : foco);
         if (x < 1) anim = requestAnimationFrame(paso);
       };
       anim = requestAnimationFrame(paso);
