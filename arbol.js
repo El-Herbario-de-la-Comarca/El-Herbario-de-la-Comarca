@@ -53,6 +53,7 @@
       h: [
         { m: "Cornell & Diehl", a: 2014, n: "Se unió al grupo el 1 de enero de 2014. Sigue elaborando en Morganton (Carolina del Norte).", h: [
           { m: "G. L. Pease", e: true, n: "Cornell & Diehl elabora sus mezclas." },
+          { m: "Seattle Pipe Club", e: true, n: "Mezclas del club de Matt Guss, creadas por Joe Lankford, fallecido en 2022. Las elabora Cornell & Diehl." },
           { m: "Per G. Jensen", e: true, n: "Las mezclas del que fue maestro mezclador de Mac Baren; las elabora Cornell & Diehl con él." },
         ] },
         { m: null, t: "Peterson (pipas)", n: "La fábrica de pipas y la tienda de Dublín. El tabaco Peterson es de STG." },
@@ -113,7 +114,7 @@
         { m: "Germain's", n: "Jersey. Casa familiar con registros desde 1820; la fundó Thomas Aubin y la siguieron los Germain.", h: [
           { m: "Esoterica", e: true, n: "Marca creada en 1988 por Stephen Richman y hoy de Mike Butera. Sus mezclas las elabora Germain's." },
         ] },
-        { m: "Sillem's", n: "Alemania. Nombre de una familia de comerciantes de Hamburgo; la marca es hoy de Seiffert & Sohn, de Kassel." },
+        { m: "Sillems", t: "Sillem's", n: "Alemania. Nombre de una familia de comerciantes de Hamburgo; la marca es hoy de Seiffert & Sohn, de Kassel." },
         { m: "Robert Lewis", n: "Reino Unido. Tabaquería de St James's Street, abierta en 1787: el comerciante de tabaco más antiguo de Londres." },
         { m: "Gladora", n: "Turquía. Tabaquera de Esmirna que cultiva su propio tabaco y lo elabora en su fábrica." },
         { m: null, t: "R. L. Will", a: 1988, n: "Alemania. Taller de pipas de Rüdiger L. Will, que compró la marca Reiner en 1987. Sus tabacos se mezclan en Dinamarca y se envasan en Alemania.", h: [
@@ -122,6 +123,15 @@
         { m: null, t: "Pöschl Tabak", n: "Alemania.", h: [{ m: "Exclusiv", e: true, n: "Pöschl elabora sus mezclas." }] },
         { m: null, t: "Von Eicken", n: "Alemania.", h: [{ m: "Käpt'n Barsdorfs Bester", e: true, n: "Von Eicken elabora sus mezclas." }] },
         { m: "Ermuri", n: "Alemania. Cooperativa de compras de estancos, nacida en Erkrath en 1920. Sus tabacos son marcas propias hechas por encargo." },
+        { m: "HU Tobacco", n: "Alemania. Las mezclas de Hans Wiedemann. Desde 2024 las distribuye por todo el mundo Kopp Tobaccos." },
+        { m: "TAK", n: "Alemania. Marca de la tienda Dein-Tabak de Kiel (Motzek), con mezclas de Tom Darasz." },
+        { m: "Kontor-Tabak", n: "Alemania. Mezclas de la casa de la tienda Tabak-Kontor de Leipzig, que las elabora." },
+        { m: "Pfeifendepot", n: "Alemania. Mezclas de la casa de la tienda Gerd Jansens Pfeifendepot." },
+        { m: "Watch City", n: "Estados Unidos. Mezclas de la casa de la tienda Watch City Cigar & Pipe (Massachusetts)." },
+        { m: "Doctor Pipe", n: "Brasil. Marca de Tobacco Way, de Aleksandro Ferreira, en Venâncio Aires, tierra de virginia y burley." },
+        { m: "MyRott", n: "Argentina. Tabaco artesanal; sus mezclas las crea Jano Barbone." },
+        { m: "Monk", n: "Argentina. Pequeña casa de mezclas en lotes cortos." },
+        { m: "Malevo", n: "Argentina. Marca joven con cinco mezclas." },
         { m: "Astley's", n: "Reino Unido. La tabaquería de Jermyn Street (Londres), abierta en 1862 y ya cerrada. El nombre lo compró Moty Ezrati, dueño de las pipas James Upshall." },
       ] },
   ];
@@ -160,6 +170,12 @@
       "https://monjureinternational.com/html/reiner_history.htm", "https://www.monjureinternational.com/html/tobacco.htm",
       "https://www.tobaccoreviews.com/blend/1677/exclusiv-prime-mixture", "https://www.tobaccoreviews.com/blend/11593/kaptn-barsdorfs-bester-bright-virginia",
       "https://www.cigarworld.de/en/ermuri"],
+    tanda5: ["https://www.smokingpipes.com/smokingpipesblog/single.cfm/post/joe-lankford-passes-blender-seattle-pipe-club-tobaccos",
+      "https://pipesmagazine.com/forums/threads/kopp-to-handle-worldwide-distribution-of-hu-tobaccos.101861/post-36928474",
+      "https://www.tobaccoreviews.com/blend/11165/motzek-kieler-freunde-alte-hasen/", "https://www.tobaccoreviews.com/blend/10414/kontor-tabak-no-8/",
+      "https://watchcitycigar.com/blog/tobacco-blending-part-1-intro", "https://www.zigarren.zone/en/?p=76727",
+      "https://pipasytabaco.es/un-sabroso-tabaco-artesanal-argentino/", "https://themagpiemason.blogspot.com/2023/05/monk-tabaco-and-square-compasses.html",
+      "https://pipesmagazine.com/forums/threads/malevo-tobacco-from-argentina.107969"],
   };
 
   const fichasDe = (m) => current.filter((d) => d.marca === m).length;
