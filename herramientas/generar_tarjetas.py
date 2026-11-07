@@ -873,6 +873,7 @@ def indice_marcas(por_marca):
     cuerpo = f"""<main class="ficha">
 <h1>Marcas de tabaco de pipa</h1>
 <p class="resumen">{cuenta(len(por_marca), "marca", "marcas")} · {cuenta(total, "tabaco", "tabacos")} en el catálogo</p>
+<a class="arbol-enlace" href="../#/arbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-7M12 14l-5-4M12 14l5-4M7 10V6M17 10V6M12 14V4"/><circle cx="12" cy="3.5" r="1.6"/><circle cx="7" cy="5" r="1.6"/><circle cx="17" cy="5" r="1.6"/></svg><span><b>Árbol de marcas</b><small>Qué grupo está detrás de cada marca y quién elabora para quién.</small></span></a>
 <ul class="tabacos">{filas}</ul>
 </main>"""
     return marco("Marcas de tabaco de pipa", f"Las {len(por_marca)} marcas de tabaco de pipa del catálogo del herbario, "

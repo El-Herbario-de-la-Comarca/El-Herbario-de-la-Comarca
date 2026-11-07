@@ -1,6 +1,6 @@
 /* ---------- Árbol de marcas ----------
    Quién es dueño de cada marca (línea continua) y quién la elabora para otro (línea discontinua).
-   Se abre desde «Explorar → Árbol de marcas» o con la dirección index.html#/arbol.
+   Se abre desde la página de marcas (marca/), que enlaza a index.html#/arbol.
    Solo entra lo comprobado: cada grupo lleva sus fuentes en FUENTES (no se enseñan en la web).
    Para cambiar algo, se edita GRUPOS y se sube el ?v= de arbol.js en index.html.
    Usa de app.js: current, panelesHash, abrirPanel, closeDetail, ponerFiltros, FRANJA, TITULO, slug, esc, $.
@@ -195,6 +195,10 @@
       ${(r.h || []).map((x) => rama(x, grupo)).join("")}</div>`;
   }
 
+  // Si se entra desde la página de marcas (marca/), al cerrar se vuelve allí.
+  let volverAMarcas = false;
+  try { volverAMarcas = /\/marca\/(index\.html)?$/.test(new URL(document.referrer).pathname); } catch (e) { /* sin referrer */ }
+
   function abrir(desdeUrl) {
     if (!desdeUrl && location.hash !== "#/arbol") history.pushState({ panel: true }, "", "#/arbol");
     abrirPanel(`
@@ -215,7 +219,7 @@
         <p class="muted ab-pie">Solo aparecen las relaciones que se han podido comprobar en fuentes fiables. Las marcas que no salen aquí son independientes o aún no se han revisado.</p>
       </div>`, "bodega-p arbol-p");
     document.title = "Árbol de marcas · " + TITULO;
-    $("d-close").addEventListener("click", () => closeDetail());
+    $("d-close").addEventListener("click", () => { if (volverAMarcas) location.href = "marca/"; else closeDetail(); });
     $("panel").querySelectorAll("button.ab-m").forEach((b) => b.addEventListener("click", () => elegir(b)));
   }
 
@@ -248,6 +252,5 @@
   }
 
   panelesHash["#/arbol"] = abrir;
-  document.querySelectorAll('a[href="#/arbol"]').forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); abrir(); }));
   if (location.hash === "#/arbol") abrir(true);
 })();

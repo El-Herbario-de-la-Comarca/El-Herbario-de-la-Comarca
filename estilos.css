@@ -1029,7 +1029,14 @@ a.btn { text-decoration: none; }
   border-radius: 999px; background: var(--surface); color: var(--fg); text-decoration: none; font-size: 0.98rem; }
 .explorar a:hover { border-color: var(--accent); color: var(--accent); }
 .explorar svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: var(--accent); }
-@media (max-width: 600px) { .explorar { margin: 8px 0 16px; } .explorar a { font-size: 0.93rem; padding: 5px 12px 5px 9px; } }
+/* En el móvil, «Explorar» y sus tres botones caben en una línea. */
+@media (max-width: 600px) {
+  .explorar { flex-wrap: nowrap; gap: 6px; margin: 8px 0 16px; }
+  .explorar .exp-l { font-size: 0.88rem; margin-right: 0; }
+  .explorar a { gap: 5px; min-height: 36px; font-size: 0.9rem; padding: 4px 10px 4px 8px; white-space: nowrap; }
+  .explorar svg { width: 16px; height: 16px; }
+}
+@media (max-width: 370px) { .explorar .exp-l { display: none; } }
 /* En la ficha: la marca y el tipo de mezcla llevan a sus páginas */
 .panel.ficha a.d-enlace { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
 .panel.ficha a.d-enlace:hover { color: var(--accent); text-decoration-color: currentColor; }
@@ -1184,3 +1191,11 @@ button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
 .ab-logo-g { flex: none; width: 56px; height: 56px; border-radius: 10px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
 .ab-logo-g img { max-width: 48px; max-height: 48px; object-fit: contain; }
 .ab-info .ab-info-t { flex: 1 1 160px; min-width: 0; }
+
+/* Enlace al árbol de marcas en la página de marcas (marca/) */
+.arbol-enlace { display: flex; align-items: center; gap: 14px; margin: 14px 0 22px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 14px;
+  background: var(--surface); color: var(--fg); text-decoration: none; max-width: 560px; }
+.arbol-enlace:hover { border-color: var(--accent); }
+.arbol-enlace svg { width: 34px; height: 34px; flex: none; fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.arbol-enlace b { display: block; font-family: var(--display); font-weight: 400; font-size: 1.3rem; color: var(--accent); }
+.arbol-enlace small { display: block; color: var(--muted); font-size: .95rem; }
