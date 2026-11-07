@@ -1201,12 +1201,15 @@ button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
 .arbol-enlace small { display: block; color: var(--muted); font-size: .95rem; }
 
 /* ---------- Buscar por foto (foto.js) ---------- */
-.q-caja { position: relative; min-width: 0; }
-.q-caja input[type="search"] { width: 100%; padding-right: 48px; }
-.q-foto { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); width: 40px; height: 40px; display: grid; place-items: center;
-  border: 0; border-radius: 50%; background: transparent; color: var(--accent); cursor: pointer; }
-.q-foto:hover, .q-foto:focus-visible { background: color-mix(in srgb, var(--accent) 12%, transparent); }
-.q-foto svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+/* Botón verde cuadrado al lado del buscador (variante A, elegida por el usuario). */
+.q-caja { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.q-caja input[type="search"] { flex: 1 1 auto; min-width: 0; }
+.q-foto { flex: none; width: 52px; display: grid; place-items: center; border: 1px solid var(--accent); border-radius: 10px;
+  background: var(--accent); color: var(--accent-fg); cursor: pointer; }
+.q-foto[hidden] { display: none; }
+.q-foto:hover { filter: brightness(1.1); }
+.q-foto:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.q-foto svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .q-foto.leyendo { cursor: progress; }
 .q-foto.leyendo svg { animation: q-foto-latido 1s ease-in-out infinite; }
 @keyframes q-foto-latido { 50% { opacity: .35; transform: scale(.9); } }
