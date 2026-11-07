@@ -24,6 +24,9 @@
         { m: "Stanwell", a: 2003, n: "Comprada a British American Tobacco. Las pipas las lleva Kopp con licencia." },
         { m: "W.Ø. Larsen", n: "La casa de Copenhague pasó a Stanwell y hoy figura entre las marcas del grupo." },
         { m: "Borkum Riff", a: 2011, n: "Nacida en Suecia en 1962. Se elabora en Assens." },
+        { m: "Skandinavik", n: "Marca del grupo, con mezclas de Peter Stokkebye." },
+        { m: "Alsbo", e: true, n: "Se elabora en la fábrica de STG en Assens." },
+        { m: "Comoy's", e: true, n: "El tabaco de la antigua casa de pipas londinense lo elabora STG en Dinamarca." },
         { m: "Lane Limited", a: 2011, n: "Comprada a Reynolds American.", h: [
           { m: "Captain Black" },
           { m: "Half and Half", n: "Nacida con una receta de American Tobacco del siglo XIX." },
@@ -34,12 +37,13 @@
         ] },
         { m: "STG", t: "Mac Baren", a: 2024, n: "La casa de Svendborg. Tras la compra cerró su fábrica; sus mezclas están en el catálogo como STG.", h: [
           { m: "Planta", a: 2019, n: "Mac Baren se quedó con las marcas de tabaco de pipa de esta casa de Berlín, que dejó de fabricar.", h: [
-            { m: "Holger Danske" }, { m: "Cellini" }, { m: "Mc Lintock" }, { m: "R and M" },
+            { m: "Holger Danske" }, { m: "Cellini" }, { m: "Mc Lintock" }, { m: "R and M" }, { m: "Brigg" },
           ] },
           { m: "St. Bruno", a: 2015, n: "La de Ogden's de Liverpool. Mac Baren la elaboraba desde 2006 y en 2015 se quedó con la marca." },
           { m: "Capstan", e: true, n: "La marca es de Imperial Brands. La elaboraba Mac Baren, y antes Orlik." },
           { m: "Three Nuns", e: true, n: "La marca es de Imperial Brands. La elaboraba Mac Baren, y antes Orlik." },
           { m: "Sutliff", a: 2013, n: "Comprada por Mac Baren. Cerró su fábrica de Richmond en 2025." },
+          { m: "Amsterdamer", n: "Nació en la francesa Seita y pasó por Imperial antes de ser de Mac Baren." },
           { m: "Amphora", e: true, n: "Figura en el catálogo de Mac Baren." },
         ] },
       ] },
@@ -69,6 +73,7 @@
           { m: "Robert McConnell" },
           { m: "Fribourg & Treyer" },
           { m: "Ilsted" },
+          { m: "Wessex", e: true, n: "Kopp elabora sus mezclas." },
         ] },
         { m: null, t: "Kopp Pipes", a: 1919, n: "Pipas y accesorios.", h: [{ m: "Rattray's" }] },
       ] },
@@ -106,6 +111,8 @@
         { m: "Germain's", n: "Jersey. Casa familiar con registros desde 1820; la fundó Thomas Aubin y la siguieron los Germain.", h: [
           { m: "Esoterica", e: true, n: "Marca creada en 1988 por Stephen Richman y hoy de Mike Butera. Sus mezclas las elabora Germain's." },
         ] },
+        { m: "Sillem's", n: "Alemania. Nombre de una familia de comerciantes de Hamburgo; la marca es hoy de Seiffert & Sohn, de Kassel." },
+        { m: "Astley's", n: "Reino Unido. La tabaquería de Jermyn Street (Londres), abierta en 1862 y ya cerrada. El nombre lo compró Moty Ezrati, dueño de las pipas James Upshall." },
       ] },
   ];
   // Fuentes de cada grupo, para quien lo revise (no salen en la web).
@@ -134,6 +141,10 @@
       "https://www.smokingpipes.com/pipe-tobacco/vauen/", "https://en.wikipedia.org/wiki/Savinelli_Pipes", "https://www.smokingpipes.com/pipe-tobacco/chacom/",
       "https://pipesmagazine.com/?p=6064", "https://theislandwiki.org/wiki/J_F_Germain_and_Son,_tobacco_manufacturers",
       "https://pipesmagazine.com/forums/threads/esoterica-tobacciana.26750/"],
+    tanda3: ["https://pipesmagazine.com/?p=17772", "https://www.tobaccoreviews.com/blend/1280/scandinavian-tobacco-group-stg-skandinavik-full-aroma-cavendish",
+      "https://www.tobaccoreviews.com/blend/4183/mac-baren-amsterdamer/", "https://www.tobaccoreviews.com/blend/2979/alsbo-whisky/",
+      "https://www.tobaccoreviews.com/blend/5622/comoys-of-london-cask-4-stand-fast-navy/", "https://www.tobaccoreviews.com/blend/1274/wessex-classic-virginia/",
+      "https://pipedia.org/wiki/Sillem%27s", "https://pipedia.org/wiki/Astley%27s"],
   };
 
   const fichasDe = (m) => current.filter((d) => d.marca === m).length;
