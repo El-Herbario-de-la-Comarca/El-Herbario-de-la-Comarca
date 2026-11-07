@@ -17,17 +17,27 @@
           { m: "Clan", a: 2007, n: "Comprada a British American Tobacco." },
           { m: "Danske Club", n: "Comprada a British American Tobacco." },
           { m: "Kentucky Bird", n: "Comprada a British American Tobacco." },
+          { m: "Escudo", e: true, a: 2004, n: "La Navy De Luxe que crearon los Cope en 1912. Orlik la elabora desde 2004 con la marca A&C Petersen." },
+          { m: "Richmond", e: true, n: "Su Navy Cut la elabora Orlik." },
         ] },
         { m: "Stanwell", a: 2003, n: "Comprada a British American Tobacco. Las pipas las lleva Kopp con licencia." },
         { m: "W.Ø. Larsen", n: "La casa de Copenhague pasó a Stanwell y hoy figura entre las marcas del grupo." },
         { m: "Borkum Riff", a: 2011, n: "Nacida en Suecia en 1962. Se elabora en Assens." },
-        { m: "Lane Limited", a: 2011, n: "Comprada a Reynolds American.", h: [{ m: "Captain Black" }] },
+        { m: "Lane Limited", a: 2011, n: "Comprada a Reynolds American.", h: [
+          { m: "Captain Black" },
+          { m: "Half and Half", n: "Nacida con una receta de American Tobacco del siglo XIX." },
+          { m: "Sir Walter Raleigh", e: true, n: "La elabora Lane. Antes era de Brown & Williamson." },
+        ] },
         { m: "Peterson", t: "Peterson (tabaco)", a: 2019, n: "Las marcas de tabaco de Kapp & Peterson. Las pipas son de Laudisi.", h: [
           { m: null, t: "Mezclas de Dunhill", a: 2019, n: "Early Morning Pipe, Nightcap, Royal Yacht, Elizabethan Mixture… Hoy se venden como Peterson." },
         ] },
         { m: "STG", t: "Mac Baren", a: 2024, n: "La casa de Svendborg. Tras la compra cerró su fábrica; sus mezclas están en el catálogo como STG.", h: [
-          { m: "Holger Danske", a: 2019, n: "Llegó a Mac Baren con las marcas de Planta (Berlín)." },
-          { m: "Cellini", a: 2019, n: "Llegó a Mac Baren con las marcas de Planta (Berlín)." },
+          { m: "Planta", a: 2019, n: "Mac Baren se quedó con las marcas de tabaco de pipa de esta casa de Berlín, que dejó de fabricar.", h: [
+            { m: "Holger Danske" }, { m: "Cellini" }, { m: "Mc Lintock" }, { m: "R and M" },
+          ] },
+          { m: "St. Bruno", a: 2015, n: "La de Ogden's de Liverpool. Mac Baren la elaboraba desde 2006 y en 2015 se quedó con la marca." },
+          { m: "Capstan", e: true, n: "La marca es de Imperial Brands. La elaboraba Mac Baren, y antes Orlik." },
+          { m: "Three Nuns", e: true, n: "La marca es de Imperial Brands. La elaboraba Mac Baren, y antes Orlik." },
           { m: "Sutliff", a: 2013, n: "Comprada por Mac Baren. Cerró su fábrica de Richmond en 2025." },
           { m: "Amphora", e: true, n: "Figura en el catálogo de Mac Baren." },
         ] },
@@ -61,6 +71,26 @@
         ] },
         { m: null, t: "Kopp Pipes", a: 1919, n: "Pipas y accesorios.", h: [{ m: "Rattray's" }] },
       ] },
+    { id: "imperial", nombre: "Imperial Brands", corto: "Imperial Brands", pais: "Reino Unido",
+      historia: "Gran tabaquera británica, antes llamada Imperial Tobacco. Conserva varias marcas clásicas de pipa, aunque ya no las elabora ella.",
+      h: [
+        { m: "Capstan", n: "Marca de W.D. & H.O. Wills. La elaboraba Mac Baren (STG)." },
+        { m: "Three Nuns", n: "Marca de Bell's. La elaboraba Mac Baren (STG)." },
+      ] },
+    { id: "altria", nombre: "Altria", corto: "Altria", pais: "Estados Unidos",
+      historia: "Gran tabaquera estadounidense. Su tabaco de pipa está en John Middleton, comprada en 2007.",
+      h: [
+        { m: null, t: "John Middleton", a: 2007, n: "Casa de Pensilvania.", h: [
+          { m: "Prince Albert" }, { m: "Carter Hall" },
+        ] },
+      ] },
+    { id: "jti", nombre: "Japan Tobacco International", corto: "JTI", pais: "Japón",
+      historia: "La tabaquera japonesa compró en 2007 la británica Gallaher, y con ella sus tabacos de pipa.",
+      h: [
+        { m: null, t: "Gallaher", a: 2007, n: "Tabaquera británica, nacida en Irlanda del Norte.", h: [
+          { m: "Condor", n: "La de la bolsa verde. Ya no se fabrica." },
+        ] },
+      ] },
   ];
   // Fuentes de cada grupo, para quien lo revise (no salen en la web).
   // eslint-disable-next-line no-unused-vars
@@ -76,6 +106,14 @@
       "https://halfwheel.com/scandinavian-tobacco-group-acquires-peterson-pipe-tobacco-brands/275372/"],
     gawith: ["https://www.gawithhoggarth.ltd/gawith-hoggarth", "https://www.smokingpipes.com/smokingpipesblog/single.cfm/post/the-history-gawith-hoggarth-co"],
     kopp: ["https://www.kopp-companies.com/en/", "https://www.kopp-pipes.com/en/stanwell/"],
+    tanda1: ["https://www.tobaccoreviews.com/blend/6/scandinavian-tobacco-group-stg-escudo-navy-de-luxe/",
+      "https://www.tobaccoreviews.com/blend/3341/orlik-tobacco-company-as-richmond-navy-cut/",
+      "https://www.tobaccoreviews.com/blend/1149/scandinavian-tobacco-group-stg-half-half",
+      "https://www.tobaccoreviews.com/blend/1237/scandinavian-tobacco-group-stg-sir-walter-raleigh",
+      "https://www.smokingpipes.com/smokingpipesblog/single.cfm/post/classic-pipe-tobaccos-st-bruno-first-impressions",
+      "https://pipesmagazine.com/?p=6933", "https://www.badgerandblade.com/forum/threads/stg-to-stop-making-3-nuns-and-capstan.344134/",
+      "https://en.wikipedia.org/wiki/John_Middleton_Co.", "https://en.wikipedia.org/wiki/Gallaher_Group",
+      "https://pipesmagazine.com/forums/threads/some-bad-news-for-the-condor-lovers.103649/"],
   };
 
   const fichasDe = (m) => current.filter((d) => d.marca === m).length;
