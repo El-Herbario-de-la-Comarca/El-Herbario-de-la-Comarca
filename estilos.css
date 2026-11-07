@@ -1099,3 +1099,46 @@ body.en-prueba .overlay { padding-bottom: 110px; }
   display: flex; align-items: center; gap: 12px; max-width: calc(100% - 32px); padding: 10px 14px;
   background: var(--surface, #fff); color: var(--fg, #222); border: 1px solid var(--line, #ccc); border-radius: 10px;
   box-shadow: 0 6px 24px rgba(0,0,0,.18); font-size: 0.9rem; }
+
+/* ---------- Rueda de sabores (sabores.js) ---------- */
+.rs-cuerpo { grid-template-columns: minmax(0, 560px) minmax(0, 1fr); align-items: start; }
+.rs-dibujo { min-width: 0; }
+.rueda { width: 100%; height: auto; display: block; touch-action: manipulation; }
+.rueda path { cursor: pointer; stroke: var(--surface); stroke-width: 1.4; transition: opacity .15s, fill .15s; outline: none; }
+.rueda .rs-fam { fill: var(--c1); }
+.rueda .rs-nota { fill: var(--c2); }
+.rueda .rs-nota:hover, .rueda .rs-nota:focus-visible { fill: color-mix(in srgb, var(--c1) 35%, var(--c2)); }
+.rueda path:focus-visible { stroke: var(--fg); stroke-width: 2.5; }
+.rueda.foco path { opacity: .3; }
+.rueda.foco path.on { opacity: 1; }
+.rueda text { pointer-events: none; font-family: var(--sans, inherit); }
+.rueda .rs-tf { font-size: 11px; font-weight: 600; }
+.rueda .rs-tn { font-size: 10.5px; fill: #2E2418; }
+.rueda .rs-centro { fill: var(--surface); stroke: var(--line); cursor: pointer; outline: none; }
+.rueda .rs-centro:focus-visible { stroke: var(--accent); stroke-width: 2; }
+.rueda .rs-tc { font-family: var(--display); font-size: 14px; fill: var(--muted); pointer-events: none; }
+.rs-info { display: grid; gap: 12px; align-content: start; padding-top: 8px; }
+.rs-info h3 { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.05; margin: 0; }
+.rs-info .btn { justify-self: start; }
+.rs-fam-l { font-family: var(--mono); font-size: .9rem; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+.rs-fam-l::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--c1, var(--accent)); }
+.rs-otras { margin-top: 6px !important; font-size: .92rem; }
+.rs-nota-pie { font-size: .9rem; }
+.rs-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rs-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 6px 13px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--c1); background: var(--c2); color: #2E2418; font: inherit; font-size: .95rem; }
+.rs-chip small { font-family: var(--mono); font-size: .78rem; opacity: .75; }
+.rs-chip:hover, .rs-chip:focus-visible { background: color-mix(in srgb, var(--c1) 30%, var(--c2)); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .rueda .rs-nota { fill: color-mix(in srgb, var(--c1) 42%, var(--surface)); }
+  :root:not([data-theme="light"]) .rueda .rs-tn { fill: var(--fg); }
+  :root:not([data-theme="light"]) .rs-chip { background: color-mix(in srgb, var(--c1) 30%, var(--surface)); color: var(--fg); }
+}
+:root[data-theme="dark"] .rueda .rs-nota { fill: color-mix(in srgb, var(--c1) 42%, var(--surface)); }
+:root[data-theme="dark"] .rueda .rs-tn { fill: var(--fg); }
+:root[data-theme="dark"] .rs-chip { background: color-mix(in srgb, var(--c1) 30%, var(--surface)); color: var(--fg); }
+@media (max-width: 760px) {
+  .rs-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  .rs-dibujo { margin: 0 -8px; }
+  .rs-info h3 { font-size: 1.7rem; }
+}

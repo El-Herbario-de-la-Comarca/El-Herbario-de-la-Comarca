@@ -434,7 +434,7 @@ function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i 
 
 /* ---------- Catálogo ---------- */
 const POR_PAGINA = 20;
-const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" };
+const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: "nombre", page: 1, falta: "" };
 // Fichas incompletas (solo admin, desde Mi cuenta): «foto» o «notas».
 // Datos que faltan en las fichas: casillas de «Mi cuenta» (foto y notas) y panel de Tareas (todos)
 const FALTAS = { foto: ["Sin foto", (d) => !fotoSegura(d.foto)], notas: ["Sin notas de sabor", (d) => !d.notas.length],
@@ -461,9 +461,9 @@ function fillFilters() {
    Al pasar del catálogo completo a uno filtrado se añade una entrada al historial; mientras se
    sigue filtrando, esa misma entrada se va actualizando. Así, Atrás (gesto del móvil o botón del
    navegador) vuelve siempre al catálogo sin filtros. */
-const SIN_FILTROS = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", sort: "nombre", page: 1, falta: "" };
+const SIN_FILTROS = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: "nombre", page: 1, falta: "" };
 const SELECTS_FILTRO = [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-pais", "pais"], ["sort", "sort"]];
-const hayFiltros = () => !!(state.q.trim() || state.marca || state.tipo || state.hoja || state.corte || state.pais || state.falta);
+const hayFiltros = () => !!(state.q.trim() || state.marca || state.tipo || state.hoja || state.corte || state.pais || state.nota || state.falta);
 const fotoFiltros = () => Object.fromEntries(Object.keys(SIN_FILTROS).map((k) => [k, state[k]]));
 const urlSinFicha = () => location.pathname + location.search;
 const enEntradaFiltrada = () => !!(history.state && history.state.filtros);
@@ -527,6 +527,8 @@ function render() {
     if (state.hoja && !d.hojas.includes(state.hoja)) return false;
     if (state.corte && d.corte !== state.corte) return false;
     if (state.pais && d.pais !== state.pais) return false;
+    // Nota de sabor elegida en la rueda (sabores.js), con sus formas equivalentes
+    if (state.nota && !(window.Sabores ? window.Sabores.tieneNota(d, state.nota) : d.notas.some((n) => norm(n) === norm(state.nota)))) return false;
     if (res) return res.niveles.has(d);
     if (q) {
       const hay = norm([d.nombre, d.marca, (d.otros || []).join(" "), d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc].join(" "));
@@ -543,11 +545,11 @@ function render() {
   state.page = Math.min(Math.max(1, state.page), paginas);
   const desde = (state.page - 1) * POR_PAGINA;
   const visibles = list.slice(desde, desde + POR_PAGINA);
-  $("count").textContent = (falta ? `${falta[0]} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
+  $("count").textContent = (falta ? `${falta[0]} · ` : "") + (state.nota ? `Sabor: ${state.nota} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
     (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "") +
     (res && res.corregidas.length ? ` · buscando «${res.corregidas.join(" ")}»` : "");
   pintarPaginador(paginas);
-  pintarUltimas(!falta && !q && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
+  pintarUltimas(!falta && !q && !state.nota && !state.marca && !state.tipo && !state.hoja && !state.corte && !state.pais && state.page === 1);
   $("grid").innerHTML = list.length ? visibles.map((d) => {
     const st = statsDe(d.id);
     const rate = st.n ? `${fmtMedia(st.media)} de 5 · ${st.n} ${st.n === 1 ? "reseña" : "reseñas"}` : "Sin reseñas todavía";
@@ -798,6 +800,11 @@ function ponerUrlFicha(d) {
   else history.pushState({ ficha: true }, "", h);
 }
 function quitarUrlFicha() {
+  if (location.hash === "#/sabores") {   // rueda de sabores (sabores.js)
+    if (history.state && history.state.sabores) history.back();
+    else history.replaceState(null, "", location.pathname + location.search);
+    return;
+  }
   if (!idDeHash()) return;
   // Si la ficha se abrió desde el listado, se vuelve atrás; si se entró por un enlace, se limpia la URL.
   if (history.state && history.state.ficha) history.back();
@@ -809,6 +816,7 @@ function abrirFichaDeUrl() {
 }
 window.addEventListener("popstate", () => {
   if (idDeHash()) { abrirFichaDeUrl(); return; }
+  if (location.hash === "#/sabores" && window.Sabores) { window.Sabores.abrir(true); return; }
   if (!$("overlay").hidden) closeDetail(true);
   // Catálogo: se ponen los filtros de la entrada a la que se ha vuelto (ninguno si no los tenía).
   const destino = enEntradaFiltrada() ? { ...SIN_FILTROS, ...history.state.filtros } : { ...SIN_FILTROS, sort: state.sort };
@@ -3303,6 +3311,7 @@ async function contarVisita() {
   const { data } = await sb.auth.getSession();
   await leerSesion(data && data.session);
   await refrescar();
+  if (window.Sabores && window.Sabores.abierta()) window.Sabores.abrir(true);   // la rueda, con las notas de Supabase
   abrirFichaDeUrl();   // por si la ficha solo está en Supabase (no en la copia de respaldo)
   // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
   // (fallo conocido de supabase-js). Por eso el trabajo se aplaza con setTimeout.
