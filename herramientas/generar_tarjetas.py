@@ -380,6 +380,7 @@ ICO = {
     "quiero": '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
     "hoja": '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
     "gusta": '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
+    "aviso": '<path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
     "etiqueta": '<path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1.5 1.5 0 0 1 0 2.1l-6.9 6.9a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8.5" cy="8.5" r="1.6"/>',
 }
 ico = lambda k: f'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">{ICO[k]}</svg>'
@@ -715,6 +716,7 @@ def pagina(d, otras, parecidas_=()):
       {bodega}
       <div class="compartir"><button class="btn" id="d-share" type="button">{ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
       <div class="compartir" id="d-etq" hidden><button class="btn" id="d-etq-btn" type="button">{ico("etiqueta")}Descargar etiquetas</button></div>
+      <div class="compartir"><a class="btn" href="../index.html?aviso=1#/ficha/{e(ident)}" rel="nofollow">{ico("aviso")}Avisar de un error</a></div>
     </div>
     <div class="info">
       <div id="d-meta">{meta}</div>

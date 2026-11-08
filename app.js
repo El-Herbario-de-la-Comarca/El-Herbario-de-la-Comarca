@@ -570,7 +570,7 @@ function render() {
         <p>${esc(d.desc)}</p>
       </div>
     </a>`;
-  }).join("") : `<p class="empty">${busquedaFoto ? "La foto no encaja con ninguna ficha. Prueba con otra foto, más de cerca y con buena luz, o escribe el nombre." : "Ningún tabaco coincide con la búsqueda. Prueba con menos filtros."}</p>`;
+  }).join("") : `<p class="empty">${busquedaFoto ? "La foto no encaja con ninguna ficha. Prueba con otra foto, más de cerca y con buena luz, o escribe el nombre." : `Ningún tabaco coincide con la búsqueda. Prueba con menos filtros.${$("q").value.trim() ? ' ¿Crees que falta en el catálogo? <button class="link" type="button" data-sugerir="busqueda">Sugiérelo</button>.' : ""}`}</p>`;
   anotarFiltros();
 }
 
@@ -700,6 +700,7 @@ const ICO = {
   hoja: '<path d="M12 20C12 13 7 10 4 9c3-2 7 0 8 4 1-4 5-6 8-4-3 1-8 4-8 11z"/>',
   gusta: '<path d="M12 20.5S3.5 15 3.5 9a5 5 0 0 1 8.5-3.6A5 5 0 0 1 20.5 9c0 6-8.5 11.5-8.5 11.5z"/>',
   rrss: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1" fill="currentColor"/>',
+  aviso: '<path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
   etiqueta: '<path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1.5 1.5 0 0 1 0 2.1l-6.9 6.9a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8.5" cy="8.5" r="1.6"/>',
 };
 const ico = (k) => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
@@ -863,6 +864,9 @@ async function compartirFicha(d) {
   try { await navigator.clipboard.writeText(url); if (msg) msg.textContent = "Enlace copiado. Pégalo en WhatsApp o Telegram."; }
   catch (e) { if (msg) msg.textContent = url; }
 }
+// Desde las páginas f/<id>.html, «Avisar de un error» llega como index.html?aviso=1#/ficha/<id>
+let avisoAlAbrir = /[?&]aviso=1\b/.test(location.search);
+if (avisoAlAbrir) history.replaceState(history.state, "", location.pathname + location.hash);
 function openDetail(id, desdeUrl) {
   const d = findItem(id); if (!d) return;
   openId = d.id;
@@ -884,6 +888,7 @@ function openDetail(id, desdeUrl) {
       <div class="compartir"><button class="btn" id="d-share" type="button">${ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
       <div class="compartir" id="d-etq" hidden></div>
       <div class="compartir" id="d-rrss" hidden></div>
+      <div class="compartir"><button class="btn" id="d-aviso" type="button">${ico("aviso")}Avisar de un error</button></div>
     </div>
     <div class="info">
       <div id="d-meta"></div>
@@ -912,11 +917,17 @@ function openDetail(id, desdeUrl) {
     </div>`, "ficha");
   $("d-close").addEventListener("click", () => closeDetail());
   $("d-share").addEventListener("click", () => compartirFicha(d));
+  $("d-aviso").addEventListener("click", () => window.Avisos && window.Avisos.abrir("error", d));
   $("d-r-cat").addEventListener("click", () => closeDetail());
   $("d-r-marca").addEventListener("click", () => verMarca(d.marca));
   $("panel").querySelectorAll("[data-ficha]").forEach((b) => b.addEventListener("click", () => { openDetail(b.dataset.ficha); $("overlay").scrollTop = 0; }));
   $("d-close").focus();
   paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas();
+  if (avisoAlAbrir) {   // avisos.js se carga después de app.js: se espera a que esté
+    avisoAlAbrir = false; let intentos = 0;
+    const ir = () => { if (window.Avisos) window.Avisos.abrir("error", d); else if (++intentos < 40) setTimeout(ir, 150); };
+    setTimeout(ir, 0);
+  }
 }
 /* Desde la ruta de la ficha: cierra y deja el catálogo filtrado por esa marca */
 function verMarca(marca) {

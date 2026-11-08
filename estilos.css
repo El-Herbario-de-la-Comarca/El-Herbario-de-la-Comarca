@@ -1223,3 +1223,13 @@ button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
 .foto-msg { margin: 2px 0 0; font-size: .92rem; color: var(--muted); }
 .foto-msg[data-tipo="error"] { color: var(--danger, #A3392B); }
 .foto-msg[data-tipo="hecho"] { color: var(--accent); }
+
+/* Avisar de un error · Sugerir un tabaco (avisos.js) */
+.confirm .box.aviso-box { width: min(100%, 480px); max-height: calc(100vh - 32px); overflow: auto; }
+.aviso-box textarea { width: 100%; min-height: 120px; }
+.aviso-box #av-estado:empty { display: none; }
+.sugerir { display: flex; justify-content: center; margin: 22px 0 0; }
+.sugerir .btn { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); border-radius: 10px; min-height: 42px; }
+.sugerir .ico, .compartir #d-aviso .ico { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.empty .link { font: inherit; }
+.d-lado .compartir a.btn { text-decoration: none; }
