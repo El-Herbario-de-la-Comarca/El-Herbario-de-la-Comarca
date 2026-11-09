@@ -1101,12 +1101,6 @@ body.en-prueba .overlay { padding-bottom: 110px; }
   .ta-marcas { grid-template-columns: 1fr; }
 }
 
-/* Aviso de versión nueva (app.js · avisarVersion) */
-.aviso-version { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 9000;
-  display: flex; align-items: center; gap: 12px; max-width: calc(100% - 32px); padding: 10px 14px;
-  background: var(--surface, #fff); color: var(--fg, #222); border: 1px solid var(--line, #ccc); border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(0,0,0,.18); font-size: 0.9rem; }
-
 /* ---------- Rueda de sabores (sabores.js) ---------- */
 .rs-cuerpo { grid-template-columns: minmax(0, 560px) minmax(0, 1fr); align-items: start; }
 .rs-dibujo { min-width: 0; }

@@ -2971,18 +2971,24 @@ async function guardarPerfil(nombre, avatar, ok) {
    Solo se usa si config.js tiene turnstileSiteKey. El script de Cloudflare se carga al abrir
    la ventana de acceso (no en cada visita). Supabase comprueba el token en el registro, la
    entrada y la recuperación de contraseña; cada token vale para una sola petición. */
-const captcha = { clave: CFG.turnstileSiteKey || "", id: null, token: "", carga: null, esperas: [] };
+const captcha = { clave: CFG.turnstileSiteKey || "", id: null, token: "", carga: null, esperas: [], fallo: false };
+// Mensaje cuando la comprobación no sale: suele pasar en wifis públicas (tren, hotel…), donde mucha gente
+// comparte la misma dirección, o con un bloqueador de anuncios.
+const AVISO_CAPTCHA = "No se ha podido comprobar que no eres un robot. Si estás en una wifi pública (tren, hotel, aeropuerto…), prueba con otra conexión, por ejemplo los datos del móvil. También puede ser un bloqueador de anuncios: desactívalo para esta web.";
 function cargarTurnstile() {
   if (window.turnstile) return Promise.resolve();
   if (!captcha.carga) captcha.carga = new Promise((ok, mal) => {
     const s = document.createElement("script");
     s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-    s.async = true; s.onload = () => ok(); s.onerror = () => { captcha.carga = null; mal(new Error("turnstile")); };
+    const fallar = () => { captcha.carga = null; mal(new Error("turnstile")); };
+    // Con una conexión muy lenta no se espera indefinidamente.
+    const limite = setTimeout(fallar, 15000);
+    s.async = true; s.onload = () => { clearTimeout(limite); ok(); }; s.onerror = () => { clearTimeout(limite); fallar(); };
     document.head.appendChild(s);
   });
   return captcha.carga;
 }
-function tokenCaptcha(t) { captcha.token = t || ""; if (t) { captcha.esperas.splice(0).forEach((f) => f(t)); } }
+function tokenCaptcha(t) { captcha.token = t || ""; if (t) { captcha.fallo = false; captcha.esperas.splice(0).forEach((f) => f(t)); } }
 async function prepararCaptcha() {
   if (!captcha.clave) return;
   try { await cargarTurnstile(); } catch (e) { return; }
@@ -2991,19 +2997,22 @@ async function prepararCaptcha() {
     sitekey: captcha.clave, language: "es", theme: "auto", appearance: "interaction-only",
     callback: tokenCaptcha,
     "expired-callback": () => tokenCaptcha(""),
-    "error-callback": () => { tokenCaptcha(""); return true; }
+    // Cloudflare no da el visto bueno: se avisa ya, sin esperar los 15 segundos.
+    "error-callback": () => { tokenCaptcha(""); captcha.fallo = true; captcha.esperas.splice(0).forEach((f) => f("")); return true; }
   });
 }
 // Devuelve el token para la petición (esperando un poco si aún se está comprobando) o null.
 async function pedirCaptcha() {
   if (!captcha.clave) return undefined;
   await prepararCaptcha();
-  if (!window.turnstile || captcha.id === null) { $("lg-msg").style.color = ""; $("lg-msg").textContent = "No se ha podido cargar la comprobación anti-robots. Revisa tu conexión o desactiva el bloqueador de anuncios para esta web."; return null; }
+  if (!window.turnstile || captcha.id === null) { $("lg-msg").style.color = ""; $("lg-msg").textContent = AVISO_CAPTCHA; return null; }
   if (captcha.token) return captcha.token;
+  // Si falló antes, se pide otra vez antes de esperar.
+  if (captcha.fallo) { captcha.fallo = false; try { window.turnstile.reset(captcha.id); } catch (e) {} }
   $("lg-msg").style.color = "var(--muted)"; $("lg-msg").textContent = "Comprobando que no eres un robot…";
   const t = await new Promise((ok) => { captcha.esperas.push(ok); setTimeout(() => ok(""), 15000); });
   $("lg-msg").style.color = ""; $("lg-msg").textContent = "";
-  if (!t) { $("lg-msg").textContent = "Completa la comprobación anti-robots y vuelve a pulsar."; return null; }
+  if (!t) { $("lg-msg").textContent = AVISO_CAPTCHA; return null; }
   return t;
 }
 // Tras usar un token hay que pedir otro.
@@ -3014,8 +3023,6 @@ function gastarCaptcha() {
 
 /* ---------- Acceso (correo y contraseña) ---------- */
 function abrirLogin() {
-  // Con código viejo en memoria el acceso puede fallar (p. ej. sin captcha): se recarga antes.
-  comprobarVersion(true).then((nueva) => { if (nueva && !ctx.session) location.reload(); });
   prepararCaptcha();
   $("lg-msg").textContent = ""; $("lg-msg").style.color = "";
   ["lg-send", "lg-new", "lg-forgot"].forEach((id) => ($(id).disabled = false));
@@ -3040,7 +3047,8 @@ function errorLogin(err) {
   if (/not confirmed/i.test(m)) return "Tienes que confirmar tu correo antes de entrar. Busca el mensaje en tu bandeja de entrada.";
   if (/already registered/i.test(m)) return "Ya existe una cuenta con ese correo. Pulsa «Entrar».";
   if (/rate limit|too many/i.test(m)) return "Demasiados intentos. Espera unos minutos.";
-  if (/captcha/i.test(m)) return "No se ha superado la comprobación anti-robots. Espera un momento y vuelve a intentarlo.";
+  if (/captcha/i.test(m)) return AVISO_CAPTCHA;
+  if (/failed to fetch|network|load failed/i.test(m)) return "No se ha podido conectar con el servidor. Revisa tu conexión; si estás en una wifi pública, prueba con los datos del móvil.";
   if (/sending.*(email|mail)|smtp/i.test(m)) return "La cuenta no se ha podido crear porque ha fallado el envío del correo. Inténtalo más tarde o avisa al administrador.";
   if (/signups? not allowed|disabled/i.test(m)) return "Ahora mismo no se pueden crear cuentas nuevas.";
   if (/password/i.test(m) && /weak|short|characters/i.test(m)) return "La contraseña no es válida: usa al menos 8 caracteres.";
@@ -3349,37 +3357,6 @@ async function contarVisita() {
     }, 0);
   });
 })();
-
-/* ---------- Aviso de versión nueva ----------
-   En el móvil, una pestaña o la web instalada pueden pasar días abiertas con el código viejo en
-   memoria. Al volver a la web (y cada 30 min) se compara la lista de archivos ?v= de index.html con
-   la que está cargada. Si cambió: aviso con «Actualizar», y recarga directa al abrir «Entrar». */
-const firmaVersion = (lista) => lista.filter((u) => /\?v=/.test(u)).map((u) => u.replace(/^.*\//, "")).sort().join("|");
-const versionCargada = firmaVersion([...document.querySelectorAll("script[src],link[href]")].map((e) => e.getAttribute("src") || e.getAttribute("href")));
-let versionNueva = false, ultimaComprobacion = 0;
-async function comprobarVersion(forzar) {
-  if (versionNueva) return true;
-  if (!forzar && Date.now() - ultimaComprobacion < 60000) return false;
-  ultimaComprobacion = Date.now();
-  try {
-    const r = await fetch("index.html?_=" + Date.now(), { cache: "no-store" });
-    if (!r.ok) return false;
-    const html = await r.text();
-    const firma = firmaVersion([...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((m) => m[1]));
-    if (firma && firma !== versionCargada) { versionNueva = true; avisarVersion(); }
-  } catch (e) {}
-  return versionNueva;
-}
-function avisarVersion() {
-  if ($("aviso-version")) return;
-  const d = document.createElement("div");
-  d.id = "aviso-version"; d.className = "aviso-version"; d.setAttribute("role", "status");
-  d.innerHTML = `<span>Hay una versión nueva del herbario.</span><button class="btn primary" type="button">Actualizar</button>`;
-  d.querySelector("button").addEventListener("click", () => location.reload());
-  document.body.appendChild(d);
-}
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") comprobarVersion(); });
-setInterval(() => { if (document.visibilityState === "visible") comprobarVersion(true); }, 30 * 60 * 1000);
 
 // Service worker: guarda la web para que abra rápido e instalable en el móvil.
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
