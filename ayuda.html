@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ayuda · El herbario de la Comarca</title>
-<meta name="description" content="Cómo funciona El herbario de la Comarca: Mi bodega, tarros y latas, reseñas, tipos de mezcla y la app en el móvil.">
+<meta name="description" content="Cómo funciona El herbario de la Comarca: tu cuenta, el buscador y la búsqueda por foto, marcas, mezclas y sabores, las fichas, Mi bodega, reseñas y la app en el móvil.">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="img/icono-192.png">
 <link rel="stylesheet" href="/fuentes/web/fuentes.css?v=20261105">
@@ -48,11 +48,16 @@
 <main class="ayuda">
   <a class="volver" href="./">← Volver al catálogo</a>
   <h1>Cómo funciona el herbario</h1>
-  <p class="entrada">Una guía breve para sacar partido al herbario, sobre todo a <strong>Mi bodega</strong>, tu despensa particular de tabaco de pipa.</p>
+  <p class="entrada">Una guía breve para sacar partido al herbario: cómo crear tu cuenta, encontrar tabacos, leer las fichas y llevar tu despensa particular en <strong>Mi bodega</strong>.</p>
+  <p class="consejo">El herbario está en <strong>fase de pruebas</strong>. Si ves un dato equivocado o algo que no funciona, usa el botón <a href="#avisos">Avisar de un error</a> de cada ficha. Nos ayuda mucho.</p>
 
   <nav class="indice" aria-label="Contenido de la ayuda">
     <p>En esta página</p>
     <ul>
+      <li><a href="#cuenta">Tu cuenta</a>: <a href="#registro">crearla</a>, <a href="#entrar">entrar</a> y <a href="#problemas">si no puedes entrar</a></li>
+      <li><a href="#buscar">Buscar tabacos</a>: <a href="#buscador">el buscador</a> y <a href="#foto">buscar por foto</a></li>
+      <li><a href="#explorar">Explorar</a>: <a href="#marcas">marcas y árbol de marcas</a>, <a href="#mezclas">mezclas</a> y <a href="#sabores">la rueda de sabores</a></li>
+      <li><a href="#ficha">La ficha de un tabaco</a> y <a href="#avisos">avisar de un error o sugerir un tabaco</a></li>
       <li><a href="#bodega">Mi bodega</a>: <a href="#listas">las tres listas</a>, <a href="#tarros">tarros y latas</a>, <a href="#estanteria">la estantería</a> y <a href="#privacidad">quién la ve</a></li>
       <li><a href="#resenas">Reseñas y rangos</a></li>
       <li><a href="#mezclas">Tipos de mezcla</a></li>
@@ -60,6 +65,86 @@
       <li><a href="#movil">El herbario en el móvil</a></li>
     </ul>
   </nav>
+
+  <h2 id="cuenta">Tu cuenta</h2>
+  <p>Para mirar el catálogo no hace falta cuenta. Con ella puedes además escribir reseñas, llevar <a href="#bodega">Mi bodega</a>, buscar por foto, descargar etiquetas para tus tarros y avisar de errores.</p>
+
+  <h3 id="registro">Crear la cuenta</h3>
+  <ol class="pasos">
+    <li><span>Pulsa <strong>Entrar</strong>, arriba a la derecha, y luego <span class="muestra">Crear cuenta</span>.</span></li>
+    <li><span>Escribe tu correo, una contraseña de al menos 8 caracteres y tu <strong>nombre público</strong>: es el que verán los demás junto a tus reseñas. Tu correo nunca se muestra.</span></li>
+    <li><span>Vuelve a pulsar <span class="muestra">Crear cuenta</span>. Te llegará un correo de <strong>no-responde@elherbariodelacomarca.es</strong>: pulsa el enlace para confirmar tu dirección.</span></li>
+    <li><span>Ya puedes entrar con tu correo y tu contraseña.</span></li>
+  </ol>
+  <p class="consejo">Si el correo de confirmación no llega en unos minutos, mira en la carpeta de <strong>correo no deseado</strong> (spam) o en «Promociones».</p>
+
+  <h3 id="entrar">Entrar y Mi cuenta</h3>
+  <ul>
+    <li>Para entrar, pulsa <strong>Entrar</strong> y escribe tu correo y tu contraseña. La sesión se queda abierta en ese navegador hasta que salgas.</li>
+    <li>Si no recuerdas la contraseña, escribe tu correo y pulsa <strong>He olvidado mi contraseña</strong>: te llegará un correo para poner una nueva.</li>
+    <li>En <strong>Mi cuenta</strong> puedes cambiar tu nombre público y tu foto de perfil, ver tu <a href="#resenas">rango</a> y, en el móvil, instalar la app.</li>
+  </ul>
+
+  <h3 id="problemas">Si no puedes entrar</h3>
+  <p>Para evitar que se registren robots, al entrar o crear la cuenta se hace una comprobación invisible de Cloudflare. Casi siempre pasa sin que te des cuenta, pero puede fallar en algunos casos:</p>
+  <ul>
+    <li><strong>Wifis públicas</strong> (tren, hotel, aeropuerto…): mucha gente sale a internet con la misma dirección y la comprobación puede desconfiar. Prueba con los datos del móvil o con otra conexión.</li>
+    <li><strong>Bloqueadores de anuncios</strong>: pueden impedir que cargue la comprobación. Desactívalos para esta web.</li>
+    <li><strong>Una versión antigua guardada en el navegador</strong>: recarga la página. En el ordenador, con <strong>Ctrl + Mayús + R</strong> (o <strong>Cmd + Mayús + R</strong> en Mac).</li>
+  </ul>
+
+  <h2 id="buscar">Buscar tabacos</h2>
+  <h3 id="buscador">El buscador</h3>
+  <p>Escribe en <strong>Buscar</strong> el nombre de un tabaco, una marca o un sabor. No hace falta escribirlo perfecto: el buscador entiende pequeñas erratas, plurales y palabras en español, inglés o alemán. También encuentra los tabacos por <strong>otros nombres</strong>: el que tienen en Estados Unidos, uno antiguo o el de una marca anterior.</p>
+  <p>Junto al buscador están los filtros: <strong>Marca</strong>, <strong>Mezcla</strong>, <strong>Lleva</strong> (una hoja concreta, como latakia o perique), <strong>Corte</strong> y <strong>País</strong>. Puedes combinarlos, y <strong>Quitar filtros</strong> devuelve el catálogo completo.</p>
+
+  <h3 id="foto">Buscar por foto</h3>
+  <p>¿Tienes una lata delante y no sabes cuál es en el catálogo? Pulsa el <strong>icono de la cámara</strong> que hay dentro del campo Buscar:</p>
+  <ol class="pasos">
+    <li><span>En el móvil se abre la cámara; en el ordenador, puedes elegir una foto guardada.</span></li>
+    <li><span>Haz la foto a la lata o la bolsa, con el <strong>nombre bien visible</strong> y buena luz.</span></li>
+    <li><span>El herbario lee el texto de la etiqueta y te enseña los tabacos que encajan, del más al menos probable («Tu foto»).</span></li>
+  </ol>
+  <ul>
+    <li>Necesitas haber entrado con tu cuenta. Hay un número máximo de fotos al día por persona.</li>
+    <li>La foto <strong>no se guarda</strong>: solo se usa para leer el texto. Más detalles en la <a href="privacidad.html">política de privacidad</a>.</li>
+    <li>Para volver al catálogo normal, escribe en el buscador o toca cualquier filtro.</li>
+  </ul>
+
+  <h2 id="explorar">Explorar</h2>
+  <p>Debajo de la cabecera, el menú <strong>Explorar</strong> lleva a tres formas de recorrer el herbario.</p>
+
+  <h3 id="marcas">Marcas y árbol de marcas</h3>
+  <p><strong>Marcas</strong> reúne todas las marcas del catálogo. Cada una tiene su página, con un texto sobre su historia y todas sus mezclas.</p>
+  <p>Desde esa página se abre el <strong>Árbol de marcas</strong>: un mapa de qué grupos son dueños de qué marcas y quién elabora el tabaco de quién. La <strong>línea continua</strong> indica que una empresa es dueña de la marca; la <strong>discontinua</strong>, que la elabora para otra casa. Toca una marca para resaltarla y ver sus fichas o su página.</p>
+
+  <h3 id="explorar-mezclas">Mezclas</h3>
+  <p><strong>Mezclas</strong> agrupa el catálogo por <a href="#mezclas">tipo de mezcla</a> (Inglesa, Virginia, Aromática…), con una explicación de cada estilo.</p>
+
+  <h3 id="sabores">La rueda de sabores</h3>
+  <p><strong>Sabores</strong> abre una rueda con las notas de sabor de las fichas, agrupadas en familias: dulces, frutas, tostados, especias, hierba, tierra, humo, licores y ácidos.</p>
+  <ul>
+    <li>Toca una <strong>familia</strong> (el anillo de dentro): la rueda se amplía y gira para que leas sus notas.</li>
+    <li>Toca una <strong>nota</strong> (el anillo de fuera) para ver cuántos tabacos la tienen, y pulsa <strong>Ver las fichas</strong> para filtrar el catálogo con ella.</li>
+    <li>Toca el centro, «Sabores», para devolver la rueda a su forma.</li>
+  </ul>
+
+  <h2 id="ficha">La ficha de un tabaco</h2>
+  <p>Cada ficha recoge los datos contrastados de la mezcla: marca, tipo de mezcla, corte, país, formato, hojas, notas de sabor y una descripción. Además:</p>
+  <dl>
+    <dt>Según las reseñas</dt><dd>La fuerza, la intensidad de sabor y demás valoraciones salen solo de lo que votan los socios en sus reseñas. Por eso no aparecen hasta que alguien reseña el tabaco.</dd>
+    <dt>Parecidas de otras marcas</dt><dd>Hasta cuatro tabacos de otras casas con el mismo tipo de mezcla, hojas, corte o notas de sabor. Útil si se te acaba uno y buscas algo similar.</dd>
+    <dt>Más de la serie y de la marca</dt><dd>Otras mezclas de la misma gama o del mismo fabricante.</dd>
+    <dt>Compartir</dt><dd>En el móvil abre el menú para enviar la ficha por WhatsApp, Telegram o correo; en el ordenador copia el enlace para que lo pegues donde quieras.</dd>
+    <dt>Descargar etiquetas</dt><dd>Con tu cuenta, prepara dos etiquetas para tus tarros (una para el costado y otra redonda para la tapa) con el nombre del tabaco y tus fechas.</dd>
+  </dl>
+
+  <h3 id="avisos">Avisar de un error o sugerir un tabaco</h3>
+  <ul>
+    <li><strong>Avisar de un error</strong>: el botón está en cada ficha, debajo de Compartir. Cuéntanos qué está mal (un dato, la foto, una errata) y llegará al administrador.</li>
+    <li><strong>¿Falta algún tabaco? Sugiérelo</strong>: al final del catálogo, en el pie de la página y cuando una búsqueda no da resultados. Indica la marca y el nombre de la mezcla.</li>
+    <li>Necesitas haber entrado con tu cuenta. Puedes enviar hasta 10 mensajes al día.</li>
+  </ul>
 
   <h2 id="bodega">Mi bodega</h2>
   <p>Mi bodega es tu lista personal de tabacos: los que tienes, los que has probado y los que te gustaría probar. Para usarla necesitas una cuenta; cuando entras, aparece el botón <strong>Mi bodega</strong> arriba a la derecha.</p>
@@ -110,6 +195,7 @@
     <li><strong>Por tipo de mezcla</strong> (en «Lo tengo») muestra qué parte de tus gramos es Inglesa, Virginia, Aromática…</li>
     <li><strong>Madurando en la bodega</strong> lista cada envase con fecha, del más antiguo al más nuevo. La barra se llena a los 10 años.</li>
     <li>Pulsa cualquier lata de la estantería para abrir su ficha.</li>
+    <li>Con <strong>Descargar inventario en PDF</strong> (en «Lo tengo») te llevas la lista de lo que tienes, con sus envases y fechas.</li>
   </ul>
 
   <h3 id="privacidad">¿Quién ve mi bodega?</h3>
