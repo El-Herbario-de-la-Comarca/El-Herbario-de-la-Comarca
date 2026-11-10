@@ -35,7 +35,7 @@
         { m: "Peterson", t: "Peterson (tabaco)", a: 2019, n: "Las marcas de tabaco de Kapp & Peterson. Las pipas son de Laudisi.", h: [
           { m: null, t: "Mezclas de Dunhill", a: 2019, n: "Early Morning Pipe, Nightcap, Royal Yacht, Elizabethan Mixture… Hoy se venden como Peterson." },
         ] },
-        { m: "STG", t: "Mac Baren", a: 2024, n: "La casa de Svendborg. Tras la compra cerró su fábrica; sus mezclas están en el catálogo como STG.", h: [
+        { m: "Mac Baren", a: 2024, n: "La casa de Svendborg. Tras la compra STG cerró su fábrica y elabora sus mezclas en Assens; se siguen vendiendo como Mac Baren.", h: [
           { m: "Planta", a: 2019, n: "Mac Baren se quedó con las marcas de tabaco de pipa de esta casa de Berlín, que dejó de fabricar.", h: [
             { m: "Holger Danske" }, { m: "Cellini" }, { m: "Mc Lintock" }, { m: "R and M" }, { m: "Brigg" },
           ] },
@@ -234,7 +234,7 @@
     b.closest(".ab-l").after(info);
     const veces = todos.filter((x) => x.dataset.m === m);
     const grupos = [...new Set(veces.map((x) => GRUPOS.find((g) => g.id === x.dataset.g).corto))];
-    const n = fichasDe(m), nombre = m === "STG" ? "Mac Baren (STG)" : m;
+    const n = fichasDe(m), nombre = m;
     const logo = logoDe(m);
     info.innerHTML = `${logo ? `<span class="ab-logo-g"><img src="${esc(logo)}" alt="Logo de ${esc(nombre)}"></span>` : ""}<div class="ab-info-t"><strong>${esc(nombre)}</strong>
         <span class="muted">${n ? fichas(n) + " · " : ""}${grupos.length > 1 ? `aparece en ${grupos.join(" y ")}` : esc(grupos[0])}</span></div>

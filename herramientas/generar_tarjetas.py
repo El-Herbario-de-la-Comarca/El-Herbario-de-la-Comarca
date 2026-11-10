@@ -951,6 +951,20 @@ def escribir(ruta, contenido):
         ruta.write_text(contenido, encoding="utf-8")
 
 
+# Páginas de marca que han cambiado de nombre: clave vieja → clave nueva.
+# STG → Mac Baren (10/11/2026): las mezclas de Mac Baren estuvieron unos días con la marca STG.
+MARCAS_RENOMBRADAS = {"stg": "mac-baren"}
+
+
+def pagina_redireccion(destino):
+    """Página mínima que lleva a otra de la misma carpeta (para direcciones viejas que Google ya conoce)."""
+    d = html.escape(destino)
+    return ('<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
+            f'<meta name="robots" content="noindex"><link rel="canonical" href="{html.escape(BASE)}marca/{d}">'
+            f'<meta http-equiv="refresh" content="0; url={d}"><title>El herbario de la Comarca</title></head>'
+            f'<body><p>Esta página ha cambiado de dirección: <a href="{d}">{d}</a></p></body></html>\n')
+
+
 def volcar(carpeta, paginas):
     """Escribe {nombre: html} en la carpeta y borra las paginas que ya no existen."""
     carpeta.mkdir(exist_ok=True)
@@ -1004,7 +1018,11 @@ def main():
         if clave and f"{clave}.html" not in marcas:
             marcas[f"{clave}.html"] = pagina_marca(marca, fs, textos["marca"].get(clave, ""))
     marcas["index.html"] = indice_marcas(por_marca)
-    volcar(CARPETA_MARCA, marcas)
+    # Marcas que cambiaron de nombre: la página vieja lleva a la nueva (fuera del sitemap)
+    redirecciones = {f"{viejo}.html": pagina_redireccion(f"{nuevo}.html")
+                     for viejo, nuevo in MARCAS_RENOMBRADAS.items()
+                     if f"{viejo}.html" not in marcas and f"{nuevo}.html" in marcas}
+    volcar(CARPETA_MARCA, {**marcas, **redirecciones})
     mezclas = {f"{slug(t)}.html": pagina_mezcla(t, fs, textos["mezcla"].get(slug(t), "")) for t, fs in por_tipo.items()}
     mezclas["index.html"] = indice_mezclas(por_tipo, textos["mezcla"])
     volcar(CARPETA_MEZCLA, mezclas)

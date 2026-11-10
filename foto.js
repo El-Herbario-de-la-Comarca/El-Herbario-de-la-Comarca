@@ -25,7 +25,7 @@
   const VACIAS = new Set(["the", "and", "de", "la", "el", "of", "y", "und", "a", "g", "gr", "gramos", "net", "wt", "oz",
     "tobacco", "tabaco", "tabak", "pipe", "pipa", "pfeifentabak", "smoking", "co", "ltd", "inc", "est", "since"]);
   // Lo que pone en la lata cuando la marca del catálogo es otra (dueño actual, nombre corto…).
-  const OTRAS_MARCAS = { "STG": ["Mac Baren", "Scandinavian Tobacco Group"], "Kopp": ["Kohlhase & Kopp", "Kohlhase Kopp"],
+  const OTRAS_MARCAS = { "Mac Baren": ["MacBaren", "Mac Baren Tobacco Company"], "Kopp": ["Kohlhase & Kopp", "Kohlhase Kopp"],
     "G. L. Pease": ["GL Pease", "Pease"], "Cornell & Diehl": ["Cornell Diehl"], "W.Ø. Larsen": ["WO Larsen", "Larsen"] };
 
   let indice = null, base = null;   // se rehace si cambia el catálogo
