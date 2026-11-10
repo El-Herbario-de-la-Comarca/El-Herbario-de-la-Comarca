@@ -515,7 +515,10 @@ function setupFilters() {
     
   });
 }
-const camposBusqueda = (d) => ({ principal: [d.nombre, d.marca, ...(d.otros || [])],
+// Otros nombres de una marca para el buscador: quien escribe «Mac Baren» encuentra las fichas de STG,
+// que compró Mac Baren en 2024 (cuentan como marca, así salen primero).
+const OTRAS_MARCAS_BUSQUEDA = { "STG": ["Mac Baren", "Scandinavian Tobacco Group"] };
+const camposBusqueda = (d) => ({ principal: [d.nombre, d.marca, ...(OTRAS_MARCAS_BUSQUEDA[d.marca] || []), ...(d.otros || [])],
   resto: [d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc] });
 function render() {
   const q = norm(state.q.trim());
