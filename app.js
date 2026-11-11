@@ -207,21 +207,12 @@ async function salirModoPrueba() {
   await leerSesion(ctx.session);
   await refrescar();
 }
-// Franja fija abajo mientras dura el modo prueba (la pinta paintTop).
+// El modo prueba ya no enseña franja abajo (11/11/2026, a petición del usuario).
+// Para salir: Mi cuenta → «Salir del modo prueba». Se quita la franja si quedara alguna.
 function paintAvisoPrueba() {
-  let av = $("aviso-prueba");
-  if (!modoPrueba) { if (av) av.remove(); document.body.classList.remove("en-prueba"); return; }
-  if (!av) { av = document.createElement("div"); av.id = "aviso-prueba"; av.className = "aviso-prueba"; av.setAttribute("role", "status"); document.body.prepend(av); }
-  document.body.classList.add("en-prueba");
-  av.innerHTML = `<span><strong>Modo prueba.</strong> Estás viendo el herbario como <strong>${esc(modoPrueba.perfil.nombre || "Saruman Blanco")}</strong>, un lector con datos inventados. No se guarda nada.</span>
-    <span class="btns"><button class="btn" type="button" id="ap-barajar">Inventar otros datos</button><button class="btn primary" type="button" id="ap-salir">Volver a mi cuenta</button></span>`;
-  $("ap-salir").addEventListener("click", salirModoPrueba);
-  $("ap-barajar").addEventListener("click", async () => {
-    if (!modoPrueba) return;
-    const nombre = modoPrueba.perfil.nombre;
-    modoPrueba = crearDatosPrueba(modoPrueba.uidReal); modoPrueba.perfil.nombre = nombre;
-    closeDetail(); await refrescar();
-  });
+  const av = $("aviso-prueba");
+  if (av) av.remove();
+  document.body.classList.remove("en-prueba");
 }
 
 /* ---------- Estado ---------- */
