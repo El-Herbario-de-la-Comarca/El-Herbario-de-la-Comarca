@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://elherbariodelacomarca.es/</loc><lastmod>2026-11-12</lastmod></url>
-<url><loc>https://elherbariodelacomarca.es/marca/</loc><lastmod>2026-11-11</lastmod></url>
-<url><loc>https://elherbariodelacomarca.es/mezcla/</loc><lastmod>2026-11-10</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/</loc><lastmod>2026-11-13</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/marca/</loc><lastmod>2026-11-13</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/mezcla/</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/alsbo.html</loc><lastmod>2026-11-05</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/amphora.html</loc><lastmod>2026-11-05</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/amsterdamer.html</loc><lastmod>2026-11-05</lastmod></url>
@@ -45,7 +45,7 @@
 <url><loc>https://elherbariodelacomarca.es/marca/kontor-tabak.html</loc><lastmod>2026-11-05</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/kopp.html</loc><lastmod>2026-11-05</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/lane-limited.html</loc><lastmod>2026-11-06</lastmod></url>
-<url><loc>https://elherbariodelacomarca.es/marca/mac-baren.html</loc><lastmod>2026-11-11</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/marca/mac-baren.html</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/malevo.html</loc><lastmod>2026-11-06</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/mc-lintock.html</loc><lastmod>2026-11-06</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/marca/monk.html</loc><lastmod>2026-11-05</lastmod></url>
@@ -90,7 +90,7 @@
 <url><loc>https://elherbariodelacomarca.es/mezcla/lakeland.html</loc><lastmod>2026-11-11</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/mezcla/oriental.html</loc><lastmod>2026-11-12</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/mezcla/sin-mezclar.html</loc><lastmod>2026-11-12</lastmod></url>
-<url><loc>https://elherbariodelacomarca.es/mezcla/virginia-perique.html</loc><lastmod>2026-11-12</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/mezcla/virginia-perique.html</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/mezcla/virginia.html</loc><lastmod>2026-11-12</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/1.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/2.html</loc><lastmod>2026-11-10</lastmod></url>
@@ -596,7 +596,7 @@
 <url><loc>https://elherbariodelacomarca.es/f/1084.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/1085.html</loc><lastmod>2026-11-11</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/1086.html</loc><lastmod>2026-11-12</lastmod></url>
-<url><loc>https://elherbariodelacomarca.es/f/1087.html</loc><lastmod>2026-11-09</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/f/1087.html</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/1088.html</loc><lastmod>2026-11-10</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/1089.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/1090.html</loc><lastmod>2026-11-11</lastmod></url>
@@ -1002,7 +1002,7 @@
 <url><loc>https://elherbariodelacomarca.es/f/2262.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/2263.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/2264.html</loc><lastmod>2026-11-09</lastmod></url>
-<url><loc>https://elherbariodelacomarca.es/f/2265.html</loc><lastmod>2026-11-09</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/f/2265.html</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/2266.html</loc><lastmod>2026-11-12</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/2267.html</loc><lastmod>2026-11-12</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/2268.html</loc><lastmod>2026-11-12</lastmod></url>
@@ -1167,6 +1167,7 @@
 <url><loc>https://elherbariodelacomarca.es/f/n4ed3f539deae40509a6306c7a7de08cc.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/n5032a1b970a44dac8b49124bf178d444.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/n509fd929023b45ffa6bda5207e82c53b.html</loc><lastmod>2026-11-09</lastmod></url>
+<url><loc>https://elherbariodelacomarca.es/f/n51ad206fe1804f75a9d9345dfc2a70a9.html</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/n6120cfd63643476487348feadb1138b3.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/n61c73dc9c10c487fac5272c4d13441f6.html</loc><lastmod>2026-11-09</lastmod></url>
 <url><loc>https://elherbariodelacomarca.es/f/n661be27c84c84920b6ae53a5eb04233d.html</loc><lastmod>2026-11-09</lastmod></url>
