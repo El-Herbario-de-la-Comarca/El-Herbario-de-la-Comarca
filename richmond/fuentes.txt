@@ -1,0 +1,23 @@
+01.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/f8/a5/2d/1740575780/logo_pfeifen_shop_online.webp
+02.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/70/4c/6f/1790785070/Logo_Richmond_sm.webp
+03.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/thumbnail/70/4c/6f/1790785070/Logo_Richmond_sm_200x200.webp
+04.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/57/07/90/1770204905/richmond_navy_cut_1.webp
+05.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/thumbnail/57/07/90/1770204905/richmond_navy_cut_1_800x800.webp
+06.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/ff/e4/71/1770204905/richmond_navy_cut_2.webp
+07.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/thumbnail/ff/e4/71/1770204905/richmond_navy_cut_2_800x800.webp
+08.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/15/12/66/1749114313/icon_vorkasse.webp
+09.svg	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/ac/bd/15/1784892310/payment_app_ShopwarePayments_klarna.svg?ts=1794378081
+10.svg	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/99/77/22/1740564638/swag_paypal_paypal.svg?ts=1772013909
+11.svg	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/c1/72/31/1740996892/creditcard-icon.svg?ts=1747322236
+12.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/f8/57/62/1749114633/icon_rechnung.webp
+13.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/c4/57/29/1749114661/icon_lastschrift.webp
+14.webp	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/bc/4c/76/1749114646/icon_nachnahme.webp
+15.svg	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/f6/63/6c/1740564643/swag_paypal_google_pay.svg?ts=1772013910
+16.png	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/f8/a5/2d/1740575780/logo_pfeifen_shop_online.png?ts=1772705125
+17.png	pagina https://www.pfeifen-shop-online.de/Marken/Richmond	https://www.pfeifen-shop-online.de/media/bc/d9/91/1784560359/wurzel_blu_96x96.png?ts=1784560359
+18.png	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Atlantic_10_Conference_textless_logo_in_Richmond_blue.svg/960px-Atlantic_10_Conference_textless_logo_in_Richmond_blue.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+19.png	commons	https://upload.wikimedia.org/wikipedia/commons/7/7c/Logo_Richmond_Smiles.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled
+20.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Richmond-upon-thames-college-logo-rgb.jpg/960px-Richmond-upon-thames-college-logo-rgb.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+21.png	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Richmond_Kickers_Logo_2012_to_2024.svg/960px-Richmond_Kickers_Logo_2012_to_2024.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+22.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Richmond_Raceway_Logo_%282024%29.jpg/960px-Richmond_Raceway_Logo_%282024%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+23.png	commons	https://upload.wikimedia.org/wikipedia/commons/3/34/Richmond_Standard_Logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled

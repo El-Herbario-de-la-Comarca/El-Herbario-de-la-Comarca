@@ -1,0 +1,19 @@
+01.webp	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/f8/a5/2d/1740575780/logo_pfeifen_shop_online.webp
+02.webp	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/15/12/66/1749114313/icon_vorkasse.webp
+03.svg	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/ac/bd/15/1784892310/payment_app_ShopwarePayments_klarna.svg?ts=1794378081
+04.svg	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/99/77/22/1740564638/swag_paypal_paypal.svg?ts=1772013909
+05.svg	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/c1/72/31/1740996892/creditcard-icon.svg?ts=1747322236
+06.webp	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/f8/57/62/1749114633/icon_rechnung.webp
+07.webp	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/c4/57/29/1749114661/icon_lastschrift.webp
+08.webp	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/bc/4c/76/1749114646/icon_nachnahme.webp
+09.svg	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/f6/63/6c/1740564643/swag_paypal_google_pay.svg?ts=1772013910
+10.png	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/f8/a5/2d/1740575780/logo_pfeifen_shop_online.png?ts=1772705125
+11.png	pagina https://www.pfeifen-shop-online.de/Zigarren/Format/	https://www.pfeifen-shop-online.de/media/bc/d9/91/1784560359/wurzel_blu_96x96.png?ts=1784560359
+12.webp	pagina https://www.pfeifen-shop-online.de/Marken/Germains	https://www.pfeifen-shop-online.de/media/4a/39/43/1790785070/Logo_Germains_sm.webp
+13.webp	pagina https://www.pfeifen-shop-online.de/Marken/Germains	https://www.pfeifen-shop-online.de/thumbnail/4a/39/43/1790785070/Logo_Germains_sm_200x200.webp
+14.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Phineas_and_Ferb_Signing_%2812280364674%29.jpg/960px-Phineas_and_Ferb_Signing_%2812280364674%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+15.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Phineas_and_Ferb_Signing_%2812280364674%29_%28cropped%29.jpg/960px-Phineas_and_Ferb_Signing_%2812280364674%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+16.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Phineas_and_Ferb_Signing_%2812280488606%29.jpg/960px-Phineas_and_Ferb_Signing_%2812280488606%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+17.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Phineas_and_Ferb_Signing_with_Vincent_Martella_%289404683259%29_%28cropped%29.jpg/960px-Phineas_and_Ferb_Signing_with_Vincent_Martella_%289404683259%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+18.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Phineas_and_Ferb_Signing_with_Vincent_Martella_and_Dan_Povenmire_%289404683259%29.jpg/960px-Phineas_and_Ferb_Signing_with_Vincent_Martella_and_Dan_Povenmire_%289404683259%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+19.jpg	commons	https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Phineas_and_Ferb_and_Robot.jpg/960px-Phineas_and_Ferb_and_Robot.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
