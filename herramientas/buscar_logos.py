@@ -8,11 +8,10 @@ Para cada marca descarga imágenes que parecen logos de:
   - las páginas indicadas (web oficial, ficha de marca de tiendas, Pipedia): <img> con «logo» en
     src/alt/class/id, og:image y apple-touch-icon;
   - Wikimedia Commons (búsqueda «<nombre> logo»);
-  - la búsqueda de imágenes de Bing (primeros resultados).
 Guarda carpeta_destino/<clave>/NN.<ext> y carpeta_destino/<clave>/fuentes.txt (NN → URL).
 Solo sirve para elegir a mano: no publica nada.
 """
-import html, json, re, sys, urllib.parse, urllib.request
+import html, json, re, sys, time, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -23,12 +22,13 @@ TIPOS = {"image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/s
 
 
 def get(url, timeout=25):
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "en,de;q=0.8,es;q=0.6"})
+    ua = "HerbarioLogos/1.0 (https://elherbariodelacomarca.es)" if "wikimedia.org" in url else UA
+    req = urllib.request.Request(urllib.parse.quote(url, safe=":/?&=%#+,;@!$'()*~"), headers={"User-Agent": ua, "Accept-Language": "en,de;q=0.8,es;q=0.6"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read(), (r.headers.get("Content-Type") or "").split(";")[0].strip().lower(), r.geturl()
 
 
-def candidatos_pagina(url):
+def candidatos_pagina(url, nombre=""):
     try:
         cuerpo, tipo, final = get(url)
     except Exception as ex:
@@ -39,7 +39,10 @@ def candidatos_pagina(url):
     t = cuerpo.decode("utf-8", "replace")
     out = []
     for tag in re.findall(r"<img\b[^>]*>", t, re.I):
-        if not re.search(r"logo|brand|marke|hersteller", tag, re.I):
+        alt = " ".join(re.findall(r"(?:alt|title)\s*=\s*[\"']([^\"']*)", tag, re.I)).lower()
+        clave_nombre = (nombre.lower().split() or [""])[0]
+        if not (re.search(r"logo|brand|marke|hersteller|manufacturer", tag, re.I)
+                or (len(clave_nombre) > 2 and clave_nombre in alt)):
             continue
         for attr in ("data-src", "data-lazy-src", "src"):
             m = re.search(attr + r"\s*=\s*[\"']([^\"']+)", tag, re.I)
@@ -57,7 +60,7 @@ def candidatos_pagina(url):
         u = urllib.parse.urljoin(final, html.unescape(u.strip()))
         if u.startswith("http") and u not in res:
             res.append(u)
-    return res[:8]
+    return res[:10]
 
 
 def candidatos_commons(texto):
@@ -68,7 +71,7 @@ def candidatos_commons(texto):
         d = json.loads(get("https://commons.wikimedia.org/w/api.php?" + q)[0])
     except Exception as ex:
         print(f"    sin Commons ({ex})", flush=True)
-        return []
+        return None
     pal = [p for p in re.split(r"\W+", texto.lower()) if len(p) > 2]
     res = []
     for p in (d.get("query") or {}).get("pages", {}).values():
@@ -117,9 +120,13 @@ def marca(clave, info, destino):
     carpeta.mkdir(parents=True, exist_ok=True)
     urls = []
     for p in info.get("paginas", []):
-        urls += [("pagina " + p, u) for u in candidatos_pagina(p)]
-    urls += [("commons", u) for u in candidatos_commons(info["nombre"])]
-    urls += [("bing", u) for u in candidatos_bing(info.get("buscar") or f'{info["nombre"]} tobacco logo')]
+        urls += [("pagina " + p, u) for u in candidatos_pagina(p, info["nombre"])]
+    for _ in range(3):   # Commons limita las peticiones seguidas
+        c = candidatos_commons(info["nombre"])
+        if c is not None:
+            break
+        time.sleep(5)
+    urls += [("commons", u) for u in (c or [])]
     vistos, lineas, n = set(), [], 0
     for origen, u in urls:
         if u in vistos:
@@ -136,7 +143,7 @@ def marca(clave, info, destino):
 def main():
     marcas = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     destino = Path(sys.argv[2])
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=2) as pool:
         list(pool.map(lambda kv: marca(kv[0], kv[1], destino), marcas.items()))
 
 
