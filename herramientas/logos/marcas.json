@@ -1,213 +1,174 @@
 {
  "ilsted": {
   "nombre": "Ilsted",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Ilsted"
-  ]
- },
- "kapt-n-barsdorfs-bester": {
-  "nombre": "Käpt'n Barsdorfs Bester",
-  "paginas": [
-   "https://www.barsdorf.de/"
-  ]
+  "fichas": [
+   "ilsted"
+  ],
+  "paginas": []
  },
  "kentucky-bird": {
   "nombre": "Kentucky Bird",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Kentucky-Bird",
-   "https://www.st-group.com/about-us/our-brands/kentucky-bird"
-  ]
+  "fichas": [
+   "kentuckybird"
+  ],
+  "paginas": []
  },
  "lane-limited": {
   "nombre": "Lane Limited",
-  "paginas": [
-   "https://www.st-group.com/about-us/our-brands/lane-limited",
-   "https://www.st-group.com/about-us/our-brands/lane",
-   "https://stglanepipe.com/us/"
-  ]
- },
- "malevo": {
-  "nombre": "Malevo",
+  "fichas": [
+   "lane"
+  ],
   "paginas": []
  },
  "mc-lintock": {
   "nombre": "Mc Lintock",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/McLintock",
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Mc-Lintock",
-   "https://mac-baren.com/pipe-tobacco/"
-  ]
- },
- "monk": {
-  "nombre": "Monk",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Monk"
-  ]
+  "fichas": [
+   "mclintock"
+  ],
+  "paginas": []
  },
  "myrott": {
   "nombre": "MyRott",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/MyRott",
-   "https://www.myrott.de/"
-  ]
+  "fichas": [
+   "myrott"
+  ],
+  "paginas": []
  },
  "orlik": {
   "nombre": "Orlik",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Orlik",
-   "https://www.st-group.com/about-us/our-brands/orlik"
-  ]
- },
- "per-g-jensen": {
-  "nombre": "Per G. Jensen",
-  "paginas": [
-   "https://www.cornellanddiehl.com/"
-  ]
+  "fichas": [
+   "orlik"
+  ],
+  "paginas": []
  },
  "planta": {
   "nombre": "Planta",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Planta",
-   "https://www.planta-tabak.de/"
-  ]
+  "fichas": [
+   "planta"
+  ],
+  "paginas": []
  },
  "prestige": {
   "nombre": "Prestige",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Prestige"
-  ]
- },
- "prince-albert": {
-  "nombre": "Prince Albert",
+  "fichas": [
+   "prestige"
+  ],
   "paginas": []
  },
  "r-and-m": {
   "nombre": "R and M",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/R-M",
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/RM"
-  ]
+  "fichas": [
+   "randm",
+   "rm"
+  ],
+  "paginas": []
  },
  "rattray-s": {
   "nombre": "Rattray's",
+  "fichas": [
+   "rattray"
+  ],
   "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Rattray-s",
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Rattrays",
-   "https://www.kopp-pipes.com/",
-   "https://www.rattrays.com/"
+   "https://www.kopp-pipes.com/"
   ]
  },
  "reiner": {
   "nombre": "Reiner",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Reiner"
-  ]
+  "fichas": [
+   "reiner"
+  ],
+  "paginas": []
  },
  "richmond": {
   "nombre": "Richmond",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Richmond",
-   "https://www.st-group.com/about-us/our-brands/richmond"
-  ]
- },
- "robert-lewis": {
-  "nombre": "Robert Lewis",
-  "paginas": [
-   "https://www.robertlewis.co.uk/"
-  ]
+  "fichas": [
+   "richmond"
+  ],
+  "paginas": []
  },
  "robert-mcconnell": {
   "nombre": "Robert McConnell",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Robert-McConnell"
-  ]
- },
- "santa-anita": {
-  "nombre": "Santa Anita",
-  "paginas": []
- },
- "seattle-pipe-club": {
-  "nombre": "Seattle Pipe Club",
-  "paginas": [
-   "https://seattlepipeclub.com/",
-   "https://www.seattlepipeclub.com/"
-  ]
- },
- "secreto-de-coquena": {
-  "nombre": "Secreto de Coquena",
+  "fichas": [
+   "mcconnell"
+  ],
   "paginas": []
  },
  "sir-walter-raleigh": {
   "nombre": "Sir Walter Raleigh",
-  "paginas": [
-   "https://www.st-group.com/about-us/our-brands/sir-walter-raleigh",
-   "https://stglanepipe.com/us/"
-  ]
+  "fichas": [
+   "walterraleigh"
+  ],
+  "paginas": []
  },
  "skandinavik": {
   "nombre": "Skandinavik",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Skandinavik",
-   "https://www.st-group.com/about-us/our-brands/skandinavik"
-  ]
+  "fichas": [
+   "skandinavik"
+  ],
+  "paginas": []
  },
  "st-bruno": {
   "nombre": "St. Bruno",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/St-Bruno",
-   "https://mac-baren.com/pipe-tobacco/"
-  ]
- },
- "stanwell": {
-  "nombre": "Stanwell",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Stanwell",
-   "https://www.st-group.com/about-us/our-brands/stanwell",
-   "https://stanwell.com/",
-   "https://www.stanwell.com/"
-  ]
+  "fichas": [
+   "stbruno"
+  ],
+  "paginas": []
  },
  "sutliff": {
   "nombre": "Sutliff",
-  "paginas": [
-   "https://www.sutliff-tobacco.com/about-us",
-   "https://sutliff-tobacco.com/"
-  ]
+  "fichas": [
+   "sutliff"
+  ],
+  "paginas": []
  },
  "thomas-radford": {
   "nombre": "Thomas Radford",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Thomas-Radford"
-  ]
+  "fichas": [
+   "radford"
+  ],
+  "paginas": []
  },
  "three-nuns": {
   "nombre": "Three Nuns",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Three-Nuns",
-   "https://mac-baren.com/pipe-tobacco/"
-  ]
+  "fichas": [
+   "threenuns"
+  ],
+  "paginas": []
  },
  "w-o-larsen": {
   "nombre": "W.Ø. Larsen",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/W-O-Larsen",
-   "https://www.st-group.com/about-us/our-brands/w-o-larsen",
-   "https://www.wolarsen.com/",
-   "https://www.wolarsen.dk/"
-  ]
+  "fichas": [
+   "larsen"
+  ],
+  "paginas": []
  },
  "wessex": {
   "nombre": "Wessex",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Wessex"
-  ]
+  "fichas": [
+   "wessex"
+  ],
+  "paginas": []
  },
  "winslow": {
   "nombre": "Winsløw",
-  "paginas": [
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Winsloew",
-   "https://www.pfeifen-shop-online.de/Pipe-Tobacco/Winslow",
-   "https://www.winslowpipes.dk/"
-  ]
+  "fichas": [
+   "winslow",
+   "winsloew"
+  ],
+  "paginas": []
+ },
+ "monk": {
+  "nombre": "Monk",
+  "fichas": [
+   "monk"
+  ],
+  "paginas": []
+ },
+ "robert-lewis": {
+  "nombre": "Robert Lewis",
+  "fichas": [
+   "robertlewis"
+  ],
+  "paginas": []
  }
 }

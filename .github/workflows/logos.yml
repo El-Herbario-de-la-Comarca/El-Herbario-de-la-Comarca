@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Buscar candidatos
-        run: python3 herramientas/buscar_logos.py herramientas/logos/marcas.json /tmp/candidatos
+        run: python3 herramientas/buscar_logos.py herramientas/logos/marcas.json /tmp/candidatos https://www.pfeifen-shop-online.de/sitemap.xml
       - name: Guardar en la rama logos-candidatos
         run: |
           cd /tmp/candidatos

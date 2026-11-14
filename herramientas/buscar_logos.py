@@ -60,7 +60,7 @@ def candidatos_pagina(url, nombre=""):
         u = urllib.parse.urljoin(final, html.unescape(u.strip()))
         if u.startswith("http") and u not in res:
             res.append(u)
-    return res[:10]
+    return res[:40]
 
 
 def candidatos_commons(texto):
@@ -115,11 +115,45 @@ def bajar(u, destino_base):
     return ruta.name, u
 
 
+SITEMAP = []
+
+
+def leer_sitemap(url):
+    """Todas las direcciones (loc) de un sitemap, siguiendo los índices y los .xml.gz."""
+    import gzip
+    try:
+        datos = get(url, timeout=40)[0]
+    except Exception as ex:
+        print(f"    sin sitemap {url} ({ex})", flush=True)
+        return []
+    if datos[:2] == b"\x1f\x8b":
+        datos = gzip.decompress(datos)
+    locs = re.findall(r"<loc>\s*([^<]+?)\s*</loc>", datos.decode("utf-8", "replace"))
+    if "<sitemapindex" in datos.decode("utf-8", "replace")[:500]:
+        return [u for l in locs for u in leer_sitemap(html.unescape(l))]
+    return [html.unescape(l) for l in locs]
+
+
+def paginas_sitemap(fichas):
+    """Páginas de categoría (pocas partes en la ruta) cuyo último trozo contiene alguna de las fichas."""
+    res = []
+    for u in SITEMAP:
+        partes = [x for x in urllib.parse.urlparse(u).path.split("/") if x]
+        if not partes or len(partes) > 3 or partes[0].lower() in ("detail", "en"):
+            continue
+        ultimo = re.sub(r"[^a-z0-9]", "", partes[-1].lower())
+        if any(f in ultimo for f in fichas) and len(ultimo) <= max(len(f) for f in fichas) + 12:
+            res.append(u)
+    return res[:4]
+
+
 def marca(clave, info, destino):
     carpeta = destino / clave
     carpeta.mkdir(parents=True, exist_ok=True)
     urls = []
-    for p in info.get("paginas", []):
+    paginas = info.get("paginas", []) + paginas_sitemap(info.get("fichas", []))
+    print(f"  {clave}: páginas {paginas}", flush=True)
+    for p in paginas:
         urls += [("pagina " + p, u) for u in candidatos_pagina(p, info["nombre"])]
     for _ in range(3):   # Commons limita las peticiones seguidas
         c = candidatos_commons(info["nombre"])
@@ -143,6 +177,9 @@ def marca(clave, info, destino):
 def main():
     marcas = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     destino = Path(sys.argv[2])
+    for sm in sys.argv[3:]:
+        SITEMAP.extend(leer_sitemap(sm))
+    print(f"  {len(SITEMAP)} direcciones en los sitemaps", flush=True)
     with ThreadPoolExecutor(max_workers=2) as pool:
         list(pool.map(lambda kv: marca(kv[0], kv[1], destino), marcas.items()))
 
