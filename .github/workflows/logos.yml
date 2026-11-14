@@ -1,0 +1,62 @@
+# Logos de las marcas que no tienen (se lanza a mano: Actions → «Logos de marcas» → Run workflow).
+#   buscar:   descarga logos candidatos (herramientas/buscar_logos.py) en la rama «logos-candidatos», para elegirlos.
+#   publicar: da de alta en la tabla marcas_logo cada imagen de img/marcas/ cuya marca aún no tenga logo
+#             (no cambia los logos que ya se hayan subido desde la web). Usa el secreto SUPABASE_DB_URL.
+name: Logos de marcas
+on:
+  workflow_dispatch:
+    inputs:
+      paso:
+        description: "buscar o publicar"
+        required: true
+        default: buscar
+permissions:
+  contents: write
+  actions: write
+jobs:
+  buscar:
+    if: inputs.paso == 'buscar'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Buscar candidatos
+        run: python3 herramientas/buscar_logos.py herramientas/logos/marcas.json /tmp/candidatos
+      - name: Guardar en la rama logos-candidatos
+        run: |
+          cd /tmp/candidatos
+          git init -q -b logos-candidatos
+          git config user.name "Herbario (automático)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -qm "Logos candidatos"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" logos-candidatos
+  publicar:
+    if: inputs.paso == 'publicar'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Dar de alta los logos
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          python3 - > /tmp/logos.sql <<'EOF'
+          import json, pathlib
+          nombres = json.loads(pathlib.Path("herramientas/logos/marcas_nombre.json").read_text(encoding="utf-8"))
+          filas = []
+          for f in sorted(pathlib.Path("img/marcas").glob("*.*")):
+              clave = f.stem
+              if clave in nombres:
+                  url = f"https://elherbariodelacomarca.es/img/marcas/{f.name}"
+                  filas.append("('%s', '%s', '%s')" % (clave, nombres[clave].replace("'", "''"), url))
+          print("insert into public.marcas_logo (clave, marca, logo) values")
+          print(",\n".join(filas))
+          print("on conflict (clave) do nothing;")
+          print("select count(*) as marcas_con_logo from public.marcas_logo;")
+          EOF
+          cat /tmp/logos.sql
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f /tmp/logos.sql
+      - name: Regenerar las páginas de marca
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run tarjetas.yml --ref main || true

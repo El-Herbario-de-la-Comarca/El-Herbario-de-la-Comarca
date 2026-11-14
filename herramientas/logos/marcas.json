@@ -1,0 +1,274 @@
+{
+ "ilsted": {
+  "nombre": "Ilsted",
+  "paginas": [
+   "https://www.cigarworld.de/en/ilsted"
+  ],
+  "buscar": "Ilsted pipe tobacco logo"
+ },
+ "kapt-n-barsdorfs-bester": {
+  "nombre": "Käpt'n Barsdorfs Bester",
+  "paginas": [
+   "https://www.barsdorf.de/"
+  ],
+  "buscar": "Käpt'n Barsdorf Tabak logo"
+ },
+ "kentucky-bird": {
+  "nombre": "Kentucky Bird",
+  "paginas": [
+   "https://www.cigarworld.de/en/kentucky-bird"
+  ],
+  "buscar": "Kentucky Bird Tabak logo"
+ },
+ "kontor-tabak": {
+  "nombre": "Kontor-Tabak",
+  "paginas": [
+   "https://www.tabak-kontor.de/",
+   "https://www.kontor-tabak.de/"
+  ],
+  "buscar": "Kontor Tabak Pfeifentabak logo"
+ },
+ "kopp": {
+  "nombre": "Kopp Tobaccos",
+  "paginas": [
+   "https://www.kopp-tobaccos.com/",
+   "https://www.kopp-tobaccos.de/",
+   "https://www.cigarworld.de/en/kopp"
+  ],
+  "buscar": "Kopp Tobaccos logo"
+ },
+ "lane-limited": {
+  "nombre": "Lane Limited",
+  "paginas": [
+   "https://pipedia.org/wiki/Lane,_Ltd."
+  ],
+  "buscar": "Lane Limited pipe tobacco logo"
+ },
+ "malevo": {
+  "nombre": "Malevo",
+  "paginas": [],
+  "buscar": "Malevo tabaco para pipa logo"
+ },
+ "mc-lintock": {
+  "nombre": "Mc Lintock",
+  "paginas": [
+   "https://www.cigarworld.de/en/mc-lintock"
+  ],
+  "buscar": "McLintock pipe tobacco logo"
+ },
+ "monk": {
+  "nombre": "Monk",
+  "paginas": [],
+  "buscar": "Monk pipe tobacco logo"
+ },
+ "myrott": {
+  "nombre": "MyRott",
+  "paginas": [
+   "https://www.myrott.de/"
+  ],
+  "buscar": "MyRott Pfeifentabak logo"
+ },
+ "orlik": {
+  "nombre": "Orlik",
+  "paginas": [
+   "https://www.cigarworld.de/en/orlik",
+   "https://pipedia.org/wiki/Orlik"
+  ],
+  "buscar": "Orlik tobacco logo"
+ },
+ "per-g-jensen": {
+  "nombre": "Per G. Jensen",
+  "paginas": [],
+  "buscar": "Per G. Jensen pipe tobacco"
+ },
+ "planta": {
+  "nombre": "Planta",
+  "paginas": [
+   "https://www.planta-tabak.de/",
+   "https://www.cigarworld.de/en/planta"
+  ],
+  "buscar": "Planta Tabakmanufaktur logo"
+ },
+ "prestige": {
+  "nombre": "Prestige",
+  "paginas": [],
+  "buscar": "Prestige pipe tobacco Mac Baren logo"
+ },
+ "prince-albert": {
+  "nombre": "Prince Albert",
+  "paginas": [],
+  "buscar": "Prince Albert pipe tobacco logo"
+ },
+ "r-and-m": {
+  "nombre": "R and M",
+  "paginas": [],
+  "buscar": "R&M pipe tobacco Planta logo"
+ },
+ "rattray-s": {
+  "nombre": "Rattray's",
+  "paginas": [
+   "https://www.rattrays.com/",
+   "https://www.cigarworld.de/en/rattrays",
+   "https://pipedia.org/wiki/Rattray's"
+  ],
+  "buscar": "Rattray's pipe tobacco logo"
+ },
+ "reiner": {
+  "nombre": "Reiner",
+  "paginas": [
+   "https://www.cigarworld.de/en/reiner"
+  ],
+  "buscar": "Reiner Pfeifentabak logo"
+ },
+ "richmond": {
+  "nombre": "Richmond",
+  "paginas": [],
+  "buscar": "Richmond pipe tobacco logo"
+ },
+ "robert-lewis": {
+  "nombre": "Robert Lewis",
+  "paginas": [
+   "https://www.robertlewis.co.uk/"
+  ],
+  "buscar": "Robert Lewis tobacconist London logo"
+ },
+ "robert-mcconnell": {
+  "nombre": "Robert McConnell",
+  "paginas": [
+   "https://www.cigarworld.de/en/robert-mcconnell",
+   "https://pipedia.org/wiki/Robert_McConnell"
+  ],
+  "buscar": "Robert McConnell pipe tobacco logo"
+ },
+ "santa-anita": {
+  "nombre": "Santa Anita",
+  "paginas": [],
+  "buscar": "Santa Anita tabaco para pipa logo"
+ },
+ "seattle-pipe-club": {
+  "nombre": "Seattle Pipe Club",
+  "paginas": [
+   "https://www.seattlepipeclub.com/"
+  ],
+  "buscar": "Seattle Pipe Club logo"
+ },
+ "secreto-de-coquena": {
+  "nombre": "Secreto de Coquena",
+  "paginas": [],
+  "buscar": "Secreto de Coquena tabaco logo"
+ },
+ "sillems": {
+  "nombre": "Sillems",
+  "paginas": [
+   "https://www.sillems.de/",
+   "https://www.cigarworld.de/en/sillems"
+  ],
+  "buscar": "Sillem's Hamburg Tabak logo"
+ },
+ "sir-walter-raleigh": {
+  "nombre": "Sir Walter Raleigh",
+  "paginas": [],
+  "buscar": "Sir Walter Raleigh pipe tobacco logo"
+ },
+ "skandinavik": {
+  "nombre": "Skandinavik",
+  "paginas": [
+   "https://www.cigarworld.de/en/skandinavik"
+  ],
+  "buscar": "Skandinavik pipe tobacco logo"
+ },
+ "solani": {
+  "nombre": "Solani",
+  "paginas": [
+   "https://www.solani.de/",
+   "https://www.cigarworld.de/en/solani"
+  ],
+  "buscar": "Solani Pfeifentabak logo"
+ },
+ "st-bruno": {
+  "nombre": "St. Bruno",
+  "paginas": [],
+  "buscar": "St Bruno pipe tobacco logo"
+ },
+ "stanwell": {
+  "nombre": "Stanwell",
+  "paginas": [
+   "https://www.stanwell.com/",
+   "https://www.cigarworld.de/en/stanwell",
+   "https://pipedia.org/wiki/Stanwell"
+  ],
+  "buscar": "Stanwell pipes logo"
+ },
+ "stg": {
+  "nombre": "Scandinavian Tobacco Group",
+  "paginas": [
+   "https://www.st-group.com/"
+  ],
+  "buscar": "Scandinavian Tobacco Group logo"
+ },
+ "sutliff": {
+  "nombre": "Sutliff",
+  "paginas": [
+   "https://sutliff-tobacco.com/"
+  ],
+  "buscar": "Sutliff Tobacco Company logo"
+ },
+ "tak": {
+  "nombre": "TAK Dein Tabak",
+  "paginas": [
+   "https://www.dein-tabak.de/"
+  ],
+  "buscar": "Dein Tabak TAK Pfeifentabak logo"
+ },
+ "thomas-radford": {
+  "nombre": "Thomas Radford",
+  "paginas": [],
+  "buscar": "Thomas Radford pipe tobacco logo"
+ },
+ "three-nuns": {
+  "nombre": "Three Nuns",
+  "paginas": [],
+  "buscar": "Three Nuns pipe tobacco logo"
+ },
+ "vauen": {
+  "nombre": "Vauen",
+  "paginas": [
+   "https://www.vauen.de/",
+   "https://www.vauen.com/",
+   "https://www.cigarworld.de/en/vauen"
+  ],
+  "buscar": "Vauen Pfeifen logo"
+ },
+ "w-o-larsen": {
+  "nombre": "W.Ø. Larsen",
+  "paginas": [
+   "https://www.wolarsen.com/",
+   "https://www.wolarsen.dk/",
+   "https://www.cigarworld.de/en/w-o-larsen"
+  ],
+  "buscar": "W.O. Larsen logo"
+ },
+ "watch-city": {
+  "nombre": "Watch City",
+  "paginas": [
+   "https://www.watchcitycigar.com/"
+  ],
+  "buscar": "Watch City Cigar pipe tobacco logo"
+ },
+ "wessex": {
+  "nombre": "Wessex",
+  "paginas": [
+   "https://www.cigarworld.de/en/wessex"
+  ],
+  "buscar": "Wessex pipe tobacco logo"
+ },
+ "winslow": {
+  "nombre": "Winsløw",
+  "paginas": [
+   "https://www.winslowpipes.dk/",
+   "https://www.cigarworld.de/en/winslow",
+   "https://pipedia.org/wiki/Winsløw"
+  ],
+  "buscar": "Winslow pipes Denmark logo"
+ }
+}
