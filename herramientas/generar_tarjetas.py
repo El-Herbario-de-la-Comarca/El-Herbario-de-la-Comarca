@@ -187,13 +187,17 @@ def recorta(t, n):
     return t if len(t) <= n else t[: n - 1].rsplit(" ", 1)[0] + "…"
 
 
+# Imagen del encabezado (1200x630) para las vistas previas al compartir cuando la página no tiene foto propia.
+COMPARTIR = BASE + "img/compartir.jpg"
+
+
 def imagen(foto):
     foto = str(foto or "")
     if foto.startswith("https://"):
         return foto
     if foto.startswith("img/"):
         return BASE + foto
-    return BASE + "img/icono-512.png"
+    return COMPARTIR
 
 
 ESTILO = """
@@ -310,6 +314,9 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website", 
     ld = json.dumps({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": i + 1, "name": n, **({"item": BASE + r} if r is not None else {})}
         for i, (n, r) in enumerate(migas)]}, ensure_ascii=False).replace("</", "<\\/")
+    propia = bool(imagen_og) and imagen_og != COMPARTIR
+    og_medidas = "" if propia else '\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">'
+    tarjeta_tw = "summary" if propia else "summary_large_image"
     return f"""<!doctype html>
 <html lang="es" class="comarca"><head><meta charset="utf-8">
 <title>{e(titulo)} · El herbario de la Comarca</title>
@@ -321,9 +328,9 @@ def marco(titulo, desc, ruta, cuerpo, migas, imagen_og=None, tipo_og="website", 
 <meta property="og:locale" content="es_ES">
 <meta property="og:title" content="{e(titulo)}">
 <meta property="og:description" content="{e(desc)}">
-<meta property="og:image" content="{e(imagen_og or BASE + "img/icono-512.png")}">
+<meta property="og:image" content="{e(imagen_og or COMPARTIR)}">{og_medidas}
 <meta property="og:url" content="{e(url)}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="{tarjeta_tw}">
 <meta name="theme-color" content="#3E5A2B">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="../img/icono-192.png">
