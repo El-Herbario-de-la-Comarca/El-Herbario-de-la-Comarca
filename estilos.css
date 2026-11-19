@@ -1189,6 +1189,73 @@ body.en-prueba .overlay { padding-bottom: 110px; }
   .mo-info h3 { font-size: 1.7rem; }
 }
 
+/* ---------- Comparador de dos tabacos (comparar.js) ---------- */
+.panel.comparar-p { --cm-a: var(--accent); --cm-b: var(--gold, #A8761E); }
+.cm-cuerpo { gap: 18px; max-width: 760px; }
+.cm-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.cm-col { display: grid; gap: 4px; justify-items: start; align-content: start; padding: 12px 14px; border: 1px solid var(--line); border-top: 4px solid var(--cm-a); border-radius: 12px; background: var(--surface); min-width: 0; }
+.cm-col.b { border-top-color: var(--cm-b); }
+.cm-col-art { width: 72px; }
+.cm-col-art svg, .cm-col-art .photo { width: 72px; height: auto; display: block; }
+.cm-col .brandname { color: var(--muted); }
+.cm-col-nom { font-family: var(--display); font-size: 1.25rem; line-height: 1.15; text-align: left; text-decoration: none; color: var(--fg); overflow-wrap: anywhere; }
+.cm-col-nom:hover { text-decoration: underline; }
+.cm-cambiar { font-size: .92rem; }
+.cm-parecido { display: grid; gap: 6px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--casilla); }
+.cm-parecido p { margin: 0; font-size: .95rem; }
+.cm-p-t { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; color: var(--oro-tinta); }
+.cm-p-t strong { font-family: var(--display); font-weight: 400; font-size: 1.35rem; color: var(--accent); }
+.cm-p-barra { display: block; height: 12px; border-radius: 6px; background: var(--line); overflow: hidden; }
+.cm-p-barra span { display: block; height: 100%; border-radius: 6px; background: var(--accent); }
+.cm-solo { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-family: var(--body); font-size: 1rem; color: var(--fg); text-transform: none; letter-spacing: 0; cursor: pointer; justify-self: start; }
+.cm-solo input { width: 20px; height: 20px; accent-color: var(--accent); }
+.cm-tabla { display: grid; gap: 2px; padding: 6px; border: 1px solid var(--line); border-radius: 14px; background: var(--casilla); }
+.cm-tabla.solo .cm-fila.igual { display: none; }
+.cm-fila { display: grid; gap: 6px; padding: 10px 12px; border-radius: 10px; }
+.cm-fila.igual { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.cm-etq { font-family: var(--mono); font-size: .95rem; color: var(--oro-tinta); display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.cm-igual { font-size: .8rem; color: var(--accent); }
+.cm-leyenda { font-size: .8rem; color: var(--accent); }
+.cm-dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; overflow-wrap: anywhere; }
+.cm-hoja { padding: 1px 0; }
+.cm-h { display: inline-flex; align-items: center; gap: 8px; }
+.cm-h.no { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 60%, transparent); }
+.cm-h .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.cm-punto { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--line); box-sizing: border-box; }
+.cm-punto.a.on { background: var(--cm-a); border-color: var(--cm-a); }
+.cm-punto.b.on { background: var(--cm-b); border-color: var(--cm-b); }
+.cm-chips { display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start; }
+.panel.comparar-p .chip.sabor { background: var(--sabor-bg); color: var(--sabor-fg); }
+.panel.comparar-p .chip.sabor.comun { background: var(--accent); color: var(--accent-fg); }
+.cm-nota { font-family: var(--display); font-weight: 400; font-size: 1.3rem; }
+.cm-escalas { display: grid; gap: 12px; padding-top: 6px; }
+.cm-esc { display: grid; gap: 4px; }
+.cm-esc-l { font-size: .95rem; }
+.cm-esc-b { position: relative; height: 8px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); margin: 6px 8px; }
+.cm-esc-b span { position: absolute; top: 50%; width: 16px; height: 16px; transform: translate(-50%, -50%); border: 2px solid var(--surface); box-sizing: border-box; }
+.cm-esc-b .a { border-radius: 50%; background: var(--cm-a); }
+.cm-esc-b .b { background: var(--cm-b); transform: translate(-50%, -50%) rotate(45deg); width: 14px; height: 14px; }
+.cm-esc-x { display: flex; justify-content: space-between; font-size: .85rem; color: var(--muted); }
+.cm-acts { margin: 0; }
+/* En la ficha */
+.d-lado .d-cmp .btn.primary { color: var(--accent-fg); }
+.d-cmp .ico { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.d-cmp .cm-elegida { display: flex; gap: 8px; align-items: center; margin: 0; font-size: .95rem; }
+.d-cmp .cm-con { margin: 0; font-size: .92rem; }
+.d-cmp .cm-cambiar { justify-self: center; }
+/* Bandeja con el primer tabaco elegido */
+.cm-bandeja { position: fixed; left: 50%; transform: translateX(-50%); bottom: max(14px, env(safe-area-inset-bottom, 0px)); z-index: 20;
+  width: min(calc(100% - 24px), 560px); display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 12px; border-radius: 18px;
+  background: var(--accent); color: var(--accent-fg); box-shadow: 0 12px 28px -14px rgb(46 36 24 / .7); }
+.cm-b-art { width: 40px; flex: none; }
+.cm-b-art svg, .cm-b-art .photo { width: 40px; height: auto; display: block; }
+.cm-b-txt { display: grid; min-width: 0; flex: 1; line-height: 1.25; }
+.cm-b-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-b-txt span { font-size: .88rem; opacity: .9; }
+.cm-b-x { flex: none; width: 44px; height: 44px; border-radius: 22px; border: 0; background: color-mix(in srgb, var(--accent-fg) 18%, transparent); color: inherit; cursor: pointer; display: grid; place-items: center; }
+.cm-b-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+body:has(.cm-bandeja:not([hidden])) { padding-bottom: 96px; }
+
 /* ---------- Árbol de marcas (arbol.js) ---------- */
 .ab-ley { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .95rem; color: var(--muted); }
 .ab-ley i { display: inline-block; width: 26px; border-top: 2px solid var(--accent); vertical-align: .3em; margin-right: 7px; }

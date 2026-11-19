@@ -817,8 +817,10 @@ function ponerUrlFicha(d) {
 }
 // Paneles con dirección propia (#/sabores, #/arbol): cada archivo registra aquí cómo se abre.
 const panelesHash = {};
+// El panel de una dirección: exacta (#/sabores) o por su comienzo (#/comparar/<id>/<id> -> #/comparar).
+const panelDe = (h) => panelesHash[h] || (/^#\/[a-z]+\//.test(h) ? panelesHash[h.split("/").slice(0, 2).join("/")] : undefined);
 function quitarUrlFicha() {
-  if (panelesHash[location.hash]) {   // rueda de sabores, árbol de marcas…
+  if (panelDe(location.hash)) {   // rueda de sabores, árbol de marcas, comparador…
     if (history.state && history.state.panel) history.back();
     else history.replaceState(null, "", location.pathname + location.search);
     return;
@@ -834,7 +836,7 @@ function abrirFichaDeUrl() {
 }
 window.addEventListener("popstate", () => {
   if (idDeHash()) { abrirFichaDeUrl(); return; }
-  if (panelesHash[location.hash]) { panelesHash[location.hash](true); return; }
+  if (panelDe(location.hash)) { panelDe(location.hash)(true); return; }
   if (!$("overlay").hidden) closeDetail(true);
   // Catálogo: se ponen los filtros de la entrada a la que se ha vuelto (ninguno si no los tenía).
   const destino = enEntradaFiltrada() ? { ...SIN_FILTROS, ...history.state.filtros } : { ...SIN_FILTROS, sort: state.sort };
@@ -895,6 +897,7 @@ function openDetail(id, desdeUrl) {
       <div class="nicho"><div class="art" id="d-art">${art(d, true)}</div><div class="balda" aria-hidden="true"></div></div>
       <div id="d-bodega"></div>
       <div class="compartir"><button class="btn" id="d-share" type="button">${ico("compartir")}Compartir ficha</button><span class="muted" id="d-share-msg" role="status"></span></div>
+      <div class="compartir d-cmp" id="d-cmp" hidden></div>
       <div class="compartir" id="d-etq" hidden></div>
       <div class="compartir" id="d-rrss" hidden></div>
       <div class="compartir"><button class="btn" id="d-aviso" type="button">${ico("aviso")}Avisar de un error</button></div>
@@ -932,6 +935,7 @@ function openDetail(id, desdeUrl) {
   $("panel").querySelectorAll("[data-ficha]").forEach((b) => b.addEventListener("click", () => { openDetail(b.dataset.ficha); $("overlay").scrollTop = 0; }));
   $("d-close").focus();
   paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas();
+  if (window.Comparar) window.Comparar.enFicha(d, par);
   if (avisoAlAbrir) {   // avisos.js se carga después de app.js: se espera a que esté
     avisoAlAbrir = false; let intentos = 0;
     const ir = () => { if (window.Avisos) window.Avisos.abrir("error", d); else if (++intentos < 40) setTimeout(ir, 150); };
@@ -3356,7 +3360,8 @@ async function contarVisita() {
   const { data } = await sb.auth.getSession();
   await leerSesion(data && data.session);
   await refrescar();
-  if (!$("overlay").hidden && panelesHash[location.hash]) panelesHash[location.hash](true);   // rueda o árbol, con los datos de Supabase
+  if (!$("overlay").hidden && panelDe(location.hash)) panelDe(location.hash)(true);   // rueda, árbol o comparador, con los datos de Supabase
+  if (window.Comparar) window.Comparar.alArrancar();   // quien entra por el enlace de una comparación
   if (location.hash === "#/bodega" && $("overlay").hidden) panelesHash["#/bodega"]();   // quien recarga con la bodega abierta
   abrirFichaDeUrl();   // por si la ficha solo está en Supabase (no en la copia de respaldo)
   // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
@@ -3373,6 +3378,7 @@ async function contarVisita() {
       if (ev === "SIGNED_IN" && cambioUsuario) cerrarLogin();
       if (cambioUsuario && !$("overlay").hidden) closeDetail();
       await refrescar();
+      if (window.Comparar) window.Comparar.cambioSesion();
     }, 0);
   });
 })();
