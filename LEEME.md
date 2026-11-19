@@ -93,6 +93,8 @@ Como no hay confirmación por correo, cualquiera puede crear una cuenta con cual
 2. En GitHub, entra en el repositorio, pulsa **Add file → Upload files**, arrastra el archivo (sustituye al anterior) y pulsa **Commit changes**.
 3. La web se actualiza sola en uno o dos minutos. Si no ves el cambio, recarga con Ctrl + F5.
 
+**Importante: cambia la versión al tocar un archivo.** Los móviles y ordenadores que ya han visitado la web guardan los archivos `.js` y `.css` y no los vuelven a pedir mientras su dirección sea la misma. Por eso, cada vez que cambies `app.js`, `estilos.css` u otro de esos archivos, cambia también su número `?v=…` en `index.html` (por ejemplo `app.js?v=202611191200` → `app.js?v=202611201030`, con la fecha y la hora). Si no, quien ya conoce la web seguirá viendo la versión antigua. Las páginas de fichas y marcas copian esos números de `index.html` en su regeneración diaria.
+
 No hace falta volver a ejecutar los archivos SQL cuando cambias el diseño.
 
 ## 8. (Opcional) Correo propio: confirmaciones y recuperar contraseñas
