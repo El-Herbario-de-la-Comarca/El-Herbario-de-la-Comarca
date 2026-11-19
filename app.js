@@ -2519,6 +2519,9 @@ async function descargarInventario(lista, envasesDe, info, titular) {
 }
 function abrirBodega(fuente) {
   const prueba = fuente && fuente.prueba ? fuente : null;   // bodega inventada (solo admin); los clics pasan un evento
+  // Dirección propia (#/bodega), para que Atrás cierre la bodega en vez de salir de la web,
+  // y desde una ficha abierta en la bodega vuelva a ella. La bodega de otro usuario (admin) no la lleva.
+  if (!(prueba && prueba.ajena) && location.hash !== "#/bodega") history.pushState({ panel: true }, "", "#/bodega");
   openId = null;
   const B = prueba ? prueba.bodega : bodega, T = prueba ? prueba.tarros : tarros;
   const conGramos = prueba ? true : ctx.gramosOk, conTarros = prueba ? true : ctx.tarrosOk;
@@ -2702,6 +2705,12 @@ function abrirBodega(fuente) {
     formTarro(b.dataset.tabaco, (tarros[b.dataset.tabaco] || []).find((t) => String(t.id) === b.dataset.tarro))));
   conectarEtiquetas(panel);
 }
+
+// Al volver con Atrás a #/bodega (desde una ficha) o al entrar con esa dirección.
+panelesHash["#/bodega"] = () => {
+  if (ctx.session && ctx.bodega) abrirBodega();
+  else { history.replaceState(null, "", location.pathname + location.search); if (!$("overlay").hidden) closeDetail(true); }
+};
 
 /* Bodega de prueba de «Saruman Blanco» (solo admin, desde Mi cuenta). Se inventa en el navegador:
    unos 100 tabacos al azar con gramos, tarros y fechas. No se guarda nada en la base de datos. */
@@ -3333,6 +3342,7 @@ async function contarVisita() {
   await leerSesion(data && data.session);
   await refrescar();
   if (!$("overlay").hidden && panelesHash[location.hash]) panelesHash[location.hash](true);   // rueda o árbol, con los datos de Supabase
+  if (location.hash === "#/bodega" && $("overlay").hidden) panelesHash["#/bodega"]();   // quien recarga con la bodega abierta
   abrirFichaDeUrl();   // por si la ficha solo está en Supabase (no en la copia de respaldo)
   // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
   // (fallo conocido de supabase-js). Por eso el trabajo se aplaza con setTimeout.
