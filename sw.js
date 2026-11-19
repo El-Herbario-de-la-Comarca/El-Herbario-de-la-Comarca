@@ -1,5 +1,6 @@
 // Service worker del herbario: guarda la web en el móvil para que abra rápido y funcione sin conexión.
-// Siempre intenta la red primero (para tener lo último) y usa la copia guardada si falla.
+// Las páginas se piden siempre a la red primero (para tener lo último) y se usa la copia guardada si falla.
+// Los archivos con versión (?v=…) y las fuentes salen directamente de la copia guardada.
 // Las peticiones a Supabase y a otros sitios no se tocan.
 const CACHE = "herbario-v4";
 const BASICOS = ["./", "./index.html", "./estilos.css", "./tema-comarca.css", "./app.js", "./buscador.js", "./config.js",
@@ -12,9 +13,35 @@ self.addEventListener("activate", (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
+// Guarda una respuesta y borra las versiones anteriores del mismo archivo (otra «?v=…»), para que la
+// copia no crezca sin fin.
+function guardar(req, res) {
+  const copia = res.clone();
+  return caches.open(CACHE).then(async (c) => {
+    await c.put(req, copia);
+    const ruta = new URL(req.url).pathname;
+    (await c.keys()).forEach((k) => { if (k.url !== req.url && new URL(k.url).pathname === ruta) c.delete(k); });
+  });
+}
 self.addEventListener("fetch", (e) => {
   const req = e.request;
-  if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== "GET" || url.origin !== self.location.origin) return;
+  // Archivos con versión (app.js?v=…, estilos.css?v=…) y fuentes: con la misma dirección no cambian nunca
+  // (cuando cambian, index.html pide otra «?v=»). Se sirven de la copia guardada sin preguntar a GitHub.
+  if (req.mode !== "navigate" && (url.searchParams.has("v") || url.pathname.startsWith("/fuentes/"))) {
+    e.respondWith(caches.match(req).then((r) => r || fetch(req).then((res) => { if (res.ok) e.waitUntil(guardar(req, res)); return res; })));
+    return;
+  }
+  // Copia de respaldo del catálogo: sale la guardada al instante y se pide la nueva para la próxima visita.
+  if (url.pathname === "/datos-iniciales.js") {
+    e.respondWith(caches.match(req, { ignoreSearch: true }).then((r) => {
+      const red = fetch(req, { cache: "no-cache" }).then((res) => { if (res.ok) e.waitUntil(guardar(req, res)); return res; });
+      if (r) { e.waitUntil(red.catch(() => {})); return r; }
+      return red;
+    }));
+    return;
+  }
   e.respondWith(
     // «no-cache»: pregunta siempre a GitHub si hay versión nueva, en lugar de usar la copia del navegador
     // (GitHub Pages la da por buena 10 minutos y los cambios tardaban en verse).

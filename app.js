@@ -285,6 +285,43 @@ function ytId(raw) {
 }
 function fotoSegura(u) { return /^(https:\/\/|img\/)/.test(u || "") ? u : ""; }
 
+/* ---------- Copia de la última carga, guardada en este navegador ----------
+   Lo último que se ha leído de Supabase (fichas con sus fotos, reseñas, fotos de los autores, socios y
+   logos) se guarda aquí. En la visita siguiente la web se pinta con ello al instante, sin esperar a la
+   red, y en cuanto llega lo nuevo se vuelve a pintar. Si no hay nada guardado se usa datos-iniciales.js. */
+const CLAVE_CACHE = "herbario-cache-v1";
+const cacheNueva = {};
+function leerCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CLAVE_CACHE) || "null");
+    return c && Array.isArray(c.tabacos) && c.tabacos.length ? c : null;
+  } catch (e) { return null; }
+}
+function guardarCache() {
+  if (!cacheNueva.tabacos) return;
+  const datos = { ...(leerCache() || {}), ...cacheNueva, t: Date.now() };
+  setTimeout(() => {   // después de pintar, para no frenar nada
+    try { localStorage.setItem(CLAVE_CACHE, JSON.stringify(datos)); }
+    catch (e) { try { localStorage.removeItem(CLAVE_CACHE); } catch (e2) {} }   // sin sitio: mejor nada que a medias
+  }, 0);
+}
+function usarCache() {
+  const c = leerCache();
+  if (!c) return false;
+  aplicarTabacos(c.tabacos);
+  ctx.online = !!sb; ctx.aviso = "";
+  if (c.opiniones) aplicarOpiniones(c.opiniones);
+  if (c.fotos) aplicarFotosAutores(c.fotos);
+  if (c.socios) aplicarSocios(c.socios);
+  if (c.logos) aplicarLogos(c.logos);
+  return true;
+}
+function aplicarTabacos(filas) {
+  current = filas.map(mapItem).filter((d) => d.nombre);
+  ctx.espanaOk = filas.length > 0 && "en_espana" in filas[0];   // 16_se_vende_en_espana.sql
+  ctx.otrosOk = filas.length > 0 && "otros_nombres" in filas[0];   // 46_otros_nombres.sql
+}
+
 /* ---------- Carga de datos ---------- */
 async function cargarTodo() { if (await cargarTabacos()) await cargarExtras(); }
 // Primero las fichas (con sus fotos), para pintar el catálogo cuanto antes. Devuelve false si falla.
@@ -298,19 +335,21 @@ async function cargarTabacos() {
       for (let intento = 0; ; intento++) {
         const { data, error } = await sb.from("tabacos").select("*").order("nombre").order("id").range(desde, desde + 999);
         if (!error) return data;
+        if (error.code === "PGRST103") return [];   // se ha pedido más allá de la última ficha
         if (intento >= 1) throw error;
         await new Promise((r) => setTimeout(r, 1500));
       }
     };
+    // Las dos primeras páginas a la vez (el catálogo pasa de 1000 fichas); si hay más, se siguen pidiendo.
     const filas = [];
-    for (let desde = 0; ; desde += 1000) {
-      const data = await pagina(desde);
-      filas.push(...data);
-      if (data.length < 1000) break;
+    let lotes = await Promise.all([pagina(0), pagina(1000)]);
+    for (let desde = 2000; ; desde += 1000) {
+      lotes.forEach((l) => filas.push(...l));
+      if (lotes[lotes.length - 1].length < 1000) break;
+      lotes = [await pagina(desde)];
     }
-    current = filas.map(mapItem).filter((d) => d.nombre);
-    ctx.espanaOk = filas.length > 0 && "en_espana" in filas[0];   // 16_se_vende_en_espana.sql
-    ctx.otrosOk = filas.length > 0 && "otros_nombres" in filas[0];   // 46_otros_nombres.sql
+    aplicarTabacos(filas);
+    cacheNueva.tabacos = filas;
     ctx.online = true;
     return true;
   } catch (e) {
@@ -341,49 +380,65 @@ async function cargarMisLikes() {
 async function cargarOpiniones() {
   {
     // Reseñas de usuarios. Si aún no se ha ejecutado 07_resenas_usuarios.sql, la web sigue sin ellas.
-    opiniones = {};
     try {
+      const filas = [];
       for (let desde = 0; ; desde += 1000) {
         const { data, error } = await sb.from("opiniones").select("*").order("creado", { ascending: false }).order("id", { ascending: false }).range(desde, desde + 999);
         if (error) throw error;
-        data.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).push(mapOpinion(x)); });
+        filas.push(...data);
         if (data.length < 1000) break;
       }
-      if (modoPrueba) {   // las reseñas inventadas del lector de prueba y sus «me gusta»
-        modoPrueba.resenas.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).unshift(mapOpinion(x)); });
-        Object.values(opiniones).forEach((l) => l.forEach((o) => { if (modoPrueba.likes.has(String(o.id))) o.likes++; }));
-      }
-      ctx.opiniones = true;
-    } catch (e) { console.warn("Reseñas no disponibles", e); ctx.opiniones = false; }
+      aplicarOpiniones(filas);
+      cacheNueva.opiniones = filas;
+    } catch (e) { console.warn("Reseñas no disponibles", e); opiniones = {}; ctx.opiniones = false; }
   }
 }
+function aplicarOpiniones(filas) {
+  opiniones = {};
+  filas.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).push(mapOpinion(x)); });
+  if (modoPrueba) {   // las reseñas inventadas del lector de prueba y sus «me gusta»
+    modoPrueba.resenas.forEach((x) => { const k = String(x.tabaco_id); (opiniones[k] = opiniones[k] || []).unshift(mapOpinion(x)); });
+    Object.values(opiniones).forEach((l) => l.forEach((o) => { if (modoPrueba.likes.has(String(o.id))) o.likes++; }));
+  }
+  ctx.opiniones = true;
+}
 async function cargarFotosAutores() {
-    fotosAutores = {};
     try {
       const { data, error } = await sb.rpc("fotos_resenas");
       if (error) throw error;
-      (data || []).forEach((x) => { const u = fotoSegura(x.avatar); if (u) fotosAutores[String(x.autor)] = u; });
-    } catch (e) { console.warn("Fotos de las reseñas no disponibles", e); }
+      aplicarFotosAutores(data || []); cacheNueva.fotos = data || [];
+    } catch (e) { console.warn("Fotos de las reseñas no disponibles", e); fotosAutores = {}; }
+}
+function aplicarFotosAutores(filas) {
+  fotosAutores = {};
+  filas.forEach((x) => { const u = fotoSegura(x.avatar); if (u) fotosAutores[String(x.autor)] = u; });
 }
 async function cargarLogos() {
-  logosMarca = {}; ctx.logosOk = false;
-  if (!sb) return;
+  if (!sb) { logosMarca = {}; ctx.logosOk = false; return; }
   const { data, error } = await sb.from("marcas_logo").select("clave,logo");
-  if (error) return;   // falta 43_logos_marcas.sql
-  (data || []).forEach((f) => { logosMarca[f.clave] = f.logo; });
+  if (error) { logosMarca = {}; ctx.logosOk = false; return; }   // falta 43_logos_marcas.sql
+  aplicarLogos(data || []); cacheNueva.logos = data || [];
+}
+function aplicarLogos(filas) {
+  logosMarca = {};
+  filas.forEach((f) => { logosMarca[f.clave] = f.logo; });
   ctx.logosOk = true;
 }
 async function cargarSocios() {
-    sociosAutores = new Set();
     try {
       const { data, error } = await sb.rpc("socios_resenas");
       if (error) throw error;
-      (data || []).forEach((x) => sociosAutores.add(String(x.autor)));
-    } catch (e) { console.warn("Socios no disponibles (falta 23_socios_del_club.sql)", e); }
+      aplicarSocios(data || []); cacheNueva.socios = data || [];
+    } catch (e) { console.warn("Socios no disponibles (falta 23_socios_del_club.sql)", e); sociosAutores = new Set(); }
+}
+function aplicarSocios(filas) {
+  sociosAutores = new Set();
+  filas.forEach((x) => sociosAutores.add(String(x.autor)));
 }
 function usarRespaldo(aviso) {
   ctx.online = false;
-  current = (window.DATOS_INICIALES || []).map(mapItem).filter((d) => d.nombre);
+  const c = aviso ? leerCache() : null;   // sin conexión: mejor lo último visto que la copia fija
+  current = ((c && c.tabacos) || window.DATOS_INICIALES || []).map(mapItem).filter((d) => d.nombre);
   opiniones = {}; bodega = {}; ctx.bodega = false;
   ctx.aviso = aviso || "";
 }
@@ -394,9 +449,11 @@ async function refrescar() {
       if (!findItem(openId)) closeDetail(); else { paintArt(); paintMeta(); paintBodega(); paintTools(); paintVideo(); paintResenas(); }
     }
   };
+  // Fichas y todo lo demás (reseñas, socios, logos, Mi bodega) se piden a la vez.
+  const extras = sb ? cargarExtras().then(() => true, (e) => { console.warn(e); return false; }) : Promise.resolve(false);
   const ok = await cargarTabacos();
   pintar();                       // el catálogo y sus fotos ya se ven
-  if (ok) { await cargarExtras(); pintar(); }   // reseñas, medias, socios y Mi bodega
+  if (ok && await extras) { pintar(); guardarCache(); }   // reseñas, medias, socios y Mi bodega
 }
 
 /* ---------- Ilustración y piezas ---------- */
@@ -2773,26 +2830,27 @@ const ICONO_BAUL = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" 
   <path d="M3 13.5h18M8 4.4v6.1M16 4.4v6.1"/><rect x="10.3" y="12.2" width="3.4" height="3.6" rx=".6" fill="currentColor" stroke="none"/></svg>`;
 const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector", suspendido: "Suspendida" };
 async function cargarPerfil() {
-  ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false;
-  ctx.socioOk = false;
-  if (!sb || !ctx.session) return;
+  if (!sb || !ctx.session) { ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false; ctx.socioOk = false; return; }
   // Las dos consultas van a la vez (la segunda falla si aún no se ha ejecutado el 23).
   const [perfil, socio] = await Promise.all([
     sb.from("perfiles").select("nombre,avatar").eq("id", ctx.uid).maybeSingle(),
     sb.from("perfiles").select("socio,socio_desde").eq("id", ctx.uid).maybeSingle(),
   ]);
+  const p = { nombre: "", avatar: "" }; let perfilOk = false, socioOk = false;
   try {
     const { data, error } = perfil;
     if (error) throw error;
-    ctx.perfil = { nombre: (data && data.nombre) || "", avatar: fotoSegura((data && data.avatar) || "") };
-    ctx.perfilOk = true;
+    p.nombre = (data && data.nombre) || ""; p.avatar = fotoSegura((data && data.avatar) || "");
+    perfilOk = true;
   } catch (e) { console.warn("Perfil sin nombre ni foto (falta 13_mi_cuenta.sql)", e); }
   try {
     const { data, error } = socio;
     if (error) throw error;
-    ctx.perfil.socio = !!(data && data.socio); ctx.perfil.socioDesde = (data && data.socio_desde) || null;
-    ctx.socioOk = true;
+    p.socio = !!(data && data.socio); p.socioDesde = (data && data.socio_desde) || null;
+    socioOk = true;
   } catch (e) { console.warn("Sin datos de socio (falta 23_socios_del_club.sql)", e); }
+  // Se cambia todo de golpe al final, para que no parpadee el perfil recordado de la última vez.
+  ctx.perfil = p; ctx.perfilOk = perfilOk; ctx.socioOk = socioOk;
 }
 function avatarHTML(grande) {
   const cls = grande ? "avatar big" : "avatar";
@@ -3156,13 +3214,24 @@ async function leerSesion(session) {
   // Modo prueba: sigue la sesión del administrador, pero con la identidad del lector inventado.
   if (modoPrueba && ctx.uid !== modoPrueba.uidReal) { modoPrueba = null; borrarPrueba(); }
   if (modoPrueba) { ctx.uid = PRUEBA_UID; ctx.email = PRUEBA_EMAIL; }
-  ctx.rol = "anonimo";
+  // Rol y perfil de la última vez en este navegador, para que los botones de la cuenta salgan al momento.
+  // Son solo para pintar: lo que cada cuenta puede hacer lo decide siempre la base de datos.
+  const CLAVE_SESION = "herbario-sesion";
+  let previo = null;
+  try { previo = session && !modoPrueba ? JSON.parse(localStorage.getItem(CLAVE_SESION) || "null") : null; } catch (e) {}
+  if (!session) try { localStorage.removeItem(CLAVE_SESION); } catch (e) {}
+  if (!previo || previo.uid !== ctx.uid) previo = null;
+  ctx.rol = previo ? previo.rol : "anonimo";
+  if (previo) { ctx.perfil = previo.perfil; ctx.perfilOk = previo.perfilOk; ctx.socioOk = previo.socioOk; }
   const rol = async () => {
     if (!session || !sb) return;
     const { data, error } = await sb.rpc("mi_rol");
-    if (!error && typeof data === "string") ctx.rol = data;
+    ctx.rol = !error && typeof data === "string" ? data : "anonimo";
   };
   await Promise.all([rol(), cargarPerfil()]);
+  if (session && !modoPrueba) try {
+    localStorage.setItem(CLAVE_SESION, JSON.stringify({ uid: ctx.uid, rol: ctx.rol, perfil: ctx.perfil, perfilOk: ctx.perfilOk, socioOk: ctx.socioOk }));
+  } catch (e) {}
   marcarVisita();
   await Promise.all([contarPendientes(), contarUsuariosNuevos()]);
 }
@@ -3352,14 +3421,19 @@ async function contarVisita() {
 /* ---------- Arranque ---------- */
 (async function iniciar() {
   setupFilters();
-  usarRespaldo(); fillFilters(); render(); paintTop();   // se ve algo al instante
+  if (!usarCache()) usarRespaldo();   // lo último visto en este navegador o, si no hay, la copia de respaldo
+  fillFilters(); render(); paintTop();                    // se ve algo al instante
   cargarTarjetas().then(() => { if ([...tarjetas].length) render(); });   // ajusta los enlaces de las fichas sin página
   abrirFichaDeUrl();                                      // quien entra por el enlace de una ficha
   if (!sb) return;
   contarVisita();
   const { data } = await sb.auth.getSession();
-  await leerSesion(data && data.session);
-  await refrescar();
+  // La cuenta y el catálogo se cargan a la vez; la barra de arriba sale ya con el rol recordado.
+  const lectura = leerSesion(data && data.session);
+  paintTop();
+  await Promise.all([refrescar(), lectura]);
+  paintTop();
+  if (!$("overlay").hidden && openId != null && findItem(openId)) paintTools();
   if (!$("overlay").hidden && panelDe(location.hash)) panelDe(location.hash)(true);   // rueda, árbol o comparador, con los datos de Supabase
   if (window.Comparar) window.Comparar.alArrancar();   // quien entra por el enlace de una comparación
   if (location.hash === "#/bodega" && $("overlay").hidden) panelesHash["#/bodega"]();   // quien recarga con la bodega abierta

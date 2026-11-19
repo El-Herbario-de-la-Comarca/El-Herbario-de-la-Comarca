@@ -982,6 +982,24 @@ def volcar(carpeta, paginas):
             viejo.unlink()
 
 
+# Copia de respaldo (datos-iniciales.js): la primera visita pinta con ella antes de que llegue Supabase,
+# así que se rehace cada día con lo que hay en la base de datos, fotos incluidas. Solo los campos que
+# usa la web, y sin los vacíos.
+CAMPOS_RESPALDO = ("id", "nombre", "marca", "pais", "tipo", "corte", "formato", "descripcion", "notas", "hojas",
+                   "en_espana", "foto", "otros_nombres", "video_id")
+
+
+def escribir_respaldo(fichas):
+    filas = []
+    for d in sorted(fichas, key=lambda d: (str(d.get("nombre") or "").lower(), str(d.get("id")))):
+        filas.append({k: d[k] for k in CAMPOS_RESPALDO
+                      if k in ("id", "nombre") or d.get(k) not in (None, "", [], False)})
+    escribir(RAIZ / "datos-iniciales.js",
+             "// Copia de respaldo del catálogo: se usa si la base de datos no está configurada o no responde.\n"
+             "// La rehace cada día herramientas/generar_tarjetas.py a partir de Supabase.\n"
+             "window.DATOS_INICIALES = " + json.dumps(filas, ensure_ascii=False, separators=(",", ":")) + ";\n")
+
+
 def main():
     try:
         fichas = desde_supabase()
@@ -991,6 +1009,8 @@ def main():
         fichas, origen = desde_respaldo(), "datos-iniciales.js"
     validas = [d for d in fichas
                if re.fullmatch(r"[A-Za-z0-9_-]{1,40}", str(d.get("id", ""))) and d.get("nombre")]
+    if origen == "Supabase" and len(validas) > 500:   # nunca con una lectura a medias
+        escribir_respaldo(validas)
     por_marca, por_tipo = {}, {}
     for d in validas:
         d["id"] = str(d["id"])
