@@ -5,7 +5,7 @@
    columna por tabaco: lo que coincide sale marcado y se puede ocultar con «Ver solo lo que cambia».
    Solo con cuenta. Tiene dirección propia, index.html#/comparar/<id>/<id>, que se comparte con un enlace;
    quien lo abre sin sesión ve la ventana de entrar y, al entrar, la comparación.
-   Usa de app.js: ctx, current, findItem, opinionesDe, statsDe, fmtMedia, CARACT, ORDEN_MEDIAS, MIN_MEDIAS,
+   Usa de app.js: ctx, current, findItem, opinionesDe, statsDe, fmtMedia, CARACT, MIN_MEDIAS, columnasCaract,
    puntosParecido, art, ico, panelesHash, abrirPanel, closeDetail, openDetail, abrirLogin, FRANJA, TITULO, esc, norm, $. */
 (function () {
   const CLAVE = "herbario-comparar";   // id del primer tabaco elegido (en el navegador)
@@ -134,39 +134,26 @@
       <span class="cm-etq">Notas de sabor${comunes ? '<span class="cm-leyenda">en verde, las que comparten</span>' : ""}</span>
       <div class="cm-dos"><span class="cm-chips">${chips(A, cb)}</span><span class="cm-chips">${chips(B, ca)}</span></div></div>`;
   }
-  // Valoración y escalas de las reseñas, con el mismo mínimo que las medias de la ficha.
-  function mediasDe(d) {
-    const todas = opinionesDe(d.id);
-    const st = statsDe(d.id);
-    const escalas = {};
-    ORDEN_MEDIAS.forEach((k) => {
-      const c = CARACT.find((x) => x.k === k), tope = c.ops.length - 1;
-      const vals = todas.map((o) => o[k]).filter((v) => v >= 1 && v <= tope);
-      if (vals.length >= MIN_MEDIAS) {
-        const m = vals.reduce((x, v) => x + v, 0) / vals.length;
-        escalas[k] = { pos: Math.round((m - 1) / (tope - 1) * 100), txt: c.ops[Math.round(m)] };
-      }
-    });
-    return { st, escalas };
-  }
+  // Valoración (con el mismo mínimo que las medias de la ficha) y, por cada característica que hayan votado
+  // en las dos, la opción más votada y su gráfico de columnas, como en «Según las reseñas» de la ficha.
   function filaResenas(A, B) {
     if (!ctx.opiniones) return "";
-    const ma = mediasDe(A), mb = mediasDe(B);
-    const nota = (m) => !m.st.n ? '<span class="muted">Sin reseñas todavía</span>'
-      : m.st.n < MIN_MEDIAS ? `<span class="muted">${m.st.n} ${m.st.n === 1 ? "reseña" : "reseñas"}: faltan para sacar medias</span>`
-      : `<strong class="cm-nota">${fmtMedia(m.st.media)}</strong> <span class="muted">de 5 · ${m.st.n} reseñas</span>`;
-    const escalas = ORDEN_MEDIAS.filter((k) => ma.escalas[k] && mb.escalas[k]).map((k) => {
-      const c = CARACT.find((x) => x.k === k), tope = c.ops.length - 1, ea = ma.escalas[k], eb = mb.escalas[k];
-      return `<div class="cm-esc">
-        <span class="cm-esc-l">${esc(c.label)}</span>
-        <span class="cm-esc-b" role="img" aria-label="${esc(c.label)}: ${esc(A.nombre)}, ${esc(ea.txt)}; ${esc(B.nombre)}, ${esc(eb.txt)}">
-          <span class="a" style="left:${ea.pos}%"></span><span class="b" style="left:${eb.pos}%"></span></span>
-        <span class="cm-esc-x"><span>${esc(c.ops[1])}</span><span>${esc(c.ops[tope])}</span></span></div>`;
+    const sa = statsDe(A.id), sb = statsDe(B.id);
+    const nota = (st) => !st.n ? '<span class="muted">Sin reseñas todavía</span>'
+      : st.n < MIN_MEDIAS ? `<span class="muted">${st.n} ${st.n === 1 ? "reseña" : "reseñas"}: faltan para sacar medias</span>`
+      : `<strong class="cm-nota">${fmtMedia(st.media)}</strong> <span class="muted">de 5 · ${st.n} reseñas</span>`;
+    const oa = opinionesDe(A.id), ob = opinionesDe(B.id);
+    const cars = CARACT.map((c) => {
+      const va = oa.map((o) => o[c.k]).filter(Boolean), vb = ob.map((o) => o[c.k]).filter(Boolean);
+      if (!va.length || !vb.length) return "";
+      const ra = columnasCaract(c, va), rb = columnasCaract(c, vb);
+      const lado = (r, cls) => `<div class="cm-car ${cls}"><strong>${esc(c.ops[r.top])}</strong><span class="car-n">${r.n} de ${r.total} ${r.total === 1 ? "voto" : "votos"}</span>${r.grafico}</div>`;
+      return `<div class="cm-car-f"><span class="cm-car-l">${esc(c.label)}</span><div class="cm-dos">${lado(ra, "a")}${lado(rb, "b")}</div></div>`;
     }).join("");
     return `<div class="cm-fila">
       <span class="cm-etq">Según las reseñas</span>
-      <div class="cm-dos"><span>${nota(ma)}</span><span>${nota(mb)}</span></div>
-      ${escalas ? `<div class="cm-escalas">${escalas}</div>` : ""}</div>`;
+      <div class="cm-dos"><span>${nota(sa)}</span><span>${nota(sb)}</span></div>
+      ${cars ? `<div class="cm-escalas">${cars}</div>` : ""}</div>`;
   }
 
   function columna(d, cls) {

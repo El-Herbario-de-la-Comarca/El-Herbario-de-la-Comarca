@@ -490,19 +490,30 @@ def nota_grande(ops):
     </div>"""
 
 
+def columnas_caract(label, opciones, votos):
+    """La opción más votada y un gráfico de columnas con el reparto (igual que columnasCaract de app.js)."""
+    cuenta = [votos.count(i) for i in range(len(opciones))]
+    mx = max(cuenta[1:])
+    top = cuenta.index(mx)
+    reparto = ", ".join(f"{op} {cuenta[i]}" for i, op in enumerate(opciones) if i and cuenta[i])
+    cols = "".join(
+        f'<i class="{"top" if i == top else "on" if cuenta[i] else "cero"}" '
+        f'style="height:{round(22 + 78 * cuenta[i] / mx) if cuenta[i] else 12}%" title="{e(op)}: {cuenta[i]}"></i>'
+        for i, op in enumerate(opciones) if i)
+    grafico = (f'<div class="car-g"><div class="car-cols" role="img" aria-label="{e(label)}, votos: {e(reparto)}">{cols}</div>'
+               f'<div class="car-x"><span>{e(opciones[1])}</span><span>{e(opciones[-1])}</span></div></div>')
+    return top, cuenta[top], len(votos), grafico
+
+
 def resumen_caract(ops):
     filas = ""
     for k, _, label, opciones in CARACT:
         votos = [o[k] for o in ops if o[k]]
         if not votos:
             continue
-        cuenta = [votos.count(i) for i in range(len(opciones))]
-        top = cuenta.index(max(cuenta))
-        barras = "".join(
-            f'<li><span class="op">{e(op)}</span><span class="barra"><i style="width:{round(cuenta[i] / len(votos) * 100)}%"></i></span>'
-            f'<span class="n">{cuenta[i]}</span></li>' for i, op in enumerate(opciones) if i and cuenta[i])
-        filas += (f'<div class="car"><div class="car-h"><span class="car-l">{e(label)}</span><strong>{e(opciones[top])}</strong></div>'
-                  f'<ul>{barras}</ul></div>')
+        top, n, total, grafico = columnas_caract(label, opciones, votos)
+        filas += (f'<div class="car"><div class="car-t"><span class="car-l">{e(label)}</span><strong>{e(opciones[top])}</strong>'
+                  f'<span class="car-n">{n} de {total} {"voto" if total == 1 else "votos"}</span></div>{grafico}</div>')
     return f'<div class="caract"><h3>Según las reseñas</h3>{filas}</div>' if filas else ""
 
 
@@ -520,26 +531,12 @@ def medias_html(todas):
     estrellas = "".join(f'<i class="{"on" if media >= i - .25 else "half" if media >= i - .75 else ""}"></i>' for i in range(1, 6))
     reparto = "".join(f'<div class="md-br"><span>{i}</span><span class="md-bb"><span style="width:{round(cuenta[i] / mx * 100) if mx else 0}%"></span></span>'
                       f'<span>{cuenta[i]}</span></div>' for i in (5, 4, 3, 2, 1))
-    escalas = ""
-    for k in ORDEN_MEDIAS:
-        _, _, label, ops = next(c for c in CARACT if c[0] == k)
-        tope = len(ops) - 1
-        vals = [o[k] for o in todas if 1 <= o[k] <= tope]
-        if len(vals) < MIN_MEDIAS:
-            continue
-        m = sum(vals) / len(vals)
-        pos = round((m - 1) / (tope - 1) * 100)
-        v = ops[int(m + .5)]
-        escalas += (f'<div class="md-fila"><span class="md-lab">{e(label)}</span>'
-                    f'<span class="md-esc" role="img" aria-label="{e(label)}: {e(v)}"><span style="left:{pos}%"></span></span>'
-                    f'<span class="md-val">{e(v)}</span><span class="md-ext"><span>{e(ops[1])}</span><span>{e(ops[tope])}</span></span></div>')
     return f"""<div class="medias">
     <div class="md-top">
       <div class="md-nota"><strong>{fmt_media(media)}</strong><span class="md-est" aria-hidden="true">{estrellas}</span>
         <span class="muted">{n} {"reseña" if n == 1 else "reseñas"}</span></div>
       <div class="md-reparto" aria-label="Reparto de puntuaciones">{reparto}</div>
     </div>
-    {f'<div class="md-escalas"><h4>Según los fumadores</h4>{escalas}</div>' if escalas else ""}
   </div>"""
 
 

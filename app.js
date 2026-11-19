@@ -739,17 +739,26 @@ function notaGrande(d) {
       <span class="nota-l" aria-hidden="true">${st.n} ${st.n === 1 ? "reseña" : "reseñas"}</span>
     </div>`;
 }
-/* Lo que dicen las reseñas de fuerza, sabor, aromatizante y nota de habitación (como Tobacco Reviews) */
+/* Lo que dicen las reseñas de fuerza, sabor, aromatizante y nota de habitación: para cada una, la opción
+   más votada y un pequeño gráfico de columnas con el reparto de votos (una columna por opción). */
+function columnasCaract(c, votos) {
+  const cuenta = c.ops.map((_, i) => votos.filter((v) => v === i).length);
+  const max = Math.max(...cuenta.slice(1));
+  const top = cuenta.indexOf(max);
+  const reparto = c.ops.map((op, i) => (i && cuenta[i] ? `${op} ${cuenta[i]}` : "")).filter(Boolean).join(", ");
+  const cols = c.ops.map((op, i) => !i ? "" : `<i class="${i === top ? "top" : cuenta[i] ? "on" : "cero"}" style="height:${cuenta[i] ? Math.round(22 + 78 * cuenta[i] / max) : 12}%" title="${esc(op)}: ${cuenta[i]}"></i>`).join("");
+  const grafico = `<div class="car-g"><div class="car-cols" role="img" aria-label="${esc(c.label)}, votos: ${esc(reparto)}">${cols}</div>
+    <div class="car-x"><span>${esc(c.ops[1])}</span><span>${esc(c.ops[c.ops.length - 1])}</span></div></div>`;
+  return { top, n: cuenta[top], total: votos.length, grafico };
+}
 function resumenCaract(d) {
   const l = opinionesDe(d.id);
   const filas = CARACT.map((c) => {
     const votos = l.map((o) => o[c.k]).filter(Boolean);
     if (!votos.length) return "";
-    const cuenta = c.ops.map((_, i) => votos.filter((v) => v === i).length);
-    const max = Math.max(...cuenta);
-    const top = cuenta.indexOf(max);
-    const barras = c.ops.map((op, i) => i && cuenta[i] ? `<li><span class="op">${esc(op)}</span><span class="barra"><i style="width:${Math.round(cuenta[i] / votos.length * 100)}%"></i></span><span class="n">${cuenta[i]}</span></li>` : "").join("");
-    return `<div class="car"><div class="car-h"><span class="car-l">${esc(c.label)}</span><strong>${esc(c.ops[top])}</strong></div><ul>${barras}</ul></div>`;
+    const r = columnasCaract(c, votos);
+    return `<div class="car"><div class="car-t"><span class="car-l">${esc(c.label)}</span><strong>${esc(c.ops[r.top])}</strong>
+      <span class="car-n">${r.n} de ${r.total} ${r.total === 1 ? "voto" : "votos"}</span></div>${r.grafico}</div>`;
   }).join("");
   return filas ? `<div class="caract"><h3>Según las reseñas</h3>${filas}</div>` : "";
 }
@@ -1452,24 +1461,12 @@ function mediasHTML(todas) {
   const max = Math.max(...cuenta);
   const estrellas = [1, 2, 3, 4, 5].map((i) => `<i class="${media >= i - 0.25 ? "on" : media >= i - 0.75 ? "half" : ""}"></i>`).join("");
   const reparto = [5, 4, 3, 2, 1].map((i) => `<div class="md-br"><span>${i}</span><span class="md-bb"><span style="width:${max ? Math.round(cuenta[i] / max * 100) : 0}%"></span></span><span>${cuenta[i]}</span></div>`).join("");
-  const escalas = ORDEN_MEDIAS.map((k) => {
-    const c = CARACT.find((x) => x.k === k), tope = c.ops.length - 1;
-    const vals = todas.map((o) => o[k]).filter((v) => v >= 1 && v <= tope);
-    if (vals.length < MIN_MEDIAS) return "";
-    const m = vals.reduce((a, v) => a + v, 0) / vals.length;
-    const pos = Math.round((m - 1) / (tope - 1) * 100);
-    return `<div class="md-fila"><span class="md-lab">${esc(c.label)}</span>
-      <span class="md-esc" role="img" aria-label="${esc(c.label)}: ${esc(c.ops[Math.round(m)])}"><span style="left:${pos}%"></span></span>
-      <span class="md-val">${esc(c.ops[Math.round(m)])}</span>
-      <span class="md-ext"><span>${esc(c.ops[1])}</span><span>${esc(c.ops[tope])}</span></span></div>`;
-  }).join("");
   return `<div class="medias">
     <div class="md-top">
       <div class="md-nota"><strong>${media.toFixed(1).replace(".", ",")}</strong><span class="md-est" aria-hidden="true">${estrellas}</span>
         <span class="muted">${n} ${n === 1 ? "reseña" : "reseñas"}</span></div>
       <div class="md-reparto" aria-label="Reparto de puntuaciones">${reparto}</div>
     </div>
-    ${escalas ? `<div class="md-escalas"><h4>Según los fumadores</h4>${escalas}</div>` : ""}
   </div>`;
 }
 /* Rangos por reseñas publicadas: se calculan con las reseñas que ya se cargan. */
