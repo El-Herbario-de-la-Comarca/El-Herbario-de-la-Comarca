@@ -1029,14 +1029,17 @@ a.btn { text-decoration: none; }
   border-radius: 999px; background: var(--surface); color: var(--fg); text-decoration: none; font-size: 0.98rem; }
 .explorar a:hover { border-color: var(--accent); color: var(--accent); }
 .explorar svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: var(--accent); }
-/* En el móvil, «Explorar» y sus tres botones caben en una línea. */
+/* En el móvil, «Explorar» y sus cuatro botones caben en una línea: por debajo de 470 px se quita la palabra
+   «Explorar» y por debajo de 400 px los iconos. Si aun así no caben, la fila se desliza de lado. */
 @media (max-width: 600px) {
   .explorar { flex-wrap: nowrap; gap: 6px; margin: 8px 0 16px; }
   .explorar .exp-l { font-size: 0.88rem; margin-right: 0; }
   .explorar a { gap: 5px; min-height: 36px; font-size: 0.9rem; padding: 4px 10px 4px 8px; white-space: nowrap; }
   .explorar svg { width: 16px; height: 16px; }
 }
-@media (max-width: 370px) { .explorar .exp-l { display: none; } }
+@media (max-width: 600px) { .explorar { overflow-x: auto; scrollbar-width: none; } .explorar::-webkit-scrollbar { display: none; } }
+@media (max-width: 470px) { .explorar .exp-l { display: none; } .explorar a { flex: 1 0 auto; justify-content: center; } }
+@media (max-width: 400px) { .explorar svg { display: none; } .explorar a { padding: 4px 10px; } }
 /* En la ficha: la marca y el tipo de mezcla llevan a sus páginas */
 .panel.ficha a.d-enlace { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
 .panel.ficha a.d-enlace:hover { color: var(--accent); text-decoration-color: currentColor; }
@@ -1148,6 +1151,42 @@ body.en-prueba .overlay { padding-bottom: 110px; }
   .rs-cuerpo { grid-template-columns: minmax(0, 1fr); }
   .rs-dibujo { margin: 0 -8px; }
   .rs-info h3 { font-size: 1.7rem; }
+}
+
+/* ---------- Mapa de orígenes (mapa.js) ---------- */
+.panel.origenes-p { --mo-1: color-mix(in srgb, var(--accent) 22%, var(--surface)); --mo-2: color-mix(in srgb, var(--accent) 42%, var(--surface));
+  --mo-3: color-mix(in srgb, var(--accent) 68%, var(--surface)); --mo-4: var(--accent);
+  --mo-mar: color-mix(in srgb, #6F9FB2 22%, var(--surface)); --mo-tierra: color-mix(in srgb, var(--fg) 9%, var(--surface)); }
+.mo-cuerpo { grid-template-columns: minmax(0, 620px) minmax(0, 1fr); align-items: start; }
+.mo-izq { display: grid; gap: 12px; min-width: 0; }
+.mo-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--mo-tierra); justify-self: start; }
+.mo-tabs button { font: inherit; min-height: 38px; padding: 4px 18px; border: 0; border-radius: 999px; background: none; color: var(--fg); cursor: pointer; }
+.mo-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.mo-dibujo { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--mo-mar); min-height: 120px; }
+.mo-dibujo > p { margin: 0; padding: 20px; }
+.mo-mapa { width: 100%; height: auto; display: block; touch-action: manipulation; }
+.mo-mar { fill: var(--mo-mar); }
+.mo-fondo { fill: var(--mo-tierra); stroke: var(--surface); stroke-width: 1; }
+.mo-pais { fill: var(--nv); stroke: var(--surface); stroke-width: 1.2; cursor: pointer; outline: none; transition: fill .15s; }
+.mo-pais:hover, .mo-pais:focus-visible { fill: color-mix(in srgb, var(--fg) 25%, var(--nv)); }
+.mo-pais.sel { stroke: var(--fg); stroke-width: 3; stroke-linejoin: round; }
+.mo-punto { fill: var(--nv); stroke: var(--fg); stroke-width: 1.5; cursor: pointer; outline: none; }
+.mo-punto.sel, .mo-punto:focus-visible { stroke-width: 4; }
+.mo-cifras { pointer-events: none; }
+.mo-cifra rect { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+.mo-cifra text { font-family: var(--mono); font-size: 19px; font-weight: 600; fill: var(--fg); }
+.mo-leyenda { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: .9rem; color: var(--muted); }
+.mo-leyenda i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; background: var(--nv); border: 1px solid var(--line); margin-right: 6px; vertical-align: -2px; }
+.mo-info { display: grid; gap: 12px; align-content: start; padding-top: 8px; }
+.mo-info h3 { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.05; margin: 0; }
+.mo-info p { margin: 0; }
+.mo-info .btn { justify-self: start; }
+.mo-info a.rs-chip { text-decoration: none; }
+.rs-chip.on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+@media (max-width: 760px) {
+  .mo-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  .mo-dibujo { margin: 0 -8px; }
+  .mo-info h3 { font-size: 1.7rem; }
 }
 
 /* ---------- Árbol de marcas (arbol.js) ---------- */
