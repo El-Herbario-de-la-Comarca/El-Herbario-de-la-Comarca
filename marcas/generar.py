@@ -92,7 +92,7 @@ def main():
             assert len(nombre) <= 120 and len(marca) <= 80 and len(desc) <= 2000 and len(formato) <= 80
             nuevas.append({
                 "nombre": nombre, "marca": marca, "pais": pais, "tipo": tipo, "corte": corte,
-                "formato": formato, "desc": desc, "fuerza": 0, "notas": [], "id": siguiente,
+                "formato": formato, "notas": [], "id": siguiente,
                 "descripcion": desc,
             })
             siguiente += 1
@@ -100,7 +100,7 @@ def main():
     todas = base + nuevas
     (RAIZ / "datos-iniciales.js").write_text(
         "// Copia de respaldo del catálogo: se usa si la base de datos no está configurada o no responde.\n"
-        "window.DATOS_INICIALES = " + json.dumps(todas, ensure_ascii=False) + ";\n",
+        "window.DATOS_INICIALES = " + json.dumps(todas, ensure_ascii=False, separators=(",", ":")) + ";\n",
         encoding="utf-8",
     )
 

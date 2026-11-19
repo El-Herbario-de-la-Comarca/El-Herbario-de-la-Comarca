@@ -169,7 +169,7 @@ def main():
         else:
             d["tipo"] = d["tipo"] if d["tipo"] in ESTILOS else ""
             d.setdefault("hojas", [])
-    (RAIZ / "datos-iniciales.js").write_text(pre + "window.DATOS_INICIALES = " + json.dumps(datos, ensure_ascii=False) + ";\n")
+    (RAIZ / "datos-iniciales.js").write_text(pre + "window.DATOS_INICIALES = " + json.dumps(datos, ensure_ascii=False, separators=(",", ":")) + ";\n")
 
     # SQL
     sql = (RAIZ / "supabase" / "04_estilo_y_hojas.sql").read_text()

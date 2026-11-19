@@ -119,14 +119,14 @@ def main():
             assert len(nombre) <= 120 and len(marca) <= 80 and len(desc) <= 2000 and len(formato) <= 80, (marca, nombre)
             nuevas.append({
                 "nombre": nombre, "marca": marca, "pais": D.PAIS.get(marca, ""), "tipo": mezcla, "corte": corte,
-                "formato": formato, "desc": desc, "fuerza": 0, "notas": notas_previas.get(str(siguiente), []), "id": siguiente,
+                "formato": formato, "notas": notas_previas.get(str(siguiente), []), "id": siguiente,
                 "descripcion": desc, "hojas": hojas, "en_espana": str(siguiente) in espana,
             })
             if str(siguiente) in fotos_previas:
                 nuevas[-1]["foto"] = fotos_previas[str(siguiente)]
             siguiente += 1
 
-    ruta_js.write_text(pre + "window.DATOS_INICIALES = " + json.dumps(base + nuevas, ensure_ascii=False) + ";\n",
+    ruta_js.write_text(pre + "window.DATOS_INICIALES = " + json.dumps(base + nuevas, ensure_ascii=False, separators=(",", ":")) + ";\n",
                        encoding="utf-8")
 
     def q(v):

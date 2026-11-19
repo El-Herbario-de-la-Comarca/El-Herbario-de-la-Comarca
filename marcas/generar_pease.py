@@ -32,7 +32,7 @@ for i, (corte, texto, ns) in sorted(DATOS.items()):
     vieja = x['descripcion']
     if vieja != nueva:
         desc.append((i, vieja, nueva))
-    x['descripcion'] = x['desc'] = nueva
+    x['descripcion'] = nueva
     if corte:
         assert x['corte'] in ('', corte), (i, x['corte'])
         cortes.append((i, corte))
@@ -48,7 +48,7 @@ for i, (antes, despues) in TIPO.items():
     if por_id[i]['tipo'] == antes:
         por_id[i]['tipo'] = despues
 
-open(JS, 'w', encoding='utf-8').write(s[:ini] + json.dumps(datos, ensure_ascii=False) + s[fin:])
+open(JS, 'w', encoding='utf-8').write(s[:ini] + json.dumps(datos, ensure_ascii=False, separators=(",", ":")) + s[fin:])
 
 ids = ','.join(q(str(i)) for i in sorted(DATOS))
 L = [

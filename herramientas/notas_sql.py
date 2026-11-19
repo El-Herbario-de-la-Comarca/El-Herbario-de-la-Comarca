@@ -130,7 +130,7 @@ def sql():
     for i, notas, _ in filas:
         if not v[i]["notas"] and i in by and not by[i].get("notas"):
             by[i]["notas"] = [x.strip() for x in notas.split(",") if x.strip()]
-    p.write_text(s[:a] + json.dumps(d, ensure_ascii=False) + s[b:], encoding="utf-8")
+    p.write_text(s[:a] + json.dumps(d, ensure_ascii=False, separators=(",", ":")) + s[b:], encoding="utf-8")
     print("fichas en el SQL 51:", n)
 
 if __name__ == "__main__":

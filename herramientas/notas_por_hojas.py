@@ -197,7 +197,7 @@ def main():
     for i, _, notas, _ in filas:
         if i in by and not by[i].get("notas"):
             by[i]["notas"] = notas
-    p.write_text(s[:a] + json.dumps(d, ensure_ascii=False) + s[b:], encoding="utf-8")
+    p.write_text(s[:a] + json.dumps(d, ensure_ascii=False, separators=(",", ":")) + s[b:], encoding="utf-8")
     print("con notas:", len(filas), "· sin nota:", len(sin))
 
 if __name__ == "__main__":
