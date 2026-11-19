@@ -41,6 +41,9 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 6.4vw
 .notice { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); border: 1px dashed var(--line); padding: 8px 12px; border-radius: 4px; max-width: 72ch; margin: 0; }
 
 .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px; border-block: 1px solid var(--line); display: grid; gap: 10px; }
+/* En el móvil la barra se esconde al bajar y vuelve al subir (app.js, barraQueSeEsconde) */
+.bar.oculta { transform: translateY(calc(-100% - 8px)); }
+@media (prefers-reduced-motion: no-preference) { .bar { transition: transform .22s ease; } }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
 .field { display: grid; gap: 4px; min-width: 0; flex: 1 1 150px; }

@@ -585,7 +585,9 @@ function setupFilters() {
 const OTRAS_MARCAS_BUSQUEDA = { "Mac Baren": ["STG", "Scandinavian Tobacco Group"] };
 const camposBusqueda = (d) => ({ principal: [d.nombre, d.marca, ...(OTRAS_MARCAS_BUSQUEDA[d.marca] || []), ...(d.otros || [])],
   resto: [d.tipo, d.hojas.join(" "), d.corte, d.pais, d.notas.join(" "), d.desc] });
+let ultimoRender = 0;   // cuándo cambió el catálogo (la barra no se esconde con el desplazamiento que lo sigue)
 function render() {
+  ultimoRender = Date.now();
   const q = norm(state.q.trim());
   const byName = (a, b) => a.nombre.localeCompare(b.nombre, "es");
   const score = (d) => statsDe(d.id).media;
@@ -3434,6 +3436,32 @@ async function contarVisita() {
     (paises ? ` desde ${n(paises)} ${paises === 1 ? "país" : "países"}` : "");
   $("visitas").hidden = false;
 }
+
+/* ---------- Barra de filtros en el móvil ----------
+   Se esconde al bajar por el catálogo y vuelve en cuanto se sube un poco, para que no tape un tercio de la
+   pantalla. No se esconde arriba del todo, mientras se escribe o se elige un filtro, con un panel abierto ni
+   justo después de cambiar los filtros (cuando la página baja sola hasta los resultados). */
+(function barraQueSeEsconde() {
+  const bar = document.querySelector(".bar");
+  const movil = window.matchMedia("(max-width: 760px)");
+  if (!bar) return;
+  let y0 = window.scrollY, pendiente = false;
+  const mostrar = () => bar.classList.remove("oculta");
+  function mirar() {
+    pendiente = false;
+    const y = window.scrollY, dy = y - y0;
+    if (!movil.matches || !$("overlay").hidden || bar.contains(document.activeElement) || Date.now() - ultimoRender < 1200) { mostrar(); y0 = y; return; }
+    // Hasta que la barra llega arriba (se queda pegada) siempre se ve
+    const antes = bar.previousElementSibling;
+    const pegada = (antes ? antes.getBoundingClientRect().bottom + y : 0) + bar.offsetHeight;
+    if (y < pegada) { mostrar(); y0 = y; return; }
+    if (dy > 8) { bar.classList.add("oculta"); y0 = y; }
+    else if (dy < -8) { mostrar(); y0 = y; }
+  }
+  window.addEventListener("scroll", () => { if (!pendiente) { pendiente = true; requestAnimationFrame(mirar); } }, { passive: true });
+  bar.addEventListener("focusin", mostrar);
+  movil.addEventListener && movil.addEventListener("change", mostrar);
+})();
 
 /* ---------- Arranque ---------- */
 (async function iniciar() {
