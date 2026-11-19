@@ -481,6 +481,10 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .panel.ficha .chip.sabor { background: var(--sabor-bg); color: var(--sabor-fg); }
 .d-sep { border: 0; border-top: 1px solid var(--line); margin: 0; width: 100%; }
 .panel.ficha .d-desc { font-size: 1.12rem; line-height: 1.6; max-width: 62ch; }
+.d-desc p, .d-desc ul { margin: 0 0 0.7em; }
+.d-desc > :last-child { margin-bottom: 0; }
+.d-desc ul { padding-left: 1.2em; display: grid; gap: 0.35em; }
+.d-desc li::marker { color: var(--accent); }
 .d-desc::first-letter { float: left; font-family: "Uncial Antiqua", var(--display); font-size: 3.4em; line-height: 0.85; color: var(--accent); margin: 0.08em 0.12em 0 0; }
 
 .d-orn { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 0 48px; color: var(--gold, var(--accent)); }

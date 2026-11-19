@@ -490,6 +490,38 @@ def nota_grande(ops):
     </div>"""
 
 
+VINETA = re.compile(r"^\s*[•\-*·–]\s+")
+
+
+def texto_con_formato(t):
+    """Párrafos, listas con viñetas y saltos de línea de una descripción (igual que textoConFormato de app.js)."""
+    salida = []
+    for bloque in re.split(r"\n\s*\n", str(t).replace("\r\n", "\n").replace("\r", "\n")):
+        lineas = [l.strip() for l in bloque.split("\n") if l.strip()]
+        parrafo, lista = [], []
+
+        def cerrar_p():
+            if parrafo:
+                salida.append("<p>" + "<br>".join(e(x) for x in parrafo) + "</p>")
+                parrafo.clear()
+
+        def cerrar_l():
+            if lista:
+                salida.append("<ul>" + "".join(f"<li>{e(x)}</li>" for x in lista) + "</ul>")
+                lista.clear()
+
+        for l in lineas:
+            if VINETA.match(l):
+                cerrar_p()
+                lista.append(VINETA.sub("", l))
+            else:
+                cerrar_l()
+                parrafo.append(l)
+        cerrar_p()
+        cerrar_l()
+    return "".join(salida)
+
+
 def columnas_caract(label, opciones, votos):
     """La opción más votada y un gráfico de columnas con el reparto (igual que columnasCaract de app.js)."""
     cuenta = [votos.count(i) for i in range(len(opciones))]
@@ -661,7 +693,7 @@ def pagina(d, otras, parecidas_=()):
       </div>
       {f'<div class="d-datos">{datos}</div>' if datos else ""}
       {chips}
-      {f'<hr class="d-sep"><p class="d-desc">{e(texto)}</p>' if texto else ""}
+      {f'<hr class="d-sep"><div class="d-desc">{texto_con_formato(texto)}</div>' if texto else ""}
       {resumen_caract(todas)}"""
 
     # Resenas (paintResenas de app.js, en modo lectura)

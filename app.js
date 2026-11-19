@@ -813,9 +813,27 @@ function metaHTML(d) {
         ${d.hojas.length ? `<dt>Hojas</dt><dd>${d.hojas.map((h) => `<span class="chip hoja h-${HOJA_CLASE[h] || "otra"}">${esc(h)}</span>`).join("")}</dd>` : ""}
         ${d.notas.length ? `<dt>Notas de sabor</dt><dd>${d.notas.map((n) => `<span class="chip sabor">${esc(n)}</span>`).join("")}</dd>` : ""}
       </dl>` : ""}
-      ${d.desc ? `<hr class="d-sep"><p class="d-desc">${esc(d.desc)}</p>` : ""}
+      ${d.desc ? `<hr class="d-sep"><div class="d-desc">${textoConFormato(d.desc)}</div>` : ""}
       ${resumenCaract(d)}
       ${!d.notas.length && esEditor() ? '<p class="muted">Ficha básica: faltan las notas de sabor.</p>' : ""}`;
+}
+/* Descripción con sus párrafos y listas: una línea en blanco separa párrafos, las líneas que empiezan por
+   «•», «-», «*» o «·» forman una lista y un salto de línea suelto se respeta. (Igual que texto_con_formato
+   de herramientas/generar_tarjetas.py.) */
+function textoConFormato(t) {
+  const VINETA = /^\s*[•\-*·–]\s+/;
+  return String(t).replace(/\r\n?/g, "\n").split(/\n\s*\n/).map((bloque) => {
+    const lineas = bloque.split("\n").map((l) => l.trim()).filter(Boolean);
+    let html = "", parrafo = [], lista = [];
+    const cerrarP = () => { if (parrafo.length) html += `<p>${parrafo.map(esc).join("<br>")}</p>`; parrafo = []; };
+    const cerrarL = () => { if (lista.length) html += `<ul>${lista.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`; lista = []; };
+    lineas.forEach((l) => {
+      if (VINETA.test(l)) { cerrarP(); lista.push(l.replace(VINETA, "")); }
+      else { cerrarL(); parrafo.push(l); }
+    });
+    cerrarP(); cerrarL();
+    return html;
+  }).join("");
 }
 /* Otras fichas de la misma marca: primero las que comparten la primera palabra (la «serie») */
 function masDeLaMarca(d) {
