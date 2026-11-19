@@ -64,6 +64,18 @@ const esEditor = () => ctx.online && (ctx.rol === "admin" || ctx.rol === "editor
    leyendo de Supabase, pero nada se escribe allí. */
 const PRUEBA_UID = "prueba-saruman", PRUEBA_EMAIL = "saruman.blanco (cuenta de prueba)";
 let modoPrueba = null;   // { uidReal, perfil, bodega, tarros, likes, resenas, sig }
+// Se guarda en el navegador (19/11/2026), para que siga activo al pasar por otras páginas
+// (marcas, mezclas, fichas, ayuda) o al recargar, hasta pulsar «Salir del modo prueba».
+const CLAVE_PRUEBA = "herbario-modo-prueba";
+function guardarPrueba() {
+  if (!modoPrueba) return;
+  try { localStorage.setItem(CLAVE_PRUEBA, JSON.stringify({ ...modoPrueba, likes: [...modoPrueba.likes] })); } catch (e) {}
+}
+function borrarPrueba() { try { localStorage.removeItem(CLAVE_PRUEBA); } catch (e) {} }
+try {
+  const g = JSON.parse(localStorage.getItem(CLAVE_PRUEBA) || "null");
+  if (g && g.uidReal) modoPrueba = { ...g, likes: new Set(g.likes || []) };
+} catch (e) {}
 const respuesta = (data) => Promise.resolve({ data, error: null });
 const NO_EN_PRUEBA = { message: "En el modo prueba no se guarda nada en la base de datos." };
 // Tablas que en modo prueba se leen de los datos inventados (las demás se leen de Supabase).
@@ -81,6 +93,7 @@ class ConsultaPrueba {
   then(ok, ko) {
     let r;
     try { r = ejecutarPrueba(this); } catch (e) { r = { data: null, error: { message: String(e && e.message || e) } }; }
+    if (this.op !== "select") guardarPrueba();
     if (this.uno && r && Array.isArray(r.data)) r = { data: r.data[0] || null, error: r.error };
     return Promise.resolve(r).then(ok, ko);
   }
@@ -158,7 +171,7 @@ if (sb) {
     if (!modoPrueba) return rpcReal(fn, args, opts);
     if (fn === "mi_rol") return respuesta("lector");
     if (fn === "marcar_visita") return respuesta(null);
-    if (fn === "actualizar_mi_perfil") { modoPrueba.perfil.nombre = String((args && args.p_nombre) || "").trim().slice(0, 40); return respuesta(null); }
+    if (fn === "actualizar_mi_perfil") { modoPrueba.perfil.nombre = String((args && args.p_nombre) || "").trim().slice(0, 40); guardarPrueba(); return respuesta(null); }
     if (["fotos_resenas", "socios_resenas", "registrar_visita"].includes(fn)) return rpcReal(fn, args, opts);   // solo leen
     return Promise.resolve({ data: null, error: NO_EN_PRUEBA });
   };
@@ -195,6 +208,7 @@ function crearDatosPrueba(uidReal) {
 async function entrarModoPrueba() {
   if (!esAdmin() || !ctx.session) return;
   modoPrueba = crearDatosPrueba(ctx.uid);
+  guardarPrueba();
   closeDetail();
   await leerSesion(ctx.session);
   await refrescar();
@@ -203,6 +217,7 @@ async function entrarModoPrueba() {
 async function salirModoPrueba() {
   if (!modoPrueba) return;
   modoPrueba = null;
+  borrarPrueba();
   closeDetail();
   await leerSesion(ctx.session);
   await refrescar();
@@ -3135,7 +3150,7 @@ async function leerSesion(session) {
   ctx.email = session ? session.user.email || "" : "";
   ctx.uid = session ? session.user.id : "";
   // Modo prueba: sigue la sesión del administrador, pero con la identidad del lector inventado.
-  if (modoPrueba && ctx.uid !== modoPrueba.uidReal) modoPrueba = null;
+  if (modoPrueba && ctx.uid !== modoPrueba.uidReal) { modoPrueba = null; borrarPrueba(); }
   if (modoPrueba) { ctx.uid = PRUEBA_UID; ctx.email = PRUEBA_EMAIL; }
   ctx.rol = "anonimo";
   const rol = async () => {
