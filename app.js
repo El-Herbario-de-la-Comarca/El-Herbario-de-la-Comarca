@@ -996,7 +996,6 @@ function openDetail(id, desdeUrl) {
     </div>
     <div class="d-orn" aria-hidden="true"><span></span>${ico("hoja")}<span></span></div>
     <div class="sections">
-      <section class="sec" id="d-video" aria-labelledby="vd-h" hidden></section>
       <section class="sec sec-resenas" id="d-resenas" aria-labelledby="rv-h">
         <h3 id="rv-h">Reseñas</h3>
         <div id="rv-medias"></div>
@@ -1004,6 +1003,7 @@ function openDetail(id, desdeUrl) {
         <div class="reviews" id="rv-list"></div>
       </section>
       <section class="sec sec-resto" id="d-resto" aria-labelledby="rr-h" hidden></section>
+      <section class="sec" id="d-video" aria-labelledby="vd-h" hidden></section>
       ${mas || par.length ? '<div class="mas-col">' : ""}
       ${mas ? `<section class="sec sec-mas" aria-labelledby="mas-h">
         <h3 id="mas-h">${esc(mas.titulo)}</h3>

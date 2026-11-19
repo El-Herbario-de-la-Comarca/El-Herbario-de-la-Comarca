@@ -759,7 +759,6 @@ def pagina(d, otras, parecidas_=()):
     </div>
     <div class="d-orn" aria-hidden="true"><span></span>{ico("hoja")}<span></span></div>
     <div class="sections">
-      {video_html}
       <section class="sec sec-resenas" id="d-resenas" aria-labelledby="rv-h">
         <h3 id="rv-h">Reseñas</h3>
         <div id="rv-medias">{medias_html(todas)}</div>
@@ -767,6 +766,7 @@ def pagina(d, otras, parecidas_=()):
         <div class="reviews" id="rv-list">{lista_rv}</div>
       </section>
       {resto_html}
+      {video_html}
       {mas_html}
     </div>
   </main>"""

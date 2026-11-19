@@ -495,9 +495,9 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .d-orn .ico { width: 22px; height: 22px; stroke-width: 1.4; }
 .panel.ficha .sections { border-top: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); column-gap: 40px; padding: 8px 48px 40px; }
 .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-columns: minmax(0, 1fr); }
-/* Reseñas: medias y la última a la izquierda, tabacos relacionados a la derecha, y el resto debajo a todo lo ancho */
-.panel.ficha .sections { grid-template-areas: "video video" "res mas" "resto resto"; }
-.panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "video" "res" "resto"; }
+/* Reseñas: medias y la última a la izquierda, tabacos relacionados a la derecha, el resto debajo a todo lo ancho y, al final, el vídeo */
+.panel.ficha .sections { grid-template-areas: "res mas" "resto resto" "video video"; }
+.panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "res" "resto" "video"; }
 .panel.ficha #d-video { grid-area: video; }
 .panel.ficha .sec-resenas { grid-area: res; }
 .panel.ficha .sec-mas, .panel.ficha .mas-col { grid-area: mas; }
@@ -509,7 +509,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .rev-rejilla .rev, .rev-rejilla .rev:first-child { padding: 16px 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .panel.ficha .sec { padding: 20px 0; }
 .panel.ficha .sec + .sec { border-top: 0; }
-.panel.ficha #d-video { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }
+.panel.ficha #d-video { grid-column: 1 / -1; border-top: 1px solid var(--line); margin-top: 6px; }
 .panel.ficha .sec h3 { font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: 0; text-transform: none; color: var(--accent); }
 .rv-vacio { display: flex; gap: 22px; align-items: center; padding: 24px 26px; border: 1.5px dashed color-mix(in srgb, var(--line) 50%, var(--muted)); border-radius: 14px; background: var(--casilla); }
 .rv-vacio svg { width: 78px; height: 78px; flex: none; fill: none; stroke: var(--door-ring); stroke-width: 0.65; stroke-linecap: round; stroke-linejoin: round; }
@@ -535,7 +535,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .d-lado { padding-left: 28px; } .panel.ficha .info { padding-right: 28px; }
   .nicho { height: 280px; } .panel.ficha .nicho .art { width: 210px; }
   .panel.ficha .sections { grid-template-columns: minmax(0, 1fr); padding-inline: 28px; }
-  .panel.ficha .sections, .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "video" "res" "resto" "mas"; }
+  .panel.ficha .sections, .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "res" "resto" "video" "mas"; }
   .d-orn { padding-inline: 28px; }
   .panel.ficha dl.d-chips { grid-template-columns: 110px minmax(0, 1fr); }
 }
@@ -579,7 +579,7 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   .panel.ficha .sections { order: 6; grid-template-columns: minmax(0, 1fr); padding: 0 16px 28px; }
   .panel.ficha .sec { padding: 14px 0; gap: 10px; }
   .panel.ficha .sec h3 { font-size: 1.35rem; }
-  .panel.ficha .sections, .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "video" "res" "resto" "mas"; }
+  .panel.ficha .sections, .panel.ficha .sections:not(:has(.sec-mas)) { grid-template-areas: "res" "resto" "video" "mas"; }
   .rv-vacio { flex-direction: column; text-align: center; padding: 20px; }
   .rv-vacio svg { width: 60px; height: 60px; }
   .rv-vacio-t { justify-items: center; }
