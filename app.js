@@ -497,7 +497,9 @@ function pips(n) { let h = '<span class="pips" aria-hidden="true">'; for (let i 
 
 /* ---------- Catálogo ---------- */
 const POR_PAGINA = 20;
-const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: "nombre", page: 1, falta: "" };
+// Orden del catálogo al entrar: los mejor valorados primero (los que no tienen reseñas, después, por nombre).
+const ORDEN_INICIAL = "puntuacion";
+const state = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: ORDEN_INICIAL, page: 1, falta: "" };
 // Fichas incompletas (solo admin, desde Mi cuenta): «foto» o «notas».
 // Datos que faltan en las fichas: casillas de «Mi cuenta» (foto y notas) y panel de Tareas (todos)
 const FALTAS = { foto: ["Sin foto", (d) => !fotoSegura(d.foto)], notas: ["Sin notas de sabor", (d) => !d.notas.length],
@@ -524,7 +526,7 @@ function fillFilters() {
    Al pasar del catálogo completo a uno filtrado se añade una entrada al historial; mientras se
    sigue filtrando, esa misma entrada se va actualizando. Así, Atrás (gesto del móvil o botón del
    navegador) vuelve siempre al catálogo sin filtros. */
-const SIN_FILTROS = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: "nombre", page: 1, falta: "" };
+const SIN_FILTROS = { q: "", marca: "", tipo: "", hoja: "", corte: "", pais: "", nota: "", sort: ORDEN_INICIAL, page: 1, falta: "" };
 const SELECTS_FILTRO = [["f-marca", "marca"], ["f-tipo", "tipo"], ["f-hoja", "hoja"], ["f-corte", "corte"], ["f-pais", "pais"], ["sort", "sort"]];
 // Resultado de «Buscar por foto» (foto.js): id de ficha → posición. No va en la dirección; se borra al tocar otro filtro.
 let busquedaFoto = null;
@@ -535,7 +537,7 @@ const enEntradaFiltrada = () => !!(history.state && history.state.filtros);
 /* «Más filtros» (móvil): muestra u oculta Lleva, Corte, País y Ordenar, y dice cuántos de ellos están en uso */
 function pintarMasFiltros() {
   const b = $("mas-filtros"); if (!b) return;
-  const n = [state.hoja, state.corte, state.pais, state.sort !== "nombre"].filter(Boolean).length;
+  const n = [state.hoja, state.corte, state.pais, state.sort !== ORDEN_INICIAL].filter(Boolean).length;
   const abierta = $("filtros-row").classList.contains("abierta");
   $("mas-filtros-t").textContent = (abierta ? "Menos filtros" : "Más filtros") + (n ? ` (${n})` : "");
   b.classList.toggle("activos", n > 0);
@@ -611,7 +613,7 @@ function render() {
   list.sort((a, b) => (busquedaFoto ? busquedaFoto.get(a.id) - busquedaFoto.get(b.id) : 0) ||
     (res ? res.niveles.get(a) - res.niveles.get(b) : 0) ||
     (state.sort === "marca" ? a.marca.localeCompare(b.marca, "es") || byName(a, b)
-    : state.sort === "puntuacion" ? score(b) - score(a) || byName(a, b)
+    : state.sort === "puntuacion" ? score(b) - score(a) || statsDe(b.id).n - statsDe(a.id).n || byName(a, b)
     : byName(a, b)));
   const paginas = Math.max(1, Math.ceil(list.length / POR_PAGINA));
   state.page = Math.min(Math.max(1, state.page), paginas);
