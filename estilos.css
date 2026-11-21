@@ -1344,3 +1344,18 @@ button.ab-m:hover { border-color: var(--accent); color: var(--accent); }
 .sugerir .ico, .compartir #d-aviso .ico { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .empty .link { font: inherit; }
 .d-lado .compartir a.btn { text-decoration: none; }
+
+/* ---------- Perfil público (perfil.js) ---------- */
+.pf-firma { display: inline-flex; align-items: center; gap: inherit; min-width: 0; color: inherit; text-decoration: none; font: inherit; }
+.pf-firma b, .who .pf-firma { text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
+.pf-firma:hover b, .who .pf-firma:hover { text-decoration-color: currentColor; }
+.who .pf-firma { gap: 8px; }
+.perfil-p .pf-sec { margin-top: 26px; }
+.perfil-p .pf-sec h3 { margin: 0 0 12px; }
+.perfil-p .pf-sec .bd-tabs { margin-bottom: 14px; }
+.pf-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.pf-nota { margin-top: 20px; }
+.perfil-p .cu-chips { flex-wrap: wrap; }
+.cu-publica { display: flex; gap: 10px; align-items: flex-start; margin: 16px 0 6px; cursor: pointer; }
+.cu-publica input { width: 20px; height: 20px; margin-top: 2px; flex: none; }
+.cu-publica > span { display: flex; flex-direction: column; gap: 2px; }
