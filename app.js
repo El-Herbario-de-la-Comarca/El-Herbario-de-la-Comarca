@@ -849,27 +849,62 @@ function masDeLaMarca(d) {
   return { titulo, lista };
 }
 /* Fichas parecidas de otras marcas (igual que parecidas() de herramientas/generar_tarjetas.py).
-   Puntos: misma mezcla 5, hojas en común hasta 4 (y −2 si una lleva latakia y la otra no), mismo corte 2,
-   cada nota de sabor en común 1,5 (hasta 3 notas) y mismo país 0,5. Hace falta un mínimo para que salgan.
-   Una por marca, como mucho 4; a igualdad de puntos, primero las que tienen foto. */
-function puntosParecido(d, x) {
-  let p = 0;
-  if (d.tipo && x.tipo === d.tipo) p += 5;
+   Revisado el 21/11/2026: antes bastaban mezcla, hojas y corte para que saliera una aromática de cereza
+   junto a una de melocotón. Ahora cuenta sobre todo lo que pesa en cada clase de tabaco:
+   - Mezcla: la misma 3 puntos; una vecina (Inglesa/Balcánica/Oriental, Virginia/Virginia-Perique…) 1,2.
+     Si son de mezclas que no se tocan, no sale como parecida.
+   - Hojas en común hasta 3 (1,5 en aromáticas y Lakeland), y se resta por cada hoja «de carácter»
+     (latakia, perique, kentucky, cigarro; oriental resta menos) que lleva una y la otra no.
+   - Sabor hasta 3 (4,5 en aromáticas y Lakeland): cada nota igual cuenta 1 y una de la misma familia
+     de la rueda 0,35, sobre el total de notas de las dos (la rueda junta las que significan lo mismo).
+     En aromáticas y Lakeland tiene que haber al menos una nota igual; en las demás, si las dos tienen
+     notas y ninguna coincide, se restan 1,5.
+   - Corte: el mismo 1; los dos prensados (flake, plug, coins…) o los dos sueltos 0,4. Mismo país 0,2.
+   Sale con 6 puntos o más; una por marca, como mucho 4. Mejor ninguna que una que no se parece. */
+const PARECIDO_MIN = 6;
+const AROMATICAS = new Set(["Aromática", "Lakeland"]);
+const MEZCLAS_VECINAS = {
+  "Inglesa": ["Balcánica", "Oriental"], "Balcánica": ["Inglesa", "Oriental"], "Oriental": ["Balcánica", "Inglesa"],
+  "Virginia": ["Virginia-Perique", "Lakeland"], "Virginia-Perique": ["Virginia"], "Lakeland": ["Virginia", "Aromática"], "Aromática": ["Lakeland"],
+};
+const HOJAS_CARACTER = { Latakia: 1.5, Perique: 1.5, Kentucky: 1.5, Cigarro: 1.5, Oriental: 0.8 };
+const CORTES_PRENSADOS = new Set(["Flake", "Broken Flake", "Coins", "Plug", "Rope", "Rope (cuerda)", "Cake", "Roll-cake", "Cube Cut"]);
+// Notas de sabor de una ficha tal como las cuenta la rueda (sin las vagas como «suave» o «dulce»).
+const notasParecido = (d) => {
+  const S = window.Sabores;
+  return [...new Set((d.notas || []).map((n) => (S ? S.canon(n) : norm(String(n).trim()))).filter(Boolean))];
+};
+const familiaNota = (n) => (window.Sabores ? window.Sabores.familia(n) : null);
+function parecido(d, x) {
+  const aroma = AROMATICAS.has(d.tipo);
+  let p = 0, vale = true;
+  if (d.tipo && x.tipo === d.tipo) p += 3;
+  else if (d.tipo && (MEZCLAS_VECINAS[d.tipo] || []).includes(x.tipo)) p += 1.2;
+  else if (d.tipo && x.tipo) vale = false;
   if (d.hojas.length && x.hojas.length) {
     const comunes = d.hojas.filter((h) => x.hojas.includes(h)).length;
-    p += 4 * comunes / new Set([...d.hojas, ...x.hojas]).size;
-    if (d.hojas.includes("Latakia") !== x.hojas.includes("Latakia")) p -= 2;
+    p += (aroma ? 1.5 : 3) * comunes / new Set([...d.hojas, ...x.hojas]).size;
+    for (const [h, resta] of Object.entries(HOJAS_CARACTER)) if (d.hojas.includes(h) !== x.hojas.includes(h)) p -= resta * (aroma ? 0.5 : 1);
   }
-  if (d.corte && x.corte === d.corte) p += 2;
-  const notas = new Set(d.notas.map((n) => norm(n)));
-  p += 1.5 * Math.min(3, x.notas.filter((n) => notas.has(norm(n))).length);
-  if (d.pais && x.pais === d.pais) p += 0.5;
-  return p;
+  const A = notasParecido(d), B = notasParecido(x);
+  if (A.length && B.length) {
+    const lado = (u, v) => u.reduce((s, n) => s + (v.includes(n) ? 1 : v.some((m) => familiaNota(m) && familiaNota(m) === familiaNota(n)) ? 0.35 : 0), 0) / u.length;
+    const iguales = A.filter((n) => B.includes(n)).length;
+    p += (aroma ? 4.5 : 3) * (lado(A, B) + lado(B, A)) / 2;
+    if (!iguales) { if (aroma) vale = false; else p -= 1.5; }
+  } else if (aroma && A.length) vale = false;   // una aromática con notas frente a otra sin ellas: no se sabe
+  if (d.corte && x.corte) {
+    if (x.corte === d.corte) p += 1;
+    else if (CORTES_PRENSADOS.has(d.corte) === CORTES_PRENSADOS.has(x.corte)) p += 0.4;
+  }
+  if (d.pais && x.pais === d.pais) p += 0.2;
+  return { p, vale };
 }
+// Puntos de parecido (el comparador los usa para «Cuánto se parecen»; como mucho unos 10,5).
+const puntosParecido = (d, x) => Math.max(0, parecido(d, x).p);
 function parecidas(d) {
-  const minimo = d.tipo ? 7 : 5;
   const cands = current.filter((x) => x.marca !== d.marca && x.id !== d.id)
-    .map((x) => ({ x, p: puntosParecido(d, x) })).filter((c) => c.p >= minimo)
+    .map((x) => ({ x, ...parecido(d, x) })).filter((c) => c.vale && c.p >= PARECIDO_MIN)
     .sort((a, b) => b.p - a.p || (fotoSegura(b.x.foto) ? 1 : 0) - (fotoSegura(a.x.foto) ? 1 : 0) || a.x.nombre.localeCompare(b.x.nombre, "es") || (a.x.id < b.x.id ? -1 : 1));
   const vistas = new Set(), lista = [];
   for (const { x } of cands) {

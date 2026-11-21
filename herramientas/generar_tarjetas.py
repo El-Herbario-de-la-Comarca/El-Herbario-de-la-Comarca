@@ -603,35 +603,91 @@ def mas_de_la_marca(d, otras):
     return titulo, lista_
 
 
+# ---------- Parecidas de otras marcas (como parecido() de app.js; las reglas están explicadas allí) ----------
+PARECIDO_MIN = 6
+AROMATICAS = {"Aromática", "Lakeland"}
+MEZCLAS_VECINAS = {
+    "Inglesa": ["Balcánica", "Oriental"], "Balcánica": ["Inglesa", "Oriental"], "Oriental": ["Balcánica", "Inglesa"],
+    "Virginia": ["Virginia-Perique", "Lakeland"], "Virginia-Perique": ["Virginia"], "Lakeland": ["Virginia", "Aromática"], "Aromática": ["Lakeland"],
+}
+HOJAS_CARACTER = {"Latakia": 1.5, "Perique": 1.5, "Kentucky": 1.5, "Cigarro": 1.5, "Oriental": 0.8}
+CORTES_PRENSADOS = {"Flake", "Broken Flake", "Coins", "Plug", "Rope", "Rope (cuerda)", "Cake", "Roll-cake", "Cube Cut"}
+
+
+def leer_rueda():
+    """Familias y equivalencias de notas de sabores.js, para no tenerlas escritas dos veces.
+    Devuelve (nota escrita normalizada -> nota de la rueda, nota de la rueda -> familia)."""
+    txt = (RAIZ / "sabores.js").read_text(encoding="utf-8")
+    canon, familia = {}, {}
+    for fam, notas in re.findall(r'\[\s*"([^"]+)",\s*"#[0-9A-Fa-f]+",\s*"#[0-9A-Fa-f]+",\s*"#[0-9A-Fa-f]+",\s*\[([^\]]*)\]\s*\]', txt):
+        for n in re.findall(r'"([^"]+)"', notas):
+            canon[slug_texto(n)] = n
+            familia[n] = fam
+    bloque = re.search(r"const ALIAS = \{(.*?)\};", txt, re.S)
+    for alias, n in re.findall(r'"([^"]+)":\s*"([^"]+)"', bloque.group(1) if bloque else ""):
+        canon[slug_texto(alias)] = n
+    return canon, familia
+
+
 def puntos_parecido(d, x):
-    """Como puntosParecido de app.js."""
-    p = 0.0
+    """Como parecido() de app.js: devuelve (puntos, vale)."""
+    aroma = d["_tipo"] in AROMATICAS
+    p, vale = 0.0, True
     if d["_tipo"] and x["_tipo"] == d["_tipo"]:
-        p += 5
+        p += 3
+    elif d["_tipo"] and x["_tipo"] in MEZCLAS_VECINAS.get(d["_tipo"], []):
+        p += 1.2
+    elif d["_tipo"] and x["_tipo"]:
+        vale = False
     if d["_hojas"] and x["_hojas"]:
-        p += 4 * len(d["_hojas"] & x["_hojas"]) / len(d["_hojas"] | x["_hojas"])
-        if ("Latakia" in d["_hojas"]) != ("Latakia" in x["_hojas"]):
-            p -= 2
-    if d["_corte"] and x["_corte"] == d["_corte"]:
-        p += 2
-    p += 1.5 * min(3, len(d["_notas"] & x["_notas"]))
+        p += (1.5 if aroma else 3) * len(d["_hojas"] & x["_hojas"]) / len(d["_hojas"] | x["_hojas"])
+        for h, resta in HOJAS_CARACTER.items():
+            if (h in d["_hojas"]) != (h in x["_hojas"]):
+                p -= resta * (0.5 if aroma else 1)
+    A, B = d["_notas"], x["_notas"]
+    if A and B:
+        fam = FAMILIA_NOTA
+        lado = lambda u, v: sum(1 if n in v else 0.35 if fam.get(n) and any(fam.get(m) == fam.get(n) for m in v) else 0 for n in u) / len(u)
+        p += (4.5 if aroma else 3) * (lado(A, B) + lado(B, A)) / 2
+        if not (A & B):
+            if aroma:
+                vale = False
+            else:
+                p -= 1.5
+    elif aroma and A:
+        vale = False
+    if d["_corte"] and x["_corte"]:
+        if x["_corte"] == d["_corte"]:
+            p += 1
+        elif (d["_corte"] in CORTES_PRENSADOS) == (x["_corte"] in CORTES_PRENSADOS):
+            p += 0.4
     if d["_pais"] and x["_pais"] == d["_pais"]:
-        p += 0.5
-    return p
+        p += 0.2
+    return p, vale
+
+
+CANON_NOTA, FAMILIA_NOTA = {}, {}
 
 
 def preparar_parecido(fichas):
+    global CANON_NOTA, FAMILIA_NOTA
+    if not CANON_NOTA:
+        CANON_NOTA, FAMILIA_NOTA = leer_rueda()
     for d in fichas:
         d["_tipo"], d["_corte"], d["_pais"] = d.get("tipo") or "", d.get("corte") or "", d.get("pais") or ""
         d["_hojas"] = set(lista(d.get("hojas")))
-        d["_notas"] = {slug_texto(n) for n in lista(d.get("notas"))}
+        d["_notas"] = {CANON_NOTA[k] for k in (slug_texto(n) for n in lista(d.get("notas"))) if k in CANON_NOTA}
 
 
 def parecidas(d, todas):
     """Como parecidas() de app.js: de otras marcas, una por marca, como mucho 4."""
-    minimo = 7 if d["_tipo"] else 5
-    cands = [(puntos_parecido(d, x), x) for x in todas if x.get("marca") != d.get("marca") and x["id"] != d["id"]]
-    cands = [c for c in cands if c[0] >= minimo]
+    cands = []
+    for x in todas:
+        if x.get("marca") == d.get("marca") or x["id"] == d["id"]:
+            continue
+        p, vale = puntos_parecido(d, x)
+        if vale and p >= PARECIDO_MIN:
+            cands.append((p, x))
     cands.sort(key=lambda c: (-c[0], 0 if c[1].get("foto") else 1, c[1]["nombre"].lower(), c[1]["id"]))
     vistas, sal = set(), []
     for _, x in cands:

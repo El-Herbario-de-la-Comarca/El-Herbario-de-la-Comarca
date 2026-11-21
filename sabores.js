@@ -29,6 +29,17 @@
     "fruta pasa": "pasas", "frutal": "fruta", "frutas": "fruta",
     "grosella negra": "frutos rojos", "ron jamaicano": "ron", "bourbon": "whisky",
     "conac": "licor", "jerez": "licor", "humo oscuro": "ahumado", "hierbas": "hierbas aromáticas",
+    // Plurales, erratas y variantes que aparecen en las fichas (21/11/2026)
+    "nues": "nuez", "nueces": "nuez", "avellanas": "avellana", "frutos secor": "frutos secos", "pistacho": "frutos secos",
+    "higos": "higo", "uvas pasas": "pasas", "pasa": "pasas", "frutas pasas": "pasas",
+    "chocolata": "chocolate", "cholate": "chocolate", "chocolate negro": "chocolate", "cacao": "chocolate",
+    "futa": "fruta", "frutos": "fruta", "flores": "floral", "flora": "floral", "especies dulces": "especias dulces",
+    "whiskey": "whisky", "tierra": "terroso", "tierra humeda": "terroso", "maderas": "madera", "roble": "madera",
+    "humo": "ahumado", "ahumado prominente": "ahumado", "turba": "ahumado", "lena": "hoguera",
+    "toffee": "caramelo", "melaza": "caramelo", "naranja dulce": "cítricos", "mandarina": "cítricos", "pomelo": "cítricos",
+    "fruta tropical": "frutas tropicales", "coco": "frutas tropicales", "frambuesa": "frutos rojos", "fresa": "frutos rojos", "mora": "frutos rojos",
+    "uva": "vino", "vino blanco": "vino", "champan": "vino", "tostado": "pan tostado", "pan": "pan tostado", "cereal": "pan tostado",
+    "galletas": "bizcocho", "pastel": "bizcocho",
   };
   const FAM_DE = {}, CANON = {};
   FAMILIAS.forEach((f) => f[4].forEach((n) => { FAM_DE[n] = f; CANON[norm(n)] = n; }));
@@ -302,6 +313,7 @@
   panelesHash["#/sabores"] = abrir;
   window.Sabores = {
     canon, tieneNota, abrir, verNota,
+    familia: (nota) => (FAM_DE[nota] ? FAM_DE[nota][0] : null),   // familia de una nota ya pasada por canon()
   };
 
   document.querySelectorAll('a[href="#/sabores"]').forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); abrir(); }));

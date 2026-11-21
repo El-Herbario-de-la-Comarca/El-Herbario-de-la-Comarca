@@ -10,7 +10,7 @@
 (function () {
   const CLAVE = "herbario-comparar";   // id del primer tabaco elegido (en el navegador)
   const ICONO = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="7.5" height="14" rx="2"/><rect x="13.5" y="5" width="7.5" height="14" rx="2"/></svg>`;
-  const PARECIDO_MAX = 16;   // lo más que puede sumar puntosParecido (5 + 4 + 2 + 4,5 + 0,5)
+  const PARECIDO_MAX = 10;   // puntosParecido de dos fichas casi iguales (ver parecido() en app.js)
 
   const leerElegido = () => { try { return localStorage.getItem(CLAVE) || ""; } catch (e) { return ""; } };
   const guardarElegido = (id) => { try { if (id) localStorage.setItem(CLAVE, String(id)); else localStorage.removeItem(CLAVE); } catch (e) { /* sin almacenamiento */ } };
@@ -90,9 +90,9 @@
   const iguales = (x, y) => !!x && !!y && norm(x) === norm(y);
 
   function nivelParecido(p) {
-    if (p >= 11) return "Mucho";
-    if (p >= 7) return "Bastante";
-    if (p >= 4) return "Algo";
+    if (p >= 8.5) return "Mucho";
+    if (p >= 6) return "Bastante";   // desde aquí puede salir entre las parecidas de la ficha
+    if (p >= 3.5) return "Algo";
     return "Poco";
   }
   function frasesParecido(A, B) {
