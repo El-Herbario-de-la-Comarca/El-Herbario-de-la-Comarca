@@ -241,8 +241,10 @@ const SELLO_SOCIO = '<img class="sello-socio" src="img/logo.png" alt="Socio del 
 let bodega = {};      // tabaco_id -> { tengo, probado, quiero } (solo la del usuario que ha entrado)
 let openId = null, lastFocus = null;
 
+// Notas de sabor siempre con la primera letra en mayúscula («miel» → «Miel»), las escriba como las escriba quien edita.
+const notaMayus = (n) => { const t = String(n).trim(); return t.charAt(0).toLocaleUpperCase("es") + t.slice(1); };
 function mapItem(r) {
-  const notas = Array.isArray(r.notas) ? r.notas.filter((n) => typeof n === "string" && n.trim()).map((n) => n.trim().slice(0, 40)).slice(0, 12) : [];
+  const notas = Array.isArray(r.notas) ? r.notas.filter((n) => typeof n === "string" && n.trim()).map((n) => notaMayus(n).slice(0, 40)).slice(0, 12) : [];
   const f = Number(r.fuerza);
   const hojas = Array.isArray(r.hojas) ? HOJAS.filter((h) => r.hojas.includes(h)) : [];
   return {
@@ -621,7 +623,7 @@ function render() {
   state.page = Math.min(Math.max(1, state.page), paginas);
   const desde = (state.page - 1) * POR_PAGINA;
   const visibles = list.slice(desde, desde + POR_PAGINA);
-  $("count").textContent = (busquedaFoto ? "Tu foto · " : "") + (falta ? `${falta[0]} · ` : "") + (state.nota ? `Sabor: ${state.nota} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
+  $("count").textContent = (busquedaFoto ? "Tu foto · " : "") + (falta ? `${falta[0]} · ` : "") + (state.nota ? `Sabor: ${notaMayus(state.nota)} · ` : "") + (list.length === 1 ? "1 tabaco" : `${list.length} tabacos`) +
     (paginas > 1 ? ` · mostrando ${desde + 1}–${desde + visibles.length}` : "") +
     (res && res.corregidas.length ? ` · buscando «${res.corregidas.join(" ")}»` : "");
   pintarPaginador(paginas);
@@ -1366,7 +1368,7 @@ function leerFormulario() {
     corte: $("ed-corte").value.trim().slice(0, 40),
     pais: $("ed-pais").value.trim().slice(0, 60),
     formato: $("ed-formato").value.trim().slice(0, 80),
-    notas: $("ed-notas").value.split(",").map((n) => n.trim().slice(0, 40)).filter(Boolean).slice(0, 12),
+    notas: $("ed-notas").value.split(",").map((n) => notaMayus(n).slice(0, 40)).filter(Boolean).slice(0, 12),
     descripcion: $("ed-desc").value.trim().slice(0, 2000),
     ...($("ed-es") ? { en_espana: $("ed-es").checked } : {}),
     ...($("ed-otros") ? { otros_nombres: [...new Set($("ed-otros").value.split(",").map((n) => n.trim().slice(0, 120)).filter(Boolean))].slice(0, 10) } : {})

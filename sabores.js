@@ -115,7 +115,7 @@
     m.notas.forEach(({ n, fi }, i) => {
       const f = m.fams[fi].f;
       formas += `<path class="rs-nota" style="--c1:${f[1]};--c2:${f[2]}" data-nota="${esc(n)}" data-i="${i}" tabindex="0" role="button" aria-label="${esc(n)}: ${fichas(cuentas[n])}"/>`;
-      letras += `<text class="rs-tn" data-i="${i}" dominant-baseline="central">${esc(n)}</text>`;
+      letras += `<text class="rs-tn" data-i="${i}" dominant-baseline="central">${esc(mayus(n))}</text>`;
     });
     return `<svg class="rueda" id="rueda" viewBox="-200 -200 400 400" role="group" aria-label="Rueda de sabores">${formas}${letras}
       <circle class="rs-centro" r="${R0 - 3}" tabindex="0" role="button" aria-label="Ver todas las familias"/>
@@ -141,7 +141,7 @@
       np[i].setAttribute("d", arco(R2, R3, a0, a1));
       // Familia ampliada (al acabar la animación): letra grande, en negrita y siguiendo la curva.
       if (modo && fi === fin && rotular(svg, nt[i], n, a0, a1, modo)) return;
-      if (nt[i].classList.contains("grande")) { nt[i].classList.remove("grande"); nt[i].textContent = n; }
+      if (nt[i].classList.contains("grande")) { nt[i].classList.remove("grande"); nt[i].textContent = mayus(n); }
       nt[i].style.opacity = (a1 - a0) * (R2 + 6) >= 9.5 ? 1 : 0;
       colocar(nt[i], R2 + 6, (a0 + a1) / 2, true);
     });
@@ -160,6 +160,7 @@
   }
   // Reparte un nombre en una o dos líneas que quepan en «sitio»; null si no cabe.
   function lineasPara(svg, n, sitio) {
+    n = mayus(n);
     if (medir(svg, n) <= sitio) return [n];
     const ps = n.split(" ");
     for (let k = 1; k < ps.length; k++) {
@@ -278,7 +279,7 @@
 
   function chips(f, cuentas) {
     return `<div class="rs-chips">${f[4].filter((n) => cuentas[n]).sort((a, b) => cuentas[b] - cuentas[a])
-      .map((n) => `<button type="button" class="rs-chip" style="--c1:${f[1]};--c2:${f[2]}" data-ver="${esc(n)}">${esc(n)}<small>${cuentas[n]}</small></button>`).join("")}</div>`;
+      .map((n) => `<button type="button" class="rs-chip" style="--c1:${f[1]};--c2:${f[2]}" data-ver="${esc(n)}">${esc(mayus(n))}<small>${cuentas[n]}</small></button>`).join("")}</div>`;
   }
   function pintarInfo(f, nota, cuentas) {
     const box = $("rs-info"); if (!box) return;
