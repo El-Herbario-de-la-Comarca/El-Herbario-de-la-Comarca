@@ -363,6 +363,9 @@ label.check input { width: 18px; height: 18px; accent-color: var(--accent); }
   background: color-mix(in srgb, var(--hill-a) 45%, transparent); color: var(--fg); }
 .tarro-form .tf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
 .tarro-form .tf-grid > div { display: grid; gap: 4px; }
+.tarro-form textarea { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); width: 100%; resize: vertical; min-height: 4.5em; }
+.tarro-form .tf-cuenta { margin: 2px 0 0; font-size: 0.8rem; text-align: right; }
+.tr-nota { display: block; margin-top: 3px; font-style: italic; font-size: 0.9rem; line-height: 1.4; white-space: pre-line; overflow-wrap: anywhere; color: var(--fg); }
 .tarro-form select, .tarro-form input[type=text] { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fg); width: 100%; }
 .confirm .box.tarro-form { width: min(100%, 480px); max-height: calc(100vh - 32px); overflow: auto; }
 /* Etiquetas para el tarro (etiquetas.js) */
