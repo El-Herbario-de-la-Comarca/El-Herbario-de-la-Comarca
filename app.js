@@ -172,7 +172,7 @@ if (sb) {
     if (fn === "mi_rol") return respuesta("lector");
     if (fn === "marcar_visita") return respuesta(null);
     if (fn === "actualizar_mi_perfil") { modoPrueba.perfil.nombre = String((args && args.p_nombre) || "").trim().slice(0, 40); guardarPrueba(); return respuesta(null); }
-    if (["fotos_resenas", "socios_resenas", "registrar_visita"].includes(fn)) return rpcReal(fn, args, opts);   // solo leen
+    if (["fotos_resenas", "socios_resenas", "registrar_visita", "perfil_publico", "bodega_publica_de"].includes(fn)) return rpcReal(fn, args, opts);   // solo leen
     return Promise.resolve({ data: null, error: NO_EN_PRUEBA });
   };
 }
@@ -656,8 +656,10 @@ function resenasRecientes() {
   Object.entries(opiniones).forEach(([k, os]) => { const d = findItem(k); if (d) os.forEach((o) => { if (o.score) l.push({ o, d }); }); });
   return l.sort((a, b) => new Date(b.o.creado) - new Date(a.o.creado));
 }
-function firmaResena(o) {
-  return `<span class="firma">${avatarResena(o)}<b>${esc(o.firma)}</b>${esSocio(o.autor) ? SELLO_SOCIO : ""}</span>`;
+// enlace: el nombre abre el perfil de quien firma (perfil.js). No dentro de otro botón (Últimas reseñas).
+function firmaResena(o, enlace) {
+  const nombre = `${avatarResena(o)}<b>${esc(o.firma)}</b>`;
+  return `<span class="firma">${enlace && window.Perfil ? window.Perfil.firma(o.autor, nombre) : nombre}${esSocio(o.autor) ? SELLO_SOCIO : ""}</span>`;
 }
 function irAResenas(id) {
   openDetail(id);
@@ -696,7 +698,7 @@ function abrirTodasResenas(cuantas) {
         <div class="tr-c">
           <div class="tr-h"><button class="link tr-nom" type="button" data-ult="${esc(d.id)}">${esc(d.nombre)}</button><span class="muted">${esc(d.marca)}</span>${estrellas(o.score)}</div>
           ${o.texto.trim() ? `<p>${esc(o.texto.trim())}</p>` : '<p class="muted">Solo puntuación, sin comentario.</p>'}
-          <div class="tr-pie">${firmaResena(o)}${rangoHTML(o.autor)}<span class="muted">· ${haceCuanto(o.creado)}</span></div>
+          <div class="tr-pie">${firmaResena(o, true)}${rangoHTML(o.autor)}<span class="muted">· ${haceCuanto(o.creado)}</span></div>
         </div>
       </article>`).join("")}</div>
       ${lista.length > n ? `<button class="btn tr-mas" type="button" id="tr-mas">Ver ${Math.min(30, lista.length - n)} más</button>` : ""}
@@ -1563,7 +1565,7 @@ function revHTML(o, propia) {
     ? `<div class="acts"><button class="link" type="button" data-rv="edit" data-id="${o.id}">Editar</button><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar</button></div>`
     : (esAdmin() ? `<div class="acts"><button class="link" type="button" data-rv="del" data-id="${o.id}">Borrar (admin)</button></div>` : "");
   const gusta = gustaHTML(o, propia);
-  return `<div class="head"><span class="who">${avatarResena(o)}${esc(o.firma)}${esSocio(o.autor) ? SELLO_SOCIO : ""}${rangoHTML(o.autor)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
+  return `<div class="head"><span class="who">${window.Perfil ? window.Perfil.firma(o.autor, `${avatarResena(o)}${esc(o.firma)}`) : `${avatarResena(o)}${esc(o.firma)}`}${esSocio(o.autor) ? SELLO_SOCIO : ""}${rangoHTML(o.autor)}${propia ? " <small>(tu reseña)</small>" : ""}</span>
       <span class="str">${pips(o.score)}<span>${VALORACION[o.score]}</span></span>
       <span class="when">${fecha(o.creado)}${editado ? " · editada" : ""}</span></div>
     ${CARACT.some((c) => o[c.k]) ? `<dl class="rev-car">${CARACT.map((c) => o[c.k] ? `<dt>${esc(c.label)}</dt><dd>${esc(c.ops[o[c.k]])}</dd>` : "").join("")}</dl>` : ""}
@@ -2780,7 +2782,7 @@ function abrirBodega(fuente) {
       <span class="bd-baul" aria-hidden="true">${ICONO_BAUL}</span>
       <div>${prueba && prueba.ajena ? `<h2 id="d-name">Bodega de ${esc(prueba.nombre)}</h2><p class="muted">La ves como administrador, en solo lectura: no puedes cambiar nada.</p>`
         : prueba ? `<h2 id="d-name">Bodega de ${esc(prueba.nombre)}</h2><p class="muted">Bodega de prueba con datos inventados. Solo la ves tú y no se guarda nada.</p>`
-        : '<h2 id="d-name">Mi bodega</h2><p class="muted">Solo tú y el administrador del herbario podéis verla. Marca tus tabacos desde su ficha.</p>'}</div>
+        : `<h2 id="d-name">Mi bodega</h2><p class="muted">${ctx.perfil && ctx.perfil.bodegaPublica ? "Se ve en tu perfil: los demás usuarios con cuenta ven tus tres listas, sin gramos ni tarros (puedes ocultarla en Mi cuenta)." : "Solo tú y el administrador del herbario podéis verla."} Marca tus tabacos desde su ficha.</p>`}</div>
     </div>
     <button class="x-close" id="d-close" type="button" aria-label="Cerrar" title="Cerrar"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button>
     <div class="bd-cuerpo">
@@ -2888,9 +2890,10 @@ const ROL_TXT = { admin: "Administrador", editor: "Editor", lector: "Lector", su
 async function cargarPerfil() {
   if (!sb || !ctx.session) { ctx.perfil = { nombre: "", avatar: "" }; ctx.perfilOk = false; ctx.socioOk = false; return; }
   // Las dos consultas van a la vez (la segunda falla si aún no se ha ejecutado el 23).
-  const [perfil, socio] = await Promise.all([
+  const [perfil, socio, publica] = await Promise.all([
     sb.from("perfiles").select("nombre,avatar").eq("id", ctx.uid).maybeSingle(),
     sb.from("perfiles").select("socio,socio_desde").eq("id", ctx.uid).maybeSingle(),
+    sb.from("perfiles").select("bodega_publica").eq("id", ctx.uid).maybeSingle(),   // 65_perfiles_publicos.sql
   ]);
   const p = { nombre: "", avatar: "" }; let perfilOk = false, socioOk = false;
   try {
@@ -2905,6 +2908,8 @@ async function cargarPerfil() {
     p.socio = !!(data && data.socio); p.socioDesde = (data && data.socio_desde) || null;
     socioOk = true;
   } catch (e) { console.warn("Sin datos de socio (falta 23_socios_del_club.sql)", e); }
+  ctx.publicaOk = !publica.error;
+  p.bodegaPublica = !!(publica.data && publica.data.bodega_publica);
   // Se cambia todo de golpe al final, para que no parpadee el perfil recordado de la última vez.
   ctx.perfil = p; ctx.perfilOk = perfilOk; ctx.socioOk = socioOk;
 }
@@ -3006,6 +3011,9 @@ function abrirCuenta() {
             <div class="btns"><input id="nm-in" maxlength="40" value="${esc(p.nombre)}" placeholder="Cómo quieres que te vean">
             <button class="btn primary" type="submit">Guardar</button></div>
           </form>` : '<p class="muted">El nombre visible y la foto de perfil estarán disponibles pronto.</p>'}
+          ${ctx.publicaOk && ctx.bodega ? `<label class="cu-publica"><input type="checkbox" id="cu-publica"${p.bodegaPublica ? " checked" : ""}>
+            <span><strong>Enseñar mi bodega en mi perfil</strong><span class="muted">Los demás usuarios con cuenta verán lo que tienes, lo que has probado y lo que quieres probar. Los gramos y los tarros no se ven.</span></span></label>` : ""}
+          ${ctx.publicaOk && !modoPrueba ? '<p><button class="link" type="button" id="cu-perfil">Ver mi perfil como lo ven los demás</button></p>' : ""}
           <p class="msg" id="cu-msg" role="alert"></p>
           <div class="btns">
             ${modoPrueba ? "" : '<button class="btn" id="cu-pass" type="button">Cambiar contraseña</button>'}
@@ -3028,6 +3036,17 @@ function abrirCuenta() {
   if ($("cu-instalar")) $("cu-instalar").addEventListener("click", async () => {
     if (!avisoInstalar) return;
     avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; abrirCuenta();
+  });
+  if ($("cu-perfil")) $("cu-perfil").addEventListener("click", () => { if (window.Perfil) window.Perfil.abrir(ctx.uid); });
+  if ($("cu-publica")) $("cu-publica").addEventListener("change", async (e) => {
+    const marca = e.target, msg = $("cu-msg");
+    marca.disabled = true;
+    const { error } = await sb.rpc("cambiar_bodega_publica", { p_publica: marca.checked });
+    marca.disabled = false;
+    if (error) { marca.checked = !marca.checked; msg.style.color = ""; msg.textContent = modoPrueba ? "Esto no se puede probar en el modo prueba." : "No se ha podido guardar."; return; }
+    ctx.perfil.bodegaPublica = marca.checked;
+    if (window.Perfil) window.Perfil.olvidar(ctx.uid);
+    msg.style.color = "var(--muted)"; msg.textContent = marca.checked ? "Tu bodega ya se ve en tu perfil." : "Tu bodega ya no se ve en tu perfil.";
   });
   if (!ctx.perfilOk) return;
   if ($("av-pick")) $("av-pick").addEventListener("click", () => $("av-file").click());
@@ -3094,7 +3113,7 @@ async function guardarPerfil(nombre, avatar, ok) {
   const msg = $("cu-msg"), anterior = ctx.perfil.avatar;
   const { error } = await sb.rpc("actualizar_mi_perfil", { p_nombre: nombre, p_avatar: avatar });
   if (error) { msg.style.color = ""; msg.textContent = "No se ha podido guardar."; return; }
-  ctx.perfil = { nombre: String(nombre || "").trim(), avatar };
+  ctx.perfil = { ...ctx.perfil, nombre: String(nombre || "").trim(), avatar };
   if (anterior && anterior !== avatar && !modoPrueba) {
     const r = rutaAvatar(anterior);
     if (r.startsWith(ctx.uid + "/")) { try { await sb.storage.from("avatares").remove([r]); } catch (e) {} }
@@ -3518,6 +3537,7 @@ async function contarVisita() {
   if (!$("overlay").hidden && openId != null && findItem(openId)) paintTools();
   if (!$("overlay").hidden && panelDe(location.hash)) panelDe(location.hash)(true);   // rueda, árbol o comparador, con los datos de Supabase
   if (window.Comparar) window.Comparar.alArrancar();   // quien entra por el enlace de una comparación
+  if (window.Perfil) window.Perfil.alArrancar();       // o por el enlace de un perfil
   if (location.hash === "#/bodega" && $("overlay").hidden) panelesHash["#/bodega"]();   // quien recarga con la bodega abierta
   abrirFichaDeUrl();   // por si la ficha solo está en Supabase (no en la copia de respaldo)
   // Importante: no se puede llamar a Supabase dentro de este aviso, porque la librería se bloquea
@@ -3535,6 +3555,7 @@ async function contarVisita() {
       if (cambioUsuario && !$("overlay").hidden) closeDetail();
       await refrescar();
       if (window.Comparar) window.Comparar.cambioSesion();
+      if (window.Perfil) window.Perfil.cambioSesion();
     }, 0);
   });
 })();
