@@ -197,11 +197,23 @@
       fuente("Alegreya", "normal", 8);
       const sub = doc.splitTextToSize([d.marca, d.corte].filter(Boolean).join(" · "), COL.env - COL.tab - 13);
       const filas = Math.max(1, d.envases.length);
-      const notas = d.envases.map((t) => { fuente("Alegreya", "italic", 8.5); return doc.splitTextToSize(t.nota || "", FIN - COL.nota).length; });
-      const altFilas = d.envases.length ? d.envases.map((t, i) => Math.max(FILA, 3 + notas[i] * MM(8.5) * 1.18 + 2.4)) : [FILA];
+      // La columna «Nota» es estrecha: una nota corta (hasta 3 líneas) va ahí; una más larga va debajo del envase, a todo lo ancho.
+      fuente("Alegreya", "italic", 8.5);
+      const notas = d.envases.map((t) => doc.splitTextToSize(t.nota || "", FIN - COL.nota));
+      const MAX_LINEAS = 12;   // una nota más larga se corta con «…» (entera se ve en Mi bodega)
+      const largas = notas.map((ls, i) => {
+        if (ls.length <= 3) return null;
+        const l = doc.splitTextToSize(d.envases[i].nota, FIN - COL.env);
+        if (l.length <= MAX_LINEAS) return l;
+        const rec = l.slice(0, MAX_LINEAS); rec[MAX_LINEAS - 1] = rec[MAX_LINEAS - 1].replace(/\s+$/, "") + "…";
+        return rec;
+      });
+      const altFilas = d.envases.length ? d.envases.map((t, i) => largas[i]
+        ? FILA + 1.4 + largas[i].length * MM(8.5) * 1.18 + 1.4
+        : Math.max(FILA, 3 + notas[i].length * MM(8.5) * 1.18 + 2.4)) : [FILA];
       const altNom = 3.6 + nom.length * MM(9.5) * 1.18 + sub.length * MM(8) * 1.18 + 1.8;
       const alto = Math.max(altFilas.reduce((s, a) => s + a, 0), altNom, 11);
-      return { nom, sub, filas, altFilas, alto };
+      return { nom, sub, filas, altFilas, notas, largas, alto };
     };
 
     grupos.forEach(([tipo, lista]) => {
@@ -237,7 +249,7 @@
           fuente("Alegreya", "italic", 8.5, C.muted); texto("Sin envases apuntados", COL.fec, fy + FILA / 2 + 1.2);
         }
         d.envases.forEach((t, i) => {
-          const h = m.altFilas[i], mid = fy + h / 2;
+          const h = m.altFilas[i], largo = m.largas[i], mid = largo ? fy + FILA / 2 : fy + h / 2;
           if (i) { doc.setDrawColor(C.fila); doc.setLineWidth(0.2); doc.line(COL.env, fy, FIN, fy); }
           fuente("Alegreya", "normal", 9); texto(envaseTxt(t), COL.env, mid + 1.2);
           if (t.fecha_anio) {
@@ -249,9 +261,12 @@
           }
           if (t.abierto_anio) { fuente("Alegreya", "normal", 8.5, C.rojo); texto(`Abierto ${fecha(t.abierto_anio, t.abierto_mes)}`, COL.est, mid + 1.2); }
           else { fuente("Alegreya", "normal", 8.5, C.accent); texto("Cerrado", COL.est, mid + 1.2); }
-          if (t.nota) {
+          if (largo) {
             fuente("Alegreya", "italic", 8.5, C.muted);
-            const ls = doc.splitTextToSize(t.nota, FIN - COL.nota);
+            texto(largo, COL.env, fy + FILA + 1.4);
+          } else if (t.nota) {
+            fuente("Alegreya", "italic", 8.5, C.muted);
+            const ls = m.notas[i];
             texto(ls, COL.nota, mid + 1.2 - (ls.length - 1) * MM(8.5) * 1.18 / 2);
           }
           fy += h;

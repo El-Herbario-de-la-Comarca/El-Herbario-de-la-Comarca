@@ -2283,9 +2283,28 @@ function lineaTarro(t) {
   if (t.fecha_anio) partes.push(t.tipo_fecha === "lata" ? `Fecha de la lata: ${fechaTxt(t.fecha_anio, t.fecha_mes)}`
     : `${TIPO_FECHA[t.tipo_fecha] || "Embotado"} en ${fechaTxt(t.fecha_anio, t.fecha_mes)}`);
   if (t.abierto_anio) partes.push(`abierto en ${fechaTxt(t.abierto_anio, t.abierto_mes)}`);
-  if (t.nota) partes.push(`«${t.nota}»`);
   const det = partes.join(" · ");
   return det.charAt(0).toUpperCase() + det.slice(1);
+}
+// La nota del tarro va aparte de las fechas: puede tener hasta NOTA_TARRO_MAX caracteres y varias líneas.
+const NOTA_TARRO_MAX = 2000;
+// Las notas largas se enseñan recortadas a unas 4 líneas, con «Ver más» (lo desplegado se recuerda hasta recargar).
+const NOTA_LARGA = 240, notasAbiertas = new Set();
+const notaLarga = (n) => n.length > NOTA_LARGA || n.split("\n").length > 4;
+function notaTarro(t) {
+  if (!t.nota) return "";
+  if (!notaLarga(t.nota)) return `<span class="tr-nota">${esc(t.nota)}</span>`;
+  const ab = notasAbiertas.has(String(t.id));
+  return `<span class="tr-nota recorta${ab ? " abierta" : ""}">${esc(t.nota)}</span>`
+    + `<button class="link tr-mas" type="button" data-nota-mas="${esc(t.id)}" aria-expanded="${ab}">${ab ? "Ver menos" : "Ver más"}</button>`;
+}
+function engancharNotas(raiz) {
+  raiz.querySelectorAll("[data-nota-mas]").forEach((b) => b.addEventListener("click", () => {
+    const texto = b.previousElementSibling, id = b.dataset.notaMas;
+    const ab = texto.classList.toggle("abierta");
+    if (ab) notasAbiertas.add(id); else notasAbiertas.delete(id);
+    b.setAttribute("aria-expanded", String(ab)); b.textContent = ab ? "Ver menos" : "Ver más";
+  }));
 }
 // El envase con la fecha más antigua (o null si ninguno tiene fecha).
 function masViejo(lista) {
@@ -2314,7 +2333,7 @@ function tarrosHTML(id) {
   const filas = lista.map((t) => `<li class="tr-item">
       <span class="tr-ic">${iconoEnvase(t.envase)}</span>
       <span class="tr-txt"><span>${esc(tituloTarro(t))}</span>
-        ${lineaTarro(t) ? `<span class="muted">${esc(lineaTarro(t))}</span>` : ""}</span>
+        ${lineaTarro(t) ? `<span class="muted">${esc(lineaTarro(t))}</span>` : ""}${notaTarro(t)}</span>
       <span class="tr-der">${t.fecha_anio ? `<span class="tr-edad">${esc(antiguedad(t))}</span>` : ""}
         <button class="link" type="button" data-tarro="${t.id}">Editar</button>${botonEtiqueta(id, t.id)}</span></li>`).join("");
   return `<details class="tarros" id="tr-box"${abierto ? " open" : ""}>
@@ -2330,6 +2349,7 @@ function conectarTarros(id) {
   box.addEventListener("toggle", () => { try { localStorage.setItem("herbario-tarros-abiertos", box.open ? "1" : "0"); } catch (e) {} });
   $("tr-add").addEventListener("click", () => formTarro(id, null));
   conectarEtiquetas(box);
+  engancharNotas(box);
   box.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(id, (tarros[String(id)] || []).find((t) => String(t.id) === b.dataset.tarro))));
 }
@@ -2372,7 +2392,8 @@ function formTarro(id, t) {
       </div>
       <p class="muted tf-ayuda"><strong>Embotado</strong>: cuando llenaste y cerraste el tarro. <strong>Compra</strong>: cuando lo compraste. <strong>Fecha de la lata</strong>: la que trae impresa. Con ella se calcula cuánto lleva madurando.</p>
       <label for="tf-nota">Nota (opcional)</label>
-      <input id="tf-nota" type="text" maxlength="80" value="${esc(v.nota || "")}" placeholder="Por ejemplo, para abrir en 2030">
+      <textarea id="tf-nota" rows="3" maxlength="${NOTA_TARRO_MAX}" placeholder="Por ejemplo, para abrir en 2030">${esc(v.nota || "")}</textarea>
+      <p class="muted tf-cuenta" id="tf-cuenta" aria-live="polite"></p>
       <p class="msg" id="tf-msg" role="alert"></p>
       <div class="acts"><button class="btn primary" type="submit">Guardar</button><button class="btn" type="button" id="tf-no">Cancelar</button>
         ${t ? '<button class="btn danger" type="button" id="tf-del">Borrar tarro</button>' : ""}</div>
@@ -2395,6 +2416,8 @@ function formTarro(id, t) {
     if (error) { b.disabled = false; msg.textContent = "No se ha podido borrar el tarro."; return; }
     terminar();
   });
+  const contarNota = () => { const n = q("#tf-nota").value.length; q("#tf-cuenta").textContent = `${n} de ${NOTA_TARRO_MAX} caracteres`; };
+  q("#tf-nota").addEventListener("input", contarNota); contarNota();
   q("#tf-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const num = (s) => (q(s).value.trim() ? Number(q(s).value) : null);
@@ -2406,7 +2429,7 @@ function formTarro(id, t) {
     if (am && !aa) { msg.textContent = "Si pones el mes de apertura, elige también el año."; return; }
     if (fa && aa && (aa < fa || (aa === fa && fm && am && am < fm))) { msg.textContent = "La fecha de apertura no puede ser anterior a la del tarro."; return; }
     const fila = { envase: q("#tf-env").value, gramos: gr, tipo_fecha: q("#tf-tipo").value, fecha_anio: fa, fecha_mes: fa ? fm : null,
-      abierto_anio: aa, abierto_mes: aa ? am : null, nota: q("#tf-nota").value.trim().slice(0, 80) };
+      abierto_anio: aa, abierto_mes: aa ? am : null, nota: q("#tf-nota").value.replace(/\r/g, "").replace(/\n{3,}/g, "\n\n").trim().slice(0, NOTA_TARRO_MAX) };
     if (ctx.unidadesOk) fila.unidades = ud;
     const boton = q("button[type=submit]"); boton.disabled = true;
     const { error } = t ? await sb.from("tarros").update(fila).eq("id", t.id)
@@ -2630,7 +2653,7 @@ async function descargarInventario(lista, envasesDe, info, titular) {
     if (!window.inventarioBodegaPDF) {
       if (!cargandoPDF) cargandoPDF = new Promise((ok, mal) => {
         const s = document.createElement("script");
-        s.src = "bodega-pdf.js?v=202611011720"; s.onload = ok; s.onerror = () => { cargandoPDF = null; mal(new Error("bodega-pdf.js")); };
+        s.src = "bodega-pdf.js?v=202611242100"; s.onload = ok; s.onerror = () => { cargandoPDF = null; mal(new Error("bodega-pdf.js")); };
         document.head.appendChild(s);
       });
       await cargandoPDF;
@@ -2763,7 +2786,7 @@ function abrirBodega(fuente) {
       return `<li class="bd-md">
           <span class="bd-md-ic" aria-hidden="true"><span class="bd-md-art">${art(d)}</span><span class="bd-md-env">${iconoEnvase(t.envase)}</span></span>
           <span class="bd-md-q"><strong>${esc(d.nombre)}</strong><span class="muted">${esc(tituloTarro(t))}</span></span>
-          <span class="bd-md-f muted">${esc(lineaTarro(t))}</span>
+          <span class="bd-md-f muted">${esc(lineaTarro(t))}${notaTarro(t)}</span>
           <span class="bd-md-e"><span class="bd-md-b"><span style="width:${ancho}%"></span></span><span class="muted">${esc(antiguedad(t))}</span></span>
           ${prueba ? "" : `<span class="bd-md-acc"><button class="link" type="button" data-tarro="${esc(t.id)}" data-tabaco="${esc(d.id)}">Editar</button>${botonEtiqueta(d.id, t.id)}</span>`}
         </li>`;
@@ -2835,6 +2858,7 @@ function abrirBodega(fuente) {
     $("bd-barajar").addEventListener("click", () => abrirBodega(bodegaDePrueba()));
     $("bd-salir-prueba").addEventListener("click", () => abrirBodega());
   }
+  engancharNotas(panel);
   panel.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(b.dataset.tabaco, (tarros[b.dataset.tabaco] || []).find((t) => String(t.id) === b.dataset.tarro))));
   conectarEtiquetas(panel);
