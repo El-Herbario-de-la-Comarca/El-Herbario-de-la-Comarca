@@ -2285,8 +2285,25 @@ function lineaTarro(t) {
   return det.charAt(0).toUpperCase() + det.slice(1);
 }
 // La nota del tarro va aparte de las fechas: puede tener hasta NOTA_TARRO_MAX caracteres y varias líneas.
-const NOTA_TARRO_MAX = 500;
-const notaTarro = (t) => (t.nota ? `<span class="tr-nota">${esc(t.nota)}</span>` : "");
+const NOTA_TARRO_MAX = 2000;
+// Las notas largas se enseñan recortadas a unas 4 líneas, con «Ver más» (lo desplegado se recuerda hasta recargar).
+const NOTA_LARGA = 240, notasAbiertas = new Set();
+const notaLarga = (n) => n.length > NOTA_LARGA || n.split("\n").length > 4;
+function notaTarro(t) {
+  if (!t.nota) return "";
+  if (!notaLarga(t.nota)) return `<span class="tr-nota">${esc(t.nota)}</span>`;
+  const ab = notasAbiertas.has(String(t.id));
+  return `<span class="tr-nota recorta${ab ? " abierta" : ""}">${esc(t.nota)}</span>`
+    + `<button class="link tr-mas" type="button" data-nota-mas="${esc(t.id)}" aria-expanded="${ab}">${ab ? "Ver menos" : "Ver más"}</button>`;
+}
+function engancharNotas(raiz) {
+  raiz.querySelectorAll("[data-nota-mas]").forEach((b) => b.addEventListener("click", () => {
+    const texto = b.previousElementSibling, id = b.dataset.notaMas;
+    const ab = texto.classList.toggle("abierta");
+    if (ab) notasAbiertas.add(id); else notasAbiertas.delete(id);
+    b.setAttribute("aria-expanded", String(ab)); b.textContent = ab ? "Ver menos" : "Ver más";
+  }));
+}
 // El envase con la fecha más antigua (o null si ninguno tiene fecha).
 function masViejo(lista) {
   const conFecha = lista.filter((t) => t.fecha_anio);
@@ -2330,6 +2347,7 @@ function conectarTarros(id) {
   box.addEventListener("toggle", () => { try { localStorage.setItem("herbario-tarros-abiertos", box.open ? "1" : "0"); } catch (e) {} });
   $("tr-add").addEventListener("click", () => formTarro(id, null));
   conectarEtiquetas(box);
+  engancharNotas(box);
   box.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(id, (tarros[String(id)] || []).find((t) => String(t.id) === b.dataset.tarro))));
 }
@@ -2633,7 +2651,7 @@ async function descargarInventario(lista, envasesDe, info, titular) {
     if (!window.inventarioBodegaPDF) {
       if (!cargandoPDF) cargandoPDF = new Promise((ok, mal) => {
         const s = document.createElement("script");
-        s.src = "bodega-pdf.js?v=202611242030"; s.onload = ok; s.onerror = () => { cargandoPDF = null; mal(new Error("bodega-pdf.js")); };
+        s.src = "bodega-pdf.js?v=202611242100"; s.onload = ok; s.onerror = () => { cargandoPDF = null; mal(new Error("bodega-pdf.js")); };
         document.head.appendChild(s);
       });
       await cargandoPDF;
@@ -2838,6 +2856,7 @@ function abrirBodega(fuente) {
     $("bd-barajar").addEventListener("click", () => abrirBodega(bodegaDePrueba()));
     $("bd-salir-prueba").addEventListener("click", () => abrirBodega());
   }
+  engancharNotas(panel);
   panel.querySelectorAll("[data-tarro]").forEach((b) => b.addEventListener("click", () =>
     formTarro(b.dataset.tabaco, (tarros[b.dataset.tabaco] || []).find((t) => String(t.id) === b.dataset.tarro))));
   conectarEtiquetas(panel);

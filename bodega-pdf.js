@@ -200,7 +200,14 @@
       // La columna «Nota» es estrecha: una nota corta (hasta 3 líneas) va ahí; una más larga va debajo del envase, a todo lo ancho.
       fuente("Alegreya", "italic", 8.5);
       const notas = d.envases.map((t) => doc.splitTextToSize(t.nota || "", FIN - COL.nota));
-      const largas = notas.map((ls, i) => (ls.length > 3 ? doc.splitTextToSize(d.envases[i].nota, FIN - COL.env) : null));
+      const MAX_LINEAS = 12;   // una nota más larga se corta con «…» (entera se ve en Mi bodega)
+      const largas = notas.map((ls, i) => {
+        if (ls.length <= 3) return null;
+        const l = doc.splitTextToSize(d.envases[i].nota, FIN - COL.env);
+        if (l.length <= MAX_LINEAS) return l;
+        const rec = l.slice(0, MAX_LINEAS); rec[MAX_LINEAS - 1] = rec[MAX_LINEAS - 1].replace(/\s+$/, "") + "…";
+        return rec;
+      });
       const altFilas = d.envases.length ? d.envases.map((t, i) => largas[i]
         ? FILA + 1.4 + largas[i].length * MM(8.5) * 1.18 + 1.4
         : Math.max(FILA, 3 + notas[i].length * MM(8.5) * 1.18 + 2.4)) : [FILA];

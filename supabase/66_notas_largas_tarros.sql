@@ -1,6 +1,6 @@
 -- =====================================================================
 -- 66 · Mi bodega: notas más largas en los tarros
--- La nota de cada tarro o lata pasa de 80 a 500 caracteres.
+-- La nota de cada tarro o lata pasa de 80 a 2000 caracteres.
 -- Ejecútalo una sola vez en Supabase → SQL Editor. Se puede repetir sin romper nada.
 -- (Ejecútalo antes de publicar el cambio de la web, o las notas de más de 80 caracteres darán error al guardar.)
 -- =====================================================================
@@ -20,4 +20,4 @@ begin
   end loop;
 end $$;
 
-alter table public.tarros add constraint tarros_nota_check check (char_length(nota) <= 500);
+alter table public.tarros add constraint tarros_nota_check check (char_length(nota) <= 2000);
